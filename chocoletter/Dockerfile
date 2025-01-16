@@ -9,8 +9,8 @@ WORKDIR /app
 # 필요한 파일들을 복사
 COPY gradlew .
 COPY gradle/ gradle/
-COPY build.gradle.kts .
-COPY settings.gradle.kts .
+COPY build.gradle .
+COPY settings.gradle .
 COPY src src
 
 # Gradle Wrapper에 실행 권한을 부여합니다.

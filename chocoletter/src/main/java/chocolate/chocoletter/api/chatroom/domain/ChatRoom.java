@@ -1,17 +1,30 @@
 package chocolate.chocoletter.api.chatroom.domain;
 
-import chocolate.chocoletter.api.member.domain.Member;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import chocolate.chocoletter.common.entity.BaseTimeEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public class ChatRoom {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long host;
-    private Long guest;
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ChatRoom extends BaseTimeEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private Long hostId;
+
+	private Long guestId;
+
+	@Builder
+	public ChatRoom(Long hostId, Long guestId) {
+		this.hostId = hostId;
+		this.guestId = guestId;
+	}
 }
