@@ -1,6 +1,6 @@
 package chocolate.chocoletter.api.gift.domain;
 
-public enum Type {
+public enum GiftType {
     GENERAL,
     SPECIAL
 }

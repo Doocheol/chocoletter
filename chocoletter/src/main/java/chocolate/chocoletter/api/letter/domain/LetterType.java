@@ -1,6 +1,6 @@
 package chocolate.chocoletter.api.letter.domain;
 
-public enum Type {
+public enum LetterType {
     GENERAL,
     QUESTION
 }
