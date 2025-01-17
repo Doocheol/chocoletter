@@ -13,5 +13,5 @@ import chocolate.chocoletter.api.gift.domain.Gift;
 public interface GiftRepository extends JpaRepository<Gift, Long> {
 
 	@Query("select g from Gift g where g.receiverId = :receiverId")
-	List<Gift> findAll(@Param("receiverId") Long receiverId);
+	List<Gift> findAllGift(@Param("receiverId") Long receiverId);
 }
