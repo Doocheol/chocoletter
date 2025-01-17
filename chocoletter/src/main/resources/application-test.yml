@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: optional:file:test.env[.properties]
+
+  datasource:
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+    url: jdbc:${DB_TYPE}://127.0.0.1:[forwardedPort]/${DB_SCHEMA}?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+ssh:
+  remote_jump_host: ${REMOTE_JUMP_HOST} # ssh 연결할 중간 서버 주소, ec2 ip주소
+  ssh_port: 22         # ssh 프로토콜 포트, 보통 22
+  user:  ${USER_NAME}  # ssh 연결할 사용자 계정
+  private_key: ${PRIVATE_KEY_PATH}  # ssh 연결 시 사용할 개인키 파일 경로 => 접근하고자 하는 인스턴스의 주소
+  database_url: ${DB_URL}   # rds url
+  database_port: ${DB_PORT}  # rds 열려있는 포트번호

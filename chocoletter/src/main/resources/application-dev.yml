@@ -2,10 +2,20 @@ spring:
   config:
     activate:
       on-profile: dev
-    import: optional:file:.dev.env[.properties]
+    import: optional:file:dev.env[.properties]
 
   datasource:
     driver-class-name: ${DB_DRIVER_CLASS_NAME}
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        storage_engine: innodb
