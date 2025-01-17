@@ -2,4 +2,4 @@ spring:
   config:
     activate:
       on-profile: prod
-    import: optional:file:.prod.env[.properties]
+    import: optional:file:prod.env[.properties]
