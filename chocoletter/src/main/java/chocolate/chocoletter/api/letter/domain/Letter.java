@@ -38,12 +38,22 @@ public class Letter extends BaseTimeEntity {
 
 	private String answer;
 
-	@Builder
-	public Letter(Gift gift, String nickname, String content, String question, String answer) {
+	public Letter(Gift gift, LetterType type, String nickname, String content, String question, String answer) {
 		this.gift = gift;
+		this.type = type;
 		this.nickname = nickname;
 		this.content = content;
 		this.question = question;
 		this.answer = answer;
+	}
+
+	@Builder(builderClassName = "createGeneralLetter", builderMethodName = "createGeneralLetter")
+	public static Letter createGeneralLetter(Gift gift, String nickname, String content) {
+		return new Letter(gift, LetterType.GENERAL, nickname, content, null, null);
+	}
+
+	@Builder(builderClassName = "createQuestionLetter", builderMethodName = "createQuestionLetter")
+	public static Letter createQuestionLetter(Gift gift, String nickname, String question, String answer) {
+		return new Letter(gift, LetterType.QUESTION, nickname, null, question, answer);
 	}
 }
