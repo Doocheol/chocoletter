@@ -28,4 +28,4 @@ WORKDIR /app
 COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar
 
 # 애플리케이션 실행
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-jar", "app.jar"]
