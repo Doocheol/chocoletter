@@ -22,4 +22,11 @@ public class GiftService {
 			.map(GiftResponseDto::of)
 			.collect(Collectors.toList()));
 	}
+
+	public GiftsResponseDto findSpecialGift(Long memberId) {
+		List<Gift> gifts = giftRepository.findSpecialGift(memberId);
+		return GiftsResponseDto.of(gifts.stream()
+				.map(GiftResponseDto::of)
+				.collect(Collectors.toList()));
+	}
 }
