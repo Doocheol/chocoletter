@@ -8,7 +8,6 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 
 root.render(
   <RecoilRoot>
-    {/* 전체 화면을 감싸는 컨테이너 */}
     <div className="mx-auto w-full md:max-w-sm lg:min-h-screen">
       <App />
     </div>
