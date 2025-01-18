@@ -1,5 +1,3 @@
-// types/api.ts
-
 /**
  * 사용자 데이터 응답 타입
  * - Spring Boot가 반환하는 성공 응답
