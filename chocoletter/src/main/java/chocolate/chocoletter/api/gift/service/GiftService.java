@@ -30,4 +30,10 @@ public class GiftService {
 				.map(GiftResponseDto::of)
 				.collect(Collectors.toList()));
 	}
+
+	public GiftsResponseDto findGeneralGift(Long memberId) {
+		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.GENERAL);
+		return GiftsResponseDto.of(gifts.stream()
+				.map(GiftResponseDto::of)
+				.collect(Collectors.toList()));	}
 }
