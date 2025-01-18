@@ -25,7 +25,7 @@ public class GiftService {
 	}
 
 	public GiftsResponseDto findSpecialGift(Long memberId) {
-		List<Gift> gifts = giftRepository.findSpecialGift(memberId, GiftType.SPECIAL);
+		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.SPECIAL);
 		return GiftsResponseDto.of(gifts.stream()
 				.map(GiftResponseDto::of)
 				.collect(Collectors.toList()));
