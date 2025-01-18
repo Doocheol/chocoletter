@@ -5,6 +5,7 @@
 export type UserResponse = {
   name: string; // 사용자 이름
   profile_url: string; // 프로필 이미지 URL
+  is_first_login: boolean;
 };
 
 /**
