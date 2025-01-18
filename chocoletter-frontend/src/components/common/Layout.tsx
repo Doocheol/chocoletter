@@ -7,7 +7,7 @@ type LayoutProps = {
 const Layout: React.FC<PropsWithChildren<LayoutProps>> = ({ children, className = "" }) => {
   return (
     <div
-      className={`text-center flex flex-col items-center justify-center min-h-[calc(var(--vh)_*_100)] bg-pink-600 text-gray-800 ${className}`}
+      className={`text-center flex flex-col items-center justify-center min-h-[calc(var(--vh)_*_100)] bg-pink-100 text-gray-800 ${className}`}
     >
       {children}
     </div>
