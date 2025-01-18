@@ -27,6 +27,11 @@ WORKDIR /app
 # 빌드된 JAR 파일 복사
 COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar
 
+# 빌드 시 필요한 인자 선언
+ARG CONTAINER_KEY_DIR
+ARG NAS_KEY_DIR
+ARG PRIVATE_KEY_PATH
+
 # AWS pem 키 컨테이너 안에 복사 (for test)
 RUN mkdir -p $CONTAINER_KEY_DIR
 COPY $NAS_KEY_DIR $CONTAINER_KEY_DIR
