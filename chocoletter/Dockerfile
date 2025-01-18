@@ -27,5 +27,9 @@ WORKDIR /app
 # 빌드된 JAR 파일 복사
 COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar
 
+# AWS pem 키 컨테이너 안에 복사 (for test)
+COPY $NAS_KEY_DIR $CONTAINER_KEY_DIR
+RUN chmod 600 $PRIVATE_KEY_PATH
+
 # 애플리케이션 실행
 ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-jar", "app.jar"]
