@@ -28,6 +28,7 @@ WORKDIR /app
 COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar
 
 # AWS pem 키 컨테이너 안에 복사 (for test)
+RUN mkdir -p $CONTAINER_KEY_DIR
 COPY $NAS_KEY_DIR $CONTAINER_KEY_DIR
 RUN chmod 600 $PRIVATE_KEY_PATH
 
