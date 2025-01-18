@@ -31,7 +31,7 @@ public class GiftController implements GiftSwagger {
 		return ResponseEntity.ok(gifts);
 	}
 
-	@GetMapping("/special")
+	@GetMapping("/general")
 	public ResponseEntity<?> findGeneralGift() {
 		// 로그인 한 member를 가져오기
 		Long memberId = 1L;
