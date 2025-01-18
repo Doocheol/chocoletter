@@ -1,12 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 const TutorialFocus = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleStart = () => {
     // 튜토리얼 완료 후 메인 페이지로 이동
-    navigate("/main-my-before");
+    router.push("/main/my/before");
   };
 
   return (
