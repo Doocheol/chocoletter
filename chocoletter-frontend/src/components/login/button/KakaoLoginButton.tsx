@@ -31,7 +31,7 @@ const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({ onLoginSuccess }) =
   return (
     <ImageButton
       onClick={handleKakaoLogin}
-      backgroundImage="/assets/images/social/kakao_login.png"
+      backgroundImage="/kakao_login.png"
       className="w-48 h-12"
     />
   );
