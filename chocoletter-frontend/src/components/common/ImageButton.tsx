@@ -5,42 +5,36 @@ type ImageButtonProps = {
   onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
-  /** 배경에 사용할 이미지 URL */
-  backgroundImage?: string;
+  backgroundImage?: string; // 배경 이미지
 };
 
-export const ImageButton = ({
+const ImageButton = ({
   type = "button",
   onClick,
   children,
   className = "",
   backgroundImage = "",
 }: ImageButtonProps) => {
-  // 기본 Tailwind 스타일 (반응형 높이)
-  const baseStyle = `
-    relative
-    w-full
-    h-32
-    bg-no-repeat
-    bg-center
-    bg-cover
-    overflow-hidden
+  const baseStyle = "px-4 py-2 relative overflow-hidden";
 
-    sm:h-40
-    md:h-48
-    lg:h-56
-  `;
+  const backgroundStyle = backgroundImage
+    ? {
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "contain", // 이미지 비율 유지 축소/확대
+        backgroundPosition: "center", // 중앙 정렬
+      }
+    : {};
 
   return (
     <button
       type={type}
       onClick={onClick}
       className={`${baseStyle} ${className}`}
-      style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-      }}
+      style={backgroundStyle}
     >
       {children}
     </button>
   );
 };
+
+export { ImageButton };
