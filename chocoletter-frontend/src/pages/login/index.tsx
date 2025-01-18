@@ -1,13 +1,25 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import KakaoLoginButton from "@/components/login/button/KakaoLoginButton";
 
-type Data = {
-  name: string
-}
+const Login = () => {
+  const navigate = useNavigate();
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: 'John Doe' })
-}
+  const handleLoginSuccess = (isFirstLogin: boolean) => {
+    if (isFirstLogin) {
+      navigate("/tutorial-focus");
+    } else {
+      navigate("/main-my-before");
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-pink-100 text-gray-800">
+      <h1 className="text-4xl font-bold mb-8">Welcome to Chocoletter!</h1>
+      <p className="mb-4 text-lg">Send sweet letters to your loved ones.</p>
+      <KakaoLoginButton onLoginSuccess={handleLoginSuccess} />
+    </div>
+  );
+};
+
+export default Login;
