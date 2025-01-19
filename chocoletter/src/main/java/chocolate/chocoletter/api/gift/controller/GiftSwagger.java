@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import org.springframework.http.ResponseEntity;
 
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
@@ -30,4 +31,14 @@ public interface GiftSwagger {
 		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
 	ResponseEntity<?> findSpecialGift();
+
+	@Operation(summary = "개별 선물 조회",
+		description = "로그인한 회원이 개별 선물 내용을 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "성공적으로 조회",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = GiftDetailResponseDto.class))),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
+	})
+	ResponseEntity<?> findGiftDetail(Long giftId);
 }
