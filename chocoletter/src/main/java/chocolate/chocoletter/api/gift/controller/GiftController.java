@@ -2,6 +2,7 @@ package chocolate.chocoletter.api.gift.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +30,12 @@ public class GiftController implements GiftSwagger {
 		Long memberId = 1L;
 		GiftsResponseDto gifts = giftService.findSpecialGift(memberId);
 		return ResponseEntity.ok(gifts);
+	}
+
+	@GetMapping("/{giftId}")
+	public ResponseEntity<?> findGiftDetail(@PathVariable("giftId") Long giftId) {
+		Long memberId = 1L;
+		GiftDetailResponseDto gift = giftService.findGiftDetail(memberId, giftId);
+		return ResponseEntity.ok(gift)
 	}
 }
