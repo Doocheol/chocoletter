@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = https://lab.ssafy.com/s12-webmobile1-sub1/S12P11A603.git
+	fetch = +refs/*:refs/*
+	mirror = true
+	pushurl = https://github.com/Doocheol/chocoletter-client
