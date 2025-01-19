@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("[ChocoLetterException] {}: {}", exception.getClass().getName(), exception.getErrorMessage());
 
         return ResponseEntity.status(exception.getStatus())
-                .body(FailResponse.fail(exception.getStatus().value(), exception.getErrorMessage());
+                .body(FailResponse.fail(exception.getStatus().value(), exception.getErrorMessage()));
     }
 
     @Override
