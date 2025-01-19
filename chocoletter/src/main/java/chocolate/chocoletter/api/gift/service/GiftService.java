@@ -8,6 +8,7 @@ import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.common.exception.ErrorMessage;
+import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.exception.UnAuthorizedException;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class GiftService {
 
 	public GiftDetailResponseDto findGiftDetail(Long memberId, Long giftId) {
 		Gift gift = giftRepository.findGiftById(giftId);
-		if(!memberId.equals(gift.getReceiverId())) throw new UnAuthorizedException(ErrorMessage.ERR_UNAUTORIZED);
+		if(!memberId.equals(gift.getReceiverId())) throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
 		LetterDto letter = letterService.findLetter(giftId);
 		return GiftDetailResponseDto.of(gift, letter);
 	}
