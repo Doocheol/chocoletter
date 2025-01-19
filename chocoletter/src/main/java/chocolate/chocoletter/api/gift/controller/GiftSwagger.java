@@ -22,12 +22,12 @@ public interface GiftSwagger {
 	ResponseEntity<?> findAllGift();
 
 	@Operation(summary = "특별 선물 조회",
-			description = "로그인한 회원의 특별 선물을 조회합니다.")
+		description = "로그인한 회원의 특별 선물을 조회합니다.")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "성공적으로 조회",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = GiftsResponseDto.class))),
-			@ApiResponse(responseCode = "401", description = "인증 실패")
+		@ApiResponse(responseCode = "200", description = "성공적으로 조회",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = GiftsResponseDto.class))),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
 	ResponseEntity<?> findSpecialGift();
 }
