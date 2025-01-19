@@ -3,6 +3,7 @@ package chocolate.chocoletter.api.gift.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import chocolate.chocoletter.api.gift.domain.GiftType;
 import org.springframework.stereotype.Service;
 
 import chocolate.chocoletter.api.gift.domain.Gift;
@@ -21,5 +22,12 @@ public class GiftService {
 		return GiftsResponseDto.of(gifts.stream()
 			.map(GiftResponseDto::of)
 			.collect(Collectors.toList()));
+	}
+
+	public GiftsResponseDto findSpecialGift(Long memberId) {
+		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.SPECIAL);
+		return GiftsResponseDto.of(gifts.stream()
+				.map(GiftResponseDto::of)
+				.collect(Collectors.toList()));
 	}
 }
