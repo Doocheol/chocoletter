@@ -6,7 +6,7 @@ spring:
 
   datasource:
     driver-class-name: ${DB_DRIVER_CLASS_NAME}
-    url: ${DB_URL}
+    url: jdbc:${DB_TYPE}://${DB_URL}:${DB_PORT}/${DB_SCHEMA}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
