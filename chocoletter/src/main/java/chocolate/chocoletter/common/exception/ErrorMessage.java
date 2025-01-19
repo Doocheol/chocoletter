@@ -19,11 +19,14 @@ public enum ErrorMessage {
 	ERR_ACCESS_TOKEN_EXPIRED,
 	ERR_INVALID_TOKEN,
 	ERR_EMPTY_TOKEN,
-
+	/**
+	 * 403 FORBIDDEN
+	 */
+	ERR_FORBIDDEN,
 	/**
 	 * 404 NOT_FOUND
 	 */
-
+	ERR_NOT_FOUND,
 	/**
 	 * 500 INTERNAL_SERVER_ERROR
 	 */
