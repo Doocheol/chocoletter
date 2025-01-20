@@ -1,9 +1,12 @@
 package chocolate.chocoletter.common.util;
 
+import static java.lang.System.exit;
+
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import jakarta.annotation.PreDestroy;
 import jakarta.validation.constraints.NotNull;
+import java.util.Properties;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,17 +14,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Properties;
-
-import static java.lang.System.exit;
-
 
 @Slf4j
-@Profile("test")
-@Component
-@ConfigurationProperties(prefix = "ssh")
-@Validated
 @Setter
+@Component
+@Validated
+@Profile("test")
+@ConfigurationProperties(prefix = "ssh")
 public class SshTunnelingInitializer {
 
     @NotNull
@@ -41,8 +40,9 @@ public class SshTunnelingInitializer {
 
     @PreDestroy
     public void closeSSH() {
-        if (session.isConnected())
+        if (session.isConnected()) {
             session.disconnect();
+        }
     }
 
     public Integer buildSshConnection() {
@@ -50,7 +50,7 @@ public class SshTunnelingInitializer {
         Integer forwardedPort = null;
 
         try {
-            log.info("{}@{}:{}:{} with privateKey",user, remoteJumpHost, sshPort, databasePort);
+            log.info("{}@{}:{}:{} with privateKey", user, remoteJumpHost, sshPort, databasePort);
 
             log.info("start ssh tunneling..");
             JSch jSch = new JSch();
@@ -72,7 +72,7 @@ public class SshTunnelingInitializer {
             forwardedPort = session.setPortForwardingL(0, databaseUrl, databasePort);
             log.info("successfully connected to database");
 
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("fail to make ssh tunneling");
             this.closeSSH();
             e.printStackTrace();
