@@ -19,3 +19,6 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
         storage_engine: innodb
+
+encrypt:
+  secret-key: ${ENCRYPT_SECRET_KEY}

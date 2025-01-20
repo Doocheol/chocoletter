@@ -19,7 +19,10 @@ spring:
 ssh:
   remote_jump_host: ${REMOTE_JUMP_HOST} # ssh 연결할 중간 서버 주소, ec2 ip주소
   ssh_port: 22         # ssh 프로토콜 포트, 보통 22
-  user:  ${USER_NAME}  # ssh 연결할 사용자 계정
+  user: ${USER_NAME}  # ssh 연결할 사용자 계정
   private_key: ${PRIVATE_KEY_PATH}  # ssh 연결 시 사용할 개인키 파일 경로 => 접근하고자 하는 인스턴스의 주소
   database_url: ${DB_URL}   # rds url
   database_port: ${DB_PORT}  # rds 열려있는 포트번호
+
+encrypt:
+  secret-key: ${ENCRYPT_SECRET_KEY}
