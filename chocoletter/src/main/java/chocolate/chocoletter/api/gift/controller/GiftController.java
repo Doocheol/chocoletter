@@ -22,4 +22,12 @@ public class GiftController implements GiftSwagger {
 		GiftsResponseDto gifts = giftService.findAllGift(memberId);
 		return ResponseEntity.ok(gifts);
 	}
+
+	@GetMapping("/special")
+	public ResponseEntity<?> findSpecialGift() {
+		// 로그인 한 member를 가져오기
+		Long memberId = 1L;
+		GiftsResponseDto gifts = giftService.findSpecialGift(memberId);
+		return ResponseEntity.ok(gifts);
+	}
 }
