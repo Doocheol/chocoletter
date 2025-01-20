@@ -22,11 +22,15 @@ public class LetterService {
 	}
 
 	public RandomQuestionResponseDto findRandomQuestion(Long questionId) {
-		Long randomId = null;
-		do {
-			Random random = new Random();
+		Random random = new Random();
+		Long randomId;
+		if (questionId == 0) {
 			randomId = random.nextLong(1, 21L);
-		} while (randomId.equals(questionId));
+		} else {
+			do {
+				randomId = random.nextLong(1, 21L);
+			} while (randomId.equals(questionId));
+		}
 		Question question = letterRepository.findQuestions(randomId);
 		return RandomQuestionResponseDto.of(question);
 	}
