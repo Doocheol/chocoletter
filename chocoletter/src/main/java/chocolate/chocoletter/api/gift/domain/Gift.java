@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,18 +24,22 @@ import lombok.NoArgsConstructor;
 public class Gift extends BaseTimeEntity {
 
 	@Id
+	@Column(unique = true, nullable = false, updatable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "gift_box_id")
+	@JoinColumn(name = "gift_box_id", nullable = false)
 	private GiftBox giftBox;
 
+	@Column(nullable = false)
 	private Long senderId;
 
+	@Column(nullable = false)
 	private Long receiverId;
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private GiftType type;
 
 	private LocalDateTime unBoxingTime;

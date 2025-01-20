@@ -2,6 +2,7 @@ package chocolate.chocoletter.api.letter.domain;
 
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,16 +21,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Letter extends BaseTimeEntity {
 	@Id
+	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "gift_id")
+	@JoinColumn(name = "gift_id", nullable = false, unique = true)
 	private Gift gift;
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private LetterType type;
 
+	@Column(nullable = false, length = 25)
 	private String nickname;
 
 	private String content;
