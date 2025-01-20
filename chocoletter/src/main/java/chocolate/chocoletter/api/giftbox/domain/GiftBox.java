@@ -25,7 +25,7 @@ public class GiftBox extends BaseTimeEntity {
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "member_id", nullable = false)
+	@JoinColumn(name = "member_id", nullable = false, unique = true)
 	private Member member;
 
 	@Column(nullable = false)
