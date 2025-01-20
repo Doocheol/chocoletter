@@ -1,6 +1,7 @@
 package chocolate.chocoletter.api.member.domain;
 
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,14 +17,20 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseTimeEntity {
 
 	@Id
+	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
 	private String socialId;
 
+	@Column(nullable = false, unique = true)
 	private String alarmAddress;
+
+	@Column(nullable = false)
 	private Integer sendGiftCount;
 
 	@Builder
