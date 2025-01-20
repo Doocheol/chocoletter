@@ -1,7 +1,9 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,12 @@ public class GiftController implements GiftSwagger {
 		return ResponseEntity.ok(gifts);
 	}
 
+	@GetMapping("/{giftId}")
+	public ResponseEntity<?> findGiftDetail(@PathVariable("giftId") Long giftId) {
+		Long memberId = 1L;
+		GiftDetailResponseDto gift = giftService.findGiftDetail(memberId, giftId);
+		return ResponseEntity.ok(gift);
+	}
 	@GetMapping("/general")
 	public ResponseEntity<?> findGeneralGifts() {
 		// 로그인 한 member를 가져오기
