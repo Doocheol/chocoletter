@@ -17,7 +17,7 @@ public class LetterController {
 
 	@GetMapping("/question/{questionId}")
 	public ResponseEntity<?> findRandomQuestion(@PathVariable("questionId") Long questionId) {
-		letterService.findQuestion(questionId);
+		letterService.findRandomQuestion(questionId);
 		return ResponseEntity.ok("");
 	}
 }
