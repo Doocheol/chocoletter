@@ -5,6 +5,8 @@ import LoginView from "./pages/LoginView";
 import { isLoginAtom } from "./atoms/auth/userAtoms";
 import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
+import WaitingRoomView from "./pages/VideoWaitingRoomView";
+import VideoRoomView from "./pages/VideoRoomView";
 import { ToastContainer } from "react-toastify";
 
 declare global {
@@ -37,6 +39,8 @@ function App() {
 				<Routes>
 					<Route index element={<LoginView />} />
 					<Route path="/*" element={<ErrorPage />} />
+					<Route path="/video/waiting-room/:id" element={<WaitingRoomView />} />
+					<Route path="/video/room" element={<VideoRoomView />} />
 				</Routes>
 			</BrowserRouter>
 			<ToastContainer
