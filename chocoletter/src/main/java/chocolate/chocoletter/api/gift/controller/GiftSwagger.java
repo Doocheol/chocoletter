@@ -11,33 +11,33 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 public interface GiftSwagger {
 
-	@Operation(summary = "전체 선물 조회",
-		description = "로그인한 회원의 전체 선물을 조회합니다.")
+	@Operation(summary = "전체 선물 목록 조회",
+		description = "로그인한 회원의 전체 선물 목록을 조회합니다.")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "성공적으로 조회",
 			content = @Content(mediaType = "application/json",
 				schema = @Schema(implementation = GiftsResponseDto.class))),
 		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
-	ResponseEntity<?> findAllGift();
+	ResponseEntity<?> findAllGifts();
 
-	@Operation(summary = "특별 선물 조회",
-			description = "로그인한 회원의 특별 선물을 조회합니다.")
+	@Operation(summary = "특별 선물 목록 조회",
+		description = "로그인한 회원의 특별 선물 목록을 조회합니다.")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "성공적으로 조회",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = GiftsResponseDto.class))),
-			@ApiResponse(responseCode = "401", description = "인증 실패")
+		@ApiResponse(responseCode = "200", description = "성공적으로 조회",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = GiftsResponseDto.class))),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
-	ResponseEntity<?> findSpecialGift();
+	ResponseEntity<?> findSpecialGifts();
 
-	@Operation(summary = "일반 선물 조회",
-			description = "로그인한 회원의 일반 선물을 조회합니다.")
+	@Operation(summary = "일반 선물 목록 조회",
+		description = "로그인한 회원의 일반 선물 목록을 조회합니다.")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "성공적으로 조회",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = GiftsResponseDto.class))),
-			@ApiResponse(responseCode = "401", description = "인증 실패")
+		@ApiResponse(responseCode = "200", description = "성공적으로 조회",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = GiftsResponseDto.class))),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
-	ResponseEntity<?> findGeneralGift();
+	ResponseEntity<?> findGeneralGifts();
 }
