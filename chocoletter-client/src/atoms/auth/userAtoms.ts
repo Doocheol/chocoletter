@@ -9,8 +9,14 @@ export const isLoginAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const userNicknameAtom = atom<string>({
-  key: 'nickname',
+export const userNameAtom = atom<string>({
+  key: 'userName',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const userProfileUrlAtom = atom<string>({
+  key: 'userProfileUrl',
   default: '',
   effects_UNSTABLE: [persistAtom],
 });
