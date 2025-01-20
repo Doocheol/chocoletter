@@ -1,9 +1,14 @@
 package chocolate.chocoletter.api.gift.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import chocolate.chocoletter.api.gift.domain.GiftType;
+import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
+import chocolate.chocoletter.common.exception.ErrorMessage;
+import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
@@ -49,6 +54,27 @@ public class GiftService {
 		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.GENERAL);
 		return GiftsResponseDto.of(gifts.stream()
 				.map(GiftResponseDto::of)
-				.collect(Collectors.toList()));	
+				.collect(Collectors.toList()));
+	}
+
+	public GiftsResponseDto findGeneralGift(Long memberId) {
+		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.GENERAL);
+		return GiftsResponseDto.of(gifts.stream()
+				.map(GiftResponseDto::of)
+				.collect(Collectors.toList()));
+	}
+
+	public GiftUnboxingInvitationResponseDto findUnboxingInvitation(Long memberId, Long giftId) {
+		Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+		if (gift.getReceiverId().equals(memberId)) {
+			throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+		}
+		String formattedUnboxingTime = formatUnboxingTime(gift.getUnBoxingTime());
+		return GiftUnboxingInvitationResponseDto.of(formattedUnboxingTime);
+	}
+
+	private static String formatUnboxingTime(LocalDateTime unboxingTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+		return unboxingTime.format(formatter);
 	}
 }
