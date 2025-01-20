@@ -39,6 +39,7 @@ public class Gift extends BaseTimeEntity {
 	private Long receiverId;
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private GiftType type;
 
 	private LocalDateTime unBoxingTime;
