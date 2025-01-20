@@ -18,7 +18,7 @@ public class GiftController implements GiftSwagger {
 	private final GiftService giftService;
 
 	@GetMapping("/all")
-	public ResponseEntity<?> findAllGift() {
+	public ResponseEntity<?> findAllGifts() {
 		// 로그인 한 member를 가져오기
 		Long memberId = 1L;
 		GiftsResponseDto gifts = giftService.findAllGift(memberId);
@@ -26,7 +26,7 @@ public class GiftController implements GiftSwagger {
 	}
 
 	@GetMapping("/special")
-	public ResponseEntity<?> findSpecialGift() {
+	public ResponseEntity<?> findSpecialGifts() {
 		// 로그인 한 member를 가져오기
 		Long memberId = 1L;
 		GiftsResponseDto gifts = giftService.findSpecialGift(memberId);
@@ -38,5 +38,12 @@ public class GiftController implements GiftSwagger {
 		Long memberId = 1L;
 		GiftDetailResponseDto gift = giftService.findGiftDetail(memberId, giftId);
 		return ResponseEntity.ok(gift);
+	}
+	@GetMapping("/general")
+	public ResponseEntity<?> findGeneralGifts() {
+		// 로그인 한 member를 가져오기
+		Long memberId = 1L;
+		GiftsResponseDto gifts = giftService.findGeneralGift(memberId);
+		return ResponseEntity.ok(gifts);
 	}
 }

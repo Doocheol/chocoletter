@@ -44,4 +44,11 @@ public class GiftService {
 		LetterDto letter = letterService.findLetter(giftId);
 		return GiftDetailResponseDto.of(gift, letter);
 	}
+
+	public GiftsResponseDto findGeneralGift(Long memberId) {
+		List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.GENERAL);
+		return GiftsResponseDto.of(gifts.stream()
+				.map(GiftResponseDto::of)
+				.collect(Collectors.toList()));	
+	}
 }
