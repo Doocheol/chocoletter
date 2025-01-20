@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import chocolate.chocoletter.api.letter.dto.response.RandomQuestionResponseDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,7 @@ public class LetterController {
 
 	@GetMapping("/question/{questionId}")
 	public ResponseEntity<?> findRandomQuestion(@PathVariable("questionId") Long questionId) {
-		letterService.findRandomQuestion(questionId);
-		return ResponseEntity.ok("");
+		RandomQuestionResponseDto randomQuestion = letterService.findRandomQuestion(questionId);
+		return ResponseEntity.ok(randomQuestion);
 	}
 }
