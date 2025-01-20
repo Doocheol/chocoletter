@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/letter")
 @RequiredArgsConstructor
-public class LetterController {
+public class LetterController implements LetterSwagger {
 	private final LetterService letterService;
 
 	@GetMapping("/question/{questionId}")
