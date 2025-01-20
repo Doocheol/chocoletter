@@ -39,7 +39,7 @@ function App() {
 				<Routes>
 					<Route index element={<LoginView />} />
 					<Route path="/*" element={<ErrorPage />} />
-					<Route path="/video/waiting-room/:id" element={<WaitingRoomView />} />
+					<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
 					<Route path="/video/room" element={<VideoRoomView />} />
 				</Routes>
 			</BrowserRouter>

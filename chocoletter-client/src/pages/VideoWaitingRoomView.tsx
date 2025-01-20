@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
-import { useSearchParams } from "react-router";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 import { MyFaceInVideoWaitingRoom } from "../components/videoWaitingRoom/MyFaceInVideoWaitingRoom";
@@ -13,8 +13,11 @@ const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'htt
 // API를 받아옵니다.
 
 export default function WaitingRoom() {
-    const waitingComment = useMemo(() => ["잠시만 기다려 주세요. 상대방을 기다리고 있어요!", "화면을 유지해 주세요. 연결이 끊길 수 있어요!", "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"], []);
-    const sessionIdInit = useSearchParams();
+    const waitingComment = useMemo(() => [
+        "잠시만 기다려 주세요. 상대방을 기다리고 있어요!", 
+        "화면을 유지해 주세요. 연결이 끊길 수 있어요!", 
+        "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"], []);
+    const { sessionIdInit } = useParams();
     const [sessionId, setSessionId] = useState('');
     const [token, setToken] = useState('');
     const [isTimerOn, setIsTimerOn] = useState(false);
@@ -56,7 +59,7 @@ export default function WaitingRoom() {
 
         getSessionId();
 
-    }, []);
+    }, [sessionIdInit]);
 
     useEffect(() => {
         const getToken = async () => {
@@ -65,7 +68,7 @@ export default function WaitingRoom() {
         }
 
 
-        const createToken = async (sessionId: String) => {
+        const createToken = async (sessionId: string) => {
             const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
                 headers: { 'Content-Type': 'application/json', },
             });
@@ -82,10 +85,12 @@ export default function WaitingRoom() {
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [cnt, waitingComment, comment]);
+    }, [cnt, waitingComment]);
 
     // 5분동안 타이머 및 지나면 방 폭파
     useEffect(() => {
+        if (!isTimerOn) return;
+
         const interval = setInterval(() => {
             setRemainTime((time) => time - 1);
             setMakeMMSS(() => {
@@ -103,7 +108,7 @@ export default function WaitingRoom() {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [remainTime])
+    }, [isTimerOn, remainTime])
 
 
     return (

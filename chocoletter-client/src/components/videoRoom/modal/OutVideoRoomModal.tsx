@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 
-import classes from '@/styles/videoRoom.module.css';
+import classes from '../../../styles/videoRoom.module.css';
 import GoToMainMyEventButton from '../button/GoToMainMyEventButton';
 
 
 const OutVideoRoomModal: React.FC = () => {
     const [remainTime, setRemainTime] = useState(5);
-    const router = useRouter();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const interval = setInterval(() => {
             setRemainTime((prev) => {
                 if (prev === 1) {
-                    router.push('/main/my/event');
+                    navigate('/main/my/event');
                     clearInterval(interval);
                     return 1;
                 } else {
