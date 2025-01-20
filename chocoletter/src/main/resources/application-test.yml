@@ -2,7 +2,6 @@ spring:
   config:
     activate:
       on-profile: test
-    import: optional:file:test.env[.properties]
 
   datasource:
     driver-class-name: ${DB_DRIVER_CLASS_NAME}
