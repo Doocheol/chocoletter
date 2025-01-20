@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,10 @@ public class GiftBox extends BaseTimeEntity {
 
 	private String shareCode;
 
+	@Builder
+	public GiftBox(Member member, Integer giftCount, String shareCode) {
+		this.member = member;
+		this.giftCount = giftCount;
+		this.shareCode = shareCode;
+	}
 }
