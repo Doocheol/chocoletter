@@ -1,0 +1,56 @@
+@import "textShadow.css";
+@import "animation.css";
+
+.App {
+  text-align: center;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.navHeight {
+  height: 3.5rem;
+}
+
+.fullHeight {
+  height: calc((var(--vh, 1vh) * 100) - 3.5rem);
+}
+
+.maxFullHeight {
+  max-height: calc((var(--vh, 1vh) * 100) - 3.5rem);
+  overflow: auto;
+}
+
+.manualHeight {
+  height: calc((var(--vh, 1vh) * 100) - 12rem);
+}
+
+.guideHeight {
+  height: calc((var(--vh, 1vh) * 100) - 16rem);
+}
+
+.writingHeight {
+  height: calc((var(--vh, 1vh) * 100) - 17.5rem);
+}
+
+.writingDetailHeight {
+  height: calc((var(--vh, 1vh) * 100) - 21rem);
+}
+
+.loadingHeight {
+  height: calc((var(--vh, 1vh) * 100) - 40rem);
+}
+
+/* body {
+  overflow: hidden;
+  touch-action: none;
+} */
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
