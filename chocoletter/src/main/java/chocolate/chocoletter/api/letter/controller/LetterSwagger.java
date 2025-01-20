@@ -2,10 +2,12 @@ package chocolate.chocoletter.api.letter.controller;
 
 import org.springframework.http.ResponseEntity;
 
+import chocolate.chocoletter.api.letter.dto.request.RandomQuestionRequestDto;
 import chocolate.chocoletter.api.letter.dto.response.RandomQuestionResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -24,5 +26,11 @@ public interface LetterSwagger {
 				responseCode = "401",
 				description = "인증 실패")
 		})
-	ResponseEntity<?> findRandomQuestion(Long questionId);
+	ResponseEntity<?> findRandomQuestion(@RequestBody(
+		description = "랜덤 질문 요청 데이터 (첫 질문이면 previousQuestionId를 0으로, 새로고침이면 이전의 문제 id를 넣어주세요)",
+		required = true,
+		content = @Content(
+			schema = @Schema(
+				implementation = RandomQuestionRequestDto.class)))
+	RandomQuestionRequestDto requestDto);
 }
