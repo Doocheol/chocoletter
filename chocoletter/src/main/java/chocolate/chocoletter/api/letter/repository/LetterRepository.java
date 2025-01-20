@@ -15,5 +15,5 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
 	Letter findLetterByGiftId(@Param("giftId") Long giftId);
 
 	@Query("select q from Question q where q.id = :questionId")
-	Question findQuestions(@Param("questionId") Long questionId);
+	Question findQuestion(@Param("questionId") Long questionId);
 }

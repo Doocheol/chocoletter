@@ -31,7 +31,7 @@ public class LetterService {
 				randomId = random.nextLong(1, 21L);
 			} while (randomId.equals(questionId));
 		}
-		Question question = letterRepository.findQuestions(randomId);
+		Question question = letterRepository.findQuestion(randomId);
 		return RandomQuestionResponseDto.of(question);
 	}
 }
