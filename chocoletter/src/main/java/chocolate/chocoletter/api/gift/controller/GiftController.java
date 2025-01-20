@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,11 +49,11 @@ public class GiftController implements GiftSwagger {
 		return ResponseEntity.ok(gifts);
 	}
 
-    @Override
-    public ResponseEntity<?> findUnboxingInvitation() {
+    @GetMapping("/{giftId}/unboxing/invitation")
+    public ResponseEntity<?> findUnboxingInvitation(@RequestParam String giftId) {
         // 로그인 한 member를 가져오기
         Long memberId = 1L;
-        GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId);
+        GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok(unboxingInvitation);
     }
 }
