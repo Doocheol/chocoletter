@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { sessionAtom, tokenAtom } from "../atoms/video/videoAtoms"
+import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
 
 import { MyFaceInVideoWaitingRoom } from "../components/videoWaitingRoom/MyFaceInVideoWaitingRoom";
 import LetterInVideoModal from "../components/videoWaitingRoom/modal/LetterInVideoModal";
@@ -14,7 +14,7 @@ const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'htt
 
 // API를 받아옵니다.
 
-export default function WaitingRoom() {
+export const WaitingRoomView = () => {
     const waitingComment = useMemo(() => [
         "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
         "5분 안에 연결되지 않으면 화상채팅 기회가 사라져요 ㅠㅠ",
@@ -24,7 +24,8 @@ export default function WaitingRoom() {
     const [isTimerOn, setIsTimerOn] = useState(false);
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
-    // const [isBothJoin, setIsBothJoin] = useState(false);
+    // const [isBothJoin, setIsBothJoin] = useState(0);
+    const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [comment, setComment] = useState(waitingComment[2]);
@@ -43,6 +44,30 @@ export default function WaitingRoom() {
         setIsOpenLetter(false);
     }
 
+    // video-room 연결 테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // token 동기화를 위해 localStorage 사용
+    useEffect(() => {
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === 'isBothJoin' && event.newValue !== null && Number(event.newValue) > 1) {
+                navigate('/video/room', { state: { sessionId: sessionValue, token: tokenValue } });
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, [sessionValue, tokenValue, navigate]);
+
+    useEffect(() => {
+        localStorage.setItem('isBothJoin', isBothJoin.toString());
+        console.log('is', isBothJoin)
+    }, [isBothJoin]);
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+
+
     useEffect(() => {
         if (!sessionIdInit) return;
 
@@ -57,8 +82,8 @@ export default function WaitingRoom() {
         const getSessionId = async () => {
             try {
                 const newSessionId = await createSession();
-                setSessionValue(newSessionId);
-                setIsTimerOn(true);
+                setSessionValue(newSessionId);  // sessionId 할당
+                setIsTimerOn(true);             // 5분 타이머 작동(이거는 바꿔야 함-입장 시 바로 시작 예약시간 기준으로 5분전으로 변경경)
             } catch (err) {
                 console.error(err);
             }
@@ -71,10 +96,12 @@ export default function WaitingRoom() {
     useEffect(() => {
         const getToken = async () => {
             const aToken = await createToken(sessionValue);
-            console.log(aToken)
-            setTokenValue(aToken);
+            const url = new URL(aToken);
+            const params = new URLSearchParams(url.search);
+            const exToken = params.get("token") as string;
+            console.log('be', exToken)
+            setTokenValue(exToken);
         }
-
 
         const createToken = async (sessionValue: string) => {
             const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionValue + '/connections', {}, {
@@ -84,6 +111,25 @@ export default function WaitingRoom() {
         }
 
         getToken();
+
+        const getConnection = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:4443/openvidu/api/sessions/${sessionValue}/connection`,
+                    {
+                        headers: {
+                            Authorization: 'Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU'
+                        }
+                    }
+                )
+                setIsBothJoin(response.data["numberOfElements"]);
+                console.log(isBothJoin);
+            } catch {
+                console.log('error')
+            }
+        }
+
+        getConnection();
     }, [sessionValue, setTokenValue]);
 
     // 3초마다 상단 메세지가 변경경
@@ -95,11 +141,6 @@ export default function WaitingRoom() {
 
         return () => clearInterval(interval);
     }, [cnt, waitingComment]);
-
-    // RTC가 약속된 두 명이 들어오면 비디오 룸으로 이동
-    useEffect(() => {
-
-    })
 
     // 5분동안 타이머 및 지나면 방 폭파
     useEffect(() => {
@@ -126,6 +167,16 @@ export default function WaitingRoom() {
         return () => clearInterval(interval);
     }, [isTimerOn, remainTime, navigate])
 
+    // 임시로 2명이면 넘어가요
+    useEffect(() => {
+        if (isBothJoin <= 1) return;
+
+        const timeout = setTimeout(() => {
+            navigate('/video/room', { state: { sessionId: sessionValue, token: tokenValue } });
+        }, 5000);
+
+        return () => clearTimeout(timeout);
+    }, [isBothJoin, navigate, sessionValue, tokenValue])
 
     return (
         <>
