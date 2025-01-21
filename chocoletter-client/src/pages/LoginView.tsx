@@ -29,7 +29,7 @@ function LoginView() {
 
 	return (
 		<div className="h-[calc((var(--vh, 1vh) * 100)-8rem)]">
-			<div className="h-1/3 flex justify-center items-center">
+			<div className="flex justify-center items-center">
 				<img
 					src={chocoletter_login_view_logo}
 					alt="chocoletter_logo"
