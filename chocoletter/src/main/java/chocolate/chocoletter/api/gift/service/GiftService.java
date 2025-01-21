@@ -9,6 +9,8 @@ import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
+import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
+import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class GiftService {
     private final GiftRepository giftRepository;
     private final LetterService letterService;
+    private final UnboxingRoomService unboxingRoomService;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
@@ -72,7 +75,14 @@ public class GiftService {
         }
         gift.acceptUnboxing();
         // TODO : senderId에 맞는 유저한테 알림톡 전송
-        // TODO : unboxing room 엔티티 만들어서 데이터 저장
+
+        UnboxingRoom unboxingRoom = UnboxingRoom.builder()
+                .receiverId(gift.getReceiverId())
+                .senderId(gift.getSenderId())
+                .startTime(gift.getUnBoxingTime())
+                .build();
+
+        unboxingRoomService.saveUnboxingRoom(unboxingRoom);
     }
 
     private String formatUnboxingTime(LocalDateTime unboxingTime) {
@@ -83,5 +93,4 @@ public class GiftService {
     public void saveGift(Gift gift) {
         giftRepository.save(gift);
     }
-
 }
