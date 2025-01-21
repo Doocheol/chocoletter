@@ -41,4 +41,8 @@ public class GiftBox extends BaseTimeEntity {
         this.giftCount = 0;
         this.shareCode = shareCode;
     }
+
+    public void addGiftCount() {
+        this.giftCount++;
+    }
 }
