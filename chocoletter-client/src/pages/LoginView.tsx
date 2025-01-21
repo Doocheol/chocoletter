@@ -1,5 +1,3 @@
-// import { useRecoilState } from "recoil";
-// import { useEffect } from "react";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import { useNavigate } from "react-router-dom";

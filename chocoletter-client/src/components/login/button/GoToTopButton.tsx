@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { FaArrowUp } from "react-icons/fa"; // 아이콘 라이브러리 사용 (react-icons)
-import { MdArrowUpward } from "react-icons/md";
+// import { MdArrowUpward } from "react-icons/md";
 
 import classNames from "classnames"; // 조건부 클래스 적용을 위한 라이브러리
 
