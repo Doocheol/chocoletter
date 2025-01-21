@@ -23,14 +23,14 @@ public class IdEncryptionUtil {
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         byte[] valueBytes = ByteBuffer.allocate(Long.BYTES).putLong(value).array();
         byte[] encryptedData = cipher.doFinal(valueBytes);
-        return Base64.getEncoder().encodeToString(encryptedData);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(encryptedData);
     }
 
     public Long decrypt(String encryptedData) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-        byte[] decodedData = Base64.getDecoder().decode(encryptedData);
+        byte[] decodedData = Base64.getUrlDecoder().decode(encryptedData);
         byte[] decryptedBytes = cipher.doFinal(decodedData);
         return ByteBuffer.wrap(decryptedBytes).getLong();
     }

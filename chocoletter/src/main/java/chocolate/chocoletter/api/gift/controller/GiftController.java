@@ -52,11 +52,16 @@ public class GiftController implements GiftSwagger {
         return ResponseEntity.ok(gift);
     }
 
-    @GetMapping("/unboxing/invitation")
-    public ResponseEntity<?> findUnboxingInvitation(@RequestParam("giftId") @DecryptedId Long giftId) {
+    @GetMapping("/{giftId}/unboxing/invitation")
+    public ResponseEntity<?> findUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
         // 로그인 한 member를 가져오기
         Long memberId = 1L;
         GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok(unboxingInvitation);
+    }
+
+    @GetMapping("/test")
+    public void getEncryptedIdForTest() throws Exception {
+        System.out.println(idEncryptionUtil.encrypt(1L));
     }
 }
