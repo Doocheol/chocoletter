@@ -9,9 +9,9 @@ import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,6 +58,13 @@ public class GiftController implements GiftSwagger {
         Long memberId = 1L;
         GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok(unboxingInvitation);
+    }
+
+    @PatchMapping("{giftId}/unboxing/invitation/accept")
+    public ResponseEntity<?> acceptUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
+        Long memberId = 1L;
+        giftService.acceptUnboxingInvitation(memberId, giftId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/test")
