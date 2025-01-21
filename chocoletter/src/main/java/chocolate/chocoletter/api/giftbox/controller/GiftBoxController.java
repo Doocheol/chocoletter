@@ -2,6 +2,7 @@ package chocolate.chocoletter.api.giftbox.controller;
 
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.service.GiftBoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,4 +36,15 @@ public class GiftBoxController implements GiftBoxSwagger {
         giftBoxService.sendGeneralQuestionGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PostMapping("/{giftBoxId}/gift/special/free")
+    public ResponseEntity<?> sendSpecialFreeGift(@PathVariable("giftBoxId") Long giftBoxId, @RequestBody
+    SpecialFreeGiftRequestDto requestDto) {
+        // 로그인 한 유저 찾아오기
+        Long memberId = 1L;
+        giftBoxService.sendSpecialFreeGift(memberId, giftBoxId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
 }
