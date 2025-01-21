@@ -1,4 +1,14 @@
 package chocolate.chocoletter.api.giftbox.dto.request;
 
-public record GeneralFreeGiftRequestDto(String nickName, String Content) {
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record GeneralFreeGiftRequestDto(
+	@NotNull
+	@Size(min = 1, max = 25)
+	String nickName,
+	@NotNull
+	@Size(min = 1, max = 200)
+	String Content) {
+
 }
