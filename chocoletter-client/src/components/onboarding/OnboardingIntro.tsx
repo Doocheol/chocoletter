@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import onboarding_intro_1 from "../../assets/images/logo/onboarding_intro_1.png";
 import onboarding_intro_2 from "../../assets/images/logo/onboarding_intro_2.png";
 import onboarding_intro_3 from "../../assets/images/logo/onboarding_intro_3.png";
+import { GoToTopButton } from "../login/button/GoToTopButton";
 // import { useHref } from "react-router-dom";
 
 function OnboardingIntro() {
@@ -21,7 +22,7 @@ function OnboardingIntro() {
 	}, []);
 
 	return (
-		<div className="flex flex-col mb-6 w-full">
+		<div className="flex flex-col w-full">
 			<div
 				className={`flex justify-center items-center pt-2 ${
 					scrollPosition < 90
@@ -107,7 +108,7 @@ function OnboardingIntro() {
 				</div>
 			</div>
 			<a
-				className={`mx-8 mb-24 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink ${
+				className={`mx-8 mb-8 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink ${
 					scrollPosition > 330 ? "heartbeat" : "collapse"
 				} `}
 				href="https://www.chocoletter.store"
@@ -116,6 +117,12 @@ function OnboardingIntro() {
 					초코레터팀의 초콜릿 상자 보러가기
 				</p>
 			</a>
+			<div className="mx-8 mb-12 flex justify-end">
+				<GoToTopButton
+					className="mb-" // 버튼의 너비와 높이 조정
+					scrollThreshold={600} // 필요에 따라 조정
+				/>
+			</div>
 		</div>
 	);
 }
