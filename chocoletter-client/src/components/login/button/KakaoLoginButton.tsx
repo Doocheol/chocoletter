@@ -8,9 +8,6 @@ import {
 import { ImageButton } from "../../common/ImageButton";
 import kakao_login_button from "../../../assets/images/button/kakao_login_button.png";
 
-// react-toastify 관련 import
-// import { toast } from "react-toastify";
-
 type KakaoLoginButtonProps = {
 	onLoginSuccess: (isFirstLogin: boolean) => void;
 	onLoginFailure?: (error: any) => void;

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+// import { useState } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
@@ -7,8 +8,8 @@ import LoginView from "./pages/LoginView";
 import ErrorPage from "./pages/ErrorPage";
 import WaitingRoomView from "./pages/VideoWaitingRoomView";
 // import VideoRoomView from "./pages/VideoRoomView";
+import ReceiveView from "./pages/ReceiveView";
 import { ToastContainer } from "react-toastify";
-import { WebSocketProvider } from "./hooks/useSocket";
 
 declare global {
 	interface Window {
@@ -36,16 +37,15 @@ function App() {
 
 	return (
 		<div className="App bg-hrtColorBackground text-hrtColorOutline">
-			<WebSocketProvider>
-				<BrowserRouter>
-					<Routes>
-						<Route index element={<LoginView />} />
-						<Route path="/*" element={<ErrorPage />} />
-						<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
-						{/* <Route path="/video/room" element={<VideoRoomView />} /> */}
-					</Routes>
-				</BrowserRouter>
-			</WebSocketProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route index element={<LoginView />} />
+					<Route path="/*" element={<ErrorPage />} />
+					<Route path="/receive" element={<ReceiveView />} />
+					<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
+					{/* <Route path="/video/room" element={<VideoRoomView />} /> */}
+				</Routes>
+			</BrowserRouter>
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}
