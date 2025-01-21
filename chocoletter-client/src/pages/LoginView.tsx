@@ -4,6 +4,8 @@ import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Onboarding from "../components/onboarding/Onboarding";
+import Button from "../components/common/Button";
 
 function LoginView() {
 	const navigate = useNavigate();
@@ -38,6 +40,9 @@ function LoginView() {
 				onLoginSuccess={handleLoginSuccess}
 				onLoginFailure={handleLoginFailure} // onLoginFailure 전달
 			/>
+			<Button></Button>
+
+			<Onboarding />
 		</div>
 	);
 }
