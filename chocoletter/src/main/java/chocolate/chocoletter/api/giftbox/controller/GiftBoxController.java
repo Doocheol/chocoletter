@@ -8,20 +8,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.service.GiftBoxService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/gift-box")
 @RequiredArgsConstructor
 public class GiftBoxController {
-	private final GiftService giftService;
+	private final GiftBoxService giftBoxService;
 
 	@PostMapping("/{giftBoxId}/gift/general/general")
 	public ResponseEntity<?> sendGeneralFreeGift(@PathVariable("giftBoxId") Long giftBoxId, @RequestBody
 	GeneralFreeGiftRequestDto requestDto) {
-		giftService.sendGeneralFreeGift(giftBoxId, requestDto);
+		// 로그인 한 유저 찾아오기
+		Long memberId = 1L;
+		giftBoxService.sendGeneralFreeGift(memberId, giftBoxId, requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
