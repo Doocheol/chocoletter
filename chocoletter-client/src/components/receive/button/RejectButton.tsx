@@ -12,7 +12,10 @@ const RejectButton = () => {
 
     return (
         <div className="text-center">
-            <Button onClick={handleAcceptClick}>
+            <Button 
+                onClick={handleAcceptClick}
+                className="w-[300px] h-[100px]" // 픽셀 단위를 명시
+            >
                 그때는 어려울 것 같아요. <br />
                 다른 시간에 함께 할 수 있을까요?😥
             </Button>

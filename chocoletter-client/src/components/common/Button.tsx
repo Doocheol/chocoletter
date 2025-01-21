@@ -14,7 +14,7 @@ const Button = ({
     className = "",
 }: ButtonProps) => {
     const baseStyle =
-        "px-8 py-3 h-[100px] w-[300px] bg-white text-black rounded-lg shadow-md hover:bg-[#fcb7b7]";
+        "px-8 py-3 bg-white text-black rounded-lg shadow-md hover:bg-[#fcb7b7]";
 
     return (
         <button
