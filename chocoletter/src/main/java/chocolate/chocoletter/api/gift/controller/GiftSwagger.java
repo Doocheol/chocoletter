@@ -128,4 +128,24 @@ public interface GiftSwagger {
             }
     )
     ResponseEntity<?> acceptUnboxingInvitation(Long giftId);
+
+    @Operation(
+            summary = "언박싱 초대장 거절",
+            description = "언박싱 초대장을 거절합니다."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 거절",
+                            content = @Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "403", description = "초대장은 받은 사람만 거절할 수 있습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
+            }
+    )
+    ResponseEntity<?> rejectUnboxingInvitation(Long giftId);
 }

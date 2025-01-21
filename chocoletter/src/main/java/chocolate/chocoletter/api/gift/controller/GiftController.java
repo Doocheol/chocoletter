@@ -67,6 +67,14 @@ public class GiftController implements GiftSwagger {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("{giftId}/unboxing/invitation/reject")
+    public ResponseEntity<?> rejectUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
+        Long memberId = 1L;
+        giftService.rejectUnboxingInvitation(memberId, giftId);
+        return ResponseEntity.ok().build();
+    }
+
+
     @GetMapping("/test")
     public void getEncryptedIdForTest() throws Exception {
         System.out.println(idEncryptionUtil.encrypt(1L));
