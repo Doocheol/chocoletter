@@ -24,6 +24,16 @@ export const VideoRoomView = () => {
     const [publishers, setPublisher] = useState<Publisher | null>(null);
     const [subscribers, setSubscribers] = useState<(Subscriber | Subscriber)[]>([]);
 
+    const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
+    const [videoState, setVideoState] = useState({
+        session: null,
+        mainStreamManager: null,
+        publisher: null,
+        subscribers: [],
+    }); // 비디오 상태
+
+    const [userName, setUserName] = useState('User808'); // 사용자 이름
+
     // video id 찾기
     const myTargetElement = document.getElementById("my-video") as HTMLElement;
 
