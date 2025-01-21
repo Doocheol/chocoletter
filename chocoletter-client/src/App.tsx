@@ -11,6 +11,7 @@ import WaitingRoomView from "./pages/VideoWaitingRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
 import { ToastContainer } from "react-toastify";
+import MainMyBeforeView from "./pages/MainMyBeforeView";
 
 declare global {
 	interface Window {
@@ -42,9 +43,16 @@ function App() {
 				<Routes>
 					<Route index element={<LoginView />} />
 					<Route path="/*" element={<ErrorPage />} />
+					<Route
+						path="/main/my/before"
+						element={<MainMyBeforeView />}
+					/>
 					<Route path="/receive" element={<ReceiveView />} />
 					<Route path="/letter" element={<LetterView />} />
-					<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
+					<Route
+						path="/video/waiting-room/:sessionIdInit"
+						element={<WaitingRoomView />}
+					/>
 					{/* <Route path="/video/room" element={<VideoRoomView />} /> */}
 				</Routes>
 			</BrowserRouter>
