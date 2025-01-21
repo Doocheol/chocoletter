@@ -1,17 +1,10 @@
-// src/pages/MainScreen.tsx
-
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
-
-// React Icons 임포트
-import {
-	FaHome,
-	FaChalkboardTeacher,
-	FaComments,
-	FaUserCircle,
-} from "react-icons/fa";
+import { FaRegCircleQuestion } from "react-icons/fa6";
+import { FaHome, FaComments, FaUserCircle } from "react-icons/fa";
 import { FiShare, FiCamera } from "react-icons/fi";
+import ShareModal from "../components/main/my/before/modal/ShareModal";
 // import { useNavigate } from "react-router";
 
 const MainMyBeforeView: React.FC = () => {
@@ -20,10 +13,12 @@ const MainMyBeforeView: React.FC = () => {
 
 	// const navigate = useNavigate();
 
+	// 모달 상태 관리
+	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
 	// 버튼 클릭 핸들러 (예시)
 	const handleShare = () => {
-		// 공유 기능 구현
-		alert("공유 버튼 클릭!");
+		setIsShareModalOpen(true);
 	};
 
 	const handleCapture = () => {
@@ -64,7 +59,7 @@ const MainMyBeforeView: React.FC = () => {
 					<FaHome />
 				</button>
 				<button onClick={handleTutorial} className="text-2xl">
-					<FaChalkboardTeacher />
+					<FaRegCircleQuestion />
 				</button>
 				<button onClick={handleChat} className="text-2xl">
 					<FaComments />
@@ -76,23 +71,23 @@ const MainMyBeforeView: React.FC = () => {
 
 			{/* 본문 */}
 			<main className="flex-grow flex flex-col items-center justify-center bg-gray-100">
-				<div className="flex space-x-8 mb-8">
+				<div className="flex flex-col items-center justify-center mb-8">
 					{/* 개봉 가능한 초콜릿 개수 */}
-					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md">
+					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md mb-8">
 						<span className="text-4xl font-bold text-hrtColorPink">
 							{availableGifts}
 						</span>
 						<span className="mt-2 text-lg text-gray-700">
-							개봉 가능한 초콜릿
+							개봉 가능 초콜릿
 						</span>
 					</div>
 
 					{/* 받은 전체 초콜릿 개수 */}
 					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md">
-						<span className="text-4xl font-bold text-hrtColorPink">
+						<span className="text-2xl font-bold text-hrtColorPink">
 							{receivedGifts}
 						</span>
-						<span className="mt-2 text-lg text-gray-700">
+						<span className="mt-2 text-sm text-gray-700">
 							받은 전체 초콜릿
 						</span>
 					</div>
@@ -101,10 +96,14 @@ const MainMyBeforeView: React.FC = () => {
 				{/* 내 초콜릿 박스 아이콘 */}
 				<button
 					onClick={handleMyChocolateBox}
-					className="flex items-center justify-center w-48 h-48 bg-hrtColorYellow rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
+					className="flex items-center justify-center w-48 h-48 bg-hrtColorYellow shadow-lg hover:shadow-xl transition-shadow duration-300"
 				>
 					<span className="text-3xl text-hrtColorPink">🍫</span>
 				</button>
+				<div className="text-sm text-gray-700 mt-4">
+					개봉 가능한 일반 초콜릿이 있으면 박스를 클릭하여 편지를 읽어
+					볼 수 있어요!
+				</div>
 			</main>
 
 			{/* 하단 */}
@@ -124,6 +123,11 @@ const MainMyBeforeView: React.FC = () => {
 					<span className="text-sm text-gray-700">캡처</span>
 				</button>
 			</footer>
+
+			<ShareModal
+				isOpen={isShareModalOpen}
+				onClose={() => setIsShareModalOpen(false)}
+			/>
 		</div>
 	);
 };
