@@ -2,13 +2,13 @@
 // import { useEffect } from "react";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Onboarding from "../components/onboarding/Onboarding";
 import DefaultButton from "../components/common/DefaultButton";
 
 function LoginView() {
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleLoginSuccess = (isFirstLogin: boolean) => {
 		if (isFirstLogin) {
@@ -16,7 +16,7 @@ function LoginView() {
 			// navigate("/tutorial-focus");
 		} else {
 			toast.success("로그인에 성공했습니다."); // 변경: success 메시지
-			// navigate("/main-my-before");
+			navigate("/main/my/before"); // 이동 페이지
 		}
 	};
 
