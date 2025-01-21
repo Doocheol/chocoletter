@@ -7,6 +7,7 @@ import LoginView from "./pages/LoginView";
 // import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
 import ReceiveView from "./pages/ReceiveView";
+import LetterView from "./pages/LetterView";
 import { ToastContainer } from "react-toastify";
 
 declare global {
@@ -40,6 +41,7 @@ function App() {
 					<Route index element={<LoginView />} />
 					<Route path="/*" element={<ErrorPage />} />
 					<Route path="/receive" element={<ReceiveView />} />
+					<Route path="/letter" element={<LetterView />} />
 				</Routes>
 			</BrowserRouter>
 			<ToastContainer
