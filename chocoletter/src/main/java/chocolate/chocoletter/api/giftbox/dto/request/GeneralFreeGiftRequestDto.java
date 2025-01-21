@@ -1,4 +1,4 @@
 package chocolate.chocoletter.api.giftbox.dto.request;
 
-public record GeneralGeneralGiftRequestDto(String nickName, String Content) {
+public record GeneralFreeGiftRequestDto(String nickName, String Content) {
 }
