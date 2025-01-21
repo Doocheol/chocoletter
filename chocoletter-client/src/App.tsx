@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+// import { useState } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
-import { isLoginAtom } from "./atoms/auth/userAtoms";
-import { useRecoilValue } from "recoil";
+// import { isLoginAtom } from "./atoms/auth/userAtoms";
+// import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
 import { ToastContainer } from "react-toastify";
 
@@ -14,7 +15,7 @@ declare global {
 }
 
 function App() {
-	const isLogin = useRecoilValue(isLoginAtom);
+	// const isLogin = useRecoilValue(isLoginAtom);
 
 	// if (isLogin) {
 

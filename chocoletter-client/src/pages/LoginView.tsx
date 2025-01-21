@@ -1,14 +1,14 @@
-import { useRecoilState } from "recoil";
-import { useEffect } from "react";
+// import { useRecoilState } from "recoil";
+// import { useEffect } from "react";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Onboarding from "../components/onboarding/Onboarding";
-import Button from "../components/common/Button";
+import DefaultButton from "../components/common/DefaultButton";
 
 function LoginView() {
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
 	const handleLoginSuccess = (isFirstLogin: boolean) => {
 		if (isFirstLogin) {
@@ -40,7 +40,7 @@ function LoginView() {
 				onLoginSuccess={handleLoginSuccess}
 				onLoginFailure={handleLoginFailure} // onLoginFailure 전달
 			/>
-			<Button></Button>
+			<DefaultButton></DefaultButton>
 
 			<Onboarding />
 		</div>

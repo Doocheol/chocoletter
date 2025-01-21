@@ -1,6 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+// import { useNavigate } from "react-router-dom";
+// import { useRecoilValue } from "recoil";
 import chocoletter_login_view_logo from "../../assets/images/logo/chocoletter_login_view_logo.png";
 import OnboardingIntro from "./OnboardingIntro";
 
@@ -9,12 +9,13 @@ import OnboardingIntro from "./OnboardingIntro";
 // import { ITotalHeartPropsTypes } from "../../types/messageType";
 
 function Onboarding() {
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
 	// const isLogin = useRecoilValue(isLoginAtom);
 	// const userId = getUserInfo().userId;
 
 	const onMyGiftBoxHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
+		e.preventDefault();
 		// navigate(`/main/my/before/user?id=${userId}`);
 	};
 

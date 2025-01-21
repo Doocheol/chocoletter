@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import onboarding_intro_1 from "../../assets/images/logo/onboarding_intro_1.png";
 import onboarding_intro_2 from "../../assets/images/logo/onboarding_intro_2.png";
 import onboarding_intro_3 from "../../assets/images/logo/onboarding_intro_3.png";
-import { useHref } from "react-router-dom";
+// import { useHref } from "react-router-dom";
 
 function OnboardingIntro() {
 	const [scrollPosition, setScrollPosition] = useState(0);
