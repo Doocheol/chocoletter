@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.giftbox.domain.GiftBox;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
@@ -27,10 +28,7 @@ public class GiftBoxService {
 
 
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
-        GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
-        if (receiverGiftBox == null) {
-            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND);
-        }
+        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.Content());
@@ -38,10 +36,7 @@ public class GiftBoxService {
     }
 
     public void sendGeneralQuestionGift(Long senderId, Long giftBoxId, GeneralQuestionRequestDto requestDto) {
-        GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
-        if (receiverGiftBox == null) {
-            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND);
-        }
+        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
@@ -50,17 +45,35 @@ public class GiftBoxService {
     }
 
     public void sendSpecialFreeGift(Long senderId, Long giftBoxId, SpecialFreeGiftRequestDto requestDto) {
+        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
+                parseDateTime(requestDto.unBoxingTime()));
+        giftService.saveGift(gift);
+        Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
+        letterService.saveLetter(letter);
+    }
+
+    public void sendSpecialQuestionGift(Long senderId, Long giftBoxId, SpecialQuestionGiftRequestDto requestDto) {
+        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
+                parseDateTime(requestDto.unBoxingTime()));
+        giftService.saveGift(gift);
+        Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
+                requestDto.answer());
+        letterService.saveLetter(letter);
+    }
+
+    private GiftBox findGiftBoxByGiftBoxId(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {
             throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND);
         }
+        return receiverGiftBox;
+    }
+
+    private LocalDateTime parseDateTime(String dateTime) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = LocalTime.parse(requestDto.unBoxingTime(), timeFormatter);
-        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(), time);
-        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                dateTime);
-        giftService.saveGift(gift);
-        Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
-        letterService.saveLetter(letter);
+        LocalTime time = LocalTime.parse(dateTime, timeFormatter);
+        return LocalDateTime.of(LocalDate.now(), time);
     }
 }
