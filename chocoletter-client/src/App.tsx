@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
-import { isLoginAtom } from "./atoms/auth/userAtoms";
-import { useRecoilValue } from "recoil";
+// import { isLoginAtom } from "./atoms/auth/userAtoms";
+// import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
 import WaitingRoomView from "./pages/VideoWaitingRoomView";
-import VideoRoomView from "./pages/VideoRoomView";
+// import VideoRoomView from "./pages/VideoRoomView";
 import { ToastContainer } from "react-toastify";
+import { WebSocketProvider } from "./hooks/useSocket";
 
 declare global {
 	interface Window {
@@ -16,7 +17,7 @@ declare global {
 }
 
 function App() {
-	const isLogin = useRecoilValue(isLoginAtom);
+	// const isLogin = useRecoilValue(isLoginAtom);
 
 	// if (isLogin) {
 
@@ -35,14 +36,16 @@ function App() {
 
 	return (
 		<div className="App bg-hrtColorBackground text-hrtColorOutline">
-			<BrowserRouter>
-				<Routes>
-					<Route index element={<LoginView />} />
-					<Route path="/*" element={<ErrorPage />} />
-					<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
-					<Route path="/video/room" element={<VideoRoomView />} />
-				</Routes>
-			</BrowserRouter>
+			<WebSocketProvider>
+				<BrowserRouter>
+					<Routes>
+						<Route index element={<LoginView />} />
+						<Route path="/*" element={<ErrorPage />} />
+						<Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
+						{/* <Route path="/video/room" element={<VideoRoomView />} /> */}
+					</Routes>
+				</BrowserRouter>
+			</WebSocketProvider>
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

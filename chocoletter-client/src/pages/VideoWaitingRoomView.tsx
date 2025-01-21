@@ -1,12 +1,14 @@
-import React from "react";
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { sessionAtom, tokenAtom } from "../atoms/video/videoAtoms"
 
 import { MyFaceInVideoWaitingRoom } from "../components/videoWaitingRoom/MyFaceInVideoWaitingRoom";
 import LetterInVideoModal from "../components/videoWaitingRoom/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/videoWaitingRoom/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css";
+// import { useSocket } from "../hooks/useSocket";
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
@@ -14,19 +16,24 @@ const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'htt
 
 export default function WaitingRoom() {
     const waitingComment = useMemo(() => [
-        "잠시만 기다려 주세요. 상대방을 기다리고 있어요!", 
-        "화면을 유지해 주세요. 연결이 끊길 수 있어요!", 
+        "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
+        "5분 안에 연결되지 않으면 화상채팅 기회가 사라져요 ㅠㅠ",
+        "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
         "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"], []);
     const { sessionIdInit } = useParams();
-    const [sessionId, setSessionId] = useState('');
-    const [token, setToken] = useState('');
     const [isTimerOn, setIsTimerOn] = useState(false);
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
+    // const [isBothJoin, setIsBothJoin] = useState(false);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [comment, setComment] = useState(waitingComment[2]);
     const [cnt, setCnt] = useState(0);
+
+    const navigate = useNavigate();
+    // const { userList } = useSocket();
+    const [sessionValue, setSessionValue] = useRecoilState(sessionAtom)
+    const [tokenValue, setTokenValue] = useRecoilState(tokenAtom)
 
     const showRTCLetter = () => {
         setIsOpenLetter(true);
@@ -50,7 +57,7 @@ export default function WaitingRoom() {
         const getSessionId = async () => {
             try {
                 const newSessionId = await createSession();
-                setSessionId(newSessionId);
+                setSessionValue(newSessionId);
                 setIsTimerOn(true);
             } catch (err) {
                 console.error(err);
@@ -59,23 +66,25 @@ export default function WaitingRoom() {
 
         getSessionId();
 
-    }, [sessionIdInit]);
+    }, [sessionIdInit, setSessionValue]);
 
     useEffect(() => {
         const getToken = async () => {
-            const aToken = await createToken(sessionId);
-            setToken(aToken);
+            const aToken = await createToken(sessionValue);
+            console.log(aToken)
+            setTokenValue(aToken);
         }
 
 
-        const createToken = async (sessionId: string) => {
-            const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+        const createToken = async (sessionValue: string) => {
+            const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionValue + '/connections', {}, {
                 headers: { 'Content-Type': 'application/json', },
             });
             return response.data; // The token
         }
 
-    });
+        getToken();
+    }, [sessionValue, setTokenValue]);
 
     // 3초마다 상단 메세지가 변경경
     useEffect(() => {
@@ -86,6 +95,11 @@ export default function WaitingRoom() {
 
         return () => clearInterval(interval);
     }, [cnt, waitingComment]);
+
+    // RTC가 약속된 두 명이 들어오면 비디오 룸으로 이동
+    useEffect(() => {
+
+    })
 
     // 5분동안 타이머 및 지나면 방 폭파
     useEffect(() => {
@@ -102,13 +116,15 @@ export default function WaitingRoom() {
                     }
                     return `0${minute} : ${second}`;
                 } else {
+                    clearInterval(interval);
+                    navigate('/main/my/event')
                     return '00:00';
                 }
             });
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [isTimerOn, remainTime])
+    }, [isTimerOn, remainTime, navigate])
 
 
     return (
@@ -125,6 +141,9 @@ export default function WaitingRoom() {
                 <div className={classes.back}>
                     <h1>{comment}</h1>
                     <p>{makeMMSS}</p>
+                    {/* <p>{userList.length}</p> */}
+                    <p>{sessionValue}</p>
+                    <p>{tokenValue}</p>
                     <MyFaceInVideoWaitingRoom />
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
                 </div>
