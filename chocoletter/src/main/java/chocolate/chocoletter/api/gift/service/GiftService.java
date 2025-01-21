@@ -79,4 +79,9 @@ public class GiftService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return unboxingTime.format(formatter);
     }
+
+    public void saveGift(Gift gift) {
+        giftRepository.save(gift);
+    }
+
 }

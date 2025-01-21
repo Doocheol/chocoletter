@@ -53,7 +53,7 @@ public class Letter extends BaseTimeEntity {
 
 	@Builder(builderClassName = "createGeneralLetter", builderMethodName = "createGeneralLetter")
 	public static Letter createGeneralLetter(Gift gift, String nickname, String content) {
-		return new Letter(gift, LetterType.GENERAL, nickname, content, null, null);
+		return new Letter(gift, LetterType.FREE, nickname, content, null, null);
 	}
 
 	@Builder(builderClassName = "createQuestionLetter", builderMethodName = "createQuestionLetter")
