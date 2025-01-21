@@ -71,4 +71,8 @@ public class Gift extends BaseTimeEntity {
     public static Gift createSpecialGift(GiftBox giftBox, Long senderId, Long receiverId, LocalDateTime unBoxingTime) {
         return new Gift(giftBox, senderId, receiverId, GiftType.SPECIAL, unBoxingTime, 0, false);
     }
+
+    public void acceptUnboxing() {
+        this.isAccept = true;
+    }
 }
