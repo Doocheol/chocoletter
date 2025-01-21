@@ -11,6 +11,7 @@ import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -61,6 +62,17 @@ public class GiftService {
         }
         String formattedUnboxingTime = formatUnboxingTime(gift.getUnBoxingTime());
         return GiftUnboxingInvitationResponseDto.of(formattedUnboxingTime);
+    }
+
+    @Transactional
+    public void acceptUnboxingInvitation(Long memberId, Long giftId) {
+        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+        if (!gift.getReceiverId().equals(memberId)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        gift.acceptUnboxing();
+        // TODO : senderId에 맞는 유저한테 알림톡 전송
+        // TODO : unboxing room 엔티티 만들어서 데이터 저장
     }
 
     private String formatUnboxingTime(LocalDateTime unboxingTime) {
