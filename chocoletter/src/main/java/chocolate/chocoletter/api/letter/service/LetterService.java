@@ -21,6 +21,10 @@ public class LetterService {
 		return LetterDto.of(letter);
 	}
 
+	public void saveLetter(Letter letter) {
+		letterRepository.save(letter);
+	}
+
 	public RandomQuestionResponseDto findRandomQuestion(Long questionId) {
 		Random random = new Random();
 		Long randomId;
