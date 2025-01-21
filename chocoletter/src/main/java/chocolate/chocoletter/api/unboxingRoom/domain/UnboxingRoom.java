@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class unboxingRoom extends BaseTimeEntity {
+public class UnboxingRoom extends BaseTimeEntity {
 
     @Id
     @Column(unique = true, nullable = false)
@@ -32,7 +32,7 @@ public class unboxingRoom extends BaseTimeEntity {
     private LocalDateTime startTime;
 
     @Builder
-    public unboxingRoom(Long senderId, Long receiverId, LocalDateTime startTime) {
+    public UnboxingRoom(Long senderId, Long receiverId, LocalDateTime startTime) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.startTime = startTime;
