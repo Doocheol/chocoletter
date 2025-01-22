@@ -6,7 +6,24 @@ import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login
 
 // 편지 작성 완료 후, 전송 완료 페이지
 const SentGiftView = () => {
+    const [remainTime, setRemainTime] = useState(5000);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setRemainTime((prev) => {
+                if (prev === 1) {
+                    navigate('/main/my/before');
+                    clearInterval(interval);
+                    return 1;
+                } else {
+                    return prev - 1;
+                }
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [])
 
     const goBackMainMyEvent = () => {
         navigate('/main/my/before')
@@ -36,7 +53,7 @@ const SentGiftView = () => {
                     >
                         내 초콜릿 상자로 이동하기
                     </Button>
-                    
+                    <p className="text-sm">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</p>
                 </div>
                 
             </div>
