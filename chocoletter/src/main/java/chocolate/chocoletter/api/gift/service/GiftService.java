@@ -85,6 +85,21 @@ public class GiftService {
         unboxingRoomService.saveUnboxingRoom(unboxingRoom);
     }
 
+    @Transactional
+    public void rejectUnboxingInvitation(Long memberId, Long giftId) {
+        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+        if (!gift.getReceiverId().equals(memberId)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        gift.rejectUnboxing();
+        if (gift.getRejectCount() == 3) {
+            gift.changeToGeneralGift();
+            // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
+            return;
+        }
+        // TODO : senderId 에게 언박싱 일정 거절 알림 전송
+    }
+
     private String formatUnboxingTime(LocalDateTime unboxingTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return unboxingTime.format(formatter);
