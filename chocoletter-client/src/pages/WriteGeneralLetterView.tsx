@@ -5,8 +5,13 @@ import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 
-// 이 부분은 연습 페이지입니다. 기존 (혹은 추후) LetterViewrk 가 모두 대체할 예정이므로, 안 봐도 됩니다.
+// 편지지 선택 뷰 이후, 자유 형식 편지지 작성 화면
 const WriteGeneralLetterView = () => {
+    const navigate = useNavigate();
+
+    const goBackMainMyEvent = () => {
+        navigate('/selectgift')  // 초콜릿 종류 선택 화면으로 이동동
+    }
 	return (
 		<div className="relative flex flex-col items-center h-screen">
              {/* GoBackButton을 좌측 상단에 고정 */}
@@ -21,7 +26,16 @@ const WriteGeneralLetterView = () => {
                     />
                 </div>
 
-			<h1 className="text-center">현재 페이지</h1>
+			    <h1 className="text-center">현재 페이지</h1>
+
+                <div className="mb-8 text-center">
+                    <Button
+                        onClick={goBackMainMyEvent}
+                        className="w-[300px] h-[50px] px-1 mb-4" 
+                    >
+                        편지 작성 완료!✏️
+                    </Button>
+                </div>
             </div>
 		</div>
 	);
