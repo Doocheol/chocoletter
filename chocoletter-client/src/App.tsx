@@ -14,9 +14,9 @@ import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
 
 declare global {
-	interface Window {
-		Kakao: any;
-	}
+	// interface Window {
+	// 	Kakao: any;
+	// }
 }
 
 function App() {
