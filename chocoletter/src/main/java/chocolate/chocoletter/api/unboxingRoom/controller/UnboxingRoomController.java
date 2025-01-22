@@ -19,9 +19,9 @@ public class UnboxingRoomController implements UnboxingRoomSwagger {
     private final UnboxingRoomService unboxingRoomService;
 
     @GetMapping("/{roomId}/verify")
-    public ResponseEntity<?> hasAccessToUnboxingRoom(@PathVariable @DecryptedId Long unboxingRoomId) {
+    public ResponseEntity<?> hasAccessToUnboxingRoom(@PathVariable @DecryptedId Long roomId) {
         Long memberId = 1L;
-        GiftDetailResponseDto gift = unboxingRoomService.hasAccessToUnboxingRoom(memberId, unboxingRoomId);
+        GiftDetailResponseDto gift = unboxingRoomService.hasAccessToUnboxingRoom(memberId, roomId);
         return ResponseEntity.ok(gift);
     }
 }
