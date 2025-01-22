@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FiX } from "react-icons/fi"; // React Icons에서 X 아이콘 가져오기
+import { FiXSquare } from "react-icons/fi";
 import FocusLock from "react-focus-lock";
 
 interface ModalProps {
@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
 	return (
 		<div
-			className="fixed inset-0 ml-5 z-50 flex items-center justify-center bg-black bg-opacity-50"
+			className="fixed inset-0 pl-5 z-50 flex items-center justify-center bg-black bg-opacity-50"
 			onClick={handleBackdropClick}
 		>
 			<FocusLock>
@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 						className="absolute top-1 right-1 text-gray-500 hover:text-gray-700 focus:outline-none"
 						aria-label="모달 닫기"
 					>
-						<FiX size={16} />
+						<FiXSquare size={16} />
 					</button>
 					{children}
 				</div>
