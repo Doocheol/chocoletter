@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { GoBackButton } from "../components/common/GoBackButton";
+import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 
 function ReceiveView() {
@@ -14,8 +16,10 @@ function ReceiveView() {
     };
 
     return (
-        <div className="relative h-full">
-			{/* <GoBackButton imageUrl={goBackIcon} altText="뒤로가기 버튼" /> */}
+        <div className="relative flex flex-col items-center h-screen">
+             {/* GoBackButton을 좌측 상단에 고정 */}
+             {/* <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" /> */}
+
             <h1 className="text-2xl font-bold mb-24">
                 발렌타인데이, <br/>
                 마음을 전할 편지지를 선택하세요!💌
