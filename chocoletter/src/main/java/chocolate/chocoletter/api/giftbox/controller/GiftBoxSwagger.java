@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -123,7 +124,8 @@ public interface GiftBoxSwagger {
 
     @Operation(
             summary = "내 선물 갯수 조회",
-            description = "로그인한 사용자의 선물 개수를 조회합니다."
+            description = "로그인한 사용자의 선물 개수를 조회합니다.",
+            tags = {"GiftBox"}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -139,7 +141,8 @@ public interface GiftBoxSwagger {
 
     @Operation(
             summary = "내 선물 갯수 조회",
-            description = "로그인한 사용자의 선물 개수를 조회합니다."
+            description = "로그인한 사용자의 선물 개수를 조회합니다.",
+            tags = {"GiftBox"}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -155,6 +158,29 @@ public interface GiftBoxSwagger {
     ResponseEntity<?> findGiftBox(
             @Parameter(
                     description = "정보를 볼 GiftBox의 ID",
+                    required = true
+            )
+            @PathVariable("giftBoxId") Long giftBoxId);
+
+    @Operation(
+            summary = "상대방의 unboxing 스케줄 조회",
+            description = "선물을 받을 사람의 RTC 스케줄을 조회합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UnboxingTimesResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "없는 초콜릿 박스 입니다.")
+    })
+    ResponseEntity<?> findUnboxingTimes(
+            @Parameter(
+                    description = "일정을 볼 GiftBox의 ID",
                     required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId);
