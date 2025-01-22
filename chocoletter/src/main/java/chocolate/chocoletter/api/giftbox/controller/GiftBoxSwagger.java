@@ -4,6 +4,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,16 +24,13 @@ public interface GiftBoxSwagger {
             tags = {"GiftBox"}
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "선물이 성공적으로 전송되었습니다."
-            )
+            @ApiResponse(responseCode = "201", description = "선물이 성공적으로 전송되었습니다."),
+            @ApiResponse(responseCode = "404", description = "없는 선물함 입니다.")
     })
     ResponseEntity<?> sendGeneralFreeGift(
             @Parameter(
                     description = "선물을 전송할 GiftBox의 ID",
-                    required = true,
-                    example = "1"
+                    required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -52,16 +50,13 @@ public interface GiftBoxSwagger {
             tags = {"GiftBox"}
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "선물이 성공적으로 전송되었습니다."
-            )
+            @ApiResponse(responseCode = "201", description = "선물이 성공적으로 전송되었습니다."),
+            @ApiResponse(responseCode = "404", description = "없는 선물함 입니다.")
     })
     ResponseEntity<?> sendGeneralQuestionGift(
             @Parameter(
                     description = "선물을 전송할 GiftBox의 ID",
-                    required = true,
-                    example = "1"
+                    required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -81,16 +76,13 @@ public interface GiftBoxSwagger {
             tags = {"GiftBox"}
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "선물이 성공적으로 전송되었습니다."
-            )
+            @ApiResponse(responseCode = "201", description = "선물이 성공적으로 전송되었습니다."),
+            @ApiResponse(responseCode = "404", description = "없는 선물함 입니다.")
     })
     ResponseEntity<?> sendSpecialFreeGift(
             @Parameter(
                     description = "선물을 전송할 GiftBox의 ID",
-                    required = true,
-                    example = "1"
+                    required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -110,16 +102,13 @@ public interface GiftBoxSwagger {
             tags = {"GiftBox"}
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "선물이 성공적으로 전송되었습니다."
-            )
+            @ApiResponse(responseCode = "201", description = "선물이 성공적으로 전송되었습니다."),
+            @ApiResponse(responseCode = "404", description = "없는 선물함 입니다.")
     })
     ResponseEntity<?> sendSpecialQuestionGift(
             @Parameter(
                     description = "선물을 전송할 GiftBox의 ID",
-                    required = true,
-                    example = "1"
+                    required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -147,4 +136,26 @@ public interface GiftBoxSwagger {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content)
     })
     ResponseEntity<?> findGiftCount();
+
+    @Operation(
+            summary = "내 선물 갯수 조회",
+            description = "로그인한 사용자의 선물 개수를 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GiftBoxResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "없는 초콜릿 박스 입니다.")
+    })
+    ResponseEntity<?> findGiftBox(
+            @Parameter(
+                    description = "정보를 볼 GiftBox의 ID",
+                    required = true
+            )
+            @PathVariable("giftBoxId") Long giftBoxId);
 }
