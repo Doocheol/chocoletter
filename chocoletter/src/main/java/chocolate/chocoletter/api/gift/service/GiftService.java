@@ -42,9 +42,18 @@ public class GiftService {
                 .collect(Collectors.toList()));
     }
 
-    public GiftDetailResponseDto findGiftDetail(Long memberId, Long giftId) {
+    public GiftDetailResponseDto findReceiveGiftDetail(Long memberId, Long giftId) {
         Gift gift = giftRepository.findGiftById(giftId);
         if (!memberId.equals(gift.getReceiverId())) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        LetterDto letter = letterService.findLetter(giftId);
+        return GiftDetailResponseDto.of(gift, letter);
+    }
+
+    public GiftDetailResponseDto findSendGiftDetail(Long memberId, Long giftId) {
+        Gift gift = giftRepository.findGiftById(giftId);
+        if (!memberId.equals(gift.getSenderId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         LetterDto letter = letterService.findLetter(giftId);

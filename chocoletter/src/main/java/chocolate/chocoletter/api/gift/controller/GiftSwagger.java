@@ -70,8 +70,8 @@ public interface GiftSwagger {
     ResponseEntity<?> findGeneralGifts();
 
     @Operation(
-            summary = "개별 선물 조회",
-            description = "로그인한 회원이 개별 선물 내용을 조회합니다."
+            summary = "내가 받은 개별 선물 조회",
+            description = "로그인한 회원이 자신이 받은 개별 선물 내용을 조회합니다."
     )
     @ApiResponses(
             value = {
@@ -86,7 +86,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findGiftDetail(Long giftId);
+    ResponseEntity<?> findReceiveGiftDetail(Long giftId);
 
     @Operation(
             summary = "언박싱 초대장 조회",
