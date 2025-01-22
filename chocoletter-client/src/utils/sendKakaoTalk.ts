@@ -1,59 +1,28 @@
 export const initializeKakao = () => {
-    if (typeof window !== "undefined" && window.Kakao) {
-      const kakao = window.Kakao;
-      const kakaoKey = import.meta.env.VITE_KAKAOTALK_JAVASCRIPT_KEY;
-  
-      if (!kakao.isInitialized()) {
-        kakao.init(kakaoKey);
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+        const kakaoAppKey = import.meta.env.VITE_KAKAOTALK_JAVASCRIPT_KEY;
+        if (!kakaoAppKey) {
+            console.error("Kakao JavaScript key is not defined in environment variables.");
+            return;
+        }
+        window.Kakao.init(kakaoAppKey);
         console.log("Kakao SDK initialized.");
-      }
+    } else if (window.Kakao && window.Kakao.isInitialized()) {
+        console.log("Kakao SDK already initialized.");
+    } else {
+        console.error("Kakao SDK is not available on the window object.");
     }
-  };
-  
-  interface ShareContent {
-    title: string;
-    description: string;
-    imageUrl: string;
-    link: {
-      mobileWebUrl: string;
-      webUrl: string;
-    };
-  }
-  
-  export const sendKakaoShare = (content: ShareContent) => {
-    if (typeof window !== "undefined" && window.Kakao) {
-      const kakao = window.Kakao;
-  
-      kakao.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: content.title,
-          description: content.description,
-          imageUrl: content.imageUrl,
-          link: content.link,
-        },
-        social: {
-          likeCount: 286,
-          commentCount: 45,
-          sharedCount: 845,
-        },
-        buttons: [
-          {
-            title: "웹으로 보기",
-            link: {
-              mobileWebUrl: content.link.mobileWebUrl,
-              webUrl: content.link.webUrl,
-            },
-          },
-          {
-            title: "앱으로 보기",
-            link: {
-              mobileWebUrl: content.link.mobileWebUrl,
-              webUrl: content.link.webUrl,
-            },
-          },
-        ],
-      });
+};
+
+export const sendKakaoShare = (shareContent: Kakao.ShareOptions) => {
+    if (window.Kakao && window.Kakao.Share && window.Kakao.isInitialized()) {
+        try {
+            window.Kakao.Share.sendDefault(shareContent);
+            console.log("Kakao share sent successfully.");
+        } catch (error) {
+            console.error("Failed to send Kakao share:", error);
+        }
+    } else {
+        console.error("Kakao SDK is not initialized or Share module is unavailable.");
     }
-  };
-  
+};
