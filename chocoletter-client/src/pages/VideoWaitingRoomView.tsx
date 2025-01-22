@@ -4,9 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
 
-import { MyFaceInVideoWaitingRoom } from "../components/videoWaitingRoom/MyFaceInVideoWaitingRoom";
-import LetterInVideoModal from "../components/videoWaitingRoom/modal/LetterInVideoModal";
-import LetterInVideoOpenButton from "../components/videoWaitingRoom/button/LetterInVideoOpenButton";
+import { MyFaceInVideoWaitingRoom } from "../components/video-waiting-room/MyFaceInVideoWaitingRoom";
+import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
+import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css";
 // import { useSocket } from "../hooks/useSocket";
 
