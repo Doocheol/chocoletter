@@ -1,19 +1,19 @@
 import React from "react";
 
 type GoBackButtonProps = {
-    imageUrl?: string; // 버튼 이미지 경로 (선택적)
-    altText?: string;  // 이미지 대체 텍스트
+    icon: React.ReactNode; // 아이콘 컴포넌트
+    altText?: string; // 접근성 텍스트
     className?: string; // 추가 클래스
 };
 
-const GoBackButton = ({
-    imageUrl = "", // 기본값 빈 문자열
-    altText = "뒤로가기",
+export const GoBackButton = ({
+    icon,
+    altText = "뒤로가기 버튼",
     className = "",
 }: GoBackButtonProps) => {
     const baseStyle =
-        "absolute left-0 w-[50px] h-[50px] bg-cover z-10";
-
+        "absolute top-4 left-4 flex items-center justify-center w-12 h-12 bg-white rounded-full shadow hover:bg-gray-200";
+    
     const handleBackClick = () => {
         window.history.back(); // 브라우저 이전 페이지로 이동
     };
@@ -22,12 +22,9 @@ const GoBackButton = ({
         <button
             onClick={handleBackClick}
             className={`${baseStyle} ${className}`}
-            style={{
-                backgroundImage: `url(${imageUrl})`, 
-            }}
-            aria-label={altText} 
-        />
+            aria-label={altText}
+        >
+            {icon}
+        </button>
     );
 };
-
-export { GoBackButton };
