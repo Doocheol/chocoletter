@@ -72,4 +72,9 @@ public class GiftBoxController implements GiftBoxSwagger {
         return ResponseEntity.ok(giftBoxService.findFriendGiftBox(giftBoxId));
     }
 
+    @GetMapping("/{giftBoxId}/unboxing/schedule")
+    public ResponseEntity<?> findUnboxingTimes(@PathVariable("giftBoxId") Long giftBoxId) {
+        return ResponseEntity.ok(giftBoxService.findUnBoxingTimes(giftBoxId));
+    }
+
 }
