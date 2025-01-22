@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -83,7 +84,7 @@ public class GiftController implements GiftSwagger {
     }
 
     @GetMapping("/test")
-    public void getEncryptedIdForTest() throws Exception {
-        System.out.println(idEncryptionUtil.encrypt(1L));
+    public void getEncryptedIdForTest(@RequestParam Long id) throws Exception {
+        System.out.println(idEncryptionUtil.encrypt(id));
     }
 }
