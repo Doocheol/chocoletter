@@ -48,6 +48,6 @@ declare namespace Kakao {
     }
 }
 
-// interface Window {
-//     Kakao: typeof Kakao;
-// }
+interface Window {
+    Kakao: typeof Kakao;
+}
