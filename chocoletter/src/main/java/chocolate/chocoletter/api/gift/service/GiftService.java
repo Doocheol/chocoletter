@@ -76,6 +76,16 @@ public class GiftService {
         return GiftUnboxingInvitationResponseDto.of(formattedUnboxingTime);
     }
 
+    public List<String> findReceiverUnboxingTimes(Long memberId) {
+        List<Gift> receiverSpecialGifts = giftRepository.findReceiverSpecialGifts(memberId, GiftType.SPECIAL);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return receiverSpecialGifts.stream()
+                .map(Gift::getUnBoxingTime)
+                .distinct()
+                .map(dateTime -> dateTime.format(formatter))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void acceptUnboxingInvitation(Long memberId, Long giftId) {
         Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
