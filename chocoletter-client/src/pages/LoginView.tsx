@@ -1,14 +1,12 @@
-// import { useRecoilState } from "recoil";
-// import { useEffect } from "react";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Onboarding from "../components/onboarding/Onboarding";
 import DefaultButton from "../components/common/DefaultButton";
 
 function LoginView() {
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleLoginSuccess = (isFirstLogin: boolean) => {
 		if (isFirstLogin) {
@@ -16,7 +14,7 @@ function LoginView() {
 			// navigate("/tutorial-focus");
 		} else {
 			toast.success("로그인에 성공했습니다."); // 변경: success 메시지
-			// navigate("/main-my-before");
+			navigate("/main/my/before"); // 이동 페이지
 		}
 	};
 
@@ -29,7 +27,7 @@ function LoginView() {
 
 	return (
 		<div className="h-[calc((var(--vh, 1vh) * 100)-8rem)]">
-			<div className="h-1/3 flex justify-center items-center">
+			<div className="flex justify-center items-center">
 				<img
 					src={chocoletter_login_view_logo}
 					alt="chocoletter_logo"
