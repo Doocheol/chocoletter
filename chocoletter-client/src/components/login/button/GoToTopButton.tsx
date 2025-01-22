@@ -46,7 +46,7 @@ const GoToTopButton: React.FC<GoToTopButtonProps> = ({
 				<button
 					onClick={scrollToTop}
 					className={classNames(
-						"px-2 bg-white text-black rounded-md shadow-lg hover:bg-gray-200 transition-colors duration-300",
+						"px-2 h-10 bg-white text-black rounded-full shadow-lg hover:bg-gray-200 transition-colors duration-300",
 
 						className
 					)}
