@@ -6,8 +6,8 @@ import LoginView from "./pages/LoginView";
 // import { isLoginAtom } from "./atoms/auth/userAtoms";
 // import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
-import WaitingRoomView from "./pages/VideoWaitingRoomView";
-// import VideoRoomView from "./pages/VideoRoomView";
+import { WaitingRoomView } from "./pages/VideoWaitingRoomView";
+import { VideoRoomView } from "./pages/VideoRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
 import { ToastContainer } from "react-toastify";
@@ -53,7 +53,7 @@ function App() {
 						path="/video/waiting-room/:sessionIdInit"
 						element={<WaitingRoomView />}
 					/>
-					{/* <Route path="/video/room" element={<VideoRoomView />} /> */}
+					<Route path="/video/room" element={<VideoRoomView />} />
 				</Routes>
 			</BrowserRouter>
 			<ToastContainer
