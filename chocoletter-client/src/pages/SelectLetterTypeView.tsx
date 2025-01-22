@@ -4,7 +4,7 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 
-function ReceiveView() {
+function SelectLetterTypeView() {
     const navigate = useNavigate();
 
     const handleAccept = () => {
@@ -50,4 +50,4 @@ function ReceiveView() {
     );
 }
 
-export default ReceiveView;
+export default SelectLetterTypeView;
