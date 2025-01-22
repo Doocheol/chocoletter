@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
+import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 
 // 이 부분은 연습 페이지입니다. 기존 (혹은 추후) LetterViewrk 가 모두 대체할 예정이므로, 안 봐도 됩니다.
 const WriteGeneralLetterView = () => {
@@ -12,6 +13,13 @@ const WriteGeneralLetterView = () => {
              <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
             
             <div className="absolute mt-24">
+                <div className="h-1/3 flex justify-center items-center mb-24">
+                    <img
+                        src={chocoletter_login_view_logo}
+                        alt="chocoletter_login_view_logo"
+                        className="max-h-40"
+                    />
+                </div>
 
 			<h1 className="text-center">현재 페이지</h1>
             </div>
