@@ -74,6 +74,13 @@ public class GiftController implements GiftSwagger {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("{giftId}/type")
+    public ResponseEntity<?> changeToGeneralGift(@PathVariable @DecryptedId Long giftId) {
+        // 초대를 보낸 유저로 로그인을 한다고 가정
+        Long memberId = 2L;
+        giftService.changeToGeneralGift(memberId, giftId);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/test")
     public void getEncryptedIdForTest() throws Exception {

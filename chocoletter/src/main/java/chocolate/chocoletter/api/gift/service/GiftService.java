@@ -100,6 +100,15 @@ public class GiftService {
         // TODO : senderId 에게 언박싱 일정 거절 알림 전송
     }
 
+    @Transactional
+    public void changeToGeneralGift(Long memberId, Long giftId) {
+        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+        if (!gift.getSenderId().equals(memberId)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        gift.changeToGeneralGift();
+    }
+
     private String formatUnboxingTime(LocalDateTime unboxingTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return unboxingTime.format(formatter);

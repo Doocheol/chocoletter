@@ -148,4 +148,24 @@ public interface GiftSwagger {
             }
     )
     ResponseEntity<?> rejectUnboxingInvitation(Long giftId);
+
+    @Operation(
+            summary = "특별 선물에서 일반 선물 변경",
+            description = "언박싱 초대 거절 시, 보낸 사람은 일반 초콜릿으로 바꿀 수 있습니다."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 변경",
+                            content = @Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "403", description = "보낸 사람만 초대를 다시 할 수 있습니다."),
+                    @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
+            }
+    )
+    ResponseEntity<?> changeToGeneralGift(Long giftId);
 }
