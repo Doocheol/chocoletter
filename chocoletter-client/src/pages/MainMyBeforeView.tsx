@@ -52,7 +52,7 @@ const MainMyBeforeView: React.FC = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-screen">
+		<div className="flex flex-col min-h-screen">
 			{/* 헤더 */}
 			<header className="flex justify-between items-center p-4 bg-white shadow-md">
 				<button onClick={handleHome} className="text-2xl">

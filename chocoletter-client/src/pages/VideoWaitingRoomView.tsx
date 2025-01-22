@@ -1,30 +1,30 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { useRecoilState } from "recoil";
-import { sessionAtom, tokenAtom } from "../atoms/video/videoAtoms"
+import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
 
-import { MyFaceInVideoWaitingRoom } from "../components/videoWaitingRoom/MyFaceInVideoWaitingRoom";
-import LetterInVideoModal from "../components/videoWaitingRoom/modal/LetterInVideoModal";
-import LetterInVideoOpenButton from "../components/videoWaitingRoom/button/LetterInVideoOpenButton";
+import { MyFaceInVideoWaitingRoom } from "../components/video-waiting-room/MyFaceInVideoWaitingRoom";
+import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
+import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css";
 // import { useSocket } from "../hooks/useSocket";
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
-
 // API를 받아옵니다.
 
-export default function WaitingRoom() {
-    const waitingComment = useMemo(() => [
-        "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
-        "5분 안에 연결되지 않으면 화상채팅 기회가 사라져요 ㅠㅠ",
-        "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
-        "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"], []);
+const waitingComment = [
+    "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
+    "5분 안에 연결되지 않으면 화상채팅 기회가 사라져요 ㅠㅠ",
+    "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
+    "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"];
+
+export const WaitingRoomView = () => {
     const { sessionIdInit } = useParams();
-    const [isTimerOn, setIsTimerOn] = useState(false);
+    const [isTimerOn, setIsTimerOn] = useState(true);
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
-    // const [isBothJoin, setIsBothJoin] = useState(false);
+    // const [isBothJoin, setIsBothJoin] = useState(0);
+    const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [comment, setComment] = useState(waitingComment[2]);
@@ -43,50 +43,43 @@ export default function WaitingRoom() {
         setIsOpenLetter(false);
     }
 
+    // 방 참가 인원 API 요청 부분(예정)
+
+    // video-room 연결 테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // token 동기화를 위해 localStorage 사용
     useEffect(() => {
-        if (!sessionIdInit) return;
-
-
-        const createSession = async () => {
-            const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionIdInit }, {
-                headers: { 'Content-Type': 'application/json', },
-            });
-            return response.data; // 세션 ID 받아오기
-        }
-
-        const getSessionId = async () => {
-            try {
-                const newSessionId = await createSession();
-                setSessionValue(newSessionId);
-                setIsTimerOn(true);
-            } catch (err) {
-                console.error(err);
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === 'isBothJoin' && event.newValue !== null && Number(event.newValue) > 1) {
+                navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
             }
-        }
+        };
 
-        getSessionId();
+        window.addEventListener('storage', handleStorageChange);
 
-    }, [sessionIdInit, setSessionValue]);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, [navigate, sessionIdInit]);
 
     useEffect(() => {
-        const getToken = async () => {
-            const aToken = await createToken(sessionValue);
-            console.log(aToken)
-            setTokenValue(aToken);
-        }
+        localStorage.setItem('isBothJoin', isBothJoin.toString());
+        console.log('is', isBothJoin, 'and', sessionIdInit);
+        const goView = async () => {
+            if (isBothJoin >= 2) {
+                console.log('here', sessionIdInit);
+                const timeout = await setTimeout(() => {
+                    navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
+                }, 3000);
 
+                return () => clearTimeout(timeout);
+            }
+        };
+        goView();
+    }, [isBothJoin]);
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
 
-        const createToken = async (sessionValue: string) => {
-            const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionValue + '/connections', {}, {
-                headers: { 'Content-Type': 'application/json', },
-            });
-            return response.data; // The token
-        }
-
-        getToken();
-    }, [sessionValue, setTokenValue]);
-
-    // 3초마다 상단 메세지가 변경경
+    // 3초마다 상단 메세지가 변경
     useEffect(() => {
         const interval = setInterval(() => {
             setComment(waitingComment[cnt]);
@@ -94,12 +87,7 @@ export default function WaitingRoom() {
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [cnt, waitingComment]);
-
-    // RTC가 약속된 두 명이 들어오면 비디오 룸으로 이동
-    useEffect(() => {
-
-    })
+    }, [cnt]);
 
     // 5분동안 타이머 및 지나면 방 폭파
     useEffect(() => {
@@ -125,7 +113,6 @@ export default function WaitingRoom() {
 
         return () => clearInterval(interval);
     }, [isTimerOn, remainTime, navigate])
-
 
     return (
         <>
