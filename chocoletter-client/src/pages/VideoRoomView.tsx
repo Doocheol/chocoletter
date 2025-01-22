@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import classes from '../styles/videoRoom.module.css';
-import CloseVideoRoomButton from '../components/videoRoom/button/CloseVideoRoomButton';
-import OutVideoRoomModal from '../components/videoRoom/modal/OutVideoRoomModal';
+import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
+import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
 
 import { Publisher, Subscriber } from 'openvidu-browser';
 import { joinSession } from '../utils/openvidu';
