@@ -8,11 +8,11 @@ function SelectGiftTypeView() {
     const navigate = useNavigate();
 
     const handleAccept = () => {
-        navigate("/write/general"); 
+        navigate("/settime"); 
     };
 
     const handleReject = () => {
-        navigate("/write/question");
+        navigate("/sentgift");
     };
 
     return (
