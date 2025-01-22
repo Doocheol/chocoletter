@@ -50,7 +50,7 @@ const WriteGeneralLetterView = () => {
                 />
 
                 {/* 편지 작성 완료 버튼 - 초콜릿 선택 화면으로 이동 */}
-                <div className="mb-8 text-center">
+                <div className="text-center">
                     <Button
                         onClick={goBackMainMyEvent}
                         className="w-[300px] h-[50px] px-1 mb-4" 
