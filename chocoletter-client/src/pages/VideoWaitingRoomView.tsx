@@ -43,95 +43,43 @@ export const WaitingRoomView = () => {
         setIsOpenLetter(false);
     }
 
+    // 방 참가 인원 API 요청 부분(예정)
+
     // video-room 연결 테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // token 동기화를 위해 localStorage 사용
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
             if (event.key === 'isBothJoin' && event.newValue !== null && Number(event.newValue) > 1) {
-                navigate('/video/room', { state: { sessionId: sessionIdInit } });
+                navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
             }
         };
 
         window.addEventListener('storage', handleStorageChange);
 
         return () => window.removeEventListener('storage', handleStorageChange);
-    }, [sessionValue, tokenValue, navigate]);
+    }, [navigate, sessionIdInit]);
 
     useEffect(() => {
         localStorage.setItem('isBothJoin', isBothJoin.toString());
-        console.log('is', isBothJoin)
+        console.log('is', isBothJoin, 'and', sessionIdInit);
+        const goView = async () => {
+            if (isBothJoin >= 2) {
+                console.log('here', sessionIdInit);
+                const timeout = await setTimeout(() => {
+                    navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
+                }, 3000);
+
+                return () => clearTimeout(timeout);
+            }
+        };
+        goView();
     }, [isBothJoin]);
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
 
-
-    // useEffect(() => {
-    //     if (!sessionIdInit) return;
-
-
-    //     const createSession = async () => {
-    //         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionIdInit }, {
-    //             headers: { 'Content-Type': 'application/json', },
-    //         });
-    //         return response.data; // 세션 ID 받아오기
-    //     }
-
-    //     const getSessionId = async () => {
-    //         try {
-    //             const newSessionId = await createSession();
-    //             setSessionValue(newSessionId);  // sessionId 할당
-    //             setIsTimerOn(true);             // 5분 타이머 작동(이거는 바꿔야 함-입장 시 바로 시작 예약시간 기준으로 5분전으로 변경경)
-    //         } catch (err) {
-    //             console.error(err);
-    //         }
-    //     }
-
-    //     getSessionId();
-
-    // }, [sessionIdInit, setSessionValue]);
-
-    // useEffect(() => {
-    //     const getToken = async () => {
-    //         const aToken = await createToken(sessionValue);
-    //         const url = new URL(aToken);
-    //         const params = new URLSearchParams(url.search);
-    //         const exToken = params.get("token") as string;
-    //         console.log('be', exToken)
-    //         setTokenValue(exToken);
-    //     }
-
-    //     const createToken = async (sessionValue: string) => {
-    //         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionValue + '/connections', {}, {
-    //             headers: { 'Content-Type': 'application/json', },
-    //         });
-    //         return response.data; // The token
-    //     }
-
-    //     getToken();
-
-    //     const getConnection = async () => {
-    //         try {
-    //             const response = await axios.get(
-    //                 `http://localhost:4443/openvidu/api/sessions/${sessionValue}/connection`,
-    //                 {
-    //                     headers: {
-    //                         Authorization: 'Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU'
-    //                     }
-    //                 }
-    //             )
-    //             setIsBothJoin(response.data["numberOfElements"]);
-    //             console.log(isBothJoin);
-    //         } catch {
-    //             console.log('error')
-    //         }
-    //     }
-
-    //     getConnection();
-    // }, [sessionValue, setTokenValue]);
-
-    // 3초마다 상단 메세지가 변경경
+    // 3초마다 상단 메세지가 변경
     useEffect(() => {
         const interval = setInterval(() => {
             setComment(waitingComment[cnt]);
@@ -165,17 +113,6 @@ export const WaitingRoomView = () => {
 
         return () => clearInterval(interval);
     }, [isTimerOn, remainTime, navigate])
-
-    // 임시로 2명이면 넘어가요
-    // useEffect(() => {
-    //     if (isBothJoin <= 1) return;
-
-    //     const timeout = setTimeout(() => {
-    //         navigate('/video/room', { state: { sessionId: sessionIdInit } });
-    //     }, 5000);
-
-    //     return () => clearTimeout(timeout);
-    // }, [isBothJoin, navigate, sessionIdInit])
 
     return (
         <>

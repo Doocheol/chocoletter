@@ -1,10 +1,9 @@
-import { StreamManager } from 'openvidu-browser';
+// import { StreamManager } from 'openvidu-browser';
 import { OpenVidu, Subscriber } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidu";
 
 import axios from 'axios';
-import React, { Component } from 'react';
-import UserVideoComponent from './UserVideoComponent';
+import React from 'react';
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
@@ -16,9 +15,9 @@ export const joinSession = async (
 	if (!user.sessionId) return;
 
 	// Openvidu 객체 생성
-    const OV = new OpenVidu();
+	const OV = new OpenVidu();
 
-    // 세션 생성
+	// 세션 생성
 	const session = OV.initSession();
 
 	// stream 생성
@@ -87,151 +86,46 @@ export const joinSession = async (
 				console.log('토큰 연결 오류:', error.code, error.message);
 			});
 	});
-},
-
-export const leaveSession = async () => {
-
-	// --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-
-	const mySession = state.session;
-
-	if (mySession) {
-		mySession.disconnect();
-	}
-
-	// Empty all properties...
-	this.OV = null;
-	this.setState({
-		session: undefined,
-		subscribers: [],
-		mySessionId: 'SessionA',
-		myUserName: 'Participant' + Math.floor(Math.random() * 100),
-		mainStreamManager: undefined,
-		publisher: undefined
-	});
 }
 
-render() {
-	const mySessionId = this.state.mySessionId;
-	const myUserName = this.state.myUserName;
+// export const leaveSession = async () => {
 
-	return (
-		<div className="container">
-			{this.state.session === undefined ? (
-				<div id="join">
-					<div id="img-div">
-						<img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo" />
-					</div>
-					<div id="join-dialog" className="jumbotron vertical-center">
-						<h1> Join a video session </h1>
-						<form className="form-group" onSubmit={this.joinSession}>
-							<p>
-								<label>Participant: </label>
-								<input
-									className="form-control"
-									type="text"
-									id="userName"
-									value={myUserName}
-									onChange={this.handleChangeUserName}
-									required
-								/>
-							</p>
-							<p>
-								<label> Session: </label>
-								<input
-									className="form-control"
-									type="text"
-									id="sessionId"
-									value={mySessionId}
-									onChange={this.handleChangeSessionId}
-									required
-								/>
-							</p>
-							<p className="text-center">
-								<input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
-							</p>
-						</form>
-					</div>
-				</div>
-			) : null}
+// 	// --- 7) Leave the session by calling 'disconnect' method over the Session object ---
 
-			{this.state.session !== undefined ? (
-				<div id="session">
-					<div id="session-header">
-						<h1 id="session-title">{mySessionId}</h1>
-						<input
-							className="btn btn-large btn-danger"
-							type="button"
-							id="buttonLeaveSession"
-							onClick={this.leaveSession}
-							value="Leave session"
-						/>
-						<input
-							className="btn btn-large btn-success"
-							type="button"
-							id="buttonSwitchCamera"
-							onClick={this.switchCamera}
-							value="Switch Camera"
-						/>
-					</div>
+// 	const mySession = state.session;
 
-					{this.state.mainStreamManager !== undefined ? (
-						<div id="main-video" className="col-md-6">
-							<UserVideoComponent streamManager={this.state.mainStreamManager} />
+// 	if (mySession) {
+// 		mySession.disconnect();
+// 	}
 
-						</div>
-					) : null}
-					<div id="video-container" className="col-md-6">
-						{this.state.publisher !== undefined ? (
-							<div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-								<UserVideoComponent
-									streamManager={this.state.publisher} />
-							</div>
-						) : null}
-						{this.state.subscribers.map((sub, i) => (
-							<div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
-								<span>{sub.id}</span>
-								<UserVideoComponent streamManager={sub} />
-							</div>
-						))}
-					</div>
-				</div>
-			) : null}
-		</div>
-	);
-}
+// 	// Empty all properties...
+// 	this.OV = null;
+// 	this.setState({
+// 		session: undefined,
+// 		subscribers: [],
+// 		mySessionId: 'SessionA',
+// 		myUserName: 'Participant' + Math.floor(Math.random() * 100),
+// 		mainStreamManager: undefined,
+// 		publisher: undefined
+// 	});
+// }
 
-
-/**
- * --------------------------------------------
- * GETTING A TOKEN FROM YOUR APPLICATION SERVER
- * --------------------------------------------
- * The methods below request the creation of a Session and a Token to
- * your application server. This keeps your OpenVidu deployment secure.
- *
- * In this sample code, there is no user control at all. Anybody could
- * access your application server endpoints! In a real production
- * environment, your application server must identify the user to allow
- * access to the endpoints.
- *
- * Visit https://docs.openvidu.io/en/stable/application-server to learn
- * more about the integration of OpenVidu in your application server.
- */
+// 세션ID와 토큰 생성
 const getToken = async (roomId: string) => {
 	const sessionId = await createSession(roomId);
 	return await createToken(sessionId);
-}
+};
 
 const createSession = async (roomId: string) => {
 	const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: roomId }, {
 		headers: { 'Content-Type': 'application/json', },
 	});
 	return response.data; // The sessionId
-}
+};
 
 const createToken = async (sessionId: string) => {
 	const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
 		headers: { 'Content-Type': 'application/json', },
 	});
 	return response.data; // The token
-}
+};
