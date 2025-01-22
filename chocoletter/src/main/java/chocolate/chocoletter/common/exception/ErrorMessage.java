@@ -30,6 +30,7 @@ public enum ErrorMessage {
     ERR_NOT_FOUND,
     ERR_NOT_RESOURCE,
     ERR_NOT_FOUND_GIFT,
+    ERR_NOT_FOUND_UNBOXING_ROOM,
 
     /**
      * 500 INTERNAL_SERVER_ERROR
