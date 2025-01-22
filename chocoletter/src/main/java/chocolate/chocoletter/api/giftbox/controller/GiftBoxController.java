@@ -4,11 +4,13 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.service.GiftBoxService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,4 +58,13 @@ public class GiftBoxController implements GiftBoxSwagger {
         giftBoxService.sendSpecialQuestionGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<?> findGiftCount() {
+        // 로그인 한 유저 찾아오기
+        Long memberId = 1L;
+        Integer giftCount = giftBoxService.findGiftCount(memberId);
+        return ResponseEntity.ok(GiftCountResponseDto.of(giftCount));
+    }
+
 }

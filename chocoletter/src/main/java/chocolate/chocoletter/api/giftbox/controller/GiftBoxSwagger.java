@@ -4,6 +4,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -130,4 +131,20 @@ public interface GiftBoxSwagger {
                     )
             ) @RequestBody
             SpecialQuestionGiftRequestDto requestDto);
+
+    @Operation(
+            summary = "내 선물 갯수 조회",
+            description = "로그인한 사용자의 선물 개수를 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GiftCountResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content)
+    })
+    ResponseEntity<?> findGiftCount();
 }

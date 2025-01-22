@@ -28,42 +28,50 @@ public class GiftBoxService {
 
 
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
-        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
+        receiverGiftBox.addGiftCount();
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.Content());
         letterService.saveLetter(letter);
     }
 
     public void sendGeneralQuestionGift(Long senderId, Long giftBoxId, GeneralQuestionRequestDto requestDto) {
-        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
+        receiverGiftBox.addGiftCount();
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
     }
 
     public void sendSpecialFreeGift(Long senderId, Long giftBoxId, SpecialFreeGiftRequestDto requestDto) {
-        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 parseDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
+        receiverGiftBox.addGiftCount();
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
     }
 
     public void sendSpecialQuestionGift(Long senderId, Long giftBoxId, SpecialQuestionGiftRequestDto requestDto) {
-        GiftBox receiverGiftBox = findGiftBoxByGiftBoxId(giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 parseDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
+        receiverGiftBox.addGiftCount();
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
     }
 
-    private GiftBox findGiftBoxByGiftBoxId(Long giftBoxId) {
+    public Integer findGiftCount(Long memberId) {
+        return giftBoxRepository.findGiftCountByGiftBoxId(memberId);
+    }
+
+    private GiftBox findGiftBox(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {
             throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND);
