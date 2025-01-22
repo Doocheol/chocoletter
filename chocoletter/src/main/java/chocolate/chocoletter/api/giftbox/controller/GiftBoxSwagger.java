@@ -98,8 +98,8 @@ public interface GiftBoxSwagger {
             SpecialFreeGiftRequestDto requestDto);
 
     @Operation(
-            summary = "특별 질물 선물 전송",
-            description = "특정 GiftBox에 특별 질물 선물을 전송합니다. 로그인한 사용자의 ID가 필요합니다.",
+            summary = "특별 질문 선물 전송",
+            description = "특정 GiftBox에 특별 질문 선물을 전송합니다. 로그인한 사용자의 ID가 필요합니다.",
             tags = {"GiftBox"}
     )
     @ApiResponses(value = {
