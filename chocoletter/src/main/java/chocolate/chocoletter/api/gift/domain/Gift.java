@@ -83,5 +83,8 @@ public class Gift extends BaseTimeEntity {
 
     public void changeToGeneralGift() {
         this.type = GiftType.GENERAL;
+        this.isAccept = null;
+        this.rejectCount = null;
+        this.unBoxingTime = null;
     }
 }
