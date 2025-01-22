@@ -1,7 +1,11 @@
 package chocolate.chocoletter.api.gift.service;
 
+import static chocolate.chocoletter.common.util.DateTimeUtil.formatDateTime;
+import static chocolate.chocoletter.common.util.DateTimeUtil.parseTimeToDateTime;
+
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
+import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
@@ -11,10 +15,10 @@ import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
 import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
+import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,8 +76,24 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        String formattedUnboxingTime = formatUnboxingTime(gift.getUnBoxingTime());
+        String formattedUnboxingTime = formatDateTime(gift.getUnBoxingTime());
         return GiftUnboxingInvitationResponseDto.of(formattedUnboxingTime);
+    }
+
+    @Transactional
+    public void sendUnboxingInvitation(Long senderId, Long giftId, UnboxingInvitationRequestDto requestDto) {
+        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+        if (!gift.getSenderId().equals(senderId)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        if (gift.getType() == GiftType.GENERAL) {
+            throw new BadRequestException(ErrorMessage.ERR_INVALID_GIFT_TYPE);
+        }
+        if (gift.getIsAccept()) {
+            throw new BadRequestException(ErrorMessage.ERR_ALREADY_ACCEPT_UNBOXING_INVITATION);
+        }
+        gift.updateUnBoxingTime(parseTimeToDateTime(requestDto.unBoxingTime()));
+        // TODO : receiverId 에게 새로운 초대장 알림톡 발송
     }
 
     public List<String> findReceiverUnboxingTimes(Long memberId) {
@@ -129,11 +149,7 @@ public class GiftService {
         gift.changeToGeneralGift();
     }
 
-    private String formatUnboxingTime(LocalDateTime unboxingTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return unboxingTime.format(formatter);
-    }
-
+    @Transactional
     public void saveGift(Gift gift) {
         giftRepository.save(gift);
     }
