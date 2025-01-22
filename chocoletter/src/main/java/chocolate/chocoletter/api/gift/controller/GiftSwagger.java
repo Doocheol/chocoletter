@@ -1,14 +1,18 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface GiftSwagger {
 
@@ -108,6 +112,43 @@ public interface GiftSwagger {
             }
     )
     ResponseEntity<?> findUnboxingInvitation(Long giftId);
+
+    @Operation(
+            summary = "언박싱 초대장 전송",
+            description = "언박싱 초대장을 전송합니다."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 전송",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = GiftUnboxingInvitationResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "이미 수락된 선물에 대해서는 초대장을 보낼 수 없습니다."),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "403", description = "해당 선물을 보낸 유저만 초대장을 보낼 수 있습니다"),
+                    @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
+            }
+    )
+    ResponseEntity<?> sendUnboxingInvitation(
+            @Parameter(
+                    description = "언박싱 초대장을 보낼 선물의 ID",
+                    required = true
+            )
+            @PathVariable("giftId") Long giftId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "언박싱 초대 시각을 포함한 요청 본문",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UnboxingInvitationRequestDto.class)
+                    )
+            ) @RequestBody
+            UnboxingInvitationRequestDto requestDto
+    );
 
     @Operation(
             summary = "언박싱 초대장 수락",
