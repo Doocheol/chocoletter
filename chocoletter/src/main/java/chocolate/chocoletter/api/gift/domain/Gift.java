@@ -87,4 +87,8 @@ public class Gift extends BaseTimeEntity {
         this.rejectCount = null;
         this.unBoxingTime = null;
     }
+
+    public void updateUnBoxingTime(LocalDateTime unBoxingTime) {
+        this.unBoxingTime = unBoxingTime;
+    }
 }
