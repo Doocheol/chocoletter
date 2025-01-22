@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ShuffleButton } from "./ShuffleButton";
 
 function QuestionLetterForm({ ...props }) {
     const [nickname, setNickname] = useState("");
@@ -69,9 +70,16 @@ function QuestionLetterForm({ ...props }) {
                 />
             </div>
             <div className="text-right mb-5 ">
-                <h1 className="w-[300px] h-[50px] flex items-center justify-center text-center bg-gray-100 border-4 border-gray-300 outline-none rounded-lg">
-                    랜덤질문이 들어갈 자리입니다.
-                </h1>
+                <div className="w-[300px] flex flex-row items-center justify-between ">
+                    <div className="w-[250px] h-[70px] flex text-center p-2 bg-gray-100 border-4 border-gray-300 outline-none rounded-lg">
+                        <h1>
+                            랜덤질문이 들어갈 자리입니다. 어떤 질문이 들어올까요?
+                        </h1>
+                    </div>
+                    <div>
+                        <ShuffleButton altText="질문 섞기 버튼" />
+                    </div>
+                </div>
                 <textarea
                     value={content}
                     className="block w-[300px] h-[300px] text-center mx-auto p-2 border-4 border-gray-300 outline-none rounded-lg resize-none"
