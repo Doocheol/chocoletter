@@ -10,8 +10,10 @@ import { WaitingRoomView } from "./pages/VideoWaitingRoomView";
 import { VideoRoomView } from "./pages/VideoRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
+import SelectGiftTypeView from "./pages/SelectGiftTypeView"
 import SelectLetterTypeView from "./pages/SelectLetterTypeView";
 import WriteGeneralLetterView from "./pages/WriteGeneralLetterView";
+import SentGiftView from "./pages/SentGiftView";
 import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
 
@@ -53,6 +55,8 @@ function App() {
 					<Route path="/letter" element={<LetterView />} />
 					<Route path="/selectletter" element={<SelectLetterTypeView />} />
 					<Route path="/write/general" element={<WriteGeneralLetterView />} />
+					<Route path="/sentgift" element={<SentGiftView />} />
+					<Route path="/selectgift" element={<SelectGiftTypeView />} />
 					<Route
 						path="/video/waiting-room/:sessionIdInit"
 						element={<WaitingRoomView />}
