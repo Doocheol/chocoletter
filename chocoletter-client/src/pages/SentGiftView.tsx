@@ -13,7 +13,7 @@ const SentGiftView = () => {
         const interval = setInterval(() => {
             setRemainTime((prev) => {
                 if (prev === 1) {
-                    navigate('/main/my/before');
+                    navigate('/main/my/before'); // 추후 수정 예정
                     clearInterval(interval);
                     return 1;
                 } else {
@@ -26,7 +26,7 @@ const SentGiftView = () => {
     }, [])
 
     const goBackMainMyEvent = () => {
-        navigate('/main/my/before')
+        navigate('/main/my/before')  // 추후 수정 예정
     }
     
 	return (
