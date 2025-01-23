@@ -50,7 +50,7 @@ const TestPage: React.FC = () => {
 			{/* 헤더 */}
 			<div className="flex justify-center items-center mb-6">
 				<h1 className="text-2xl font-bold text-hrtColorPink">
-					Test Page
+					테스트 해볼까요??
 				</h1>
 			</div>
 
