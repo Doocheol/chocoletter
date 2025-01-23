@@ -10,6 +10,7 @@ import LetterView from "./pages/LetterView";
 import SelectGiftTypeView from "./pages/SelectGiftTypeView";
 import SelectLetterTypeView from "./pages/SelectLetterTypeView";
 import WriteGeneralLetterView from "./pages/WriteGeneralLetterView";
+import WriteQuestionLetterView from "./pages/WriteQuestionLetterView";
 import SentGiftView from "./pages/SentGiftView";
 import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
@@ -23,6 +24,9 @@ import {
 import { fetchUserInfo, login } from "./services/userApi";
 import { getUserInfo } from "./services/userInfo";
 import KakaoLoginCallback from "./components/login/KakaoLoginCallback";
+import ResetTimeView from "./pages/ResetTimeView";
+import SetTimeView from "./pages/SetTimeView";
+import RejectedView from "./pages/RejectedView";
 
 declare global {
 	interface Window {
@@ -81,36 +85,29 @@ function App() {
 						<Route index element={<LoginView />} />
 						<Route path="/*" element={<ErrorPage />} />
 						<Route path="/error" element={<ErrorPage />} />
-
 						<Route
 							path="/auth/kakao/callback"
 							element={<KakaoLoginCallback />}
 						/>
-
 						<Route
 							path="/main/my/before"
 							element={<MainMyBeforeView />}
 						/>
 						<Route path="/receive" element={<ReceiveView />} />
 						<Route path="/letter" element={<LetterView />} />
-						<Route
-							path="/selectletter"
-							element={<SelectLetterTypeView />}
-						/>
-						<Route
-							path="/write/general"
-							element={<WriteGeneralLetterView />}
-						/>
+						<Route path="/selectletter" element={<SelectLetterTypeView />} />
+						<Route path="/write/general" element={<WriteGeneralLetterView />} />
+						<Route path="/write/question" element={<WriteQuestionLetterView />} />
 						<Route path="/sentgift" element={<SentGiftView />} />
-						<Route
-							path="/selectgift"
-							element={<SelectGiftTypeView />}
-						/>
+						<Route path="/selectgift" element={<SelectGiftTypeView />} />
 						<Route
 							path="/video/waiting-room/:sessionIdInit"
 							element={<WaitingRoomView />}
 						/>
 						<Route path="/video/room" element={<VideoRoomView />} />
+						<Route path="/reset-time" element={<ResetTimeView />} />
+						<Route path="/set-time" element={<SetTimeView />} />
+						<Route path="/rejected" element={<RejectedView />} />
 					</Routes>
 				</BrowserRouter>
 			</ErrorBoundary>

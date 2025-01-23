@@ -1,16 +1,19 @@
 // import { StreamManager } from 'openvidu-browser';
-import { OpenVidu, Subscriber } from 'openvidu-browser';
+import { OpenVidu } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidu";
 
 import axios from 'axios';
 import React from 'react';
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
+const APPLICATION_SERVER_URL = import.meta.env.VITE_API_SERVER_URL;
+const OPENVIDU_URL = import.meta.env.VITE_OPENVIDU_SERVER_URL
+const OPENVIDU_SECRET_BASE = import.meta.env.VITE_OPENVIDU_SECRET_BASE
 
 export const joinSession = async (
 	user: User,
 	setSessionId: React.Dispatch<React.SetStateAction<string | undefined>>,
 	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
+	setIsTerminate: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
 	if (!user.sessionId) return;
 
@@ -44,6 +47,11 @@ export const joinSession = async (
 			}
 		})
 	});
+
+	session.on("connectionDestroyed", (event) => {
+		console.log("회의 종료", event.type)
+		setIsTerminate(true)
+	})
 
 	// On every asynchronous exception...
 	session.on('exception', (exception) => {
@@ -88,27 +96,41 @@ export const joinSession = async (
 	});
 }
 
-// export const leaveSession = async () => {
+export const leaveSession = async (
+	manageVideo: VideoState,
+	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
+	setIsTerminate: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+	if (manageVideo.session) {
+		try {
+			// const Connections = await getConnections(manageVideo.session.sessionId);
+			// Connections["content"].map((connection: any) => {
+			// 	manageVideo.session?.forceDisconnect(connection);
+			// });
 
-// 	// --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-
-// 	const mySession = state.session;
-
-// 	if (mySession) {
-// 		mySession.disconnect();
-// 	}
-
-// 	// Empty all properties...
-// 	this.OV = null;
-// 	this.setState({
-// 		session: undefined,
-// 		subscribers: [],
-// 		mySessionId: 'SessionA',
-// 		myUserName: 'Participant' + Math.floor(Math.random() * 100),
-// 		mainStreamManager: undefined,
-// 		publisher: undefined
-// 	});
-// }
+			if (manageVideo.publisher) {
+				manageVideo.publisher.stream.disposeWebRtcPeer();
+				manageVideo.publisher.stream.disposeMediaStream();
+				manageVideo.publisher.stream.getMediaStream().getTracks().forEach((track) => track.stop())
+				manageVideo.publisher = undefined;
+			}
+			
+			deleteSession(manageVideo.session.sessionId);
+			manageVideo.session.disconnect();
+		} catch (err) {
+			console.log("연결 해제 오류 : ", err)
+		} finally {
+			setVideo((prevVideo) => ({
+				...prevVideo,
+				session: undefined,
+				mainStreamManager: undefined,
+				publisher: undefined,
+				subscribers: [],
+			}));
+			setIsTerminate(true);
+		}
+	}
+}
 
 // 세션ID와 토큰 생성
 const getToken = async (roomId: string) => {
@@ -129,3 +151,13 @@ const createToken = async (sessionId: string) => {
 	});
 	return response.data; // The token
 };
+
+const deleteSession = async (sessionId: string) => {
+	if (sessionId === undefined) return;
+
+	await axios.delete(`${OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/`, {
+		headers: {
+			'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`,
+		}
+	})
+}

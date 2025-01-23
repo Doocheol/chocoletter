@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
-import GeneralLetterForm from "../components/write-letter/GeneralLetterForm";
+import QuestionLetterForm from "../components/write-letter/QuestionLetterForm";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 
-// 편지지 선택 뷰 이후, 자유 형식 편지지 작성 화면
-const WriteGeneralLetterView = () => {
+// 편지지 선택 뷰 이후, 랜덤 질문 형식 편지지 작성 화면
+const WriteQuestionLetterView = () => {
     const [nickname, setNickname] = useState("");
     const [content, setContent] = useState("");
     const [contentLength, setContentLength] = useState(0);
@@ -44,7 +44,7 @@ const WriteGeneralLetterView = () => {
                     />
                 </div>
                 {/* GeneralLetterForm */}
-                <GeneralLetterForm
+                <QuestionLetterForm
                     setNickname={setNickname}
                     setContent={setContent}
                 />
@@ -63,4 +63,4 @@ const WriteGeneralLetterView = () => {
 	);
 };
 
-export default WriteGeneralLetterView;
+export default WriteQuestionLetterView;
