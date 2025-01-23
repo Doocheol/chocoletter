@@ -111,7 +111,7 @@ export const leaveSession = async (
 			if (manageVideo.publisher) {
 				manageVideo.publisher.stream.disposeWebRtcPeer();
 				manageVideo.publisher.stream.disposeMediaStream();
-				manageVideo.publisher.stream.getMediaStream().getTracks().forEach((track) => track.stop())
+				// manageVideo.publisher.stream.getMediaStream().getTracks().forEach((track) => track.stop())
 				manageVideo.publisher = undefined;
 			}
 			
@@ -155,7 +155,7 @@ const createToken = async (sessionId: string) => {
 const deleteSession = async (sessionId: string) => {
 	if (sessionId === undefined) return;
 
-	await axios.delete(`${OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/`, {
+	await axios.delete(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}/`, {
 		headers: {
 			'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`,
 		}
