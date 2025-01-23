@@ -10,6 +10,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
@@ -17,6 +18,7 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,7 @@ public class GiftBoxService {
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
+        receiverGiftBox.addGeneralGiftCount();
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
     }
@@ -44,6 +47,7 @@ public class GiftBoxService {
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
+        receiverGiftBox.addGeneralGiftCount();
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
@@ -72,8 +76,9 @@ public class GiftBoxService {
         letterService.saveLetter(letter);
     }
 
-    public Integer findGiftCount(Long memberId) {
-        return giftBoxRepository.findGiftCountByGiftBoxId(memberId);
+    public GiftCountResponseDto findGiftCount(Long memberId) {
+        GiftBox giftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
+        return GiftCountResponseDto.of(giftBox);
     }
 
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
@@ -84,6 +89,15 @@ public class GiftBoxService {
     public UnboxingTimesResponseDto findUnBoxingTimes(Long giftBoxId) {
         return UnboxingTimesResponseDto.of(
                 giftService.findReceiverUnboxingTimes(findGiftBox(giftBoxId).getMember().getId()));
+    }
+
+    @Transactional
+    public void usePreviewCount(Long memberId) {
+        GiftBox myGiftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
+        if (myGiftBox.getGeneralGiftCount() < 2) {
+            throw new BadRequestException(ErrorMessage.ERR_NOT_ENOUGH_PREVIEW_GIFT_COUNT);
+        }
+        myGiftBox.usePreviewCount();
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {
