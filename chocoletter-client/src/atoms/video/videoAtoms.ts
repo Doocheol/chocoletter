@@ -18,6 +18,6 @@ export const tokenAtom = atom<string>({
 // 로컬 테스트용입니다. 오로지
 export const memberCntAtom = atom<number>({
     key: 'memberCntAtom',
-    default: 0,
+    default: 2,
     effects_UNSTABLE: [persistAtom],
 })

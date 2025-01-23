@@ -13,7 +13,7 @@ export const VideoRoomView = () => {
     const location = useLocation();
     const { sessionIdInit } = location.state
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(10);
+    const [leftTime, setLeftTime] = useState(60);
 
     // const [publishers, setPublisher] = useState<Publisher | null>(null);
     // const [subscribers, setSubscribers] = useState<(Subscriber | Subscriber)[]>([]);
