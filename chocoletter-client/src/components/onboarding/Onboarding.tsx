@@ -13,9 +13,9 @@ function Onboarding() {
 
 	return (
 		<div className="flex flex-col items-center">
-			<div className="flex flex-col h-1/3 pt-4 w-full">
+			<div className="flex flex-col h-1/3 pb-4 w-full">
 				<div className="h-1/2 my-auto">
-					<div className="bg-hrtColorYellow px-8 h-8 rounded-xl border-1 shadow-[0_4px_4px_rgba(251,139,176,1)]">
+					<div className="px-8 h-4 rounded-xl">
 						<div className="text-2xl">사랑을 전해주세요!</div>
 					</div>
 				</div>
@@ -28,7 +28,7 @@ function Onboarding() {
 				/>
 			</div> */}
 			<div className="flex flex-col h-1/3 pt-4 w-full">
-				<div className="h-1/2 my-auto pt-10">
+				<div className="h-1/2 my-auto">
 					<button
 						className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]"
 						onClick={onMyGiftBoxHandler}

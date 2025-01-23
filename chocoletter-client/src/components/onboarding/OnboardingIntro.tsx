@@ -34,15 +34,11 @@ function OnboardingIntro() {
 				onClick={onMoreClick}
 				ref={introRef}
 			>
-				<div className="pt-10 mx-10 text-sm text-hrtColorPink textShadow-none">
-					"Click me"
-					{"\n"}
-					<img
-						src={onboarding_intro_1}
-						alt="onboarding_intro_1"
-						className="p-2 max-h-24"
-					/>
-				</div>
+				<img
+					src={onboarding_intro_1}
+					alt="onboarding_intro_1"
+					className="p-2 rounded-full max-h-24"
+				/>
 			</div>
 
 			{/* 서비스 소개 제목 */}
@@ -62,7 +58,7 @@ function OnboardingIntro() {
 
 			{/* 서비스 설명 */}
 			<div
-				className={`mt-2 mb-6 ${
+				className={`mb-2 ${
 					scrollPosition > 100 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
@@ -102,14 +98,14 @@ function OnboardingIntro() {
 							그럼, 다음 단계로 두둥,,,
 						</p>
 					</span>
-					<span className="text-lg flex flex-col justify-center text-white items-center textShadow my-2 ">
-						<p className="mr-1 purple pr-2">
+					<span className="text-lg flex flex-col justify-center text-white items-center textShadow py-2 ">
+						<p className="purple pr-2">
 							나만의 초콜릿 박스를 만들어
 						</p>
-						<p className="mr-1 white text-hrtColorPink">
+						<p className="pr-1 white text-hrtColorPink">
 							소중한 사람과 공유하고
 						</p>
-						<p className="mr-1 purple">
+						<p className="pr-1 purple">
 							특별한 초콜릿도 선물해보세요!
 						</p>
 					</span>
@@ -125,7 +121,7 @@ function OnboardingIntro() {
 
 			{/* 초콜릿 상자 보러가기 링크 */}
 			<a
-				className={`mx-8 mb-8 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink ${
+				className={`mx-4 mb-4 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink ${
 					scrollPosition > 330 ? "heartbeat" : "collapse"
 				} `}
 				href="https://www.chocolate-letter.com"
@@ -136,7 +132,7 @@ function OnboardingIntro() {
 			</a>
 
 			{/* 페이지 상단으로 가기 버튼 */}
-			<div className="mx-8 mb-12 flex justify-end">
+			<div className="px-8 flex justify-end">
 				<GoToTopButton
 					// className="mb-" // 버튼의 너비와 높이 조정
 					scrollThreshold={600} // 필요에 따라 조정
@@ -144,7 +140,7 @@ function OnboardingIntro() {
 			</div>
 
 			{/* 추가 추천 문구 */}
-			<div className="flex justify-center mb-8">
+			<div className="flex justify-center">
 				<p className="text-lg text-white">
 					Sweet Valentine's Day with chocoletter!
 				</p>
