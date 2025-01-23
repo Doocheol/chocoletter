@@ -6,6 +6,8 @@ import axios from 'axios';
 import React from 'react';
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
+const OPENVIDU_URL = import.meta.env.VITE_OPENVIDU_SERVER_URL
+const OPENVIDU_SECRET_BASE = import.meta.env.VITE_OPENVIDU_SECRET_BASE
 
 export const joinSession = async (
 	user: User,
@@ -109,6 +111,7 @@ export const leaveSession = async (
 			if (manageVideo.publisher) {
 				manageVideo.publisher.stream.disposeWebRtcPeer();
 				manageVideo.publisher.stream.disposeMediaStream();
+				manageVideo.publisher.stream.getMediaStream().getTracks().forEach((track) => track.stop())
 				manageVideo.publisher = undefined;
 			}
 			
@@ -150,6 +153,8 @@ const createToken = async (sessionId: string) => {
 };
 
 const deleteSession = async (sessionId: string) => {
+	if (sessionId === undefined) return;
+
 	await axios.delete(`http://localhost:4443/openvidu/api/sessions/${sessionId}/`, {
 		headers: {
 			'Authorization': `Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU`,
