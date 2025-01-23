@@ -5,7 +5,7 @@ import { User, VideoState } from "../types/openvidu";
 import axios from 'axios';
 import React from 'react';
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
+const APPLICATION_SERVER_URL = import.meta.env.VITE_APPLICATION_SERVER_URL;
 const OPENVIDU_URL = import.meta.env.VITE_OPENVIDU_SERVER_URL
 const OPENVIDU_SECRET_BASE = import.meta.env.VITE_OPENVIDU_SECRET_BASE
 
@@ -139,14 +139,14 @@ const getToken = async (roomId: string) => {
 };
 
 const createSession = async (roomId: string) => {
-	const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: roomId }, {
+	const response = await axios.post(APPLICATION_SERVER_URL + '/api/v1/openvidu/sessions', { customSessionId: roomId }, {
 		headers: { 'Content-Type': 'application/json', },
 	});
 	return response.data; // The sessionId
 };
 
 const createToken = async (sessionId: string) => {
-	const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+	const response = await axios.post(APPLICATION_SERVER_URL + '/api/v1/openvidu/sessions/' + sessionId + '/connections', {}, {
 		headers: { 'Content-Type': 'application/json', },
 	});
 	return response.data; // The token
@@ -155,9 +155,9 @@ const createToken = async (sessionId: string) => {
 const deleteSession = async (sessionId: string) => {
 	if (sessionId === undefined) return;
 
-	await axios.delete(`http://localhost:4443/openvidu/api/sessions/${sessionId}/`, {
+	await axios.delete(`${OPENVIDU_URL}/openvidu/api/sessions/${sessionId}/`, {
 		headers: {
-			'Authorization': `Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU`,
+			'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`,
 		}
 	})
 }
