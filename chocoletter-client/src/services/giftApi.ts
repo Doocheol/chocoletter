@@ -4,9 +4,13 @@ import baseAxios from "axios";
 // giftAPI 인스턴스 설정 
 export const axios = baseAxios.create({
     baseURL: import.meta.env.VITE_API_SERVER_URL,
+    headers: {
+        "Content-Type": "application/json",
+      },
+    withCredentials: true,
   });
-
-// AccessToken 가져오기 함수
+  
+// AccessToken 가져오기
 // function getAccessToken(): string | null {
 //     return localStorage.getItem("accessToken"); 
 // }
@@ -22,6 +26,7 @@ export async function getGiftDetail(giftId: number) {
       return null;
     }
   }
+
 
 // export async function getGiftDetail(giftId: number) {
 //     try {
