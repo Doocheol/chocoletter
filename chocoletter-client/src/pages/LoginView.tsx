@@ -1,10 +1,21 @@
+import { Link } from "react-router";
 import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
+import { Button } from "../components/common/Button";
 
 function LoginView() {
 	return (
 		<div className="h-[calc((var(--vh, 1vh) * 100)-8rem)] flex flex-col items-center justify-center px-4">
+			{/* 테스트 페이지 이동 */}
+			<div className="w-full flex justify-end mt-1">
+				<Link to="/test">
+					<Button className="text-xs sm:text-sm text-blue-500 hover:underline px-2 py-1">
+						테스트
+					</Button>
+				</Link>
+			</div>
+
 			{/* 로고 이미지 */}
 			<div className="flex justify-center items-center mb-8">
 				<img

@@ -28,6 +28,7 @@ import ResetTimeView from "./pages/ResetTimeView";
 import SetTimeView from "./pages/SetTimeView";
 import RejectedView from "./pages/RejectedView";
 import useViewportHeight from "./hooks/useViewportHeight";
+import TestPage from "./pages/TestPage";
 
 declare global {
 	interface Window {
@@ -77,6 +78,7 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route index element={<LoginView />} />
+						<Route path="/test" element={<TestPage />} />
 						<Route path="/*" element={<ErrorPage />} />
 						<Route path="/error" element={<ErrorPage />} />
 						<Route
