@@ -27,6 +27,7 @@ import KakaoLoginCallback from "./components/login/KakaoLoginCallback";
 import ResetTimeView from "./pages/ResetTimeView";
 import SetTimeView from "./pages/SetTimeView";
 import RejectedView from "./pages/RejectedView";
+import useViewportHeight from "./hooks/useViewportHeight";
 
 declare global {
 	interface Window {
@@ -38,6 +39,8 @@ function App() {
 	const setIsLogin = useSetRecoilState(isLoginAtom);
 	const setUserName = useSetRecoilState(userNameAtom);
 	const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
+
+	useViewportHeight(); // 커스텀 훅 호출
 
 	useEffect(() => {
 		const initializeUser = async () => {
@@ -68,15 +71,6 @@ function App() {
 		}
 	}, [setIsLogin, setUserName, setUserProfileUrl]);
 
-	function setScreenSize() {
-		let vh = window.innerHeight * 0.01;
-		document.documentElement.style.setProperty("--vh", `${vh}px`); //"--vh"라는 속성으로 정의해준다.
-	}
-
-	useEffect(() => {
-		setScreenSize();
-	}, []);
-
 	return (
 		<div className="App bg-hrtColorBackground text-hrtColorOutline">
 			<ErrorBoundary>
@@ -95,11 +89,23 @@ function App() {
 						/>
 						<Route path="/receive" element={<ReceiveView />} />
 						<Route path="/letter" element={<LetterView />} />
-						<Route path="/selectletter" element={<SelectLetterTypeView />} />
-						<Route path="/write/general" element={<WriteGeneralLetterView />} />
-						<Route path="/write/question" element={<WriteQuestionLetterView />} />
+						<Route
+							path="/selectletter"
+							element={<SelectLetterTypeView />}
+						/>
+						<Route
+							path="/write/general"
+							element={<WriteGeneralLetterView />}
+						/>
+						<Route
+							path="/write/question"
+							element={<WriteQuestionLetterView />}
+						/>
 						<Route path="/sentgift" element={<SentGiftView />} />
-						<Route path="/selectgift" element={<SelectGiftTypeView />} />
+						<Route
+							path="/selectgift"
+							element={<SelectGiftTypeView />}
+						/>
 						<Route
 							path="/video/waiting-room/:sessionIdInit"
 							element={<WaitingRoomView />}

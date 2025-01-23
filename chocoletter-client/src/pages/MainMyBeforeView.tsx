@@ -70,11 +70,11 @@ const MainMyBeforeView: React.FC = () => {
 			</div>
 
 			{/* 본문 */}
-			<div className="flex-grow flex flex-col items-center justify-center bg-gray-100">
-				<div className="flex flex-col items-center justify-center mb-8">
+			<div className="flex flex-col items-center justify-center bg-gray-100">
+				<div className="flex flex-col items-center justify-center mb-2">
 					{/* 개봉 가능한 초콜릿 개수 */}
-					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md mb-8">
-						<span className="text-4xl font-bold text-hrtColorPink">
+					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md mb-2">
+						<span className="text-2xl font-bold text-hrtColorPink">
 							{availableGifts}
 						</span>
 						<span className="mt-2 text-lg text-gray-700">
@@ -96,7 +96,7 @@ const MainMyBeforeView: React.FC = () => {
 				{/* 내 초콜릿 박스 아이콘 */}
 				<button
 					onClick={handleMyChocolateBox}
-					className="flex items-center justify-center w-48 h-48 bg-hrtColorYellow shadow-lg hover:shadow-xl transition-shadow duration-300"
+					className="flex items-center justify-center w-20 h-20 bg-hrtColorYellow shadow-lg hover:shadow-xl transition-shadow duration-300"
 				>
 					<span className="text-3xl text-hrtColorPink">🍫</span>
 				</button>
