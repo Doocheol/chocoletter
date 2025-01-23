@@ -150,6 +150,8 @@ const createToken = async (sessionId: string) => {
 };
 
 const deleteSession = async (sessionId: string) => {
+	if (sessionId === undefined) return;
+
 	await axios.delete(`http://localhost:4443/openvidu/api/sessions/${sessionId}/`, {
 		headers: {
 			'Authorization': `Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU`,

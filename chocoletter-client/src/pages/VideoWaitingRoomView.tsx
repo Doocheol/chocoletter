@@ -11,6 +11,21 @@ import classes from "../styles/videoRoom.module.css";
 // import { useSocket } from "../hooks/useSocket";
 
 // API를 받아옵니다.
+import axios from "axios";
+
+const getRoomInfo = async () => {
+    try {
+        const response = await axios.post(`추후 방 정보(사람, 편지, 참석 유무, 약속 시간) api url`, {}, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer {access code}`
+            }, withCredentials: true,
+        });
+        return response.data;
+    } catch (err) {
+        console.log("API 통신 오류 : ", err)
+    }
+}
 
 const waitingComment = [
     "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
