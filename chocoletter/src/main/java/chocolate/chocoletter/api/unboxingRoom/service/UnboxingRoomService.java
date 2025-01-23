@@ -29,7 +29,7 @@ public class UnboxingRoomService {
         if (unboxingRoom.getIsEnd()) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END);
         }
-        if (isMemberAuthorized(memberId, unboxingRoom)) {
+        if (isMemberNotAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         Gift gift = unboxingRoom.getGift();
@@ -43,13 +43,13 @@ public class UnboxingRoomService {
         if (unboxingRoom == null) {
             throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_UNBOXING_ROOM);
         }
-        if (isMemberAuthorized(memberId, unboxingRoom)) {
+        if (isMemberNotAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         unboxingRoom.endRoom();
     }
 
-    private boolean isMemberAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
+    private boolean isMemberNotAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
         return !unboxingRoom.getReceiverId().equals(memberId) && !unboxingRoom.getSenderId().equals(memberId);
     }
 }
