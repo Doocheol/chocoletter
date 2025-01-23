@@ -54,7 +54,7 @@ const MainMyBeforeView: React.FC = () => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			{/* 헤더 */}
-			<header className="flex justify-between items-center p-4 bg-white shadow-md">
+			<div className="flex justify-between items-center p-4 bg-white shadow-md">
 				<button onClick={handleHome} className="text-2xl">
 					<FaHome />
 				</button>
@@ -67,10 +67,10 @@ const MainMyBeforeView: React.FC = () => {
 				<button onClick={handleProfile} className="text-2xl">
 					<FaUserCircle />
 				</button>
-			</header>
+			</div>
 
 			{/* 본문 */}
-			<main className="flex-grow flex flex-col items-center justify-center bg-gray-100">
+			<div className="flex-grow flex flex-col items-center justify-center bg-gray-100">
 				<div className="flex flex-col items-center justify-center mb-8">
 					{/* 개봉 가능한 초콜릿 개수 */}
 					<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md mb-8">
@@ -100,14 +100,14 @@ const MainMyBeforeView: React.FC = () => {
 				>
 					<span className="text-3xl text-hrtColorPink">🍫</span>
 				</button>
-				<div className="text-sm text-gray-700 mt-4">
+				<div className="text-sm text-gray-700 mt-4 px-4 text-center">
 					개봉 가능한 일반 초콜릿이 있으면 박스를 클릭하여 편지를 읽어
 					볼 수 있어요!
 				</div>
-			</main>
+			</div>
 
 			{/* 하단 */}
-			<footer className="flex justify-around items-center p-4 bg-white shadow-inner">
+			<div className="flex justify-around items-center p-4 bg-white shadow-inner">
 				<button
 					onClick={handleShare}
 					className="flex flex-col items-center"
@@ -122,7 +122,7 @@ const MainMyBeforeView: React.FC = () => {
 					<FiCamera className="text-2xl text-gray-700" />
 					<span className="text-sm text-gray-700">캡처</span>
 				</button>
-			</footer>
+			</div>
 
 			<ShareModal
 				isOpen={isShareModalOpen}

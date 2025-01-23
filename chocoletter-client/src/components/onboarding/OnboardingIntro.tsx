@@ -73,7 +73,7 @@ function OnboardingIntro() {
 					<p className="mr-1 white text-hrtColorPink">
 						발렌타인데이인 2월 14일에
 					</p>
-					<p className="mr-1 purple">전면 개방됩니다.</p>
+					<p className="mr-1 purple">모든 편지를 확인 가능해요!</p>
 				</span>
 
 				{/* 두 번째 소개 이미지 */}
@@ -114,7 +114,7 @@ function OnboardingIntro() {
 					<img
 						src={onboarding_intro_3}
 						alt="onboarding_intro_3"
-						className="p-2 max-h-80"
+						className="p-2 max-h-64"
 					/>
 				</div>
 			</div>
