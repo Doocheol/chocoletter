@@ -23,8 +23,29 @@ public interface UnboxingRoomSwagger {
                     ),
                     @ApiResponse(responseCode = "401", description = "인증 실패"),
                     @ApiResponse(responseCode = "403", description = "언박싱 룸에 접근 할 수 있느 권한이 없습니다."),
+                    @ApiResponse(responseCode = "403", description = "언박싱 룸이 이미 종료되었습니다."),
                     @ApiResponse(responseCode = "404", description = "올바르지 않은 언박싱 룸 ID 입니다.")
             }
     )
     ResponseEntity<?> hasAccessToUnboxingRoom(Long unboxingRoomId);
+
+    @Operation(
+            summary = "언박싱 종료",
+            description = "언박싱이 끝났을 때, 언박싱 룸을 종료합니다."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "접근 권한 있음",
+                            content = @Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "403", description = "언박싱 룸에 접근 할 수 있느 권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "올바르지 않은 언박싱 룸 ID 입니다.")
+            }
+    )
+    ResponseEntity<?> endUnBoxingRoom(Long roomId);
 }
