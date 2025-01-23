@@ -25,6 +25,9 @@ public class UnboxingRoomService {
 
     public GiftDetailResponseDto hasAccessToUnboxingRoom(Long memberId, Long unboxingRoomId) {
         UnboxingRoom unboxingRoom = unboxingRoomRepository.findByIdOrThrow(unboxingRoomId);
+        if (unboxingRoom.getIs_end()) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END);
+        }
         if (!isMemberAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
@@ -35,6 +38,12 @@ public class UnboxingRoomService {
 
     private boolean isMemberAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
         return unboxingRoom.getReceiverId().equals(memberId) || unboxingRoom.getSenderId().equals(memberId);
+    }
+
+    @Transactional
+    public void endUnBoxingRoom(Long roomId) {
+        UnboxingRoom unboxingRoom = unboxingRoomRepository.findUnboxingRoomByRoomId(roomId);
+        unboxingRoom.endRoom();
     }
 }
 
