@@ -1,7 +1,7 @@
 import baseAxios from "axios";
 import {deleteUserInfo, getUserInfo} from "./userInfo";
-import {reissueTokenApi} from "./tokenApi";
 import { toast } from "react-toastify";
+import { reissueTokenApi } from "./userApi";
 
 export const axios = baseAxios.create({
   baseURL: import.meta.env.VITE_API_SERVER_URL,
