@@ -26,7 +26,7 @@ public class UnboxingRoomController implements UnboxingRoomSwagger {
         return ResponseEntity.ok(gift);
     }
 
-    @PatchMapping("{roomId}/status")
+    @PatchMapping("{roomId}/end")
     public ResponseEntity<?> endUnBoxingRoom(@PathVariable @DecryptedId Long roomId) {
         Long memberId = 1L;
         unboxingRoomService.endUnBoxingRoom(memberId, roomId);

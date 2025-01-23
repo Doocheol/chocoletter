@@ -39,7 +39,7 @@ public class UnboxingRoom extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime startTime;
 
-    private Boolean is_end;
+    private Boolean isEnd;
 
     @Builder
     public UnboxingRoom(Gift gift, Long senderId, Long receiverId, LocalDateTime startTime) {
@@ -50,6 +50,6 @@ public class UnboxingRoom extends BaseTimeEntity {
     }
 
     public void endRoom() {
-        this.is_end = true;
+        this.isEnd = true;
     }
 }

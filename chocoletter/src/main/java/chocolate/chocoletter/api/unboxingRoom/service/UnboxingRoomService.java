@@ -26,19 +26,15 @@ public class UnboxingRoomService {
 
     public GiftDetailResponseDto hasAccessToUnboxingRoom(Long memberId, Long unboxingRoomId) {
         UnboxingRoom unboxingRoom = unboxingRoomRepository.findByIdOrThrow(unboxingRoomId);
-        if (unboxingRoom.getIs_end()) {
+        if (unboxingRoom.getIsEnd()) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END);
         }
-        if (!isMemberAuthorized(memberId, unboxingRoom)) {
+        if (isMemberAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         Gift gift = unboxingRoom.getGift();
         LetterDto letter = letterService.findLetter(gift.getId());
         return GiftDetailResponseDto.of(gift, letter);
-    }
-
-    private boolean isMemberAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
-        return unboxingRoom.getReceiverId().equals(memberId) || unboxingRoom.getSenderId().equals(memberId);
     }
 
     @Transactional
@@ -47,10 +43,14 @@ public class UnboxingRoomService {
         if (unboxingRoom == null) {
             throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_UNBOXING_ROOM);
         }
-        if (!isMemberAuthorized(memberId, unboxingRoom)) {
+        if (isMemberAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         unboxingRoom.endRoom();
+    }
+
+    private boolean isMemberAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
+        return !unboxingRoom.getReceiverId().equals(memberId) && !unboxingRoom.getSenderId().equals(memberId);
     }
 }
 
