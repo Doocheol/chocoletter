@@ -1,10 +1,9 @@
-// src/services/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { deleteUserInfo, getUserInfo } from './userInfo'; // User Info
 import { reissueTokenApi } from './tokenApi'; // Reissue Token API
 
 // Vite 환경 변수 사용 (process.env.REACT_APP_API → import.meta.env.VITE_API_BASE_URL)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 // 인증이 필요한 Axios 인스턴스
 const authAxios = axios.create({

@@ -1,5 +1,3 @@
-// src/components/main/my/before/button/KakaoShareButton.tsx
-
 import React from "react";
 import { sendKakaoShare } from "../../../../../utils/sendKakaoTalk";
 
