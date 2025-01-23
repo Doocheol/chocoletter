@@ -51,6 +51,7 @@ public class GiftService {
         if (!memberId.equals(gift.getReceiverId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
+        gift.openGift();
         LetterDto letter = letterService.findLetter(giftId);
         return GiftDetailResponseDto.of(gift, letter);
     }
