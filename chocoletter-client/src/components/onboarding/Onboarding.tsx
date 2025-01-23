@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import OnboardingIntro from "./OnboardingIntro";
+import { toast } from "react-toastify";
 
 function Onboarding() {
 	const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Onboarding() {
 		e.preventDefault();
 		// navigate(`/main/my/before?userid=${userId}`);
 		navigate("/main/my/before"); // 이동 페이지
+		toast.info("초콜릿 박스로 이동!");
 	};
 
 	return (
