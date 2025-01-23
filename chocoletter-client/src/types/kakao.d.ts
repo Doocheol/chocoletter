@@ -1,5 +1,3 @@
-// src/types/kakao.d.ts
-
 declare namespace Kakao {
     function init(appKey: string): void;
     function isInitialized(): boolean;

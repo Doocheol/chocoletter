@@ -1,22 +1,29 @@
 import { useEffect } from "react";
-// import { useState } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
-// import { isLoginAtom } from "./atoms/auth/userAtoms";
-// import { useRecoilValue } from "recoil";
 import ErrorPage from "./pages/ErrorPage";
 import { WaitingRoomView } from "./pages/VideoWaitingRoomView";
 import { VideoRoomView } from "./pages/VideoRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
-import SelectGiftTypeView from "./pages/SelectGiftTypeView"
+import SelectGiftTypeView from "./pages/SelectGiftTypeView";
 import SelectLetterTypeView from "./pages/SelectLetterTypeView";
 import WriteGeneralLetterView from "./pages/WriteGeneralLetterView";
 import WriteQuestionLetterView from "./pages/WriteQuestionLetterView";
 import SentGiftView from "./pages/SentGiftView";
 import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { useSetRecoilState } from "recoil";
+import {
+	isLoginAtom,
+	userNameAtom,
+	userProfileUrlAtom,
+} from "./atoms/auth/userAtoms";
+import { fetchUserInfo, login } from "./services/userApi";
+import { getUserInfo } from "./services/userInfo";
+import KakaoLoginCallback from "./components/login/KakaoLoginCallback";
 import ResetTimeView from "./pages/ResetTimeView";
 import SetTimeView from "./pages/SetTimeView";
 import RejectedView from "./pages/RejectedView";
@@ -28,13 +35,38 @@ declare global {
 }
 
 function App() {
-	// const isLogin = useRecoilValue(isLoginAtom);
+	const setIsLogin = useSetRecoilState(isLoginAtom);
+	const setUserName = useSetRecoilState(userNameAtom);
+	const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
 
-	// if (isLogin) {
+	useEffect(() => {
+		const initializeUser = async () => {
+			try {
+				const userInfo = fetchUserInfo();
+				if (userInfo) {
+					// 서버에서 사용자 정보를 검증하는 API 호출 (필요 시)
+					const response = await login();
+					const { userId, userProfileUrl } = JSON.parse(response);
 
-	// } else {
+					// Recoil 상태 업데이트
+					setIsLogin(true);
+					setUserName(userId);
+					setUserProfileUrl(userProfileUrl);
+				}
+			} catch (error) {
+				console.log("사용자 정보 조회 실패:", error);
+				setIsLogin(false);
+				setUserName("");
+				setUserProfileUrl("");
+			}
+		};
 
-	// }
+		// 로그인 상태 확인
+		const userInfo = getUserInfo();
+		if (userInfo) {
+			initializeUser();
+		}
+	}, [setIsLogin, setUserName, setUserProfileUrl]);
 
 	function setScreenSize() {
 		let vh = window.innerHeight * 0.01;
@@ -47,31 +79,38 @@ function App() {
 
 	return (
 		<div className="App bg-hrtColorBackground text-hrtColorOutline">
-			<BrowserRouter>
-				<Routes>
-					<Route index element={<LoginView />} />
-					<Route path="/*" element={<ErrorPage />} />
-					<Route
-						path="/main/my/before"
-						element={<MainMyBeforeView />}
-					/>
-					<Route path="/receive" element={<ReceiveView />} />
-					<Route path="/letter" element={<LetterView />} />
-					<Route path="/selectletter" element={<SelectLetterTypeView />} />
-					<Route path="/write/general" element={<WriteGeneralLetterView />} />
-					<Route path="/write/question" element={<WriteQuestionLetterView />} />
-					<Route path="/sentgift" element={<SentGiftView />} />
-					<Route path="/selectgift" element={<SelectGiftTypeView />} />
-					<Route
-						path="/video/waiting-room/:sessionIdInit"
-						element={<WaitingRoomView />}
-					/>
-					<Route path="/video/room" element={<VideoRoomView />} />
-					<Route path="/reset-time" element={<ResetTimeView />} />
-					<Route path="/set-time" element={<SetTimeView />} />
-					<Route path="/rejected" element={<RejectedView />} />
-				</Routes>
-			</BrowserRouter>
+			<ErrorBoundary>
+				<BrowserRouter>
+					<Routes>
+						<Route index element={<LoginView />} />
+						<Route path="/*" element={<ErrorPage />} />
+						<Route path="/error" element={<ErrorPage />} />
+						<Route
+							path="/auth/kakao/callback"
+							element={<KakaoLoginCallback />}
+						/>
+						<Route
+							path="/main/my/before"
+							element={<MainMyBeforeView />}
+						/>
+						<Route path="/receive" element={<ReceiveView />} />
+						<Route path="/letter" element={<LetterView />} />
+						<Route path="/selectletter" element={<SelectLetterTypeView />} />
+						<Route path="/write/general" element={<WriteGeneralLetterView />} />
+						<Route path="/write/question" element={<WriteQuestionLetterView />} />
+						<Route path="/sentgift" element={<SentGiftView />} />
+						<Route path="/selectgift" element={<SelectGiftTypeView />} />
+						<Route
+							path="/video/waiting-room/:sessionIdInit"
+							element={<WaitingRoomView />}
+						/>
+						<Route path="/video/room" element={<VideoRoomView />} />
+						<Route path="/reset-time" element={<ResetTimeView />} />
+						<Route path="/set-time" element={<SetTimeView />} />
+						<Route path="/rejected" element={<RejectedView />} />
+					</Routes>
+				</BrowserRouter>
+			</ErrorBoundary>
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}
