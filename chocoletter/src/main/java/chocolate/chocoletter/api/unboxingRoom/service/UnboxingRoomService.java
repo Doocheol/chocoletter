@@ -8,6 +8,7 @@ import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
 import chocolate.chocoletter.api.unboxingRoom.repository.UnboxingRoomRepository;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
+import chocolate.chocoletter.common.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,14 @@ public class UnboxingRoomService {
     }
 
     @Transactional
-    public void endUnBoxingRoom(Long roomId) {
+    public void endUnBoxingRoom(Long memberId, Long roomId) {
         UnboxingRoom unboxingRoom = unboxingRoomRepository.findUnboxingRoomByRoomId(roomId);
+        if (unboxingRoom == null) {
+            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_UNBOXING_ROOM);
+        }
+        if (!isMemberAuthorized(memberId, unboxingRoom)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
         unboxingRoom.endRoom();
     }
 }
