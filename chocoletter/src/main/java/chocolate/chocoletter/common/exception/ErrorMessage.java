@@ -27,6 +27,7 @@ public enum ErrorMessage {
      * 403 FORBIDDEN
      */
     ERR_FORBIDDEN,
+    ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END,
     /**
      * /** 404 NOT_FOUND
      */
