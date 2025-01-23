@@ -13,6 +13,7 @@ import LetterView from "./pages/LetterView";
 import SelectGiftTypeView from "./pages/SelectGiftTypeView"
 import SelectLetterTypeView from "./pages/SelectLetterTypeView";
 import WriteGeneralLetterView from "./pages/WriteGeneralLetterView";
+import WriteQuestionLetterView from "./pages/WriteQuestionLetterView";
 import SentGiftView from "./pages/SentGiftView";
 import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
@@ -56,6 +57,7 @@ function App() {
 					<Route path="/letter" element={<LetterView />} />
 					<Route path="/selectletter" element={<SelectLetterTypeView />} />
 					<Route path="/write/general" element={<WriteGeneralLetterView />} />
+					<Route path="/write/question" element={<WriteQuestionLetterView />} />
 					<Route path="/sentgift" element={<SentGiftView />} />
 					<Route path="/selectgift" element={<SelectGiftTypeView />} />
 					<Route
