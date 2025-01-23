@@ -96,6 +96,7 @@ public class GiftService {
         // TODO : senderId에 맞는 유저한테 알림톡 전송
 
         UnboxingRoom unboxingRoom = UnboxingRoom.builder()
+                .gift(gift)
                 .receiverId(gift.getReceiverId())
                 .senderId(gift.getSenderId())
                 .startTime(gift.getUnBoxingTime())
