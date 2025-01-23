@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import classes from '../styles/videoRoom.module.css';
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
 
-import { Publisher, Subscriber } from 'openvidu-browser';
-import { joinSession } from '../utils/openvidu';
+// import { Publisher, Subscriber } from 'openvidu-browser';
+import { joinSession, leaveSession } from '../utils/openvidu';
 import { VideoState } from '../types/openvidu';
 
 export const VideoRoomView = () => {
     const location = useLocation();
     const { sessionIdInit } = location.state
-    console.log(sessionIdInit);
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(500);
+    const [leftTime, setLeftTime] = useState(10);
 
     // const [publishers, setPublisher] = useState<Publisher | null>(null);
     // const [subscribers, setSubscribers] = useState<(Subscriber | Subscriber)[]>([]);
 
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
+    const didJoin = useRef(false)
 
     const [videoState, setVideoState] = useState<VideoState>({
         session: undefined,
@@ -29,11 +29,15 @@ export const VideoRoomView = () => {
     }); // 비디오 상태
 
     const username = "User" + Math.floor(Math.random() * 100); // 사용자 예비 이름
-    const endCall = () => {
-        setIsTerminate(true);
+    const onEnd = () => {
+        console.log("끝났을 때라도", videoState)
+        leaveSession(videoState, setVideoState, setIsTerminate);
     }
 
     useEffect(() => {
+        if (didJoin.current) return;
+        didJoin.current = true;
+
         const initSession = async () => {
             try {
                 console.log("세션 생성 중");
@@ -42,9 +46,10 @@ export const VideoRoomView = () => {
                     { sessionId: sessionIdInit, username },
                     setSessionId,
                     setVideoState,
+                    setIsTerminate,
                 );
 
-                console.log("완료")
+                await console.log("완료", videoState)
             } catch (err) {
                 console.log("join 문제 발생 : ", err)
             }
@@ -55,7 +60,7 @@ export const VideoRoomView = () => {
 
     useEffect(() => {
         if (leftTime <= 0) {
-            endCall();
+            onEnd();
         }
 
         const timerInterval = setInterval(() => {
@@ -89,7 +94,7 @@ export const VideoRoomView = () => {
                             </div>
                         ))}
                     </div>
-                    <CloseVideoRoomButton onEnd={endCall} />
+                    <CloseVideoRoomButton onEnd={onEnd} />
                 </div>
             </div>
         </>
