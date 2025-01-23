@@ -1,5 +1,3 @@
-// src/components/MainMyBeforeView.tsx
-
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
@@ -7,8 +5,12 @@ import { FaRegCircleQuestion } from "react-icons/fa6";
 import { FaHome, FaComments, FaUserCircle } from "react-icons/fa";
 import { FiShare, FiCamera } from "react-icons/fi";
 import ShareModal from "../components/main/my/before/modal/ShareModal";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const MainMyBeforeView: React.FC = () => {
+	const navigate = useNavigate();
+
 	const availableGifts = useRecoilValue(availableGiftsAtom);
 	const receivedGifts = useRecoilValue(receivedGiftsAtom);
 
@@ -26,8 +28,8 @@ const MainMyBeforeView: React.FC = () => {
 	};
 
 	const handleHome = () => {
-		// 홈으로 이동
-		alert("홈 아이콘 클릭!");
+		navigate("/");
+		toast.info("홈으로 이동!");
 	};
 
 	const handleTutorial = () => {
