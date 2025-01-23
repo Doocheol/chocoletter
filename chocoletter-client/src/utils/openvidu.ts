@@ -5,7 +5,7 @@ import { User, VideoState } from "../types/openvidu";
 import axios from 'axios';
 import React from 'react';
 
-const APPLICATION_SERVER_URL = import.meta.env.VITE_APPLICATION_SERVER_URL;
+const APPLICATION_SERVER_URL = import.meta.env.VITE_API_SERVER_URL;
 const OPENVIDU_URL = import.meta.env.VITE_OPENVIDU_SERVER_URL
 const OPENVIDU_SECRET_BASE = import.meta.env.VITE_OPENVIDU_SECRET_BASE
 
