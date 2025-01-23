@@ -84,20 +84,6 @@ module.exports = {
           lineHeight: "2.25rem",
           fontSize: "1rem" /* 16px */,
         },
-        ".heartBoard": {
-          backgroundColor: "#fff",
-          boxShadow: "0 0 0 0.25rem #fb8bb0",
-        },
-        ".heartBoard-header": {
-          color: "#fff",
-          height: "2.5rem",
-          fontSize: "1.25rem" /* 16px */,
-          lineHeight: "2.5rem",
-          textAlign: "left",
-          paddingLeft: "0.5rem",
-          paddingRight: "0.5rem",
-          boxShadow: "0 0 0 0.25rem #fb8bb0",
-        },
       });
     }),
     plugin(function ({ addBase }) {
