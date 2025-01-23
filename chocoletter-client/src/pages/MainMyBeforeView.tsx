@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
 import { FaRegCircleQuestion } from "react-icons/fa6";
@@ -7,6 +7,9 @@ import { FiShare, FiCamera } from "react-icons/fi";
 import ShareModal from "../components/main/my/before/modal/ShareModal";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import html2canvas from "html2canvas";
+import { Button } from "../components/common/Button";
+import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 
 const MainMyBeforeView: React.FC = () => {
 	const navigate = useNavigate();
@@ -17,14 +20,38 @@ const MainMyBeforeView: React.FC = () => {
 	// 모달 상태 관리
 	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+	// 캡처 상태 관리
+	const [capturedImage, setCapturedImage] = useState<string | null>(null);
+	const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
+	const captureRef = useRef<HTMLDivElement>(null);
+
 	// 버튼 클릭 핸들러 (예시)
 	const handleShare = () => {
 		setIsShareModalOpen(true);
 	};
 
-	const handleCapture = () => {
-		// 캡처 기능 구현
-		alert("캡처 버튼 클릭!");
+	const handleCapture = async () => {
+		if (captureRef.current) {
+			try {
+				setIsCaptureModalVisible(true); // 모달 표시 (로딩 상태)
+				const canvas = await html2canvas(captureRef.current);
+				const imageData = canvas.toDataURL("image/png");
+				setCapturedImage(imageData);
+			} catch (error) {
+				// console.error("캡처 중 오류가 발생했습니다:", error);
+				toast.error("캡처 실패!");
+				setIsCaptureModalVisible(false); // 에러 시 모달 닫기
+			}
+		}
+	};
+
+	const downloadImage = (uri: string, filename: string) => {
+		const link = document.createElement("a");
+		link.href = uri;
+		link.download = filename;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
 	};
 
 	const handleHome = () => {
@@ -95,12 +122,14 @@ const MainMyBeforeView: React.FC = () => {
 				</div>
 
 				{/* 내 초콜릿 박스 아이콘 */}
-				<button
-					onClick={handleMyChocolateBox}
-					className="flex items-center justify-center w-24 h-24 bg-hrtColorYellow shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-full"
-				>
-					<span className="text-4xl text-hrtColorPink">🍫</span>
-				</button>
+				<div ref={captureRef}>
+					<button
+						onClick={handleMyChocolateBox}
+						className="flex items-center justify-center w-24 h-24 bg-hrtColorYellow shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-full"
+					>
+						<span className="text-4xl text-hrtColorPink">🍫</span>
+					</button>
+				</div>
 				<div className="text-base text-gray-700 mt-6 px-4 text-center">
 					개봉 가능한 일반 초콜릿이 있으면 박스를 클릭하여 편지를 읽어
 					볼 수 있어요!
@@ -109,21 +138,29 @@ const MainMyBeforeView: React.FC = () => {
 
 			{/* 하단 */}
 			<div className="flex justify-around items-center px-6 py-4 bg-white shadow-inner safe-bottom">
-				<button
+				<Button
 					onClick={handleShare}
 					className="flex flex-col items-center space-y-1"
 				>
 					<FiShare className="text-2xl text-gray-700" />
 					<span className="text-sm text-gray-700">공유</span>
-				</button>
-				<button
+				</Button>
+				{/* 공통 Button 컴포넌트 사용하여 캡처 버튼 변경 */}
+				<Button
 					onClick={handleCapture}
 					className="flex flex-col items-center space-y-1"
 				>
 					<FiCamera className="text-2xl text-gray-700" />
 					<span className="text-sm text-gray-700">캡처</span>
-				</button>
+				</Button>
 			</div>
+
+			{/* 캡처 모달 */}
+			<CaptureModal
+				isVisible={isCaptureModalVisible}
+				imageSrc={capturedImage}
+				onClose={() => setIsCaptureModalVisible(false)}
+			/>
 
 			<ShareModal
 				isOpen={isShareModalOpen}
