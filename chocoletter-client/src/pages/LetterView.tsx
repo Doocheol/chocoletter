@@ -10,14 +10,14 @@ import Gift from "../components/letter/Letter";
 // 편지 보는 뷰
 // gift list page 에서 초콜릿 선택 시 보이게 됨.
 interface GiftData {
-    nickname?: string;
+    nickName?: string;
     content?: string | null;
     question?: string | null;
     answer?: string | null;
 }
 
 const LetterView = () => {
-    const giftId = 1 // useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
+    const giftId = 2 // useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
 
     const [giftData, setGiftData] = useState<GiftData | null>(null);
     const [loading, setLoading] = useState(true); 
@@ -57,7 +57,7 @@ const LetterView = () => {
                 <GiftView
                 giftData={
                     giftData || { 
-                        nickname: "Anonymous",
+                        nickName: "Anonymous",
                         content: null,
                         question: "No question provided",
                         answer: "No answer provided",
@@ -91,7 +91,7 @@ const LoadingView = () => (
 const GiftView: React.FC<{ giftData: GiftData }> = ({ giftData }) => (
     <div className="flex flex-col justify-center items-center mt-12">
         <Gift
-            nickname={giftData.nickname || "Anonymous"}
+            nickName={giftData.nickName || "Anonymous"}
             content={giftData.content || null}
             question={giftData.question || "No question provided"}
             answer={giftData.answer || "No answer provided"}
