@@ -15,3 +15,10 @@ export interface MyUserInfo {
     accessToken: string | null;
   }
   
+
+  export interface ReissueTokenResponse {
+    status: string;
+    data: {
+      accessToken: string;
+    };
+  }
