@@ -51,9 +51,16 @@ public class GiftController implements GiftSwagger {
     }
 
     @GetMapping("/{giftId}/receive")
-    public ResponseEntity<?> findReceiveGiftDetail(@PathVariable("giftId") Long giftId) {
+    public ResponseEntity<?> findReceiveGiftDetail(@PathVariable("giftId") @DecryptedId Long giftId) {
         Long memberId = 1L;
         GiftDetailResponseDto gift = giftService.findReceiveGiftDetail(memberId, giftId);
+        return ResponseEntity.ok(gift);
+    }
+
+    @GetMapping("/{giftId}/send")
+    public ResponseEntity<?> findSendGiftDetail(@PathVariable("giftId") @DecryptedId Long giftId) {
+        Long memberId = 2L;
+        GiftDetailResponseDto gift = giftService.findSendGiftDetail(memberId, giftId);
         return ResponseEntity.ok(gift);
     }
 
