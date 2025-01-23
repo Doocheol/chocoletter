@@ -10,6 +10,7 @@ public enum ErrorMessage {
      */
     ERR_MISSING_AUTHORIZATION_CODE,
     ERR_INVALID_REQUEST_FIELD,
+    ERR_ALREADY_EXISTS_GIFT,
 
     /**
      * 401 UNAUTHORIZED
@@ -31,6 +32,7 @@ public enum ErrorMessage {
     ERR_NOT_RESOURCE,
     ERR_NOT_FOUND_GIFT,
     ERR_NOT_FOUND_UNBOXING_ROOM,
+    ERR_NOT_FOUND_GIFT_BOX,
 
     /**
      * 500 INTERNAL_SERVER_ERROR
