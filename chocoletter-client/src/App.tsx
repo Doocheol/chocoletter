@@ -18,6 +18,7 @@ import SentGiftView from "./pages/SentGiftView";
 import { ToastContainer } from "react-toastify";
 import MainMyBeforeView from "./pages/MainMyBeforeView";
 import ResetTimeView from "./pages/ResetTimeView";
+import SetTimeView from "./pages/SetTimeView";
 
 declare global {
 	interface Window {
@@ -66,6 +67,7 @@ function App() {
 					/>
 					<Route path="/video/room" element={<VideoRoomView />} />
 					<Route path="/reset-time" element={<ResetTimeView />} />
+					<Route path="/set-time" element={<SetTimeView />} />
 				</Routes>
 			</BrowserRouter>
 			<ToastContainer
