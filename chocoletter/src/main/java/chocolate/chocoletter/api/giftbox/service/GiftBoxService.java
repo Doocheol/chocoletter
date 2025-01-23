@@ -1,5 +1,7 @@
 package chocolate.chocoletter.api.giftbox.service;
 
+import static chocolate.chocoletter.common.util.DateTimeUtil.parseTimeToDateTime;
+
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
@@ -15,10 +17,6 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +53,7 @@ public class GiftBoxService {
         checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                parseDateTime(requestDto.unBoxingTime()));
+                parseTimeToDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
@@ -66,7 +64,7 @@ public class GiftBoxService {
         checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                parseDateTime(requestDto.unBoxingTime()));
+                parseTimeToDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
@@ -100,11 +98,5 @@ public class GiftBoxService {
         if (!giftService.findMyGift(senderId)) {
             throw new BadRequestException(ErrorMessage.ERR_ALREADY_EXISTS_GIFT);
         }
-    }
-
-    private LocalDateTime parseDateTime(String dateTime) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = LocalTime.parse(dateTime, timeFormatter);
-        return LocalDateTime.of(LocalDate.now(), time);
     }
 }

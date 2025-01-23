@@ -1,16 +1,20 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.common.annotation.DecryptedId;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,6 +63,15 @@ public class GiftController implements GiftSwagger {
         Long memberId = 1L;
         GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok(unboxingInvitation);
+    }
+
+    @PostMapping("/{giftId}/unboxing/invitation")
+    public ResponseEntity<?> sendUnboxingInvitation(@PathVariable @DecryptedId Long giftId,
+                                                    @RequestBody @Valid UnboxingInvitationRequestDto requestDto) {
+        // 로그인 한 유저가 sender
+        Long senderId = 2L;
+        giftService.sendUnboxingInvitation(senderId, giftId, requestDto);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{giftId}/unboxing/invitation/accept")
