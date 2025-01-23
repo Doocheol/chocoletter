@@ -12,6 +12,7 @@ import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
+import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import java.time.LocalDate;
@@ -30,15 +31,17 @@ public class GiftBoxService {
 
 
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
+        checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
-        Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.Content());
+        Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
     }
 
     public void sendGeneralQuestionGift(Long senderId, Long giftBoxId, GeneralQuestionRequestDto requestDto) {
+        checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
@@ -49,6 +52,7 @@ public class GiftBoxService {
     }
 
     public void sendSpecialFreeGift(Long senderId, Long giftBoxId, SpecialFreeGiftRequestDto requestDto) {
+        checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 parseDateTime(requestDto.unBoxingTime()));
@@ -59,6 +63,7 @@ public class GiftBoxService {
     }
 
     public void sendSpecialQuestionGift(Long senderId, Long giftBoxId, SpecialQuestionGiftRequestDto requestDto) {
+        checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 parseDateTime(requestDto.unBoxingTime()));
@@ -86,9 +91,15 @@ public class GiftBoxService {
     private GiftBox findGiftBox(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {
-            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_GIFT_BOX);
         }
         return receiverGiftBox;
+    }
+
+    private void checkGiftExists(Long senderId) {
+        if (!giftService.findMyGift(senderId)) {
+            throw new BadRequestException(ErrorMessage.ERR_ALREADY_EXISTS_GIFT);
+        }
     }
 
     private LocalDateTime parseDateTime(String dateTime) {
