@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,8 +64,16 @@ public class GiftBoxController implements GiftBoxSwagger {
     public ResponseEntity<?> findGiftCount() {
         // 로그인 한 유저 찾아오기
         Long memberId = 1L;
-        Integer giftCount = giftBoxService.findGiftCount(memberId);
-        return ResponseEntity.ok(GiftCountResponseDto.of(giftCount));
+        GiftCountResponseDto responseDto = giftBoxService.findGiftCount(memberId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PatchMapping("/preview")
+    public ResponseEntity<?> usePreviewCount() {
+        // 로그인 한 유저 찾아오기
+        Long memberId = 1L;
+        giftBoxService.usePreviewCount(memberId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{giftBoxId}")
