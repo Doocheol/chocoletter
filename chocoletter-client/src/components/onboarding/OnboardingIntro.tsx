@@ -4,7 +4,6 @@ import onboarding_intro_1 from "../../assets/images/logo/onboarding_intro_1.png"
 import onboarding_intro_2 from "../../assets/images/logo/onboarding_intro_2.png";
 import onboarding_intro_3 from "../../assets/images/logo/onboarding_intro_3.png";
 import { GoToTopButton } from "../login/button/GoToTopButton";
-// import { useHref } from "react-router-dom";
 
 function OnboardingIntro() {
 	const [scrollPosition, setScrollPosition] = useState(0);
@@ -25,6 +24,7 @@ function OnboardingIntro() {
 	return (
 		<div className="flex flex-col w-full">
 			{/* 첫 번째 소개 이미지 */}
+
 			<div
 				className={`flex justify-center items-center pt-2 ${
 					scrollPosition < 90
@@ -34,11 +34,15 @@ function OnboardingIntro() {
 				onClick={onMoreClick}
 				ref={introRef}
 			>
-				<img
-					src={onboarding_intro_1}
-					alt="onboarding_intro_1"
-					className="p-2 max-h-24"
-				/>
+				<div className="pt-10 mx-10 text-sm text-hrtColorPink textShadow-none">
+					"Click me"
+					{"\n"}
+					<img
+						src={onboarding_intro_1}
+						alt="onboarding_intro_1"
+						className="p-2 max-h-24"
+					/>
+				</div>
 			</div>
 
 			{/* 서비스 소개 제목 */}
