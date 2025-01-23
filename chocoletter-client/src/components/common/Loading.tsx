@@ -2,10 +2,10 @@ import React from "react";
 
 const Loading: React.FC = () => {
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
+		<div className="flex items-center justify-center min-h-screen bg-gray-100 slide-in-bottom">
 			<div className="text-center">
 				<svg
-					className="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4"
+					className="jello-vertical h-10 w-10 text-blue-500 mx-auto mb-4"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"
@@ -24,7 +24,9 @@ const Loading: React.FC = () => {
 						d="M4 12a8 8 0 018-8v8H4z"
 					></path>
 				</svg>
-				<h1 className="text-xl font-bold text-gray-700">로딩중...</h1>
+				<h1 className="text-xl font-bold text-gray-700 heartbeat">
+					로딩중...
+				</h1>
 			</div>
 		</div>
 	);
