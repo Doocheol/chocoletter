@@ -6,9 +6,10 @@ interface ModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	children: React.ReactNode;
+	className?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className }) => {
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
@@ -42,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 		>
 			<FocusLock>
 				<div
-					className="bg-white rounded-lg shadow-lg p-6 relative w-11/12 max-w-md"
+					className={`bg-white rounded-lg shadow-lg p-6 relative w-11/12 max-w-md ${className || ""}`} 
 					onClick={handleContentClick}
 				>
 					<button
