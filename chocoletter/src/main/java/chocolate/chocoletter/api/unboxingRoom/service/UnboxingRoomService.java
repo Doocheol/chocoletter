@@ -8,6 +8,7 @@ import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
 import chocolate.chocoletter.api.unboxingRoom.repository.UnboxingRoomRepository;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
+import chocolate.chocoletter.common.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,10 @@ public class UnboxingRoomService {
 
     public GiftDetailResponseDto hasAccessToUnboxingRoom(Long memberId, Long unboxingRoomId) {
         UnboxingRoom unboxingRoom = unboxingRoomRepository.findByIdOrThrow(unboxingRoomId);
-        if (!isMemberAuthorized(memberId, unboxingRoom)) {
+        if (unboxingRoom.getIsEnd()) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END);
+        }
+        if (isMemberNotAuthorized(memberId, unboxingRoom)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         Gift gift = unboxingRoom.getGift();
@@ -33,8 +37,20 @@ public class UnboxingRoomService {
         return GiftDetailResponseDto.of(gift, letter);
     }
 
-    private boolean isMemberAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
-        return unboxingRoom.getReceiverId().equals(memberId) || unboxingRoom.getSenderId().equals(memberId);
+    @Transactional
+    public void endUnBoxingRoom(Long memberId, Long roomId) {
+        UnboxingRoom unboxingRoom = unboxingRoomRepository.findUnboxingRoomByRoomId(roomId);
+        if (unboxingRoom == null) {
+            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_UNBOXING_ROOM);
+        }
+        if (isMemberNotAuthorized(memberId, unboxingRoom)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        unboxingRoom.endRoom();
+    }
+
+    private boolean isMemberNotAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
+        return !unboxingRoom.getReceiverId().equals(memberId) && !unboxingRoom.getSenderId().equals(memberId);
     }
 }
 
