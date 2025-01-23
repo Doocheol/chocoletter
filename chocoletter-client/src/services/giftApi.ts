@@ -9,8 +9,11 @@ export const axios = baseAxios.create({
       },
     withCredentials: true,
   });
+
+
   
 // AccessToken 가져오기
+const accessToken = '123' //  나중에 삭제!!
 // function getAccessToken(): string | null {
 //     return localStorage.getItem("accessToken"); 
 // }
@@ -18,35 +21,23 @@ export const axios = baseAxios.create({
 // 선물 정보 가져오기
 export async function getGiftDetail(giftId: number) {
     try {
-      const res = await axios.get(`/api/v1/gift/${giftId}/receive`);
-      const data = res.data;
-      console.log("Gift 데이터:", data);
-      return data;
+        // const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            throw new Error("AccessToken is missing");
+        }
+
+        const res = await axios.get(`/api/v1/gift/${giftId}/receive`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = res.data;
+        console.log("Gift 데이터:", data);
+        return data;
     } catch (err) {
-      return null;
+        console.error("getGiftDetail API 호출 중 에러 발생:", err);
+        return null;
     }
   }
-
-
-// export async function getGiftDetail(giftId: number) {
-//     try {
-//         const accessToken = '123' // getAccessToken();
-
-//         if (!accessToken) {
-//             throw new Error("AccessToken is missing");
-//         }
-
-//         const res = await api.get(`/api/v1/gift/${giftId}/receive`, {
-//             headers: {
-//                 Authorization: `Bearer ${accessToken}`,
-//             },
-//         });
-//         const data = res.data;
-//         console.log("Gift 데이터:", data);
-//         return data;
-//     } catch (err) {
-//         console.error("getGiftDetail API 호출 중 에러 발생:", err);
-//         return null;
-//     }
-//   }
   
