@@ -12,6 +12,10 @@ const TestPage: React.FC = () => {
 			path: "/main/my/before",
 			label: "MainMyBeforeView (/main/my/before)",
 		},
+		{
+			path: "/gift/list/before",
+			label: "GiftListBeforeView (/gift/list/before)",
+		},
 		{ path: "/receive", label: "ReceiveView (/receive)" },
 		{ path: "/letter", label: "LetterView (/letter)" },
 		{

@@ -5,19 +5,14 @@ import classes from '../styles/videoRoom.module.css';
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
 
-// import { Publisher, Subscriber } from 'openvidu-browser';
 import { joinSession, leaveSession } from '../utils/openvidu';
 import { VideoState } from '../types/openvidu';
 
-export const VideoRoomView = () => {
+const VideoRoomView = () => {
     const location = useLocation();
     const { sessionIdInit } = location.state
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(60);
-
-    // const [publishers, setPublisher] = useState<Publisher | null>(null);
-    // const [subscribers, setSubscribers] = useState<(Subscriber | Subscriber)[]>([]);
-
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false)
 
@@ -99,4 +94,6 @@ export const VideoRoomView = () => {
             </div>
         </>
     )
-}
+};
+
+export default VideoRoomView;

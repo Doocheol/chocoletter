@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 import { useRecoilState } from "recoil";
 import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
 
@@ -8,10 +8,8 @@ import { MyFaceInVideoWaitingRoom } from "../components/video-waiting-room/MyFac
 import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css";
-// import { useSocket } from "../hooks/useSocket";
 
 // API를 받아옵니다.
-import axios from "axios";
 
 const getRoomInfo = async () => {
     try {
@@ -33,7 +31,7 @@ const waitingComment = [
     "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
     "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"];
 
-export const WaitingRoomView = () => {
+const WaitingRoomView = () => {
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
     const [remainTime, setRemainTime] = useState(300);
@@ -46,9 +44,6 @@ export const WaitingRoomView = () => {
     const [cnt, setCnt] = useState(0);
 
     const navigate = useNavigate();
-    // const { userList } = useSocket();
-    const [sessionValue, setSessionValue] = useRecoilState(sessionAtom)
-    const [tokenValue, setTokenValue] = useRecoilState(tokenAtom)
 
     const showRTCLetter = () => {
         setIsOpenLetter(true);
@@ -143,9 +138,6 @@ export const WaitingRoomView = () => {
                 <div className={classes.back}>
                     <h1>{comment}</h1>
                     <p>{makeMMSS}</p>
-                    {/* <p>{userList.length}</p> */}
-                    <p>{sessionValue}</p>
-                    <p>{tokenValue}</p>
                     <MyFaceInVideoWaitingRoom />
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
                 </div>
@@ -153,3 +145,5 @@ export const WaitingRoomView = () => {
         </>
     )
 }
+
+export default WaitingRoomView;

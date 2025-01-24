@@ -1,10 +1,8 @@
-import { useEffect } from "react";
+import { lazy, useEffect, Suspense } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
 import ErrorPage from "./pages/ErrorPage";
-import { WaitingRoomView } from "./pages/VideoWaitingRoomView";
-import { VideoRoomView } from "./pages/VideoRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
 import SelectGiftTypeView from "./pages/SelectGiftTypeView";
@@ -29,6 +27,11 @@ import SetTimeView from "./pages/SetTimeView";
 import RejectedView from "./pages/RejectedView";
 import useViewportHeight from "./hooks/useViewportHeight";
 import TestPage from "./pages/TestPage";
+import GiftListBeforeView from "./pages/GiftListBeforeView";
+import Loading from "./components/common/Loading";
+
+const WaitingRoomView = lazy(() => import("./pages/VideoWaitingRoomView"));
+const VideoRoomView = lazy(() => import("./pages/VideoRoomView"));
 
 declare global {
 	interface Window {
@@ -75,49 +78,52 @@ function App() {
 	return (
 		<div className="App bg-hrtColorBackground text-hrtColorOutline">
 			<ErrorBoundary>
-				<BrowserRouter>
-					<Routes>
-						<Route index element={<LoginView />} />
-						<Route path="/test" element={<TestPage />} />
-						<Route path="/*" element={<ErrorPage />} />
-						<Route path="/error" element={<ErrorPage />} />
-						<Route
-							path="/auth/kakao/callback"
-							element={<KakaoLoginCallback />}
-						/>
-						<Route
-							path="/main/my/before"
-							element={<MainMyBeforeView />}
-						/>
-						<Route path="/receive/:giftId" element={<ReceiveView />} />
-						<Route path="/letter" element={<LetterView />} />
-						<Route
-							path="/selectletter"
-							element={<SelectLetterTypeView />}
-						/>
-						<Route
-							path="/write/general"
-							element={<WriteGeneralLetterView />}
-						/>
-						<Route
-							path="/write/question"
-							element={<WriteQuestionLetterView />}
-						/>
-						<Route path="/sentgift" element={<SentGiftView />} />
-						<Route
-							path="/selectgift"
-							element={<SelectGiftTypeView />}
-						/>
-						<Route
-							path="/video/waiting-room/:sessionIdInit"
-							element={<WaitingRoomView />}
-						/>
-						<Route path="/video/room" element={<VideoRoomView />} />
-						<Route path="/reset-time" element={<ResetTimeView />} />
-						<Route path="/set-time" element={<SetTimeView />} />
-						<Route path="/rejected" element={<RejectedView />} />
-					</Routes>
-				</BrowserRouter>
+				<Suspense fallback={<Loading />}>
+					<BrowserRouter>
+						<Routes>
+							<Route index element={<LoginView />} />
+							<Route path="/test" element={<TestPage />} />
+							<Route path="/*" element={<ErrorPage />} />
+							<Route path="/error" element={<ErrorPage />} />
+							<Route
+								path="/auth/kakao/callback"
+								element={<KakaoLoginCallback />}
+							/>
+							<Route
+								path="/main/my/before"
+								element={<MainMyBeforeView />}
+							/>
+							<Route path="/receive/:giftId" element={<ReceiveView />} />
+							<Route path="/letter" element={<LetterView />} />
+							<Route
+								path="/selectletter"
+								element={<SelectLetterTypeView />}
+							/>
+							<Route
+								path="/write/general"
+								element={<WriteGeneralLetterView />}
+							/>
+							<Route
+								path="/write/question"
+								element={<WriteQuestionLetterView />}
+							/>
+							<Route path="/sentgift" element={<SentGiftView />} />
+							<Route
+								path="/selectgift"
+								element={<SelectGiftTypeView />}
+							/>
+							<Route
+								path="/video/waiting-room/:sessionIdInit"
+								element={<WaitingRoomView />}
+							/>
+							<Route path="/video/room" element={<VideoRoomView />} />
+							<Route path="/reset-time" element={<ResetTimeView />} />
+							<Route path="/set-time" element={<SetTimeView />} />
+							<Route path="/rejected" element={<RejectedView />} />
+							<Route path="/gift/list/before" element={<GiftListBeforeView/>} />
+						</Routes>
+					</BrowserRouter>
+				</Suspense>
 			</ErrorBoundary>
 			<ToastContainer
 				position="top-right"
