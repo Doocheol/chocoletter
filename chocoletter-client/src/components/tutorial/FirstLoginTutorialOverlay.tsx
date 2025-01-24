@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "../common/Button";
 
-/** 아이콘 영역을 제외하고 화면 전체를 검은 배경으로 덮는 오버레이 props */
 interface FirstLoginTutorialOverlayProps {
 	/** 강조(구멍) 처리할 아이콘 버튼의 ref */
 	targetRef: React.RefObject<HTMLButtonElement>;
@@ -13,6 +12,7 @@ interface FirstLoginTutorialOverlayProps {
 /**
  * - 화면 전체를 어둡게 깔고, 아이콘 주변을 원형으로 오려(투명)서 아이콘만 보이게
  * - 아이콘 클릭은 막고, "알겠어요" 버튼으로만 오버레이 종료
+ * - 반응형/스크롤/리사이즈 시에도 아이콘을 정확히 따라가도록 개선
  */
 const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 	targetRef,
@@ -26,15 +26,33 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 	} | null>(null);
 
 	useLayoutEffect(() => {
-		if (targetRef.current) {
+		// 위치를 계산하는 함수
+		const updatePosition = () => {
+			if (!targetRef.current) return;
 			const rect = targetRef.current.getBoundingClientRect();
+
 			// 스크롤 보정
 			const x = rect.left + rect.width / 2 + window.scrollX;
 			const y = rect.top + rect.height / 2 + window.scrollY;
 			// 아이콘보다 약간 크게 오려서 여유를 둠
 			const radius = Math.max(rect.width, rect.height) / 2 + 8;
+
 			setCircleInfo({ x, y, radius });
-		}
+		};
+
+		// 초기 계산
+		updatePosition();
+
+		// 스크롤 & 리사이즈 이벤트 발생 시 재계산
+		window.addEventListener("resize", updatePosition);
+		// capture: true → 자식 스크롤 전에도 업데이트 가능.
+		// (필요에 따라 false로 변경해도 됨.)
+		window.addEventListener("scroll", updatePosition, true);
+
+		return () => {
+			window.removeEventListener("resize", updatePosition);
+			window.removeEventListener("scroll", updatePosition, true);
+		};
 	}, [targetRef]);
 
 	if (!circleInfo) return null;
@@ -42,25 +60,22 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 	const { x, y, radius } = circleInfo;
 
 	/**
-	 * (중요) clip-path로 "전체 화면"에서 "원형 영역"만 빼고(투명 처리) 싶으면
+	 * clip-path로 "전체 화면"에서 "원형 영역"만 빼고(투명 처리)
 	 *   1) 바깥 사각형: 화면 전체 (0,0 ~ 화면 너비/높이)
 	 *   2) 안쪽 원: circle around the icon
 	 *   3) clip-rule: evenodd (두 영역의 차집합을 클리핑)
-	 *
-	 * 예: pathData = 화면전체 사각형 → 원형 → evenodd
 	 */
 	const screenW = window.innerWidth;
 	const screenH = window.innerHeight;
 
-	// 원형 path: SVG에서 원을 그리는 (Arc) 명령어
-	// M (시작점) / a (호 그리기) -> 한 바퀴 그려서 원
+	// 원형 path: SVG 원 그리는 명령어
 	const circlePath = [
 		`M ${x - radius},${y}`,
 		`a ${radius},${radius} 0 1,0 ${radius * 2},0`,
 		`a ${radius},${radius} 0 1,0 -${radius * 2},0 Z`,
 	].join(" ");
 
-	// 전체 사각형 + 원형을 겹쳐서 evenodd로 '원형 부분만 제외'
+	// 전체 사각형 + 원형
 	const pathData = [
 		`M 0,0 H ${screenW} V ${screenH} H 0 Z`, // 화면 전체
 		circlePath, // 원형
@@ -70,7 +85,7 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 		<div
 			className="fixed inset-0 z-50"
 			style={{
-				// 오버레이가 전체 클릭을 막아서 아이콘도 클릭 안 됨
+				// 오버레이가 전체 클릭을 막아서 아이콘 클릭도 막힘
 				pointerEvents: "auto",
 			}}
 		>
@@ -85,9 +100,7 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 					left: 0,
 					width: screenW,
 					height: screenH,
-					// 반투명 배경
 					background: "rgba(0,0,0,0.7)",
-					// 경로 정의 -> 사각형-원(차집합)
 					clipPath: `path('${pathData}')`,
 					clipRule: "evenodd",
 					pointerEvents: "auto",
@@ -97,8 +110,6 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
 			{/*
         (2) 반짝이는 테두리 효과(선택)
         - 구멍보다 약간 큰 원을 그려서 boxShadow
-        - 배경과 동일한 clip-path를 써도 되지만,
-          radius를 +4 해서 "조금 더 큰 원" 주변에만 테두리
       */}
 			<div
 				style={{
