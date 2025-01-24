@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import Modal from "../../common/Modal";
-import moment from 'moment-timezone';
 
 interface AnnounceDontOpenModalProps {
     isOpen: boolean,
@@ -12,7 +11,7 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
 
     useEffect(() => {
         const openAnnounce = async () => {
-            const currentDate = moment().tz('Asia/Seoul').format('DD');
+            const currentDate = '14';
             if (currentDate !== '14') {
                 commentRef.current = '특별 초콜릿은 2월 14일\n⭐약속한 시간⭐에만 열 수 있어요!'
             } else {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import moment from 'moment-timezone';
 import { GoBackMainMyBeforeButton } from "../components/gift-list-before/button/GoBackMainMyBeforeButton";
 import { IsOpenGeneralGiftModal } from "../components/gift-list-before/modal/IsOpenGeneralGiftModal";
 import { GiftOpenBeforeButton } from "../components/gift-list-before/button/GiftOpenBeforeButton";
@@ -13,7 +12,7 @@ const GiftListBeforeView = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentDate(moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss'))
+            setCurrentDate('YYYY-MM-DD HH:mm:ss')
         }, 1000)
 
         return () => clearInterval(interval)
