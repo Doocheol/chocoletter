@@ -19,6 +19,7 @@ import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,11 @@ public class GiftService {
         Gift gift = giftRepository.findGiftById(giftId);
         if (!memberId.equals(gift.getReceiverId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        LocalDate restrictedDate = LocalDate.of(2025, 2, 14);
+        LocalDate today = LocalDate.now();
+        if (today.isBefore(restrictedDate) && gift.getType() == GiftType.SPECIAL) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_SPECIAL_BEFORE_DATE);
         }
         gift.openGift();
         LetterDto letter = letterService.findLetter(giftId);
