@@ -16,7 +16,12 @@ import { FiShare, FiCamera } from "react-icons/fi";
 import ShareModal from "../components/main/my/before/modal/ShareModal";
 import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
-import { Button } from "../components/common/Button";
+// import { Button } from "../components/common/Button";
+
+// === 공통 Dropdown
+import Dropdown from "../components/common/Dropdown";
+// === 프로필 드롭다운 내용
+import MyPage from "../components/my-page/MyPage";
 
 // === 뷰포트 높이 보정 훅 ===
 import useViewportHeight from "../hooks/useViewportHeight";
@@ -45,6 +50,9 @@ const MainMyBeforeView: React.FC = () => {
 
 	// 튜토리얼 아이콘 ref
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
+
+	// 프로필 드롭다운 열림 여부
+	const [isProfileOpen, setIsProfileOpen] = useState(false);
 
 	// 핸들러들
 	const handleShare = () => {
@@ -78,8 +86,9 @@ const MainMyBeforeView: React.FC = () => {
 		toast.info("채팅방 아이콘 클릭!");
 	};
 
+	// 프로필 드롭다운 토글
 	const handleProfile = () => {
-		toast.info("프로필 아이콘 클릭!");
+		setIsProfileOpen((prev) => !prev);
 	};
 
 	const handleMyChocolateBox = () => {
@@ -95,20 +104,24 @@ const MainMyBeforeView: React.FC = () => {
       */}
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6EEFF] to-[#FFEEF2] relative">
 				{/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-				<div className="mt-4 px-4 flex items-center justify-between slide-in-bottom">
+				<div className="mt-4 px-6 flex items-center justify-between ">
 					<button onClick={handleHome}>
-						<FaHome className="w-6 h-6" />
+						<FaHome className="w-6 h-6 slide-in-bottom" />
 					</button>
 					<div className="flex items-center gap-4">
-						{/* 튜토리얼 아이콘 (ref 연결) */}
-						<button onClick={handleTutorial} ref={tutorialIconRef}>
+						{/**
+              튜토리얼 아이콘
+              - ref={tutorialIconRef}는 button에 달고
+              - 애니메이션은 자식 <span>에만 적용
+            */}
+						<button ref={tutorialIconRef} onClick={handleTutorial}>
 							<FaRegCircleQuestion className="w-6 h-6" />
 						</button>
 						<button onClick={handleChat}>
-							<FaComments className="w-6 h-6" />
+							<FaComments className="w-6 h-6 slide-in-bottom" />
 						</button>
 						<button onClick={handleProfile}>
-							<FaUserCircle className="w-6 h-6" />
+							<FaUserCircle className="w-6 h-6 slide-in-bottom" />
 						</button>
 					</div>
 				</div>
@@ -199,6 +212,15 @@ const MainMyBeforeView: React.FC = () => {
 						onClose={() => setIsFirstLogin(false)}
 					/>
 				)}
+
+				{/* 프로필 드롭다운 (Dropdown + MyPage) */}
+				<Dropdown
+					isOpen={isProfileOpen}
+					onClose={() => setIsProfileOpen(false)}
+					className="top-14 right-4"
+				>
+					<MyPage />
+				</Dropdown>
 			</div>
 		</div>
 	);
