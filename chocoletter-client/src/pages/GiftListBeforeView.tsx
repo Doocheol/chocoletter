@@ -31,7 +31,8 @@ const GiftListBeforeView = () => {
                 {/* 초콜릿 상자 */}
                 <div className="bg-hrtColorPurple ">
                     <div>
-                        <GiftOpenBeforeButton giftId={1}/>
+                        {/* 여기 api 연동 후 바꾸세요. 미래의 나 */}
+                        <GiftOpenBeforeButton giftId={1} isOpened={true} />
                     </div>
                 </div>
                 <p>RTC 초콜릿은 2월 14일 표시되니 시각에 개봉 가능합니다!</p>
