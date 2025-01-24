@@ -91,4 +91,8 @@ public class Gift extends BaseTimeEntity {
     public void updateUnBoxingTime(LocalDateTime unBoxingTime) {
         this.unBoxingTime = unBoxingTime;
     }
+
+    public void openGift() {
+        this.isOpened = true;
+    }
 }

@@ -184,4 +184,21 @@ public interface GiftBoxSwagger {
                     required = true
             )
             @PathVariable("giftBoxId") Long giftBoxId);
+
+    @Operation(
+            summary = "열어볼 수 있는 선물 카운트 사용",
+            description = "열어볼 수 있는 선물 카운트를 사용합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UnboxingTimesResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    public ResponseEntity<?> usePreviewCount();
 }
