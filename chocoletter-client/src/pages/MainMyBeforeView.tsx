@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
 import { FaRegCircleQuestion } from "react-icons/fa6";
 import { FaHome, FaComments, FaUserCircle } from "react-icons/fa";
@@ -10,20 +10,27 @@ import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import { Button } from "../components/common/Button";
 import CaptureModal from "../components/main/my/before/modal/CaptureModal";
+import { isFirstLoginAtom } from "../atoms/auth/userAtoms";
+import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
 
 const MainMyBeforeView: React.FC = () => {
 	const navigate = useNavigate();
-
 	const availableGifts = useRecoilValue(availableGiftsAtom);
 	const receivedGifts = useRecoilValue(receivedGiftsAtom);
 
 	// 모달 상태 관리
 	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+	// 튜토리얼 여부 (recoil-persist로 관리)
+	const [isFirstLogin, setIsFirstLogin] = useRecoilState(isFirstLoginAtom);
+
 	// 캡처 상태 관리
 	const [capturedImage, setCapturedImage] = useState<string | null>(null);
 	const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
 	const captureRef = useRef<HTMLDivElement>(null);
+
+	// 튜토리얼 아이콘에 연결할 ref
+	const tutorialIconRef = useRef<HTMLButtonElement>(null);
 
 	// 버튼 클릭 핸들러 (예시)
 	const handleShare = () => {
@@ -86,7 +93,12 @@ const MainMyBeforeView: React.FC = () => {
 				<button onClick={handleHome} className="text-2xl">
 					<FaHome />
 				</button>
-				<button onClick={handleTutorial} className="text-2xl">
+
+				<button
+					ref={tutorialIconRef}
+					onClick={handleTutorial}
+					className="text-2xl"
+				>
 					<FaRegCircleQuestion />
 				</button>
 				<button onClick={handleChat} className="text-2xl">
@@ -166,6 +178,17 @@ const MainMyBeforeView: React.FC = () => {
 				isOpen={isShareModalOpen}
 				onClose={() => setIsShareModalOpen(false)}
 			/>
+
+			{/*
+        최초 로그인(튜토리얼 미시청)이라면 오버레이 표시.
+        닫으면 isFirstLogin을 false로 변경해, 다시는 표시되지 않게 함.
+      */}
+			{isFirstLogin && (
+				<FirstLoginTutorialOverlay
+					targetRef={tutorialIconRef}
+					onClose={() => setIsFirstLogin(false)}
+				/>
+			)}
 		</div>
 	);
 };
