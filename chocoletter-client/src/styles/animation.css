@@ -383,3 +383,34 @@
     animation: shake-vertical 5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite
       both;
   }
+
+  @keyframes wave-down {
+    0% {
+      transform: scaleY(0.1);
+      transform-origin: top;
+      opacity: 0.5;
+    }
+    30% {
+      transform: scaleY(1.2);
+      transform-origin: top;
+      opacity: 0.8;
+    }
+    50% {
+      transform: scaleY(0.9);
+      transform-origin: top;
+    }
+    70% {
+      transform: scaleY(1.05);
+      transform-origin: top;
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      transform-origin: top;
+      opacity: 1;
+    }
+  }
+  
+  .wave-down {
+    animation: wave-down 0.5s ease-in-out forwards;
+  }
