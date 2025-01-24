@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import moment from 'moment-timezone';
 import { GoBackMainMyBeforeButton } from "../components/gift-list-before/button/GoBackMainMyBeforeButton";
 import { IsOpenGeneralGiftModal } from "../components/gift-list-before/modal/IsOpenGeneralGiftModal";
+import { GiftOpenBeforeButton } from "../components/gift-list-before/button/GiftOpenBeforeButton";
 
 const GiftListBeforeView = () => {
+    const [currentDate, setCurrentDate] = useState('')
     const [isOpenGeneral, setIsOpenGeneral] = useState(true);
     const closeOpenGeneralModal = () => {
         setIsOpenGeneral(false)
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentDate(moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss'))
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <div>
@@ -19,9 +30,12 @@ const GiftListBeforeView = () => {
                 </div>
                 {/* 초콜릿 상자 */}
                 <div className="bg-hrtColorPurple ">
-                    <p>qq</p>
+                    <div>
+                        <GiftOpenBeforeButton giftId={1}/>
+                    </div>
                 </div>
                 <p>RTC 초콜릿은 2월 14일 표시되니 시각에 개봉 가능합니다!</p>
+                <p>{currentDate}</p>
             </div>
         </div>
     )
