@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../../../../../styles/animation.css";
 import { toast } from "react-toastify";
+import Modal from "../../../../common/Modal";
+import "../../../../../styles/animation.css";
 
 type CaptureModalProps = {
 	isVisible: boolean;
@@ -22,6 +23,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		}
 	}, [isVisible, imageSrc]);
 
+	// 모달이 아예 열리지 않는 상태면 null 반환
 	if (!isVisible) return null;
 
 	const handleDownload = () => {
@@ -40,14 +42,14 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 
 				setIsAnimating(false); // 애니메이션 종료
 				onClose(); // 모달 닫기
-			}, 500); // 애니메이션 지속 시간과 일치 (jello-vertical: 0.5s)
+			}, 500); // 애니메이션 지속 시간 (jello-vertical: 0.5s)에 맞춤
 		}
 	};
 
 	return (
-		<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+		<Modal isOpen={isVisible} onClose={onClose}>
 			<div
-				className={`bg-white p-6 rounded-lg shadow-lg flex flex-col items-center ${
+				className={`p-1 flex flex-col items-center rounded-lg ${
 					isAnimating ? "jello-vertical" : ""
 				}`}
 			>
@@ -76,7 +78,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 					</>
 				)}
 			</div>
-		</div>
+		</Modal>
 	);
 };
 
