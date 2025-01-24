@@ -3,8 +3,6 @@ import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
 import ErrorPage from "./pages/ErrorPage";
-import { WaitingRoomView } from "./pages/VideoWaitingRoomView";
-import { VideoRoomView } from "./pages/VideoRoomView";
 import ReceiveView from "./pages/ReceiveView";
 import LetterView from "./pages/LetterView";
 import SelectGiftTypeView from "./pages/SelectGiftTypeView";
@@ -29,6 +27,9 @@ import SetTimeView from "./pages/SetTimeView";
 import RejectedView from "./pages/RejectedView";
 import useViewportHeight from "./hooks/useViewportHeight";
 import TestPage from "./pages/TestPage";
+import GiftListBeforeView from "./pages/GiftListBeforeView";
+import WaitingRoomView from "./pages/VideoWaitingRoomView";
+import VideoRoomView from "./pages/VideoRoomView";
 
 declare global {
 	interface Window {
@@ -116,6 +117,7 @@ function App() {
 						<Route path="/reset-time" element={<ResetTimeView />} />
 						<Route path="/set-time" element={<SetTimeView />} />
 						<Route path="/rejected" element={<RejectedView />} />
+						<Route path="/gift/list/before" element={<GiftListBeforeView/>} />
 					</Routes>
 				</BrowserRouter>
 			</ErrorBoundary>

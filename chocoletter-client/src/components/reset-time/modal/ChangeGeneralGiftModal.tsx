@@ -1,5 +1,4 @@
 import React from "react";
-
 import Modal from "../../common/Modal";
 import { Button } from "../../common/Button";
 
@@ -12,7 +11,7 @@ const changeGeneralGiftModal: React.FC<changeGeneralGiftProps> = ({ isOpen, onCl
     return (
         <div>
             <Modal isOpen={isOpen} onClose={onClose}>
-                모달 테스트
+                <p>모달 테스트</p>
                 <Button onClick={onClose}>내 초콜릿 상자로 이동하기</Button>
             </Modal>
         </div>

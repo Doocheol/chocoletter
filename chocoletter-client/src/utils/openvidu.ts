@@ -1,4 +1,3 @@
-// import { StreamManager } from 'openvidu-browser';
 import { OpenVidu } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidu";
 
@@ -71,16 +70,10 @@ export const joinSession = async (
 					publishVideo: true, // 비디오 송출 여부
 					resolution: '640x480', // 해상도
 					frameRate: 30, // 프레임 레이트
-					// insertMode: 'APPEND',
 					mirror: true, // 거울모드
 				});
 
 				session.publish(publisher);
-
-				// var devices = await OV.getDevices();
-				// var videoDevices = devices.filter(device => device.kind === 'videoinput');
-				// var currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
-				// var currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
 
 				// Set the main video in the page to display our webcam and store our Publisher
 				setVideo((prev) => ({
