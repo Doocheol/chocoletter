@@ -19,9 +19,6 @@ function ReceiveView() {
         return null;
     }
 
-    // 일정이 수락된 경우 - webRTC시간 확정
-
-
     return (
         <div className="relative flex flex-col items-center h-screen">
             <NotFixedUnboxingTime
@@ -42,7 +39,7 @@ function ReceiveView() {
                     <AcceptButton />
                 </div>
                 <div className="mb-8">
-                    <RejectButton />
+                    <RejectButton giftId={giftId} />
                 </div>
             </div>
         </div>

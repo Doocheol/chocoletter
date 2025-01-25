@@ -10,7 +10,7 @@ export const axios = baseAxios.create({
   });
 
 // AccessToken 가져오기
-const accessToken = '123' //  나중에 삭제!!
+const accessToken = 123 //  나중에 삭제!!
 // function getAccessToken(): string | null {
 //     return localStorage.getItem("accessToken"); 
 // }
@@ -31,7 +31,7 @@ export async function getNotFixedUnboxingTime(giftId: number) {
             },
         });
         const data = res.data;
-        console.log("unboxing time:", data);
+        // console.log("unboxing time:", data);
         return data;
     } catch (err) {
         console.error("getNotFixedUnboxingTime API 호출 중 에러 발생:", err);
@@ -56,13 +56,12 @@ export async function patchUnboxingReject(giftId: number) {
             },
         });
         const data = res.data;
-        console.log("Unboxing reject response:", res.data);
         return data;
     } catch (err) {
         console.error("patchUnboxingReject API 호출 중 에러 발생:", err);
         return null;
     }
-  }
+}
 
 
   
