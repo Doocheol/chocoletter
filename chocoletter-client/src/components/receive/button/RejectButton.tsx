@@ -21,7 +21,7 @@ const RejectButton: React.FC<RejectButtonProps> = ({ giftId }) => {
             if (response) {
                 navigate("/main/my/before"); 
             } else {
-                alert("거절 요청 중 오류가 발생했습니다.");
+                alert("수락 요청 중 오류가 발생했습니다.");
             }
         } catch (err) {
             console.error("API 호출 중 에러 발생:", err);
