@@ -16,7 +16,7 @@ const accessToken = '123' //  나중에 삭제!!
 // }
 
 
-// invitation unboxing 시간 가져오기
+// UnboxingTime 가져오기
 export async function getNotFixedUnboxingTime(giftId: number) {
     try {
         // const accessToken = getAccessToken();
@@ -37,4 +37,32 @@ export async function getNotFixedUnboxingTime(giftId: number) {
         console.error("getNotFixedUnboxingTime API 호출 중 에러 발생:", err);
         return null;
     }
+}
+  
+
+// Unboxing 일정 거절
+export async function patchUnboxingReject(giftId: number) {
+    try {
+        // const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            throw new Error("AccessToken is missing");
+        }
+
+        const res = await axios.patch(`/api/v1/gift/${giftId}/unboxing/invitation/reject`, null,
+            {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = res.data;
+        console.log("Unboxing reject response:", res.data);
+        return data;
+    } catch (err) {
+        console.error("patchUnboxingReject API 호출 중 에러 발생:", err);
+        return null;
+    }
   }
+
+
+  
