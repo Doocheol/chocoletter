@@ -37,7 +37,7 @@ export async function getGiftDetail(giftId: number) {
         return data;
     } catch (err) {
         console.error("getGiftDetail API 호출 중 에러 발생:", err);
-        return null;
+        throw err;
     }
   }
   

@@ -21,15 +21,20 @@ const LetterView = () => {
 
     const [giftData, setGiftData] = useState<GiftData | null>(null);
     const [loading, setLoading] = useState(true); 
-
+    const [error, setError] = useState<number | null>(null); 
+    
     useEffect(() => {
         const fetchGiftData = async () => {
             if (selectedGiftId) {
                 try {
-                    const data = await getGiftDetail(selectedGiftId); // API 호출
+                    const data = await getGiftDetail(selectedGiftId); 
                     setGiftData(data); 
-                } catch (error) {
-                    console.error("Error fetching gift data:", error);
+                } catch (error:any) {
+                    if (error.response?.status === 403) {
+                        setError(403); // 에러 상태 설정
+                    } else {
+                        setError(error.response?.status || 500); // 기타 에러 처리
+                    }
                 } finally {
                     setLoading(false);
                 }
@@ -41,42 +46,51 @@ const LetterView = () => {
     }, [selectedGiftId]);
 
     
-
-
     return (
         <div className="relative flex flex-col items-center h-screen">
             {/* GoBackButton을 좌측 상단에 고정 */}
             <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
 
-            {/* 메인 콘텐츠 렌더링 */}
+            {/* 추후 삭제!! 선택된 Gift ID 표시 */}
+            <div className="mt-4 text-center text-gray-600">
+                <p>
+                    <strong>Selected Gift ID:</strong> {selectedGiftId}
+                </p>
+            </div>
 
+            {/* 메인 콘텐츠 렌더링 */}
             {loading ? (
                 <Loading />
+            ) : error === 403 ? (
+                <ForbiddenView />
             ) : (
                 <div className="absolute mt-24">
-                <GiftView
-                giftData={
-                    giftData || { 
-                        nickName: "Anonymous",
-                        content: null,
-                        question: "No question provided",
-                        answer: "No answer provided",
-                    }
-                }
-                />
+                    <GiftView
+                        giftData={
+                            giftData || {
+                                nickName: "Anonymous",
+                                content: null,
+                                question: "No question provided",
+                                answer: "No answer provided",
+                            }
+                        }
+                    />
                 </div>
             )}
         </div>
     );
 };
 
-// 로딩 화면 컴포넌트
-// const LoadingView = () => (
-//     <div className="flex flex-col justify-center items-center h-full text-2xl">
-//         <h1>Loading...</h1>
-//     </div>
-// );
-
+// 403 에러 화면 컴포넌트
+const ForbiddenView = () => (
+    <div className="flex flex-col justify-center items-center h-full text-2xl p-4">
+        <h1 className="font-bold">
+            선물을 열어보려면 <br/>
+            두 개의 편지를 작성하거나,  <br/>
+            2월 14일을 기다려야 해요!😥
+        </h1>
+    </div>
+);
 
 
 // Gift 컴포넌트 렌더링 컴포넌트
