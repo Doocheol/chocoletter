@@ -36,7 +36,7 @@ function ReceiveView() {
                 </h1>
                 {/* 수락/거절 버튼 */}
                 <div className="mb-8">
-                    <AcceptButton />
+                    <RejectButton giftId={giftId} />
                 </div>
                 <div className="mb-8">
                     <RejectButton giftId={giftId} />

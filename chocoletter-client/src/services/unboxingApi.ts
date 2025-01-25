@@ -38,7 +38,30 @@ export async function getNotFixedUnboxingTime(giftId: number) {
         return null;
     }
 }
-  
+
+// Unboxing 일정 수락
+export async function patchUnboxingAccept(giftId: number) {
+    try {
+        // const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            throw new Error("AccessToken is missing");
+        }
+
+        const res = await axios.patch(`/api/v1/gift/${giftId}/unboxing/invitation/accept`, null,
+            {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = res.data;
+        return data;
+    } catch (err) {
+        console.error("patchUnboxingAccept API 호출 중 에러 발생:", err);
+        return null;
+    }
+}
+
 
 // Unboxing 일정 거절
 export async function patchUnboxingReject(giftId: number) {

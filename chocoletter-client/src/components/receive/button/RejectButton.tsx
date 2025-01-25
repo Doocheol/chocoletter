@@ -32,7 +32,7 @@ const RejectButton: React.FC<RejectButtonProps> = ({ giftId }) => {
         <div className="text-center">
             <Button 
                 onClick={clickRejectHandler}
-                className="w-[300px] h-[100px]" // 픽셀 단위를 명시
+                className="w-[300px] h-[100px]"
             >
                 그때는 어려울 것 같아요. <br />
                 다른 시간에 함께 할 수 있을까요?😥
