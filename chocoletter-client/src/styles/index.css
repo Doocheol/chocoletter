@@ -18,3 +18,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fcebfc;
 }
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
