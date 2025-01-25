@@ -22,7 +22,7 @@ const chocolates = [
 
 const GiftListBeforeView = () => {
     const [currentDate, setCurrentDate] = useState('')
-    const [isOpenGeneral, setIsOpenGeneral] = useState(true);
+    const [isOpenGeneral, setIsOpenGeneral] = useState(false);
     const closeOpenGeneralModal = () => {
         setIsOpenGeneral(false)
     }
@@ -30,7 +30,7 @@ const GiftListBeforeView = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             const nowDate = new Date().toISOString();
-            const KSTDate = changeKSTDate({'givenDate': nowDate, 'format': 'YYYY-MM-DD HH:mm', 'isISO': 1})
+            const KSTDate = changeKSTDate({'givenDate': nowDate, 'format': 'YYYY-MM-DD HH:mm' })
             setCurrentDate(KSTDate)
         }, 1000)
 
@@ -50,7 +50,7 @@ const GiftListBeforeView = () => {
                 <div className="bg-hrtColorPurple w-88 grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden p-4 max-h-[13rem]">
                     {/* api 연동 후 추가 수정 */}
                     {chocolates.map((chocolate) => (
-                        <GiftOpenBeforeButton giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} />
+                        <GiftOpenBeforeButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} />
                     ))}
                 </div>
                 <p className="text-sm mt-5">특별 초콜릿은 2월 14일<br/> 표시된 시각에 개봉 가능합니다!</p>

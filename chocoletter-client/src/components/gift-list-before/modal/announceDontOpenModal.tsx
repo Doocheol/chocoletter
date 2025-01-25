@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../common/Modal";
+import { changeKSTDate } from "../../../utils/changeKSTDate";
 
 interface AnnounceDontOpenModalProps {
     isOpen: boolean,
@@ -7,15 +8,20 @@ interface AnnounceDontOpenModalProps {
 }
 
 export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ isOpen, onClose }) => {
-    const commentRef = useRef('');
+    const [comment, setComment] = useState<JSX.Element | string>('');
 
     useEffect(() => {
         const openAnnounce = async () => {
-            const currentDate = '14';
-            if (currentDate !== '14') {
-                commentRef.current = '특별 초콜릿은 2월 14일\n⭐약속한 시간⭐에만 열 수 있어요!'
+            const currentDate = new Date().toISOString();
+            const currentDay = changeKSTDate({'givenDate': currentDate, 'format':'DD'});
+            if (currentDay !== '14') {
+                setComment(
+                    <>
+                        <p>특별 초콜릿은 2월 14일</p>
+                        <p>⭐약속한 시간⭐에만 열 수 있어요!</p>
+                    </>);
             } else {
-                commentRef.current = '⭐약속한 시간⭐을 기다려주세요❣️'
+                setComment('⭐약속한 시간⭐을 기다려주세요❣️')
             }
         }
 
@@ -25,7 +31,7 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
     return(
         <div>
             <Modal isOpen={isOpen} onClose={onClose}>
-                <p>{commentRef.current}</p>
+                <p>{comment}</p>
             </Modal>
         </div>
     )

@@ -5,6 +5,9 @@ import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { Button } from "../../common/Button";
 import { getGiftDetail } from "../../../services/giftApi";
 
+// 더미 데이터
+const giftData = {nickName: 'Amy', content: 'Why', question: 'wow', answer: 'sad'}
+
 interface GiftOpenBeforeButtonProps {
     giftId: number,
     giftType: string,
@@ -42,7 +45,7 @@ export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ gift
 
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
-        const giftData = await getGiftDetailCall();
+        // const giftData = await getGiftDetailCall();
         // 나중에 giftData.chocoType으로 변경경
         if (giftType === 'SPECIAL') {
             setIsRTC(true);
@@ -64,7 +67,10 @@ export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ gift
         <div>
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
-            <Button onClick={giftOpenButtonClickHandler}>버튼</Button>
+            <Button onClick={giftOpenButtonClickHandler}>
+                <p>{giftType}</p>
+                <p>{isOpened}</p>
+            </Button>
         </div>
     )
 }
