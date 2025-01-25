@@ -19,9 +19,10 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
                     <>
                         <p>특별 초콜릿은 2월 14일</p>
                         <p>⭐약속한 시간⭐에만 열 수 있어요!</p>
-                    </>);
+                    </>
+                );
             } else {
-                setComment('⭐약속한 시간⭐을 기다려주세요❣️')
+                setComment(<p>⭐약속한 시간⭐을 기다려주세요❣️'</p>)
             }
         }
 
@@ -31,7 +32,7 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
     return(
         <div>
             <Modal isOpen={isOpen} onClose={onClose}>
-                <p>{comment}</p>
+                {comment}
             </Modal>
         </div>
     )

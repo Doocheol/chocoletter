@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AnnounceDontOpenModal } from "../modal/announceDontOpenModal";
+import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { Button } from "../../common/Button";
 import { getGiftDetail } from "../../../services/giftApi";
@@ -8,14 +8,14 @@ import { getGiftDetail } from "../../../services/giftApi";
 // 더미 데이터
 const giftData = {nickName: 'Amy', content: 'Why', question: 'wow', answer: 'sad'}
 
-interface GiftOpenBeforeButtonProps {
+interface GiftOpenButtonProps {
     giftId: number,
     giftType: string,
     isOpened: boolean,
     unboxingTime: string | null,
 }
 
-export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ giftId, giftType, isOpened }) => {
+export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
     const navigate = useNavigate();

@@ -29,7 +29,7 @@ export const changeKSTDate = ({givenDate, format}: changeDateProps) => {
     const second = String(kstDate.getUTCSeconds()).padStart(2, '0'); // 초
 
     return format
-        .replace('YYYY', fullYear)
+        .replace('YYYY', String(fullYear))
         .replace('yy', year)
         .replace('MM', month)
         .replace('DD', day)
