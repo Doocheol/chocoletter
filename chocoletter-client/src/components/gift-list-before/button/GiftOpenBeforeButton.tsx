@@ -6,16 +6,16 @@ import { Button } from "../../common/Button";
 import { getGiftDetail } from "../../../services/giftApi";
 
 interface GiftOpenBeforeButtonProps {
-    giftId: number;
-    isOpened: boolean;
+    giftId: number,
+    giftType: string,
+    isOpened: boolean,
+    unboxingTime: string | null,
 }
 
-export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ giftId, isOpened }) => {
+export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ giftId, giftType, isOpened }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
     const navigate = useNavigate();
-    // 임시 초콜릿
-    const chocoType = 'Special'
 
     // 초콜릿 정보 가져오기
     const getGiftDetailCall = async () => {
@@ -44,7 +44,7 @@ export const GiftOpenBeforeButton: React.FC<GiftOpenBeforeButtonProps> = ({ gift
     const giftOpenButtonClickHandler = async () => {
         const giftData = await getGiftDetailCall();
         // 나중에 giftData.chocoType으로 변경경
-        if (chocoType === 'Special') {
+        if (giftType === 'SPECIAL') {
             setIsRTC(true);
         } else {
             if (isOpened) {

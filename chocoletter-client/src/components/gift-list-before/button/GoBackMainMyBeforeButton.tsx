@@ -1,3 +1,4 @@
+import React from 'react';
 import { GoBackButton } from "../../common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 
