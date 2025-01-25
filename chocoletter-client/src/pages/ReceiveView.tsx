@@ -4,14 +4,15 @@ import AcceptButton from "../components/receive/button/AcceptButton";
 import RejectButton from "../components/receive/button/RejectButton";
 import NotFixedUnboxingTime from "../components/receive/NotFixedUnboxingTime";
 
+// webRTC 일정 수락/거절 화면
 function ReceiveView() {
-    const { giftId: strGiftId } = useParams<{ giftId: string }>();
+    const { giftId: strGiftId } = useParams<{ giftId: string }>(); //url에서 giftid 가져오기
     const giftId = strGiftId && !isNaN(Number(strGiftId)) ? Number(strGiftId) : null;
 
     const [time, setTime] = useState<string | null>(null);
     const [error, setError] = useState<boolean>(false);
 
-    // giftId가 null인 경우 처리
+    // giftId가 null인 경우와 에러인 경우 처리
     if (!giftId || error) {
         return (
             <div className="flex items-center justify-center h-screen">
