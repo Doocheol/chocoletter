@@ -1,5 +1,3 @@
-// src/pages/MainMyBeforeView.tsx
-
 import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +25,7 @@ import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
 // 이미지 리소스 예시
-import my_gift_box from "../assets/images/giftbox/my_giftbox_main.png";
+import my_gift_box from "../assets/images/giftbox/my_giftbox_main.svg";
 
 const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
@@ -144,7 +142,7 @@ const MainMyBeforeView: React.FC = () => {
               onClick={handleMyChocolateBox}
               className="w-[255px] rounded-md flex items-center justify-center"
             >
-              <img src={my_gift_box} alt="내 선물함" className="p-2 rounded-full max-h-60" />
+              <img src={my_gift_box} alt="내 선물함" className="p-2 max-h-60" />
             </button>
           </div>
 
