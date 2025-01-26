@@ -39,6 +39,7 @@ export async function getGiftDetail(giftId: number) {
     }
 }
 
+// 선물 리스트 가져오기
 export async function getGiftList(giftType: string) {
     try {
         // const accessToken = getAccessToken();
@@ -61,3 +62,7 @@ export async function getGiftList(giftType: string) {
     }
 }
 
+// 특별 자유 선물 보내기
+
+
+// 특별 질문 선물 보내기

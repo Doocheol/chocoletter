@@ -39,6 +39,7 @@ export async function getNotFixedUnboxingTime(giftId: number) {
     }
 }
 
+
 // Unboxing 일정 수락
 export async function patchUnboxingAccept(giftId: number) {
     try {
@@ -87,4 +88,28 @@ export async function patchUnboxingReject(giftId: number) {
 }
 
 
-  
+// Unboxing 전체 일정 조회
+export async function getUnboxingSchedule(giftBoxId: number) {
+    try {
+        // const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            throw new Error("AccessToken is missing");
+        }
+
+        const res = await axios.get(`/api/v1/gift-box/${giftBoxId}/unboxing/schedule`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = res.data;
+        // console.log("unboxing schedule:", data);
+        return data;
+    } catch (err) {
+        console.error("getUnboxingSchedule API 호출 중 에러 발생:", err);
+        return null;
+    }
+}
+
+
+
