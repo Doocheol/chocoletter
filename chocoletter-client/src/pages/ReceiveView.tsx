@@ -1,29 +1,23 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AcceptButton from "../components/receive/button/AcceptButton";
 import RejectButton from "../components/receive/button/RejectButton";
 import NotFixedUnboxingTime from "../components/receive/NotFixedUnboxingTime";
 
+// webRTC 일정 수락/거절 화면
 function ReceiveView() {
-    const { giftId: strGiftId } = useParams<{ giftId: string }>();
+    const navigate = useNavigate();
+    const { giftId: strGiftId } = useParams<{ giftId: string }>(); //url에서 giftid 가져오기
     const giftId = strGiftId && !isNaN(Number(strGiftId)) ? Number(strGiftId) : null;
 
     const [time, setTime] = useState<string | null>(null);
     const [error, setError] = useState<boolean>(false);
 
-    // giftId가 null인 경우 처리
+    // giftId가 null인 경우와 에러인 경우 처리
     if (!giftId || error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <h1 className="text-xl font-bold">
-                    잘못된 URL입니다. <br/> 선물 ID가 필요합니다.
-                </h1>
-            </div>
-        );
+        navigate("/error")
+        return null;
     }
-
-    // 일정이 수락된 경우 - webRTC시간 확정
-
 
     return (
         <div className="relative flex flex-col items-center h-screen">
@@ -42,10 +36,10 @@ function ReceiveView() {
                 </h1>
                 {/* 수락/거절 버튼 */}
                 <div className="mb-8">
-                    <AcceptButton />
+                    <RejectButton giftId={giftId} />
                 </div>
                 <div className="mb-8">
-                    <RejectButton />
+                    <RejectButton giftId={giftId} />
                 </div>
             </div>
         </div>
