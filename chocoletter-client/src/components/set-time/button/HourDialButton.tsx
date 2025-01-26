@@ -22,30 +22,31 @@ const HourDialButton: React.FC<HourDialButtonProps> = ({ onHourChange }) => {
     };
 
     return (
-        <div className="flex flex-col items-center p-6 w-50">
+        <div className="flex flex-col items-center justify-center h-full">
         {/* 시간 선택 다이얼 */}
-        <div
-            className="h-40 w-20 overflow-y-scroll snap-y snap-mandatory"
-                onScroll={handleScroll}
-                style={{
-                    scrollbarWidth: "none", 
-                    msOverflowStyle: "none", 
-                }}
-                >
-                        
-            {hours.map((h, index) => (
-                <div
-                    key={index}
-                    className={`w-[50px] h-[50px] flex items-center justify-center snap-center ${
-                    hour === h
-                        ? "text-blue-500 font-bold text-2xl " // 선택된 시간
-                        : "text-gray-400 text-xl" // 선택되지 않은 시간
-                    }`}
-                >
-                    {h}
-                </div>
-                ))}
-        </div>
+            <div className="h-[50px] text-gray-700 font-bold text-lg pr-8">시</div>
+            <div
+                className="h-40 w-20 overflow-y-scroll snap-y snap-mandatory"
+                    onScroll={handleScroll}
+                    style={{
+                        scrollbarWidth: "none", 
+                        msOverflowStyle: "none", 
+                    }}
+                    >
+                            
+                {hours.map((h, index) => (
+                    <div
+                        key={index}
+                        className={`w-[50px] h-[50px] flex items-center justify-center snap-center ${
+                        hour === h
+                            ? "text-blue-500 font-bold text-3xl rounded-lg bg-white " // 선택된 시간
+                            : "text-gray-400 text-xl" // 선택되지 않은 시간
+                        }`}
+                    >
+                        {h}
+                    </div>
+                    ))}
+            </div>
         </div>
     );
 };

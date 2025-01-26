@@ -6,7 +6,7 @@ import { GoArrowLeft } from "react-icons/go";
 import goBackIcon from "../assets/images/button/go_back_button.png";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
 import AmPmButton from "../components/set-time/button/AmPmButton"
-import HourDialPicker from "../components/set-time/button/HourDialButton"
+import HourDialButton from "../components/set-time/button/HourDialButton"
 
 // 특별 선물 선택 이후, 화상 연결 시간 설정하는 화면
 const SetTimeView = () => {
@@ -26,7 +26,7 @@ const SetTimeView = () => {
         setSelected(value); 
     };
 
-    // HourDialPicker에서 시간 변경 시 호출
+    // HourDialButton에서 시간 변경 시 호출
     const handleHourChange = (hour: string) => {
         setSelectedHour(hour);
     };
@@ -66,8 +66,10 @@ const SetTimeView = () => {
                         onSelect={selectAmPmHandler} 
                     />
 
-                    {/* HourDialPicker 표시 */}
-                    <HourDialPicker onHourChange={handleHourChange} />
+                    {/* HourDialButton 표시 */}
+                    <HourDialButton onHourChange={handleHourChange} />
+
+                    {/* <div className="flex flex-col justify-center text-3xl"> : </div> */}
 
                 </div>
 

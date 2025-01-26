@@ -9,10 +9,12 @@ interface AmPmButtonProps {
 const AmPmButton: React.FC<AmPmButtonProps> = ({ selected, onSelect }) => {
   return (
     <div className="w-[100px] flex flex-col mx-4">
+      {/* 위치 맞추는 공백 */}
+      <div className="h-[50px] text-gray-700 font-bold text-lg"></div> 
       {/* AM 버튼 */}
       <Button
         onClick={() => onSelect("AM")} 
-        className={`bg-transparent shadow-none m-4 w-[50px] h-[50px] flex items-center justify-center text-center hover:bg-blue-300 
+        className={`shadow-none m-4 w-[50px] h-[50px] flex items-center justify-center text-center hover:bg-blue-300 
           ${
             selected === "AM" ? "text-blue-500 text-2xl" : "text-gray-400"
           }`}
@@ -24,7 +26,7 @@ const AmPmButton: React.FC<AmPmButtonProps> = ({ selected, onSelect }) => {
       {/* PM 버튼 */}
       <Button
         onClick={() => onSelect("PM")}
-        className={`bg-transparent shadow-none m-4 w-[50px] h-[50px] flex items-center justify-center text-center hover:bg-blue-300 
+        className={`shadow-none m-4 w-[50px] h-[50px] flex items-center justify-center text-center hover:bg-blue-300 
           ${
             selected === "PM" ? "text-blue-500 text-2xl" : "text-gray-400"
           }`}
