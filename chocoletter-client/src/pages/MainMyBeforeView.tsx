@@ -105,10 +105,7 @@ const MainMyBeforeView: React.FC = () => {
       */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-        <div className="mt-6 mb-8 px-6 flex items-center justify-between ">
-          <button onClick={handleHome}>
-            <FaHome className="w-6 h-6 text-chocoletterPurpleBold" />
-          </button>
+        <div className="mt-6 mb-8 px-6 flex items-center justify-end ">
           <div className="flex items-center gap-7">
             {/**
               튜토리얼 아이콘

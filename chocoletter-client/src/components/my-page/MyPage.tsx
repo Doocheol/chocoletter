@@ -2,14 +2,14 @@
 
 import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { isLoginAtom, userNameAtom, userProfileUrlAtom } from "../../atoms/auth/userAtoms";
 import { receivedGiftsAtom, sentGiftsAtom } from "../../atoms/gift/giftAtoms";
 
-import { FaUserCircle } from "react-icons/fa"; // 사용자 아이콘
+import { FaUserCircle, FaHome } from "react-icons/fa"; // 사용자 아이콘 및 홈 아이콘
 import { FiLogOut } from "react-icons/fi"; // 로그아웃 아이콘
-import { HiOutlineBadgeCheck } from "react-icons/hi"; // 배지 아이콘
 import { Button } from "../common/Button";
 
 /**
@@ -28,10 +28,18 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
   const sentGifts = useRecoilValue(sentGiftsAtom);
   const receivedGifts = useRecoilValue(receivedGiftsAtom);
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     setIsLogin(false);
     toast.info("로그아웃 되었습니다.");
     onClose(); // 로그아웃 후 닫기
+  };
+
+  const handleHome = () => {
+    navigate("/");
+    toast.info("홈으로 이동!");
+    onClose(); // 홈으로 이동 후 MyPage 닫기
   };
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,7 +64,16 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
       ref={dropdownRef}
       className="fixed top-16 left-1/2 transform -translate-x-1/2 px-6 py-4 bg-white shadow-lg rounded-xl z-50 w-80 max-w-md"
     >
-      <div className="flex flex-col gap-1">
+      <div className="relative flex flex-col gap-4">
+        {/* 홈 버튼 */}
+        <button
+          onClick={handleHome}
+          className="absolute top-2 right-2 text-chocoletterPurpleBold hover:text-chocoletterPurpleDark"
+          aria-label="홈"
+        >
+          <FaHome className="w-5 h-5" />
+        </button>
+
         {/* 프로필 영역 */}
         <div className="flex items-center mb-2">
           {userProfileUrl ? (
