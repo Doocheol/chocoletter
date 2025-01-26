@@ -30,6 +30,7 @@ import TestPage from "./pages/TestPage";
 import GiftListBeforeView from "./pages/GiftListBeforeView";
 import WaitingRoomView from "./pages/VideoWaitingRoomView";
 import VideoRoomView from "./pages/VideoRoomView";
+import GiftListEventView from "./pages/GiftListEventView";
 
 declare global {
 	interface Window {
@@ -118,6 +119,7 @@ function App() {
 						<Route path="/set-time" element={<SetTimeView />} />
 						<Route path="/rejected" element={<RejectedView />} />
 						<Route path="/gift/list/before" element={<GiftListBeforeView/>} />
+						<Route path="/gift/list/event" element={<GiftListEventView />} />
 					</Routes>
 				</BrowserRouter>
 			</ErrorBoundary>

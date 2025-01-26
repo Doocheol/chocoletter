@@ -19,8 +19,9 @@ const dummyChocolates = [
     {'giftId': 11, 'giftType': "SPECIAL", 'isOpened': false, "unBoxingTime": "2025-02-14T18:30:00.000Z"},
 ]
 
+type FilterType = 'all' | 'general' | 'special'
 interface GiftListProps {
-    filter: 'all' | 'general' | 'special'
+    filter: FilterType,
 }
 
 export const GiftList: React.FC<GiftListProps> = ({filter}) => {
