@@ -1,8 +1,5 @@
 package chocolate.chocoletter.api.gift.service;
 
-import static chocolate.chocoletter.common.util.DateTimeUtil.formatDateTime;
-import static chocolate.chocoletter.common.util.DateTimeUtil.parseTimeToDateTime;
-
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
@@ -18,9 +15,9 @@ import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
+import chocolate.chocoletter.common.util.DateTimeUtil;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,7 @@ public class GiftService {
     private final GiftRepository giftRepository;
     private final LetterService letterService;
     private final UnboxingRoomService unboxingRoomService;
+    private final DateTimeUtil dateTimeUtil;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
@@ -83,7 +81,7 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        String formattedUnboxingTime = formatDateTime(gift.getUnBoxingTime());
+        String formattedUnboxingTime = dateTimeUtil.formatDateTime(gift.getUnBoxingTime());
         return GiftUnboxingInvitationResponseDto.of(formattedUnboxingTime);
     }
 
@@ -99,17 +97,16 @@ public class GiftService {
         if (gift.getIsAccept()) {
             throw new BadRequestException(ErrorMessage.ERR_ALREADY_ACCEPT_UNBOXING_INVITATION);
         }
-        gift.updateUnBoxingTime(parseTimeToDateTime(requestDto.unBoxingTime()));
+        gift.updateUnBoxingTime(dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
         // TODO : receiverId 에게 새로운 초대장 알림톡 발송
     }
 
     public List<String> findReceiverUnboxingTimes(Long memberId) {
         List<Gift> receiverSpecialGifts = giftRepository.findReceiverSpecialGifts(memberId, GiftType.SPECIAL);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return receiverSpecialGifts.stream()
                 .map(Gift::getUnBoxingTime)
                 .distinct()
-                .map(dateTime -> dateTime.format(formatter))
+                .map(dateTimeUtil::formatDateTime)
                 .collect(Collectors.toList());
     }
 
