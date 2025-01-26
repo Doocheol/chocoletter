@@ -12,7 +12,7 @@ const AmPmButton: React.FC<AmPmButtonProps> = ({ selected, onSelect }) => {
       {/* AM 버튼 */}
       <Button
         onClick={() => onSelect("AM")} // 선택 변경 이벤트
-        className={`m-4 w-[50px] h-[50px] flex items-center justify-center text-center ${selected === "AM" ? "bg-[#fcb7b7] text-white" : ""}`}
+        className={`m-4 w-[50px] h-[50px] flex items-center justify-center text-center ${selected === "AM" ? "bg-[#fcb7b8] text-white" : ""}`}
       >
         <h1>AM</h1>
       </Button>
@@ -20,7 +20,7 @@ const AmPmButton: React.FC<AmPmButtonProps> = ({ selected, onSelect }) => {
       {/* PM 버튼 */}
       <Button
         onClick={() => onSelect("PM")} // 선택 변경 이벤트
-        className={`m-4 w-[50px] h-[50px] flex items-center justify-center text-center ${selected === "PM" ? "bg-[#fcb7b7] text-white" : ""}`}
+        className={`m-4 w-[50px] h-[50px] flex items-center justify-center text-center ${selected === "PM" ? "bg-[#fcb7b8] text-white" : ""}`}
       >
         <h1>PM</h1>
       </Button>
