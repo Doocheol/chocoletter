@@ -84,7 +84,7 @@ const SetTimeView = () => {
                 </h1>
 
                 {/* 시간 선택  */}
-                <div className="h-[300px] flex flex-raw my-12">
+                <div className="h-[250px] flex flex-raw my-8">
                     {/* AmPmButton 컴포넌트 */}
                     <AmPmButton selected={selectedAmPm} onSelect={handleAmPmChange} 
                     />
@@ -100,14 +100,26 @@ const SetTimeView = () => {
                 </div>
 
                 {/* 선택된 시간 표시 */}
-                <div className="w-[300px] mb-12 p-4">
+                <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md w-[300px] mb-12">
+                    <p className="text-gray-700 text-sm font-semibold">선택된 시간</p>
+                    <p className="text-gray-500 text-sm mb-2">2025년 2월 14일</p>
+                    <div className="flex gap-2 text-3xl font-bold text-blue-600">
+                        <span>{selectedHour}</span>
+                        <span>시</span>
+                        <span>{selectedMinute}</span>
+                        <span>분</span>
+                        <span>{selectedAmPm}</span>
+                    </div>
+                </div>
+                {/* <div className="w-[300px] mb-12 p-4">
                     <p className="text-lg font-bold">
-                        선택된 시간 : {" "}
+                        선택된 시간 <br />
+                        2월 14일 {" "}
                         <span>
                             {selectedHour}시 {selectedMinute}분 {selectedAmPm}
                         </span>
                     </p>
-                </div>
+                </div> */}
 
                 {/* 초대장 전송 버튼 */}
                 <Button 
