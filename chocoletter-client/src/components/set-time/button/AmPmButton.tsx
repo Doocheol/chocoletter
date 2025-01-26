@@ -8,7 +8,7 @@ interface AmPmButtonProps {
 
 const AmPmButton: React.FC<AmPmButtonProps> = ({ selected, onSelect }) => {
   return (
-    <div className="w-[100px] flex flex-col mx-4">
+    <div className="flex flex-col items-center justify-center h-full mx-2">
       {/* 위치 맞추는 공백 */}
       <div className="h-[50px] text-gray-700 font-bold text-lg"></div> 
       {/* AM 버튼 */}
