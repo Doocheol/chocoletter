@@ -6,10 +6,12 @@ import { GoArrowLeft } from "react-icons/go";
 import goBackIcon from "../assets/images/button/go_back_button.png";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
 import AmPmButton from "../components/set-time/button/AmPmButton"
+import HourDialPicker from "../components/set-time/button/HourDialButton"
 
 // 특별 선물 선택 이후, 화상 연결 시간 설정하는 화면
 const SetTimeView = () => {
     const [selected, setSelected] = useState<"AM" | "PM">("AM");
+    const [selectedHour, setSelectedHour] = useState<string>("01"); // 선택된 시간 상태
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,6 +24,11 @@ const SetTimeView = () => {
     // AM/PM 선택
     const selectAmPmHandler = (value: "AM" | "PM") => {
         setSelected(value); 
+    };
+
+    // HourDialPicker에서 시간 변경 시 호출
+    const handleHourChange = (hour: string) => {
+        setSelectedHour(hour);
     };
 
     // 초콜릿 만들기 버튼 누르면, 카카오톡 전송 완료 모달 띄우기
@@ -44,19 +51,33 @@ const SetTimeView = () => {
             />
             {/* 페이지 콘텐츠 */}
             <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
-            <div className="absolute mt-24">
-                <h1 className="text-xl font-bold mb-24">
+            <div className="absolute mt-24 flex flex-col items-center">
+                <h1 className="text-xl font-bold mb-12">
                     함께 설렘을 나눌 수 있는 시간이에요!<br />
                     2월 14일, 당신만을 위한<br />
                     특별한 날에 원하는 시각을 설정해주세요 🤩
                 </h1>
 
-                {/* AmPmButton 컴포넌트 */}
-                <AmPmButton
-                    selected={selected}
-                    onSelect={selectAmPmHandler} 
-                />
-                
+                {/* 시간 선택  */}
+                <div className="flex flex-raw my-12">
+                    {/* AmPmButton 컴포넌트 */}
+                    <AmPmButton
+                        selected={selected}
+                        onSelect={selectAmPmHandler} 
+                    />
+
+                    {/* HourDialPicker 표시 */}
+                    <HourDialPicker onHourChange={handleHourChange} />
+
+                </div>
+
+                {/* 선택된 시간 표시 */}
+                <div className="w-[250px] mb-12 p-4">
+                    <p className="text-lg">
+                    선택된 시간 : <span className="font-bold">{selectedHour}</span>
+                    </p>
+                </div>
+
                 {/* 초대장 전송 버튼 */}
                 <Button 
                     onClick={() => {
