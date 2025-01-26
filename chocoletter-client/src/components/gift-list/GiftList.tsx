@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React from "react";
 import { GiftOpenButton } from "./button/GiftOpenButton";
-import { getGiftList } from "../../services/giftApi";
+import { useFetchChocolates } from "../../hooks/useGetChocolates";
+import Loading from "../common/Loading";
 
 // 초콜릿 더미 데이터
 const dummyChocolates = [
@@ -23,68 +24,11 @@ interface GiftListProps {
 }
 
 export const GiftList: React.FC<GiftListProps> = ({filter}) => {
-    // const [cachedData, setCachedData] = useState<{ [key: string]: any[]}>({});
-    // const [chocolates, setChocolates] = useState<any[]>([]);
-    // const [isLoading, setIsLoading] = useState(false);
-    // api
-    // 전체
-//     const getChocolates = async () => {
-//         setIsLoading(true)
-//         const chocolates = getGiftList(filter);
-//     }
+    const { data: chocolates, isLoading } = useFetchChocolates(filter);
 
-//     // Debounce 타이머를 관리하기 위한 ref
-//     const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-
-//   // Throttle 타이머를 관리하기 위한 ref
-//     const throttleTimer = useRef<number>(0);
-
-//   // Debouncing 함수 구현
-//     const debouncedFetchGifts = (filter: string) => {
-//         // 이전 타이머를 취소
-//         if (debounceTimer.current) {
-//         clearTimeout(debounceTimer.current);
-//         }
-
-//     // 새 타이머 설정
-//         debounceTimer.current = setTimeout(async () => {
-//             if (cachedData[filter]) {
-//                 setChocolates(cachedData[filter]);
-//                 return;
-//             }
-
-//         const data = await fetchGifts(filter);
-//         setCachedData((prev) => ({ ...prev, [filter]: data }));
-//         setChocolates(data);
-//         }, 300); // 300ms 디바운스
-//     };
-
-//     // Throttling 함수 구현
-//     const throttledFetchGifts = async (filter: string) => {
-//         const now = Date.now();
-
-//         // 마지막 호출 시간이 현재 시간보다 오래되었으면 실행
-//         if (now - throttleTimer.current > 1000) { // 1초 스로틀링
-//         throttleTimer.current = now;
-
-//         if (cachedData[filter]) {
-//             setChocolates(cachedData[filter]);
-//             return;
-//         }
-
-//         const data = await fetchGifts(filter);
-//         setCachedData((prev) => ({ ...prev, [filter]: data }));
-//         setChocolates(data);
-//         }
-//     };
-
-//     // 필터 변경 시 Debouncing 또는 Throttling 함수 호출
-//     useEffect(() => {
-//         debouncedFetchGifts(filter); // 또는 throttledFetchGifts(filter)
-//     }, [filter]);
-
-    // const App = () => {
-    // const [filter, setFilter] = useState<"all" | "general" | "special">("all");
+    if (isLoading) {
+        return <Loading />; // 로딩 상태 표시
+    }
 
     return (
         <div className="bg-hrtColorPurple w-88 grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden p-4 max-h-[13rem]">

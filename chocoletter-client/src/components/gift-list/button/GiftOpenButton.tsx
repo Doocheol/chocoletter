@@ -32,8 +32,12 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
 
     // 초콜릿 정보 가져오기
     const getGiftDetailCall = async () => {
-        const res = await getGiftDetail(giftId)
-        return res.data;
+        try {
+            const res = await getGiftDetail(giftId)
+            return res.data;
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     // 1. 안 열린 일반 초콜릿
@@ -61,8 +65,8 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         if (giftType === 'SPECIAL') {
             setIsRTC(true);
         } else {
+            setAtomGiftId(giftId);
             if (isOpened) {
-                setAtomGiftId(giftId);
                 navigate('/letter', { state: {
                     nickName: giftDatum.nickName,
                     content: giftDatum.content,
