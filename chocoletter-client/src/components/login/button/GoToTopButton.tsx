@@ -42,7 +42,9 @@ const GoToTopButton: React.FC<GoToTopButtonProps> = ({
   };
 
   return (
-    <>{isVisible && <img src={login_view_top_arrow} alt="Go to top" onClick={scrollToTop} />}</>
+    <>
+      <img src={login_view_top_arrow} alt="Go to top" onClick={scrollToTop} />
+    </>
   );
 };
 
