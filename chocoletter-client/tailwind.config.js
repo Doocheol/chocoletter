@@ -52,6 +52,7 @@ module.exports = {
           900: "#dcccff",
         },
         chocoletterPurple: "#d5a7ea",
+        chocoletterPurpleBold: "#9E4AFF",
         chocoletterPink: "#fb8bb0",
         chocoletterYellow: "#fff0b2",
         chocoletterRed: "#db443a",
