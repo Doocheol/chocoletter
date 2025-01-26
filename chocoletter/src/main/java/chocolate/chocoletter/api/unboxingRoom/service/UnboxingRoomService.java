@@ -5,6 +5,7 @@ import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
+import chocolate.chocoletter.api.unboxingRoom.dto.response.HasAccessUnboxingRoomResponseDto;
 import chocolate.chocoletter.api.unboxingRoom.repository.UnboxingRoomRepository;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
@@ -24,7 +25,7 @@ public class UnboxingRoomService {
         unboxingRoomRepository.save(unboxingRoom);
     }
 
-    public GiftDetailResponseDto hasAccessToUnboxingRoom(Long memberId, Long unboxingRoomId) {
+    public HasAccessUnboxingRoomResponseDto hasAccessToUnboxingRoom(Long memberId, Long unboxingRoomId) {
         UnboxingRoom unboxingRoom = unboxingRoomRepository.findByIdOrThrow(unboxingRoomId);
         if (unboxingRoom.getIsEnd()) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_UNBOXING_ROOM_ALREADY_END);
@@ -34,7 +35,8 @@ public class UnboxingRoomService {
         }
         Gift gift = unboxingRoom.getGift();
         LetterDto letter = letterService.findLetter(gift.getId());
-        return GiftDetailResponseDto.of(gift, letter);
+        GiftDetailResponseDto giftDetail = GiftDetailResponseDto.of(gift, letter);
+        return HasAccessUnboxingRoomResponseDto.of(unboxingRoom.getStartTime(), giftDetail);
     }
 
     @Transactional

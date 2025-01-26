@@ -39,6 +39,7 @@ public class UnboxingRoom extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime startTime;
 
+    @Column(nullable = false)
     private Boolean isEnd;
 
     @Builder
@@ -47,6 +48,7 @@ public class UnboxingRoom extends BaseTimeEntity {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.startTime = startTime;
+        this.isEnd = false;
     }
 
     public void endRoom() {
