@@ -56,7 +56,7 @@ export async function getUnboxingSchedule(giftBoxId: number) {
             },
         });
         const data = res.data;
-        console.log("unboxing schedule:", data);
+        // console.log("unboxing schedule:", data);
         return data;
     } catch (err) {
         console.error("getUnboxingSchedule API 호출 중 에러 발생:", err);
