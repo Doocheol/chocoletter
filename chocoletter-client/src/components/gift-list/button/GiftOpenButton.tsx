@@ -80,7 +80,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     }
 
     return (
-        <div>
+        <div className="bg-chocoletterGiftBg aspect-square rounded-lg shadow-sm">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
             <ImageButton onClick={giftOpenButtonClickHandler}>

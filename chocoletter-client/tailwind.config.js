@@ -61,6 +61,7 @@ module.exports = {
         chocoletterRed: "#db443a",
         chocoletterGray: "#dbdbdb",
         chocoletterGiftBoxBg: "#efe1ff",
+        chocoletterGiftBg: "#bfafd1",
         chocoletterBackground: {
           light: "#E6F5FF",
           dark: "#F4D3FF",
