@@ -4,15 +4,28 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class DateTimeUtil {
-    public static LocalDateTime parseTimeToDateTime(String time) {
+
+    @Value("${special-gift.open-day}")
+    private String openDay;
+
+    public LocalDateTime parseTimeToDateTime(String time) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        LocalDate baseDate = LocalDate.parse(openDay, dateFormatter);
+
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime parsedTime = LocalTime.parse(time, timeFormatter);
-        return LocalDateTime.of(LocalDate.now(), parsedTime);
+
+        return LocalDateTime.of(baseDate, parsedTime);
     }
 
-    public static String formatDateTime(LocalDateTime dateTime) {
+    public String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return dateTime.format(formatter);
     }

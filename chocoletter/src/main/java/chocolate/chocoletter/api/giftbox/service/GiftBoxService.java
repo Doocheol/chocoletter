@@ -1,7 +1,5 @@
 package chocolate.chocoletter.api.giftbox.service;
 
-import static chocolate.chocoletter.common.util.DateTimeUtil.parseTimeToDateTime;
-
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
@@ -18,6 +16,7 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
+import chocolate.chocoletter.common.util.DateTimeUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ public class GiftBoxService {
     private final GiftBoxRepository giftBoxRepository;
     private final GiftService giftService;
     private final LetterService letterService;
+    private final DateTimeUtil dateTimeUtil;
 
 
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
@@ -57,7 +57,7 @@ public class GiftBoxService {
         checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                parseTimeToDateTime(requestDto.unBoxingTime()));
+                dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
@@ -68,7 +68,7 @@ public class GiftBoxService {
         checkGiftExists(senderId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                parseTimeToDateTime(requestDto.unBoxingTime()));
+                dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
         giftService.saveGift(gift);
         receiverGiftBox.addGiftCount();
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
