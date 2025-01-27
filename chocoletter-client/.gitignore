@@ -23,4 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# roll-up
 stats.html
