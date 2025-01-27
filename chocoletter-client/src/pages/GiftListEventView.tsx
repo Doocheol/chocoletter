@@ -10,7 +10,7 @@ const GiftListEventView = () => {
     return (
         <div>
             <GoBackMainMyButton />
-            <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="flex flex-col items-center justify-center min-h-screen w-[393px] h-[852px] relative bg-chocoletterGiftBoxBg overflow-hidden">
                 <p>나의 초콜릿 박스</p>
                 <FilterButton />
                 <GiftList filter={filterType} />

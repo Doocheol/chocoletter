@@ -22,7 +22,10 @@ module.exports = {
       "7xl": "5rem",
     },
     extend: {
-      sans: ["Dovemayo_gothic", "NeoDunggeunmo", "Arial", "sans-serif"],
+      fontFamily: {
+        sans: ["Dovemayo_gothic", "NeoDunggeunmo", "Arial", "sans-serif"],
+        pretendard: ["Pretendard", "sans-serif"],
+      },
       colors: {
         dotOutline: {
           100: "#1d005c",
@@ -57,6 +60,7 @@ module.exports = {
         chocoletterYellow: "#fff0b2",
         chocoletterRed: "#db443a",
         chocoletterGray: "#dbdbdb",
+        chocoletterGiftBoxBg: "#efe1ff",
         chocoletterBackground: {
           light: "#E6F5FF",
           dark: "#F4D3FF",
