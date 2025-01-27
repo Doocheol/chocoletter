@@ -39,7 +39,11 @@ function OnboardingIntro() {
         onClick={onMoreClick}
         ref={introRef}
       >
-        <img src={login_view_down_arrow} alt="login_view_down_arrow" className="p-2 max-h-24" />
+        <img
+          src={login_view_down_arrow}
+          alt="login_view_down_arrow"
+          className="p-2 max-h-24 opacity-80"
+        />
       </div>
 
       {/* 서비스 소개 제목 */}
@@ -114,7 +118,7 @@ function OnboardingIntro() {
       {/* 페이지 상단으로 가기 버튼 */}
       <div
         className={`px-8 mb-4 flex justify-end ${
-          scrollPosition > 500 ? "slide-in-bottom" : "collapse"
+          scrollPosition > 460 ? "slide-in-bottom" : "collapse"
         }`}
       >
         <GoToTopButton
@@ -126,7 +130,7 @@ function OnboardingIntro() {
       {/* 초콜릿 상자 보러가기 링크 */}
       <a
         className={`mx-4 mb-14 ml-10 heartbeat
-          ${scrollPosition > 510 ? "slide-in-bottom" : "collapse"} `}
+          ${scrollPosition > 470 ? "slide-in-bottom" : "collapse"} `}
         href="https://www.chocolate-letter.com/"
       >
         <img
