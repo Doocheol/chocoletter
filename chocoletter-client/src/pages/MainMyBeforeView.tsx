@@ -15,6 +15,9 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import ShareModal from "../components/main/my/before/modal/ShareModal";
 import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
+import ChatModal from "../components/main/my/before/modal/ChatModal"; // ChatModal 임포트
+import TutorialModal from "../components/main/my/before/modal/TutorialModal"; // TutorialModal 임포트
+
 // import { Button } from "../components/common/Button";
 
 // === 공통 Dropdown
@@ -49,11 +52,15 @@ const MainMyBeforeView: React.FC = () => {
   const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
 
+  const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false); // 새로운 상태 추가
+
   // 튜토리얼 아이콘 ref
   const tutorialIconRef = useRef<HTMLButtonElement>(null);
 
   // 프로필 드롭다운 열림 여부
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false); // 새로운 상태 추가
 
   // 핸들러들
   const handleShare = () => {
@@ -74,16 +81,18 @@ const MainMyBeforeView: React.FC = () => {
     }
   };
 
-  const handleHome = () => {
-    navigate("/");
-    toast.info("홈으로 이동!");
-  };
+  // const handleHome = () => {
+  //   navigate("/");
+  //   toast.info("홈으로 이동!");
+  // };
 
   const handleTutorial = () => {
+    setIsTutorialModalOpen(true); // 튜토리얼 모달 열기
     toast.info("튜토리얼 아이콘 클릭!");
   };
 
   const handleChat = () => {
+    setIsChatModalOpen(true); // 채팅 모달 열기
     toast.info("채팅방 아이콘 클릭!");
   };
 
@@ -93,6 +102,8 @@ const MainMyBeforeView: React.FC = () => {
   };
 
   const handleMyChocolateBox = () => {
+    navigate("/gift/list/before");
+
     toast.info("내 초콜릿 박스 아이콘 클릭!");
   };
 
@@ -210,7 +221,7 @@ const MainMyBeforeView: React.FC = () => {
             className="w-[81px] h-14 flex items-center justify-center bg-white hover:bg-chocoletterPurple rounded-[15px] border border-black group"
             aria-label="캡처"
           >
-            <FiCamera className="w-6 h-6" />
+            <FiCamera className="w-6 h-6 text-black text-opacity-80" />
           </button>
         </div>
 
@@ -234,6 +245,12 @@ const MainMyBeforeView: React.FC = () => {
             <MyPage onClose={() => setIsProfileOpen(false)} />
           </>
         )}
+
+        {/* 채팅 모달 */}
+        <ChatModal isOpen={isChatModalOpen} onClose={() => setIsChatModalOpen(false)} />
+
+        {/* 튜토리얼 모달 */}
+        <TutorialModal isOpen={isTutorialModalOpen} onClose={() => setIsTutorialModalOpen(false)} />
       </div>
     </div>
   );
