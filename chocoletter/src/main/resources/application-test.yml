@@ -26,3 +26,9 @@ ssh:
 
 encrypt:
   secret-key: ${ENCRYPT_SECRET_KEY}
+
+openvidu-url: ${OPEN_VIDU_URL}
+openvidu-secret: ${OPEN_VIDU_SECRET}
+
+special-gift:
+  open-day: ${SPECIAL_GIFT_OPEN_DAY}
