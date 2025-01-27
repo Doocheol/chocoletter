@@ -4,43 +4,35 @@ import { selectedGiftTypeAtom } from '../../../atoms/gift/giftAtoms';
 export const FilterButton = () => {
     const [selectedValue, setSelectedValue] = useRecoilState(selectedGiftTypeAtom);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedValue(event.target.value as 'all' | 'general' | 'special');
-    };
+    const options = [
+        { id: "all", label: "모든 초콜릿" },
+        { id: "general", label: "일반 초콜릿" },
+        { id: "special", label: "특별 초콜릿" },
+    ];
 
     return (
-        <div>
-        <label>
+    <div className="flex gap-4">
+        {options.map((option) => (
+        <label
+            key={option.id}
+            className={`cursor-pointer px-4 py-2 rounded-full border 
+            ${
+                selectedValue === option.id
+                ? "bg-blue-500 text-white border-blue-500 text-sm"
+                : "bg-white text-gray-700 border-gray-300 text-sm"
+            }`}
+        >
             <input
             type="radio"
-            name="all"
-            value="all"
-            checked={selectedValue === 'all'}
-            onChange={handleChange}
+            name="chip-radio"
+            value={option.id}
+            checked={selectedValue === option.id}
+            onChange={() => setSelectedValue(option.id as "all" | "general" | "special")}
+            className="hidden"
             />
-            모든 초콜릿
+            {option.label}
         </label>
-        <label>
-            <input
-            type="radio"
-            name="general"
-            value="general"
-            checked={selectedValue === 'general'}
-            onChange={handleChange}
-            />
-            일반 초콜릿
-        </label>
-        <label>
-            <input
-            type="radio"
-            name="special"
-            value="special"
-            checked={selectedValue === 'special'}
-            onChange={handleChange}
-            />
-            특별 초콜릿
-        </label>
-        <p>선택된 필터(개발용): {selectedValue}</p>
-        </div>
+        ))}
+    </div>
     );
-}
+};
