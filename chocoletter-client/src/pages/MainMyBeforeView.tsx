@@ -133,12 +133,20 @@ const MainMyBeforeView: React.FC = () => {
         </div>
 
         {/** 초콜릿 개봉/받은 정보 카드 (jello-vertical) */}
-        <div className="mt-6 mx-auto  bg-white rounded-[30px] border border-black rounded-md w-[258px] jello-vertical">
+        <div className="mt-6 mx-auto  bg-white bg-opacity-60 rounded-[25px] border border-black border-opacity-40 w-[258px] jello-vertical">
           <div className="flex flex-col items-center gap-2.5 p-5">
-            <div className="text-2xl font-semibold text-center">
-              개봉 가능한 🍫 : {availableGifts}개
+            <div className="flex flew-row">
+              <div className="text-2xl font-normal text-center">개봉 가능한 🍫 :&nbsp;</div>
+              <div className="text-2xl font-normal text-center text-chocoletterPurpleBold">
+                {availableGifts}
+              </div>
+              <div className="text-2xl font-normal text-center">개</div>
             </div>
-            <div className="text-sm text-[#454451]">지금까지 받은 🍫 : {receivedGifts}개</div>
+            <div className="flex flew-row">
+              <div className="text-sm text-gray-500 text-center">지금까지 받은 🍫 :&nbsp;</div>
+              <div className="text-sm text-center text-chocoletterPurple">{receivedGifts}</div>
+              <div className="text-sm text-gray-500 text-center">개</div>
+            </div>
           </div>
         </div>
 
