@@ -83,7 +83,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
               className="w-10 h-10 rounded-full object-cover mr-3"
             />
           ) : (
-            <FaUserCircle className="w-10 h-10 text-gray-400 mr-3" />
+            <FaUserCircle className="w-6 h-6 text-gray-400 mr-3" />
           )}
           <div>
             <div className="text-xl font-bold text-gray-800">{userName || "초코레터"}</div>
