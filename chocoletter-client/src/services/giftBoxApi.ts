@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import baseAxios from "axios";
 
 // giftAPI 인스턴스 설정 
@@ -16,8 +15,8 @@ const accessToken = '123' //  나중에 삭제!!
 //     return localStorage.getItem("accessToken"); 
 // }
 
-// 선물 정보 가져오기
-export async function getGiftDetail(giftId: number) {
+// 선물 카운트 사용
+export async function disPreviewCoin() {
     try {
         // const accessToken = getAccessToken();
 
@@ -25,22 +24,22 @@ export async function getGiftDetail(giftId: number) {
             throw new Error("AccessToken is missing");
         }
 
-        const res = await axios.get(`/api/v1/gift/${giftId}/receive`, {
+        const res = await axios.patch(`/api/v1/gift-box/preview`,{}, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
         const data = res.data;
-        console.log("Gift 데이터:", data);
+        console.log("카운트 사용 성공!", data);
         return data;
     } catch (err) {
-        console.error("getGiftDetail API 호출 중 에러 발생:", err);
-        throw err;
+        console.error("usePreviewCoin API 호출 중 에러 발생:", err);
+        return err;
     }
 }
 
-// 선물 리스트 가져오기(filter 별)
-export async function getGiftList(giftType: string) {
+// 내 선물 개수 조회
+export async function countMyGiftBox() {
     try {
         // const accessToken = getAccessToken();
 
@@ -48,21 +47,18 @@ export async function getGiftList(giftType: string) {
             throw new Error("AccessToken is missing");
         }
 
-        const res = await axios.get(`/api/v1/gift/${giftType}`, {
+        const res = await axios.get(`/api/v1/gift-box/count`,{
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+
+        // key: giftCount, canOpenGiftCount
         const data = res.data;
-        console.log("Gift List:", data);
+        console.log("개수 조회 성공 :", data);
         return data;
     } catch (err) {
-        console.error("getGiftList API 호출 중 에러 발생:", err);
-        return null;
+        console.error("usePreviewCoin API 호출 중 에러 발생:", err);
+        return err;
     }
 }
-
-// 특별 자유 선물 보내기
-
-
-// 특별 질문 선물 보내기
