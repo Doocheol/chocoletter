@@ -113,7 +113,7 @@ function OnboardingIntro() {
 
       {/* 페이지 상단으로 가기 버튼 */}
       <div
-        className={`px-8 mb-2 flex justify-end ${
+        className={`px-8 mb-4 flex justify-end ${
           scrollPosition > 500 ? "slide-in-bottom" : "collapse"
         }`}
       >
@@ -125,7 +125,7 @@ function OnboardingIntro() {
 
       {/* 초콜릿 상자 보러가기 링크 */}
       <a
-        className={`mx-4 mb-10 ml-10 heartbeat
+        className={`mx-4 mb-14 ml-10 heartbeat
           ${scrollPosition > 510 ? "slide-in-bottom" : "collapse"} `}
         href="https://www.chocolate-letter.com/"
       >

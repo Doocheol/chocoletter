@@ -118,16 +118,16 @@ const MainMyBeforeView: React.FC = () => {
             */}
             <div className="flex flex-col items-center">
               <button onClick={handleTutorial} ref={tutorialIconRef}>
-                <FaRegCircleQuestion className="w-6 h-6 text-chocoletterPurpleBold" />
+                <FaRegCircleQuestion className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
               </button>
               {/* "튜토리얼" 텍스트는 오버레이 내에서만 표시되므로 여기서 제거 */}
             </div>
 
             <button onClick={handleChat}>
-              <FaComments className="w-6 h-6 text-chocoletterPurpleBold" />
+              <FaComments className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
             </button>
             <button onClick={handleProfile}>
-              <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold" />
+              <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
             </button>
           </div>
         </div>
@@ -148,7 +148,7 @@ const MainMyBeforeView: React.FC = () => {
           <div ref={captureRef} className="heartbeat">
             <button
               onClick={handleMyChocolateBox}
-              className="w-[255px] pl-10 rounded-md flex items-center justify-center"
+              className="w-[255px] pl-8 flex items-center justify-center hover:bg-chocoletterBackground-light hover:bg-opacity-40"
             >
               <img src={my_gift_box} alt="내 선물함" className="p-2 max-h-60" />
             </button>
@@ -156,8 +156,8 @@ const MainMyBeforeView: React.FC = () => {
 
           {/** 안내 문구 (shake-horizontal) */}
           <div className="flex items-start pl-4 gap-1.5 mt-4 w-[225px] shake-horizontal">
-            <AiOutlineExclamationCircle className="w-3 h-3" />
-            <p className="text-xs text-[#222226] leading-snug">
+            <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
+            <p className="text-xs text-gray-500 leading-snug">
               개봉 가능한 일반 초콜릿이 있다면
               <br />
               박스를 클릭하여 편지를 읽어볼 수 있어요.
@@ -186,24 +186,24 @@ const MainMyBeforeView: React.FC = () => {
             </div>
 
             {/* 공유하기 버튼 */}
-            <Button
+            <button
               onClick={handleShare}
-              className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold rounded-[15px] border border-black group"
+              className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple rounded-[15px] border border-black group"
               aria-label="공유하기"
             >
               <FiShare className="w-6 h-6 text-white" />
               <span className="font-display-1 text-white text-xl">공유하기</span>
-            </Button>
+            </button>
           </div>
 
           {/* 캡처 버튼 */}
-          <Button
+          <button
             onClick={handleCapture}
-            className="w-[81px] h-14 flex items-center justify-center bg-white border border-gray-300 rounded-md"
+            className="w-[81px] h-14 flex items-center justify-center bg-white hover:bg-chocoletterPurple rounded-[15px] border border-black group"
             aria-label="캡처"
           >
             <FiCamera className="w-6 h-6" />
-          </Button>
+          </button>
         </div>
 
         {/** 모달 & 튜토리얼 오버레이 */}

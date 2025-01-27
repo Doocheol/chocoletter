@@ -71,7 +71,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
           className="absolute top-2 right-2 text-chocoletterPurpleBold hover:text-chocoletterPurpleDark"
           aria-label="홈"
         >
-          <FaHome className="w-5 h-5" />
+          <FaHome className="w-6 h-6 hover:text-chocoletterPurple" />
         </button>
 
         {/* 프로필 영역 */}
@@ -105,14 +105,14 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
         </div>
 
         {/* 로그아웃 버튼 */}
-        <Button
+        <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center py-2 bg-chocoletterPurpleBold text-white rounded-md border border-black"
+          className="w-full flex items-center justify-center py-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple text-white rounded-xl border border-black"
           aria-label="로그아웃"
         >
           <FiLogOut className="w-5 h-5 mr-2" />
           초코레터 떠나기
-        </Button>
+        </button>
       </div>
     </div>
   );
