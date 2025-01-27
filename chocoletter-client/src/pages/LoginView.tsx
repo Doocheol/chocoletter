@@ -29,7 +29,7 @@ function LoginView() {
       {/* 서비스 타이틀 및 서브타이틀 */}
       <div className="flex flex-col items-center mb-10">
         <img src={login_view_service_title} alt="login_view_service_title" className="" />
-        <h1 className="text-gray-600 font-extrabold">chocoletter</h1>
+        {/* <h1 className="text-gray-600 font-extrabold">chocoletter</h1> */}
       </div>
 
       {/* 로그인 버튼들 */}
