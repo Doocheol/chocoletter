@@ -1,6 +1,6 @@
 package chocolate.chocoletter.api.unboxingRoom.controller;
 
-import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
+import chocolate.chocoletter.api.unboxingRoom.dto.response.HasAccessUnboxingRoomResponseDto;
 import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
 import chocolate.chocoletter.common.annotation.DecryptedId;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class UnboxingRoomController implements UnboxingRoomSwagger {
     @GetMapping("/{roomId}/verify")
     public ResponseEntity<?> hasAccessToUnboxingRoom(@PathVariable @DecryptedId Long roomId) {
         Long memberId = 1L;
-        GiftDetailResponseDto gift = unboxingRoomService.hasAccessToUnboxingRoom(memberId, roomId);
+        HasAccessUnboxingRoomResponseDto gift = unboxingRoomService.hasAccessToUnboxingRoom(memberId, roomId);
         return ResponseEntity.ok(gift);
     }
 
