@@ -15,6 +15,9 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import ShareModal from "../components/main/my/before/modal/ShareModal";
 import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
+import ChatModal from "../components/main/my/before/modal/ChatModal"; // ChatModal 임포트
+import TutorialModal from "../components/main/my/before/modal/TutorialModal"; // TutorialModal 임포트
+
 // import { Button } from "../components/common/Button";
 
 // === 공통 Dropdown
@@ -49,11 +52,15 @@ const MainMyBeforeView: React.FC = () => {
   const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
 
+  const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false); // 새로운 상태 추가
+
   // 튜토리얼 아이콘 ref
   const tutorialIconRef = useRef<HTMLButtonElement>(null);
 
   // 프로필 드롭다운 열림 여부
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false); // 새로운 상태 추가
 
   // 핸들러들
   const handleShare = () => {
@@ -68,23 +75,25 @@ const MainMyBeforeView: React.FC = () => {
         const imageData = canvas.toDataURL("image/png");
         setCapturedImage(imageData);
       } catch (error) {
-        toast.error("캡처 실패!");
+        // toast.error("캡처 실패!");
         setIsCaptureModalVisible(false);
       }
     }
   };
 
-  const handleHome = () => {
-    navigate("/");
-    toast.info("홈으로 이동!");
-  };
+  // const handleHome = () => {
+  //   navigate("/");
+  //   toast.info("홈으로 이동!");
+  // };
 
   const handleTutorial = () => {
-    toast.info("튜토리얼 아이콘 클릭!");
+    setIsTutorialModalOpen(true); // 튜토리얼 모달 열기
+    // toast.info("튜토리얼 아이콘 클릭!");
   };
 
   const handleChat = () => {
-    toast.info("채팅방 아이콘 클릭!");
+    setIsChatModalOpen(true); // 채팅 모달 열기
+    // toast.info("채팅방 아이콘 클릭!");
   };
 
   // 프로필 드롭다운 토글
@@ -93,7 +102,9 @@ const MainMyBeforeView: React.FC = () => {
   };
 
   const handleMyChocolateBox = () => {
-    toast.info("내 초콜릿 박스 아이콘 클릭!");
+    navigate("/gift/list/before");
+
+    // toast.info("내 초콜릿 박스 아이콘 클릭!");
   };
 
   return (
@@ -105,7 +116,7 @@ const MainMyBeforeView: React.FC = () => {
       */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-        <div className="mt-6 mb-8 px-6 flex items-center justify-end ">
+        <div className="mt-6 mb-4 px-6 flex items-center justify-end ">
           <div className="flex items-center gap-7">
             {/**
               튜토리얼 아이콘
@@ -118,27 +129,35 @@ const MainMyBeforeView: React.FC = () => {
             */}
             <div className="flex flex-col items-center">
               <button onClick={handleTutorial} ref={tutorialIconRef}>
-                <FaRegCircleQuestion className="w-6 h-6 text-chocoletterPurpleBold" />
+                <FaRegCircleQuestion className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
               </button>
               {/* "튜토리얼" 텍스트는 오버레이 내에서만 표시되므로 여기서 제거 */}
             </div>
 
             <button onClick={handleChat}>
-              <FaComments className="w-6 h-6 text-chocoletterPurpleBold" />
+              <FaComments className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
             </button>
             <button onClick={handleProfile}>
-              <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold" />
+              <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
             </button>
           </div>
         </div>
 
         {/** 초콜릿 개봉/받은 정보 카드 (jello-vertical) */}
-        <div className="mt-6 mx-auto  bg-white rounded-[30px] border border-black rounded-md w-[258px] jello-vertical">
+        <div className="mt-6 mx-auto  bg-white bg-opacity-60 rounded-[25px] border border-black border-opacity-40 w-[258px]">
           <div className="flex flex-col items-center gap-2.5 p-5">
-            <div className="text-2xl font-semibold text-center">
-              개봉 가능한 🍫 : {availableGifts}개
+            <div className="flex flew-row">
+              <div className="text-2xl font-normal text-center">개봉 가능한 🍫 :&nbsp;</div>
+              <div className="text-2xl font-normal text-center text-chocoletterPurpleBold">
+                {availableGifts}
+              </div>
+              <div className="text-2xl font-normal text-center">개</div>
             </div>
-            <div className="text-sm text-[#454451]">지금까지 받은 🍫 : {receivedGifts}개</div>
+            <div className="flex flew-row">
+              <div className="text-sm text-gray-500 text-center">지금까지 받은 🍫 :&nbsp;</div>
+              <div className="text-sm text-center text-chocoletterPurple">{receivedGifts}</div>
+              <div className="text-sm text-gray-500 text-center">개</div>
+            </div>
           </div>
         </div>
 
@@ -148,16 +167,16 @@ const MainMyBeforeView: React.FC = () => {
           <div ref={captureRef} className="heartbeat">
             <button
               onClick={handleMyChocolateBox}
-              className="w-[255px] pl-10 rounded-md flex items-center justify-center"
+              className="w-[255px] pl-8 flex items-center justify-center hover:bg-chocoletterBackground-light hover:bg-opacity-40"
             >
               <img src={my_gift_box} alt="내 선물함" className="p-2 max-h-60" />
             </button>
           </div>
 
           {/** 안내 문구 (shake-horizontal) */}
-          <div className="flex items-start pl-4 gap-1.5 mt-4 w-[225px] shake-horizontal">
-            <AiOutlineExclamationCircle className="w-3 h-3" />
-            <p className="text-xs text-[#222226] leading-snug">
+          <div className="flex items-start pl-4 gap-1.5 mt-1 w-[225px]">
+            <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
+            <p className="text-xs text-gray-500 leading-snug">
               개봉 가능한 일반 초콜릿이 있다면
               <br />
               박스를 클릭하여 편지를 읽어볼 수 있어요.
@@ -179,31 +198,31 @@ const MainMyBeforeView: React.FC = () => {
           {/* 공유하기 버튼을 감싸는 relative div */}
           <div className="relative group">
             {/* 툴팁 */}
-            <div className="absolute bottom-full mb-2 left-0 w-max bg-white text-sm text-gray-700 px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-full mb-2 left-0 w-max bg-white bg-opacity-70 text-sm text-gray-600 px-3 py-1 rounded-md shadow-lg">
               친구에게 공유해 초콜릿을 요청해보세요!
               {/* 화살표 */}
-              <div className="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-white border-l-8 border-l-transparent border-r-8 border-r-transparent"></div>
+              <div className="absolute top-full left-24 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-white border-l-8 border-l-transparent border-r-8 border-r-transparent"></div>
             </div>
 
             {/* 공유하기 버튼 */}
-            <Button
+            <button
               onClick={handleShare}
-              className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold rounded-[15px] border border-black group"
+              className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple rounded-[15px] border border-black group"
               aria-label="공유하기"
             >
               <FiShare className="w-6 h-6 text-white" />
               <span className="font-display-1 text-white text-xl">공유하기</span>
-            </Button>
+            </button>
           </div>
 
           {/* 캡처 버튼 */}
-          <Button
+          <button
             onClick={handleCapture}
-            className="w-[81px] h-14 flex items-center justify-center bg-white border border-gray-300 rounded-md"
+            className="w-[81px] h-14 flex items-center justify-center bg-white hover:bg-chocoletterPurple rounded-[15px] border border-black group"
             aria-label="캡처"
           >
-            <FiCamera className="w-6 h-6" />
-          </Button>
+            <FiCamera className="w-6 h-6 text-black text-opacity-80" />
+          </button>
         </div>
 
         {/** 모달 & 튜토리얼 오버레이 */}
@@ -226,6 +245,12 @@ const MainMyBeforeView: React.FC = () => {
             <MyPage onClose={() => setIsProfileOpen(false)} />
           </>
         )}
+
+        {/* 채팅 모달 */}
+        <ChatModal isOpen={isChatModalOpen} onClose={() => setIsChatModalOpen(false)} />
+
+        {/* 튜토리얼 모달 */}
+        <TutorialModal isOpen={isTutorialModalOpen} onClose={() => setIsTutorialModalOpen(false)} />
       </div>
     </div>
   );
