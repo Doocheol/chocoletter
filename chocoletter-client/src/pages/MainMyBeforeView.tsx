@@ -167,7 +167,7 @@ const MainMyBeforeView: React.FC = () => {
           <div ref={captureRef} className="heartbeat">
             <button
               onClick={handleMyChocolateBox}
-              className="w-[255px] pl-8 flex items-center justify-center hover:bg-chocoletterBackground-light hover:bg-opacity-40"
+              className="w-[255px] pl-8 flex items-center justify-center"
             >
               <img src={my_gift_box} alt="내 선물함" className="p-2 max-h-60" />
             </button>
