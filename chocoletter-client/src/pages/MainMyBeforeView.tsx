@@ -75,7 +75,7 @@ const MainMyBeforeView: React.FC = () => {
         const imageData = canvas.toDataURL("image/png");
         setCapturedImage(imageData);
       } catch (error) {
-        toast.error("캡처 실패!");
+        // toast.error("캡처 실패!");
         setIsCaptureModalVisible(false);
       }
     }
@@ -88,12 +88,12 @@ const MainMyBeforeView: React.FC = () => {
 
   const handleTutorial = () => {
     setIsTutorialModalOpen(true); // 튜토리얼 모달 열기
-    toast.info("튜토리얼 아이콘 클릭!");
+    // toast.info("튜토리얼 아이콘 클릭!");
   };
 
   const handleChat = () => {
     setIsChatModalOpen(true); // 채팅 모달 열기
-    toast.info("채팅방 아이콘 클릭!");
+    // toast.info("채팅방 아이콘 클릭!");
   };
 
   // 프로필 드롭다운 토글
@@ -104,7 +104,7 @@ const MainMyBeforeView: React.FC = () => {
   const handleMyChocolateBox = () => {
     navigate("/gift/list/before");
 
-    toast.info("내 초콜릿 박스 아이콘 클릭!");
+    // toast.info("내 초콜릿 박스 아이콘 클릭!");
   };
 
   return (
@@ -144,7 +144,7 @@ const MainMyBeforeView: React.FC = () => {
         </div>
 
         {/** 초콜릿 개봉/받은 정보 카드 (jello-vertical) */}
-        <div className="mt-6 mx-auto  bg-white bg-opacity-60 rounded-[25px] border border-black border-opacity-40 w-[258px] jello-vertical">
+        <div className="mt-6 mx-auto  bg-white bg-opacity-60 rounded-[25px] border border-black border-opacity-40 w-[258px]">
           <div className="flex flex-col items-center gap-2.5 p-5">
             <div className="flex flew-row">
               <div className="text-2xl font-normal text-center">개봉 가능한 🍫 :&nbsp;</div>
@@ -174,7 +174,7 @@ const MainMyBeforeView: React.FC = () => {
           </div>
 
           {/** 안내 문구 (shake-horizontal) */}
-          <div className="flex items-start pl-4 gap-1.5 mt-1 w-[225px] shake-horizontal">
+          <div className="flex items-start pl-4 gap-1.5 mt-1 w-[225px]">
             <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
             <p className="text-xs text-gray-500 leading-snug">
               개봉 가능한 일반 초콜릿이 있다면

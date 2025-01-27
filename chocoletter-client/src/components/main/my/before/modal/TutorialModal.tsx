@@ -30,7 +30,7 @@ const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
       <div
-        className="flex flex-col items-center px-4 py-4 text-sm tracking-tight leading-none text-center text-black bg-white rounded-3xl wave-down"
+        className="flex flex-col items-center px-4 py-4 text-sm tracking-tight leading-none text-center text-black bg-white rounded-3xl"
         aria-labelledby="tutorial-modal-title"
       >
         <div className="flex flex-col justify-center items-center w-full">

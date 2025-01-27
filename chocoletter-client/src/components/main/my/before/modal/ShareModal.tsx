@@ -82,22 +82,22 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
         {!showQRCode ? (
           <div className="flex flex-row justify-center space-x-4 pr-3">
             {/* 링크 복사 버튼 */}
-            <Button
+            <button
               onClick={handleCopyLink}
-              className="flex justify-center items-center bg-sky-200 p-10 rounded-lg shadow hover:bg-sky-100 border border-black"
+              className="flex justify-center items-center bg-sky-200 p-4 rounded-lg shadow hover:bg-sky-100 border border-black"
               aria-label="링크 복사"
             >
               <GoLink className="text-3xl text-gray-700" />
-            </Button>
+            </button>
 
             {/* QR 코드 생성 및 표시 버튼 */}
-            <Button
+            <button
               onClick={handleShowQRCode}
-              className="flex justify-center items-center bg-gray-500 p-8 rounded-lg shadow hover:bg-gray-400 border border-black"
+              className="flex justify-center items-center bg-gray-500 p-4 rounded-lg shadow hover:bg-gray-400 border border-black"
               aria-label="QR 코드 생성"
             >
               <BsQrCode className="text-3xl text-white" />
-            </Button>
+            </button>
 
             {/* 카카오톡 공유 버튼 */}
             <KakaoShareButton />
