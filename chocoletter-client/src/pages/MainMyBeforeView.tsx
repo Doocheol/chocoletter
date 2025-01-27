@@ -105,7 +105,7 @@ const MainMyBeforeView: React.FC = () => {
       */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-        <div className="mt-6 mb-8 px-6 flex items-center justify-end ">
+        <div className="mt-6 mb-4 px-6 flex items-center justify-end ">
           <div className="flex items-center gap-7">
             {/**
               튜토리얼 아이콘
@@ -155,7 +155,7 @@ const MainMyBeforeView: React.FC = () => {
           </div>
 
           {/** 안내 문구 (shake-horizontal) */}
-          <div className="flex items-start pl-4 gap-1.5 mt-4 w-[225px] shake-horizontal">
+          <div className="flex items-start pl-4 gap-1.5 mt-1 w-[225px] shake-horizontal">
             <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
             <p className="text-xs text-gray-500 leading-snug">
               개봉 가능한 일반 초콜릿이 있다면
@@ -179,10 +179,10 @@ const MainMyBeforeView: React.FC = () => {
           {/* 공유하기 버튼을 감싸는 relative div */}
           <div className="relative group">
             {/* 툴팁 */}
-            <div className="absolute bottom-full mb-2 left-0 w-max bg-white text-sm text-gray-700 px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-full mb-2 left-0 w-max bg-white bg-opacity-70 text-sm text-gray-600 px-3 py-1 rounded-md shadow-lg">
               친구에게 공유해 초콜릿을 요청해보세요!
               {/* 화살표 */}
-              <div className="absolute top-full left-4 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-white border-l-8 border-l-transparent border-r-8 border-r-transparent"></div>
+              <div className="absolute top-full left-24 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-white border-l-8 border-l-transparent border-r-8 border-r-transparent"></div>
             </div>
 
             {/* 공유하기 버튼 */}
