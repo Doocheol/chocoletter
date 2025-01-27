@@ -16,7 +16,7 @@ const TestPage: React.FC = () => {
 			path: "/gift/list/before",
 			label: "GiftListBeforeView (/gift/list/before)",
 		},
-		{ path: "/receive", label: "ReceiveView (/receive)" },
+		{ path: "/receive/2", label: "ReceiveView (/receive)" },
 		{ path: "/letter", label: "LetterView (/letter)" },
 		{
 			path: "/selectletter",

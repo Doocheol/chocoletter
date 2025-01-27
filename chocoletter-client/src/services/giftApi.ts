@@ -6,12 +6,10 @@ export const axios = baseAxios.create({
     baseURL: import.meta.env.VITE_API_SERVER_URL,
     headers: {
         "Content-Type": "application/json",
-      },
+    },
     withCredentials: true,
-  });
+});
 
-
-  
 // AccessToken 가져오기
 const accessToken = '123' //  나중에 삭제!!
 // function getAccessToken(): string | null {
@@ -37,7 +35,34 @@ export async function getGiftDetail(giftId: number) {
         return data;
     } catch (err) {
         console.error("getGiftDetail API 호출 중 에러 발생:", err);
+        throw err;
+    }
+}
+
+// 선물 리스트 가져오기
+export async function getGiftList(giftType: string) {
+    try {
+        // const accessToken = getAccessToken();
+
+        if (!accessToken) {
+            throw new Error("AccessToken is missing");
+        }
+
+        const res = await axios.get(`/api/v1/gift/${giftType}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = res.data;
+        console.log("Gift List:", data);
+        return data;
+    } catch (err) {
+        console.error("getGiftList API 호출 중 에러 발생:", err);
         return null;
     }
-  }
-  
+}
+
+// 특별 자유 선물 보내기
+
+
+// 특별 질문 선물 보내기

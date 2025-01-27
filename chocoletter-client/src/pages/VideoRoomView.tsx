@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import classes from '../styles/videoRoom.module.css';
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
@@ -10,6 +10,7 @@ import { VideoState } from '../types/openvidu';
 
 const VideoRoomView = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { sessionIdInit } = location.state
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(60);

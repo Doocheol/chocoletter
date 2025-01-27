@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { GoBackMainMyBeforeButton } from "../components/gift-list-before/button/GoBackMainMyBeforeButton";
-import { IsOpenGeneralGiftModal } from "../components/gift-list-before/modal/IsOpenGeneralGiftModal";
-import { GiftOpenBeforeButton } from "../components/gift-list-before/button/GiftOpenBeforeButton";
+import { GoBackMainMyButton } from "../components/gift-list/button/GoBackMainMyButton";
+import { GiftOpenButton } from "../components/gift-list/button/GiftOpenButton"
+import { changeKSTDate } from "../utils/changeKSTDate";
+import { GiftList } from "../components/gift-list/GiftList";
 
 const GiftListBeforeView = () => {
     const [currentDate, setCurrentDate] = useState('')
-    const [isOpenGeneral, setIsOpenGeneral] = useState(true);
-    const closeOpenGeneralModal = () => {
-        setIsOpenGeneral(false)
-    }
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentDate('YYYY-MM-DD HH:mm:ss')
+            const nowDate = new Date().toISOString();
+            const KSTDate = changeKSTDate({'givenDate': nowDate, 'format': 'YYYY-MM-DD HH:mm' })
+            setCurrentDate(KSTDate)
         }, 1000)
 
         return () => clearInterval(interval)
@@ -20,21 +19,14 @@ const GiftListBeforeView = () => {
 
     return (
         <div>
-            <IsOpenGeneralGiftModal isOpen={isOpenGeneral} onClose={closeOpenGeneralModal} />
-            <GoBackMainMyBeforeButton />
-            <div>
+            <GoBackMainMyButton />
+            <div className="flex flex-col items-center justify-center min-h-screen">
                 <p>나의 초콜릿 박스</p>
-                <div>
+                <div className="my-5">
                     <p>개봉 가능한 일반 초콜릿 개수 : n</p>
                 </div>
-                {/* 초콜릿 상자 */}
-                <div className="bg-hrtColorPurple ">
-                    <div>
-                        {/* 여기 api 연동 후 바꾸세요. 미래의 나 */}
-                        <GiftOpenBeforeButton giftId={1} isOpened={true} />
-                    </div>
-                </div>
-                <p>RTC 초콜릿은 2월 14일 표시되니 시각에 개봉 가능합니다!</p>
+                <GiftList filter={"all"} />
+                <p className="text-sm mt-5">특별 초콜릿은 2월 14일<br/> 표시된 시각에 개봉 가능합니다!</p>
                 <p>{currentDate}</p>
             </div>
         </div>

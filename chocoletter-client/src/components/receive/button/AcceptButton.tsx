@@ -1,20 +1,39 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../common/Button";
+import { patchUnboxingAccept } from "../../../services/unboxingApi";
 
 // webRTC 초대창 수락 버튼
-const AcceptButton = () => {
+
+interface AcceptButtonProps {
+    giftId: number;
+    // accessToken: string;
+}
+
+
+const AcceptButton: React.FC<AcceptButtonProps> = ({ giftId }) => {
     const navigate = useNavigate();
 
-    const handleAcceptClick = () => {
-    navigate("/main/my/before"); // 이동 페이지
-    };
+     const clickAcceptHandler = async () => {
+            try {
+                const response = await patchUnboxingAccept(giftId);
+    
+                if (response) {
+                    navigate("/main/my/before"); 
+                } else {
+                    alert("거절 요청 중 오류가 발생했습니다.");
+                }
+            } catch (err) {
+                console.error("API 호출 중 에러 발생:", err);
+            }
+        };
+
 
     return (
         <div className="text-center">
             <Button 
-                onClick={handleAcceptClick}
-                className="w-[300px] h-[100px]" // 픽셀 단위를 명시
+                onClick={clickAcceptHandler}
+                className="w-[300px] h-[100px]"
             >
                 와, 정말 기대돼요! <br />
                 2월 14일에 함께 열어봐요 😊
