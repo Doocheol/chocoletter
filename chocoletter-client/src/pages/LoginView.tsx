@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.svg";
+import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import login_view_service_title from "../assets/images/logo/login_view_service_title.svg";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
@@ -19,11 +19,7 @@ function LoginView() {
 
       {/* 로고 이미지 */}
       <div className="flex justify-center items-center mt-8 mb-4">
-        <img
-          src={chocoletter_login_view_logo}
-          alt="chocoletter_login_view_logo"
-          className="pl-10 max-h-60"
-        />
+        <img src={giftbox_before_5} alt="giftbox_before_5" className="pl-10 max-h-60" />
       </div>
 
       {/* 서비스 타이틀 및 서브타이틀 */}
@@ -33,7 +29,7 @@ function LoginView() {
       </div>
 
       {/* 로그인 버튼들 */}
-      <div className="flex flex-col items-center w-full mb-6 max-w-full">
+      <div className="flex flex-col items-center mb-6">
         <KakaoLoginButton />
       </div>
 

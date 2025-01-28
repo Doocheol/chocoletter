@@ -1,15 +1,14 @@
 import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
 import { isFirstLoginAtom } from "../atoms/auth/userAtoms";
 
 import { FaRegCircleQuestion } from "react-icons/fa6";
-import { FaHome, FaComments, FaUserCircle } from "react-icons/fa";
-import { FiShare, FiCamera } from "react-icons/fi";
+import { FaComments, FaUserCircle } from "react-icons/fa";
+import { FiCamera } from "react-icons/fi";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 import ShareModal from "../components/main/my/before/modal/ShareModal";
@@ -29,9 +28,11 @@ import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
 // 이미지 리소스 예시
-import my_gift_box from "../assets/images/giftbox/my_giftbox_main.svg";
-import { Button } from "../components/common/Button";
+import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
 import Backdrop from "../components/common/Backdrop";
+import share_button from "../assets/images/button/share_button.svg";
+import { ImageButton } from "../components/common/ImageButton";
+import capture_button from "../assets/images/button/capture_button.svg";
 
 const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ const MainMyBeforeView: React.FC = () => {
       */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-        <div className="mt-6 mb-4 px-6 flex items-center justify-end ">
+        <div className="mt-6 mr-6 flex items-center justify-end ">
           <div className="flex items-center gap-7">
             {/**
               튜토리얼 아이콘
@@ -169,7 +170,7 @@ const MainMyBeforeView: React.FC = () => {
               onClick={handleMyChocolateBox}
               className="w-[255px] pl-8 flex items-center justify-center"
             >
-              <img src={my_gift_box} alt="내 선물함" className="p-2 max-h-60" />
+              <img src={giftbox_before_2} alt="giftbox_before_2" className="p-2 max-h-60" />
             </button>
           </div>
 
@@ -194,7 +195,7 @@ const MainMyBeforeView: React.FC = () => {
           "공유하기" 버튼 위에만 나타나도록 수정
           (위아래로 움직이는 애니메이션: shake-vertical)
         */}
-        <div className="mt-auto mb-24 px-4 flex flex-row items-center gap-2.5">
+        <div className="mt-14 px-4 flex flex-row items-center gap-2.5">
           {/* 공유하기 버튼을 감싸는 relative div */}
           <div className="relative group">
             {/* 툴팁 */}
@@ -205,24 +206,35 @@ const MainMyBeforeView: React.FC = () => {
             </div>
 
             {/* 공유하기 버튼 */}
-            <button
+            <ImageButton
+              onClick={handleShare}
+              src={share_button}
+              className="flex h-14 w-[270px] items-center justify-center hover:bg-chocoletterPurple rounded-[15px] border border-black group"
+            />
+
+            {/* <button
               onClick={handleShare}
               className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple rounded-[15px] border border-black group"
               aria-label="공유하기"
             >
               <FiShare className="w-6 h-6 text-white" />
               <span className="font-display-1 text-white text-xl">공유하기</span>
-            </button>
+            </button> */}
           </div>
 
           {/* 캡처 버튼 */}
-          <button
+          <ImageButton
+            onClick={handleCapture}
+            src={capture_button}
+            className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+          />
+          {/* <button
             onClick={handleCapture}
             className="w-[81px] h-14 flex items-center justify-center bg-white hover:bg-chocoletterPurple rounded-[15px] border border-black group"
             aria-label="캡처"
           >
             <FiCamera className="w-6 h-6 text-black text-opacity-80" />
-          </button>
+          </button> */}
         </div>
 
         {/** 모달 & 튜토리얼 오버레이 */}
