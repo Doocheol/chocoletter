@@ -2,19 +2,18 @@ import React from "react";
 import go_back_arrow from "../../assets/images/button/go_back_arrow.svg";
 
 type GoBackButtonProps = {
-    icon?: React.ReactNode; // 아이콘 컴포넌트 또는 이미지
+    strokeColor?: string; // 아이콘의 stroke 색상
     altText?: string; // 접근성 텍스트
     className?: string; // 추가 클래스
 };
 
 export const GoBackButton = ({
-    icon = <img src={go_back_arrow} alt="뒤로가기" className="w-[24px] h-[24px]" />, // 기본값으로 이미지 사용
+    strokeColor = "white", // 기본값은 white
     altText = "뒤로가기 버튼",
     className = "",
 }: GoBackButtonProps) => {
-    const baseStyle =
-        "absolute flex items-center justify-center";
-    
+    const baseStyle = "absolute flex items-center justify-center mt-[17px] ml-4 top-0 left-0";
+
     const handleBackClick = () => {
         window.history.back(); // 브라우저 이전 페이지로 이동
     };
@@ -25,7 +24,22 @@ export const GoBackButton = ({
             className={`${baseStyle} ${className}`}
             aria-label={altText}
         >
-            {icon}
+            {/* SVG 아이콘 */}
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+                <path
+                    d="M18 1L7 12.2683L17.4762 23"
+                    stroke={strokeColor} // 동적으로 stroke 설정
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
         </button>
     );
 };
