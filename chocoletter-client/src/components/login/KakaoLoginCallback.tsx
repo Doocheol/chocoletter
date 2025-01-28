@@ -25,11 +25,11 @@ const KakaoLoginCallback: React.FC = () => {
         // URL의 쿼리 파라미터로 전달된 사용자 정보 추출
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken = urlParams.get("accessToken");
-        const userId = urlParams.get("userId");
+        const userName = urlParams.get("userName");
         const userProfileUrl = urlParams.get("userProfileUrl");
         const isFirstLogin = urlParams.get("isFirstLogin");
 
-        if (!accessToken || !userId) {
+        if (!accessToken || !userName) {
           throw new Error("필수 로그인 정보가 누락되었습니다.");
         }
 
@@ -42,7 +42,7 @@ const KakaoLoginCallback: React.FC = () => {
 
         // 사용자 정보 객체 생성
         const userInfo: MyUserInfo = {
-          userId,
+          userName,
           accessToken,
         };
 
@@ -51,7 +51,7 @@ const KakaoLoginCallback: React.FC = () => {
 
         // Recoil 상태 업데이트
         setIsLogin(true);
-        setUserName(userId); // 서버에서 실제 이름을 제공하는 경우, 해당 값을 사용
+        setUserName(userName); // 서버에서 실제 이름을 제공하는 경우, 해당 값을 사용
         setUserProfileUrl(userProfileUrl || "");
 
         // 로그인 성공 토스트 메시지

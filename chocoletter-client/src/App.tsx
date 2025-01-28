@@ -43,32 +43,32 @@ function App() {
   useViewportHeight(); // 커스텀 훅 호출
 
   useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        const userInfo = fetchUserInfo();
-        if (userInfo) {
-          // 서버에서 사용자 정보를 검증하는 API 호출 (필요 시)
-          const response = await login();
-          const { userId, userProfileUrl } = JSON.parse(response);
+    // const initializeUser = async () => {
+    //   try {
+    fetchUserInfo();
+    //     if (userInfo) {
+    //       // 서버에서 사용자 정보를 검증하는 API 호출 (필요 시)
+    //       const response = await login();
+    //       const { userName, userProfileUrl } = JSON.parse(response);
 
-          // Recoil 상태 업데이트
-          setIsLogin(true);
-          setUserName(userId);
-          setUserProfileUrl(userProfileUrl);
-        }
-      } catch (error) {
-        console.log("사용자 정보 조회 실패:", error);
-        setIsLogin(false);
-        setUserName("");
-        setUserProfileUrl("");
-      }
-    };
+    //       // Recoil 상태 업데이트
+    //       setIsLogin(true);
+    //       setUserName(userName);
+    //       setUserProfileUrl(userProfileUrl);
+    //     }
+    //   } catch (error) {
+    //     console.log("사용자 정보 조회 실패:", error);
+    //     setIsLogin(false);
+    //     setUserName("");
+    //     setUserProfileUrl("");
+    //   }
+    // };
 
     // 로그인 상태 확인
-    const userInfo = getUserInfo();
-    if (userInfo) {
-      initializeUser();
-    }
+    // const userInfo = getUserInfo();
+    // if (userInfo) {
+    //   initializeUser();
+    // }
   }, [setIsLogin, setUserName, setUserProfileUrl]);
 
   return (
