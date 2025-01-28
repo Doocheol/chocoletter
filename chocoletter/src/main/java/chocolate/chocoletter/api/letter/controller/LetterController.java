@@ -5,8 +5,8 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LetterController implements LetterSwagger {
     private final LetterService letterService;
 
-    @GetMapping("/question/{previousQuestionId}")
-    public ResponseEntity<?> findRandomQuestion(@PathVariable("previousQuestionId") Long previousQuestionId) {
+    @GetMapping("/question")
+    public ResponseEntity<?> findRandomQuestion(@RequestParam Long previousQuestionId) {
         RandomQuestionResponseDto randomQuestion = letterService.findRandomQuestion(previousQuestionId);
         return ResponseEntity.ok(randomQuestion);
     }

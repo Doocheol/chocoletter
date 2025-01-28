@@ -2,12 +2,13 @@ package chocolate.chocoletter.api.letter.controller;
 
 import chocolate.chocoletter.api.letter.dto.response.RandomQuestionResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface LetterSwagger {
     @Operation(
@@ -24,5 +25,10 @@ public interface LetterSwagger {
                             responseCode = "401",
                             description = "인증 실패")
             })
-    ResponseEntity<?> findRandomQuestion(@PathVariable("previousQuestionId") Long previousQuestionId);
+    ResponseEntity<?> findRandomQuestion(
+            @Parameter(
+                    description = "이전 질문",
+                    required = true,
+                    example = "1"
+            ) @RequestParam Long previousQuestionId);
 }
