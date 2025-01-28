@@ -11,8 +11,8 @@ export interface MyUserInfo {
  * 로컬 스토리지에서 가져올 때 값이 없을 수 있으므로, 각 필드는 string | null입니다.
  */
 export interface LocalMyUserInfo {
-  userName: string | null;
-  accessToken: string | null;
+  userName: string;
+  accessToken: string;
 }
 
 export interface ReissueTokenResponse {
