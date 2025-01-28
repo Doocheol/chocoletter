@@ -167,7 +167,7 @@ public class GiftService {
     }
 
     public boolean findMyGift(Long senderId, Long giftBoxId) {
-        return giftRepository.findGiftBySenderId(senderId, giftBoxId) != null;
+        return giftRepository.findGiftBySenderIdAndGiftBoxId(senderId, giftBoxId) != null;
     }
 
     public boolean checkGeneralGiftEachOther(Long senderId, Long receiverId) {
