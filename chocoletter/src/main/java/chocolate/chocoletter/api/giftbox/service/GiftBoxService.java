@@ -1,6 +1,5 @@
 package chocolate.chocoletter.api.giftbox.service;
 
-import chocolate.chocoletter.api.chatroom.domain.ChatRoom;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.service.GiftService;
@@ -116,18 +115,14 @@ public class GiftBoxService {
     }
 
     private void checkGiftExists(Long senderId, Long giftBoxId) {
-        if (!giftService.findMyGift(senderId, giftBoxId)) {
+        if (giftService.findMyGift(senderId, giftBoxId)) {
             throw new BadRequestException(ErrorMessage.ERR_ALREADY_EXISTS_GIFT);
         }
     }
 
     private void makeChattingRoom(Long senderId, Long receiverId) {
         if (giftService.checkGeneralGiftEachOther(senderId, receiverId)) {
-            return;
+            chatRoomService.saveChatRoom(senderId, receiverId);
         }
-        chatRoomService.saveChatRoom(ChatRoom.builder()
-                .hostId(receiverId)
-                .guestId(senderId)
-                .build());
     }
 }
