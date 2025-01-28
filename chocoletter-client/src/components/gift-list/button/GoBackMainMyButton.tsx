@@ -3,6 +3,6 @@ import { GoBackButton } from "../../common/GoBackButton";
 
 export const GoBackMainMyButton = () => {
     return (
-        <GoBackButton altText="내 초콜릿 상자" />
+        <GoBackButton altText="뒤로가기 버튼" />
     )
 }

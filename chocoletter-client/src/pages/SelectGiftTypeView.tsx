@@ -17,7 +17,7 @@ function SelectGiftTypeView() {
     return (
         <div className="relative flex flex-col items-center h-screen">
              {/* GoBackButton을 좌측 상단에 고정 */}
-            <GoBackButton altText="뒤로가기 버튼" />
+             <GoBackButton altText="뒤로가기 버튼" />
             
             <div className="absolute mt-24">
                 <h1 className="text-xl font-bold mb-8">

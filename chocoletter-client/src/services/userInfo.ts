@@ -5,7 +5,7 @@ import { MyUserInfo } from "../types/user";
  * @param userInfo - 저장할 사용자 정보
  */
 export const savingUserInfo = (userInfo: MyUserInfo): void => {
-  window.localStorage.setItem("userId", userInfo.userId);
+  window.localStorage.setItem("userName", userInfo.userName);
   window.localStorage.setItem("accessToken", userInfo.accessToken);
 };
 
@@ -14,11 +14,11 @@ export const savingUserInfo = (userInfo: MyUserInfo): void => {
  * @returns 사용자 정보 객체
  */
 export const getUserInfo = (): MyUserInfo | null => {
-  const userId = window.localStorage.getItem("userId");
+  const userName = window.localStorage.getItem("userName");
   const accessToken = window.localStorage.getItem("accessToken");
 
-  if (userId && accessToken) {
-    return { userId, accessToken };
+  if (userName && accessToken) {
+    return { userName, accessToken };
   }
 
   return null;
@@ -28,7 +28,7 @@ export const getUserInfo = (): MyUserInfo | null => {
  * 로컬 스토리지에서 사용자 정보를 삭제하는 함수
  */
 export const deleteUserInfo = (): void => {
-  window.localStorage.removeItem("userId");
+  window.localStorage.removeItem("userName");
   window.localStorage.removeItem("accessToken");
   window.localStorage.removeItem("recoil-persist"); // Recoil 상태 관리 관련 키 삭제
 };
