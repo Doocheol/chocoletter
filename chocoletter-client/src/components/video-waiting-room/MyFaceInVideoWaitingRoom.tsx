@@ -23,10 +23,11 @@ export const MyFaceInVideoWaitingRoom = () => {
     }, []);
 
     return (
-        <div>
+        <div className="w-full min-h-screen relative">
             <video 
                 ref={videoRef} 
                 autoPlay={true}
+                className="w-full h-full object-cover absolute"
                 style={{ transform: "scaleX(-1)" }}
             />
         </div>
