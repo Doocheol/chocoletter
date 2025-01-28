@@ -39,3 +39,5 @@ out/
 
 db
 env
+
+import.sql
