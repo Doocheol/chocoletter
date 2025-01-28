@@ -1,5 +1,7 @@
 package chocolate.chocoletter.api.giftbox.service;
 
+import chocolate.chocoletter.api.chatroom.domain.ChatRoom;
+import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
@@ -27,50 +29,34 @@ public class GiftBoxService {
     private final GiftBoxRepository giftBoxRepository;
     private final GiftService giftService;
     private final LetterService letterService;
+    private final ChatRoomService chatRoomService;
     private final DateTimeUtil dateTimeUtil;
 
-
+    @Transactional
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
-        checkGiftExists(senderId, giftBoxId);
-        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
-        Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
-        giftService.saveGift(gift);
-        receiverGiftBox.addGiftCount();
-        receiverGiftBox.addGeneralGiftCount();
+        Gift gift = generateGeneralGift(senderId, giftBoxId);
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
     }
 
+    @Transactional
     public void sendGeneralQuestionGift(Long senderId, Long giftBoxId, GeneralQuestionRequestDto requestDto) {
-        checkGiftExists(senderId, giftBoxId);
-        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
-        Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
-        giftService.saveGift(gift);
-        receiverGiftBox.addGiftCount();
-        receiverGiftBox.addGeneralGiftCount();
+        Gift gift = generateGeneralGift(senderId, giftBoxId);
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
     }
 
+    @Transactional
     public void sendSpecialFreeGift(Long senderId, Long giftBoxId, SpecialFreeGiftRequestDto requestDto) {
-        checkGiftExists(senderId, giftBoxId);
-        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
-        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
-        giftService.saveGift(gift);
-        receiverGiftBox.addGiftCount();
+        Gift gift = generateSpecialGift(senderId, giftBoxId, requestDto.unBoxingTime());
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
     }
 
+    @Transactional
     public void sendSpecialQuestionGift(Long senderId, Long giftBoxId, SpecialQuestionGiftRequestDto requestDto) {
-        checkGiftExists(senderId, giftBoxId);
-        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
-        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
-                dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
-        giftService.saveGift(gift);
-        receiverGiftBox.addGiftCount();
+        Gift gift = generateSpecialGift(senderId, giftBoxId, requestDto.unBoxingTime());
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
@@ -100,6 +86,27 @@ public class GiftBoxService {
         myGiftBox.usePreviewCount();
     }
 
+    private Gift generateGeneralGift(Long senderId, Long giftBoxId) {
+        checkGiftExists(senderId, giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
+        Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
+        giftService.saveGift(gift);
+        makeChattingRoom(gift.getReceiverId(), gift.getSenderId());
+        receiverGiftBox.addGiftCount();
+        receiverGiftBox.addGeneralGiftCount();
+        return gift;
+    }
+
+    private Gift generateSpecialGift(Long senderId, Long giftBoxId, String unBoxingTime) {
+        checkGiftExists(senderId, giftBoxId);
+        GiftBox receiverGiftBox = findGiftBox(giftBoxId);
+        Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
+                dateTimeUtil.parseTimeToDateTime(unBoxingTime));
+        giftService.saveGift(gift);
+        receiverGiftBox.addGiftCount();
+        return gift;
+    }
+
     private GiftBox findGiftBox(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {
@@ -114,7 +121,13 @@ public class GiftBoxService {
         }
     }
 
-//    private void makeChattingRoom(Long receiverId) {
-//        giftService.findMyGift(receiverId);
-//    }
+    private void makeChattingRoom(Long senderId, Long receiverId) {
+        if (giftService.checkGeneralGiftEachOther(senderId, receiverId)) {
+            return;
+        }
+        chatRoomService.saveChatRoom(ChatRoom.builder()
+                .hostId(receiverId)
+                .guestId(senderId)
+                .build());
+    }
 }
