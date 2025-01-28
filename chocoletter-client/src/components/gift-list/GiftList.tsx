@@ -2,6 +2,7 @@ import React from "react";
 import { GiftOpenButton } from "./button/GiftOpenButton";
 import { useFetchChocolates } from "../../hooks/useGetChocolates";
 import Loading from "../common/Loading";
+import classes from "../../styles/outGiftBoxChoco.module.css"
 
 // 초콜릿 더미 데이터
 const dummyChocolates = [
@@ -32,7 +33,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
     }
 
     return (
-        <div className="bg-hrtColorPurple w-88 grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden p-4 max-h-[13rem]">
+        <div className={`w-full grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-4 overflow-y-auto scrollbar-hidden p-4 ${classes.giftlist}`}>
             {/* api 연동 후 추가 수정 */}
             {dummyChocolates.map((chocolate) => (
                 <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime}/>

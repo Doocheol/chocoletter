@@ -1,9 +1,9 @@
 import React from 'react';
 import { GoBackButton } from "../../common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
+import { SlArrowLeft } from "react-icons/sl";
 
 export const GoBackMainMyButton = () => {
     return (
-        <GoBackButton icon={<GoArrowLeft />} altText="내 초콜릿 상자" />
+        <GoBackButton icon={<SlArrowLeft size={20} />} altText="내 초콜릿 상자" />
     )
 }

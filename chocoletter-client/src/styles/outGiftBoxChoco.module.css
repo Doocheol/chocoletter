@@ -8,6 +8,12 @@
     animation: bounce 1.2s infinite;
 }
 
+.giftlist {
+    padding-top: clamp(101px, 18dvh, 140px);
+    min-height: calc(100dvh - clamp(101px, 18dvh, 140px));
+    box-sizing: border-box;
+}
+
 @keyframes bounce {
 
     0%,
