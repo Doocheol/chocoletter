@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
-import blue from "../assets/images/blue.png"
+import blue from "../assets/images/letter/letter_blue.png"
+import pink from "../assets/images/letter/letter_pink.png"
 
 function SelectLetterTypeView() {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ function SelectLetterTypeView() {
                         onClick={handleAccept}
                         className="w-[364px] h-p-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 
                     >
-                        <img src={blue} alt="일반 편지지 이미지" className="w-[100px] h-[100px] flex-shrink-0 rounded-[10px] border-[1px] border-black"></img>
+                        <img src={pink} alt="일반 편지지 이미지" className="w-[100px] h-[100px] flex-shrink-0 rounded-[10px] border-[1px] border-black"></img>
                         <div className="flex flex-col gap-[14px] text-left ">
                             <p className="self-stretch text-[18px] leading-[22px] tracking-[-0.408px]">일반 편지지</p>
                             <p className="self-stretch font-[Pretendard] text-[13px] leading-[140%]">진심을 담은 자유 형식의 편지를 작성해 상대방에게 마음을 전하세요✏️</p>
