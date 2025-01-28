@@ -27,7 +27,7 @@ public interface LetterSwagger {
             })
     ResponseEntity<?> findRandomQuestion(
             @Parameter(
-                    description = "이전 질문",
+                    description = "이전 질문 id, 처음 조회 시에는 해당 파라미터를 0으로 주고, 새로고침 시에는 이전 id를 주면 됩니다.",
                     required = true,
                     example = "1"
             ) @RequestParam Long previousQuestionId);
