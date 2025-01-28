@@ -17,12 +17,21 @@ const WriteGeneralLetterView = () => {
 
     const goBackMainMyEvent = () => {
         if (contentLength < 10) {
-            // 글자 수가 10글자 미만일 경우 toast 알림
+            // 메세지가 10글자 미만일 경우
             toast.error("메세지는 최소 10글자 이상 작성해야 합니다!", {
                 position: "top-center",
                 autoClose: 2000,
             });
-            return; // 페이지 이동 방지
+            return; 
+        }
+
+        if (nickname.length < 1) {
+            // 닉네임이 1글자 미만일 경우
+            toast.error("닉네임은 최소 1글자 이상 입력해야 합니다!", {
+                position: "top-center",
+                autoClose: 2000,
+            });
+            return; 
         }
 
         navigate("/selectgift");
@@ -31,7 +40,7 @@ const WriteGeneralLetterView = () => {
 
 	return (
 		<div className="relative flex flex-col items-center h-screen">
-             {/* 뒤로 가기 버튼 */}
+
             <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" />
             
             <div className="absolute mt-24">
@@ -47,6 +56,7 @@ const WriteGeneralLetterView = () => {
                 <GeneralLetterForm
                     setNickname={setNickname}
                     setContent={setContent}
+                    onContentChange={(length) => setContentLength(length)}
                 />
 
                 {/* 편지 작성 완료 버튼 - 초콜릿 선택 화면으로 이동 */}
