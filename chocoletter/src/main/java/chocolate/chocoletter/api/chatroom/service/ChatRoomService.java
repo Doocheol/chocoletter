@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
-    public void saveChatRoom(ChatRoom chatRoom) {
-        chatRoomRepository.save(chatRoom);
+    public void saveChatRoom(Long hostId, Long guestId) {
+        chatRoomRepository.save(ChatRoom.builder()
+                .hostId(hostId)
+                .guestId(guestId)
+                .build());
     }
 }
