@@ -140,7 +140,7 @@ public class GiftService {
         gift.rejectUnboxing();
         if (gift.getRejectCount() == 3) {
             gift.changeToGeneralGift();
-            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
+            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), gift.getSenderId());
             if (receiverGift != null) {
                 chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
             }
