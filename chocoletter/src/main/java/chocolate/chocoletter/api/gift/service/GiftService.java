@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.gift.service;
 
+import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
@@ -29,6 +30,7 @@ public class GiftService {
     private final GiftRepository giftRepository;
     private final LetterService letterService;
     private final UnboxingRoomService unboxingRoomService;
+    private final ChatRoomService chatRoomService;
     private final DateTimeUtil dateTimeUtil;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
@@ -138,6 +140,9 @@ public class GiftService {
         gift.rejectUnboxing();
         if (gift.getRejectCount() == 3) {
             gift.changeToGeneralGift();
+            if (checkGeneralGiftEachOther(gift.getReceiverId(), memberId)) {
+                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId());
+            }
             // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
             return;
         }
@@ -151,6 +156,9 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         gift.changeToGeneralGift();
+        if (checkGeneralGiftEachOther(gift.getReceiverId(), memberId)) {
+            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId());
+        }
     }
 
     @Transactional
@@ -158,7 +166,11 @@ public class GiftService {
         giftRepository.save(gift);
     }
 
-    public boolean findMyGift(Long senderId) {
-        return giftRepository.findGiftBySenderId(senderId) == null;
+    public boolean findMyGift(Long senderId, Long giftBoxId) {
+        return giftRepository.findGiftBySenderIdAndGiftBoxId(senderId, giftBoxId) != null;
+    }
+
+    public boolean checkGeneralGiftEachOther(Long senderId, Long receiverId) {
+        return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL) != null;
     }
 }
