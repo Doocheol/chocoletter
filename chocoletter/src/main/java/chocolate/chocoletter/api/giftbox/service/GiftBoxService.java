@@ -31,7 +31,7 @@ public class GiftBoxService {
 
 
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
-        checkGiftExists(senderId);
+        checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
@@ -42,7 +42,7 @@ public class GiftBoxService {
     }
 
     public void sendGeneralQuestionGift(Long senderId, Long giftBoxId, GeneralQuestionRequestDto requestDto) {
-        checkGiftExists(senderId);
+        checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
@@ -54,7 +54,7 @@ public class GiftBoxService {
     }
 
     public void sendSpecialFreeGift(Long senderId, Long giftBoxId, SpecialFreeGiftRequestDto requestDto) {
-        checkGiftExists(senderId);
+        checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
@@ -65,7 +65,7 @@ public class GiftBoxService {
     }
 
     public void sendSpecialQuestionGift(Long senderId, Long giftBoxId, SpecialQuestionGiftRequestDto requestDto) {
-        checkGiftExists(senderId);
+        checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
                 dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
@@ -108,9 +108,13 @@ public class GiftBoxService {
         return receiverGiftBox;
     }
 
-    private void checkGiftExists(Long senderId) {
-        if (!giftService.findMyGift(senderId)) {
+    private void checkGiftExists(Long senderId, Long giftBoxId) {
+        if (!giftService.findMyGift(senderId, giftBoxId)) {
             throw new BadRequestException(ErrorMessage.ERR_ALREADY_EXISTS_GIFT);
         }
     }
+
+//    private void makeChattingRoom(Long receiverId) {
+//        giftService.findMyGift(receiverId);
+//    }
 }

@@ -158,7 +158,7 @@ public class GiftService {
         giftRepository.save(gift);
     }
 
-    public boolean findMyGift(Long senderId) {
-        return giftRepository.findGiftBySenderId(senderId) == null;
+    public boolean findMyGift(Long senderId, Long giftBoxId) {
+        return giftRepository.findGiftBySenderId(senderId, giftBoxId) == null;
     }
 }
