@@ -27,6 +27,7 @@ import GiftListBeforeView from "./pages/GiftListBeforeView";
 import WaitingRoomView from "./pages/VideoWaitingRoomView";
 import VideoRoomView from "./pages/VideoRoomView";
 import GiftListEventView from "./pages/GiftListEventView";
+import ChatRoomListView from "./pages/ChatRoomListView";
 
 declare global {
   interface Window {
@@ -95,6 +96,7 @@ function App() {
             <Route path="/rejected" element={<RejectedView />} />
             <Route path="/gift/list/before" element={<GiftListBeforeView />} />
             <Route path="/gift/list/event" element={<GiftListEventView />} />
+            <Route path="/chat/list" element={<ChatRoomListView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
