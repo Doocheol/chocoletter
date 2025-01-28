@@ -15,20 +15,28 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseTimeEntity {
-	@Id
-	@Column(unique = true, nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private Long hostId;
+    @Column(nullable = false)
+    private Long hostId;
 
-	@Column(nullable = false)
-	private Long guestId;
+    @Column(nullable = false)
+    private Long guestId;
 
-	@Builder
-	public ChatRoom(Long hostId, Long guestId) {
-		this.hostId = hostId;
-		this.guestId = guestId;
-	}
+    @Column(nullable = false)
+    private Long hostGiftId;
+
+    @Column(nullable = false)
+    private Long guestGiftId;
+
+    @Builder
+    public ChatRoom(Long hostId, Long guestId, Long hostGiftId, Long guestGiftId) {
+        this.hostId = hostId;
+        this.guestId = guestId;
+        this.hostGiftId = hostGiftId;
+        this.guestGiftId = guestGiftId;
+    }
 }
