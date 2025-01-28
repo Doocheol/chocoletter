@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button } from "../components/common/Button";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
 import AmPmButton from "../components/set-time/button/AmPmButton"
 import HourDialButton from "../components/set-time/button/HourDialButton"
@@ -93,7 +92,7 @@ const SetTimeView = () => {
                     onClose={closeModalAndNavigate}
             />
             {/* 페이지 콘텐츠 */}
-            <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
+            <GoBackButton altText="뒤로가기 버튼" />
             <div className="absolute mt-24 flex flex-col items-center">
                 <h1 className="text-xl font-bold mb-12">
                     함께 설렘을 나눌 수 있는 시간이에요!<br />

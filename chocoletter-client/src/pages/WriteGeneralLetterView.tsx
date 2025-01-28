@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 import GeneralLetterForm from "../components/write-letter/GeneralLetterForm";
 import { toast, ToastContainer } from "react-toastify";
@@ -32,7 +31,7 @@ const WriteGeneralLetterView = () => {
 	return (
 		<div className="relative flex flex-col items-center h-screen">
              {/* 뒤로 가기 버튼 */}
-            <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
+            <GoBackButton altText="뒤로가기 버튼" />
             
             <div className="absolute mt-24">
                 {/* 로고 이미지  */}
