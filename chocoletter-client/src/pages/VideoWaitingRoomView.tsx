@@ -38,7 +38,7 @@ const waitingWords = ["대기중.", "대기중..", "대기중..."]
 const WaitingRoomView = () => {
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(599);
+    const [remainTime, setRemainTime] = useState(303);
     const [makeMMSS, setMakeMMSS] = useState('');
     // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
@@ -84,7 +84,7 @@ const WaitingRoomView = () => {
                 console.log('here', sessionIdInit);
                 const timeout = await setTimeout(() => {
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 600000);
+                }, 300000);
 
                 return () => clearTimeout(timeout);
             }
@@ -146,18 +146,17 @@ const WaitingRoomView = () => {
 
     return (
         <div className="flex justify-center items-center min-h-screen">
-            {isOpenLetter && (
-                <LetterInVideoModal
-                    onPush={hideRTCLetter}
-                    sender="송신자"
-                    receiver="수신자"
-                />
-            )}
+            <LetterInVideoModal
+                isOpen={isOpenLetter}
+                onPush={hideRTCLetter}
+                sender="송신자"
+                receiver="수신자"
+            />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
                 <MyFaceInVideoWaitingRoom />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
-                <div className="w-full h-[107px] px-3 left-0 top-[67px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
-                    <div className="w-7 h-7 z-10" >
+                <div className="w-full h-[107px] px-3 top-[35px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
+                    <div className="w-8 h-8 z-10" >
                         <LetterInVideoOpenButton onPush={showRTCLetter} />
                     </div>
                     <div className="self-stretch h-[77px] flex flex-col justify-start items-center gap-[23px]">
