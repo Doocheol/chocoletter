@@ -140,8 +140,9 @@ public class GiftService {
         gift.rejectUnboxing();
         if (gift.getRejectCount() == 3) {
             gift.changeToGeneralGift();
-            if (checkGeneralGiftEachOther(gift.getReceiverId(), memberId)) {
-                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId());
+            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
+            if (receiverGift != null) {
+                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
             }
             // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
             return;
@@ -156,8 +157,9 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         gift.changeToGeneralGift();
-        if (checkGeneralGiftEachOther(gift.getReceiverId(), memberId)) {
-            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId());
+        Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
+        if (receiverGift != null) {
+            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
         }
     }
 
@@ -170,7 +172,8 @@ public class GiftService {
         return giftRepository.findGiftBySenderIdAndGiftBoxId(senderId, giftBoxId) != null;
     }
 
-    public boolean checkGeneralGiftEachOther(Long senderId, Long receiverId) {
-        return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL) != null;
+    public Gift findGeneralGiftEachOther(Long senderId, Long receiverId) {
+        return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL);
     }
+
 }

@@ -90,7 +90,7 @@ public class GiftBoxService {
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
         giftService.saveGift(gift);
-        makeChattingRoom(gift.getReceiverId(), gift.getSenderId());
+        makeChattingRoom(gift.getReceiverId(), gift.getSenderId(), gift.getId());
         receiverGiftBox.addGiftCount();
         receiverGiftBox.addGeneralGiftCount();
         return gift;
@@ -120,9 +120,10 @@ public class GiftBoxService {
         }
     }
 
-    private void makeChattingRoom(Long senderId, Long receiverId) {
-        if (giftService.checkGeneralGiftEachOther(senderId, receiverId)) {
-            chatRoomService.saveChatRoom(senderId, receiverId);
+    private void makeChattingRoom(Long senderId, Long receiverId, Long senderGiftId) {
+        Gift receiverGift = giftService.findGeneralGiftEachOther(senderId, receiverId);
+        if (receiverGift != null) {
+            chatRoomService.saveChatRoom(senderId, receiverId, senderGiftId, receiverGift.getId());
         }
     }
 }
