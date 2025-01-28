@@ -32,7 +32,7 @@ const WriteQuestionLetterView = () => {
 	return (
 		<div className="relative flex flex-col items-center h-screen">
              {/* 뒤로 가기 버튼 */}
-            <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
+            <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" />
             
             <div className="absolute mt-24">
                 {/* 로고 이미지  */}
