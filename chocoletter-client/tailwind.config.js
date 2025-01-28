@@ -23,6 +23,12 @@ module.exports = {
       "7xl": "5rem",
     },
     extend: {
+      backgroundImage: {
+        'letter-pink-background': "url('/src/assets/images/letter/letter_pink.png')",
+        'letter-blue-background': "url('/src/assets/images/letter/letter_blue.png')",
+      },
+      height: { screen: '100dvh' },
+      minHeight: { screen: '100dvh' },
       fontFamily: {
         sans: ["Dovemayo_gothic", "NeoDunggeunmo", "Arial", "sans-serif"],
         pretendard: ["Pretendard", "sans-serif"],

@@ -17,7 +17,7 @@ interface GiftData {
 }
 
 const LetterView = () => {
-    const selectedGiftId = 2 // useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
+    const selectedGiftId = useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
 
     const [giftData, setGiftData] = useState<GiftData | null>(null);
     const [loading, setLoading] = useState(true); 
@@ -45,11 +45,15 @@ const LetterView = () => {
         fetchGiftData();
     }, [selectedGiftId]);
 
+    const backgroundClass = giftData?.question
+        ? "bg-letter-blue-background"
+        : "bg-letter-pink-background";
+
     
     return (
-        <div className="relative flex flex-col items-center h-screen">
+        <div className={`relative flex flex-col items-center h-screen ${backgroundClass}`}>
             {/* GoBackButton을 좌측 상단에 고정 */}
-            <GoBackButton icon={<GoArrowLeft />} altText="뒤로가기 버튼" />
+            <GoBackButton strokeColor="#9E4AFF" />
 
             {/* 추후 삭제!! 선택된 Gift ID 표시 */}
             <div className="mt-4 text-center text-gray-600">
@@ -64,7 +68,7 @@ const LetterView = () => {
             ) : error === 403 ? (
                 <ForbiddenView />
             ) : (
-                <div className="absolute mt-24">
+                <div className="absolute mt-[41px] m-4">
                     <GiftView
                         giftData={
                             giftData || {
@@ -95,7 +99,7 @@ const ForbiddenView = () => (
 
 // Gift 컴포넌트 렌더링 컴포넌트
 const GiftView: React.FC<{ giftData: GiftData }> = ({ giftData }) => (
-    <div className="flex flex-col justify-center items-center mt-12">
+    <div className="flex flex-col justify-center items-center">
         <Gift
             nickName={giftData.nickName || "Anonymous"}
             content={giftData.content || null}
