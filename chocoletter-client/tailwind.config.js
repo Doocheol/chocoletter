@@ -3,7 +3,8 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  mode: 'jit',
+  content: ["index.html","./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontSize: {
       xxs: ".5rem",
@@ -22,6 +23,8 @@ module.exports = {
       "7xl": "5rem",
     },
     extend: {
+      height: { screen: '100dvh' },
+      minHeight: { screen: '100dvh' },
       fontFamily: {
         sans: ["Dovemayo_gothic", "NeoDunggeunmo", "Arial", "sans-serif"],
         pretendard: ["Pretendard", "sans-serif"],

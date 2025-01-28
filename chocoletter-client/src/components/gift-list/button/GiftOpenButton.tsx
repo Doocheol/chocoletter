@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
@@ -6,6 +6,13 @@ import { ImageButton } from "../../common/ImageButton";
 import { getGiftDetail } from "../../../services/giftApi";
 import { useRecoilState } from "recoil";
 import { selectedGiftIdAtom } from "../../../atoms/gift/giftAtoms";
+import outline_choco_button from '../../../assets/images/giftbox/outline_choco_button.svg';
+import bg_choco_button from '../../../assets/images/giftbox/bg_choco_button.svg'
+
+const generalImages = import.meta.glob('../../../assets/images/chocolate/general/*.png', { eager: true });
+const specialImages = import.meta.glob('../../../assets/images/chocolate/special/*.png', { eager: true });
+const generalChocos = Object.values(generalImages).map((module) => (module as { default: string }).default);
+const specialChocos = Object.values(specialImages).map((module) => (module as { default: string }).default);
 
 // 더미 데이터
 const giftData = [
@@ -30,6 +37,8 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     const navigate = useNavigate();
     const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom)
 
+    const [buttonImage, setButtonImage] = useState('');
+
     // 초콜릿 정보 가져오기
     const getGiftDetailCall = async () => {
         try {
@@ -48,6 +57,25 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
 
     // 3. RTC 초콜릿
     // 열지 못한다는 안내 모달로 이동
+
+    // localStorage에서 이미지 로드
+    useEffect(() => {
+        const savedImage = localStorage.getItem(`giftImage_${giftId}`);
+        if (savedImage) {
+            setButtonImage(savedImage);
+        } else {
+            let chocoRandomImage;
+            if (giftType === "SPECIAL") {
+                chocoRandomImage = specialChocos[Math.floor(Math.random() * specialChocos.length)];
+            } else {
+                chocoRandomImage = generalChocos[Math.floor(Math.random() * generalChocos.length)];
+            }
+
+            setButtonImage(chocoRandomImage);
+            localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
+        }
+        console.log(giftId, savedImage)
+    }, []);
 
     const closeRTCModal = () => {
         setIsRTC(false);
@@ -80,13 +108,12 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     }
 
     return (
-        <div className="bg-chocoletterGiftBg aspect-square rounded-lg shadow-sm">
+        <div className="relative aspect-square rounded-lg flex items-center justify-center">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
-            <ImageButton onClick={giftOpenButtonClickHandler}>
-                <p>{giftType}</p>
-                <p>{isOpened}</p>
-            </ImageButton>
+            <ImageButton backgroundImage={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 ![background-size:55%] bg-no-repeat" />
+            <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
+            <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none" />
         </div>
     )
 }

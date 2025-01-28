@@ -6,7 +6,7 @@ import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login
 
 // 편지 작성 완료 후, 전송 완료 페이지
 const SentGiftView = () => {
-    const [remainTime, setRemainTime] = useState(5);
+    const [remainTime, setRemainTime] = useState(10);
     const navigate = useNavigate();
 
     useEffect(() => {
