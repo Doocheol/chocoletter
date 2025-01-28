@@ -5,6 +5,8 @@ import { useRecoilState } from "recoil";
 import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
 
 import { MyFaceInVideoWaitingRoom } from "../components/video-waiting-room/MyFaceInVideoWaitingRoom";
+import timerIcon from "../assets/images/unboxing/timer.svg";
+import callTerminate from "../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css";
@@ -31,17 +33,21 @@ const waitingComment = [
     "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
     "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"];
 
+const waitingWords = ["대기중.", "대기중..", "대기중..."]
+
 const WaitingRoomView = () => {
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(300);
+    const [remainTime, setRemainTime] = useState(599);
     const [makeMMSS, setMakeMMSS] = useState('');
     // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [comment, setComment] = useState(waitingComment[2]);
+    const [wcomment, setWcomment] = useState(waitingWords[2]);
     const [cnt, setCnt] = useState(0);
+    const [wcnt, setWcnt] = useState(0);
 
     const navigate = useNavigate();
 
@@ -78,7 +84,7 @@ const WaitingRoomView = () => {
                 console.log('here', sessionIdInit);
                 const timeout = await setTimeout(() => {
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 3000);
+                }, 600000);
 
                 return () => clearTimeout(timeout);
             }
@@ -99,6 +105,16 @@ const WaitingRoomView = () => {
         return () => clearInterval(interval);
     }, [cnt]);
 
+    // 0.5초마다 대기중 변경
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setWcomment(waitingWords[wcnt]);
+            setWcnt((n) => (n + 1) % waitingWords.length);
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, [wcnt]);
+
     // 5분동안 타이머 및 지나면 방 폭파
     useEffect(() => {
         if (!isTimerOn) return;
@@ -110,9 +126,9 @@ const WaitingRoomView = () => {
                     const minute = Math.floor(remainTime / 60);
                     const second = remainTime - minute * 60;
                     if (second <= 9) {
-                        return `0${minute} : 0${second}`;
+                        return `${minute}:0${second}`;
                     }
-                    return `0${minute} : ${second}`;
+                    return `${minute}:${second}`;
                 } else {
                     clearInterval(interval);
                     navigate('/main/my/event')
@@ -124,26 +140,42 @@ const WaitingRoomView = () => {
         return () => clearInterval(interval);
     }, [isTimerOn, remainTime, navigate])
 
-    return (
-        <>
-            <div className="flex justify-center items-center h-screen">
-                {isOpenLetter && (
-                    <LetterInVideoModal
-                        onPush={hideRTCLetter}
-                        sender="송신자"
-                        receiver="수신자"
-                    />
-                )}
+    const handleBackClick = () => {
+        window.history.back(); // 브라우저 이전 페이지로 이동
+    };
 
-                <div className={classes.back}>
-                    <h1>{comment}</h1>
-                    <p>{makeMMSS}</p>
-                    <MyFaceInVideoWaitingRoom />
-                    <LetterInVideoOpenButton onPush={showRTCLetter} />
+    return (
+        <div className="flex justify-center items-center min-h-screen">
+            {isOpenLetter && (
+                <LetterInVideoModal
+                    onPush={hideRTCLetter}
+                    sender="송신자"
+                    receiver="수신자"
+                />
+            )}
+            <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
+                <MyFaceInVideoWaitingRoom />
+                <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
+                <div className="w-full h-[107px] px-3 left-0 top-[67px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
+                    <div className="w-7 h-7 z-10" >
+                        <LetterInVideoOpenButton onPush={showRTCLetter} />
+                    </div>
+                    <div className="self-stretch h-[77px] flex flex-col justify-start items-center gap-[23px]">
+                        <div className="self-stretch text-center text-white text-[40px] font-normal font-sans leading-snug z-20">{wcomment}</div>
+                        <div className="px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex z-20">
+                            <div className="w-[18px] h-[18px] relative">
+                                <img src={timerIcon} alt="타이머" className="w-[18px] h-[18px] left-0 top-0 absolute" />
+                            </div>
+                            <div className="text-center text-chocoletterPurpleBold text-2xl font-normal font-sans leading-snug z-20">{makeMMSS}</div>
+                        </div>
+                    </div>
                 </div>
+                <button onClick={handleBackClick} className="p-5 w-[11dvh] h-[11dvh] bottom-[10dvh] absolute bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20" >
+                    <img src={callTerminate} alt="뒤로가기 버튼" />
+                </button>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};
 
 export default WaitingRoomView;
