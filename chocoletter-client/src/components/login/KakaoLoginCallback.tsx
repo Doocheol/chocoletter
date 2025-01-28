@@ -27,18 +27,14 @@ const KakaoLoginCallback: React.FC = () => {
         const accessToken = urlParams.get("accessToken");
         const userName = urlParams.get("userName");
         const userProfileUrl = urlParams.get("userProfileUrl");
-        const isFirstLogin = urlParams.get("isFirstLogin");
+        const isFirstLoginParam = urlParams.get("isFirstLogin");
 
         if (!accessToken || !userName) {
           throw new Error("필수 로그인 정보가 누락되었습니다.");
         }
 
-        if (isFirstLogin) {
-          // 첫 로그인 여부가 전달된 경우, Recoil 상태 업데이트
-          setIsFirstLogin(true);
-        } else {
-          setIsFirstLogin(false);
-        }
+        const isFirstLogin = isFirstLoginParam === "true";
+        setIsFirstLogin(isFirstLogin);
 
         // 사용자 정보 객체 생성
         const userInfo: MyUserInfo = {
@@ -64,7 +60,7 @@ const KakaoLoginCallback: React.FC = () => {
     };
 
     handleLogin();
-  }, [navigate, setIsLogin, setUserName, setUserProfileUrl]);
+  }, [navigate, setIsLogin, setUserName, setUserProfileUrl, setIsFirstLogin]);
 
   return <Loading />; // 로딩 컴포넌트 렌더링
 };
