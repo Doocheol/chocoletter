@@ -4,7 +4,7 @@ const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   mode: 'jit',
-  content: ["index.html","./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontSize: {
       xxs: ".5rem",
@@ -69,6 +69,9 @@ module.exports = {
         chocoletterGray: "#dbdbdb",
         chocoletterGiftBoxBg: "#efe1ff",
         chocoletterGiftBg: "#bfafd1",
+        chocoletterDarkBlue: "#290059",
+        chocoletterLightPurple: "#7d1cee",
+        chocoletterWarning: "#ff3838",
         chocoletterBackground: {
           light: "#E6F5FF",
           dark: "#F4D3FF",
