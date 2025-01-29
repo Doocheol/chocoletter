@@ -4,6 +4,7 @@ import chocolate.chocoletter.common.exception.ChocoLetterException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.FailResponse;
 import chocolate.chocoletter.common.exception.FailResponse.ValidationError;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -55,5 +56,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(FailResponse.fail(HttpStatus.NOT_FOUND.value(), ErrorMessage.ERR_NOT_RESOURCE));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<FailResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        log.warn("[ConstraintViolationException] {}: {}", ex.getClass().getName(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(FailResponse.fail(HttpStatus.BAD_REQUEST.value(), ErrorMessage.ERR_INVALID_QUERY_PARAMETER));
     }
 }
