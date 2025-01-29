@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import classes from '../../../styles/videoRoom.module.css';
 import GoToMainMyEventButton from '../button/GoToMainMyEventButton';
+import timerIcon from "../../../assets/images/unboxing/timer.svg";
 
 
-const OutVideoRoomModal: React.FC = () => {
-    const [remainTime, setRemainTime] = useState(5);
+const OutVideoRoomModal = () => {
+    const [remainTime, setRemainTime] = useState(10);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,18 +26,26 @@ const OutVideoRoomModal: React.FC = () => {
     }, []);
 
     return (
-        <div className={ classes['modal-background'] }>
-        <div className="flex flex-col justify-center items-center h-screen bg-white p-8 rounded-lg shadow-lg">
-            <h1>통화가 종료되었어요.</h1>
-            <p>초콜릿으로 이어진 이 시간이</p>
-            <p>당신께</p>
-            <p>재미있거나</p>
-            <p>설레거나</p>
-            <p>흥미로운 시간이었길 바랍니다.</p>
-            <GoToMainMyEventButton/>
-            <p className="text-sm">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</p>
-        </div>
-        </div>
+        <>
+            <div className="w-[361px] h-[226px] px-[23px] py-5 bg-white rounded-[20px] border border-black flex-col justify-start items-center gap-6 inline-flex">
+                <div className="w-7 h-7 justify-center items-center inline-flex">
+                    <div className="w-7 h-7 relative flex-col justify-center items-center flex overflow-hidden" >
+                        <img src={timerIcon} alt="타이머" className="w-full h-full absolute" />
+                    </div>
+                </div>
+                <div className="flex-col justify-start items-center gap-[15px] flex">
+                    <div className="text-center text-black text-lg font-normal font-sans leading-snug">화상채팅이 종료되었어요</div>
+                    <div className="px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[18px] justify-start items-center gap-px inline-flex">
+                        <div className="text-center text-[#5800be] text-[13px] font-normal font-pretendard leading-[18.20px]">{remainTime}초 후에 내 선물상자로 이동합니다</div>
+                    </div>
+                </div>
+                <div className="justify-center items-center gap-[11px] inline-flex">
+                    <div className="w-[267px] h-[45px] bg-chocoletterPurpleBold rounded-[15px] border border-black justify-center items-center gap-2 flex">
+                        <GoToMainMyEventButton />
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
 

@@ -3,123 +3,114 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ShuffleButton } from "./ShuffleButton";
 import { getQuestion } from "../../services/questionApi";
+import question_icon from "../../assets/images/letter/question_icon.svg";
 
-function QuestionLetterForm({ ...props }) {
-    const [nickname, setNickname] = useState("");
-    const [content, setContent] = useState("");
-    const [countContent, setCountContent] = useState(0);
+interface QuestionLetterFormProps {
+    setNickname: (nickname: string) => void;
+    setContent: (content: string) => void;
+    onContentChange?: (length: number) => void;
+}
+
+const QuestionLetterForm: React.FC<QuestionLetterFormProps> = ({
+    setNickname,
+    setContent,
+    onContentChange,
+}) => {
+    const [nickname, updateNickname] = useState<string>("");
+    const [content, updateContent] = useState<string>("");
+    const [contentLength, setContentLength] = useState<number>(0);
     const [randomQuestion, setRandomQuestion] = useState("랜덤질문이 들어갈 자리입니다.")
 
+    const nicknameToastId = "nickname-warning";
+    const contentToastId = "content-warning";
 
-    // 더미 데이터
-    const dummyQuestions = [
-        "함께 가보고 싶은 여행지는 어디인가요?",
-        "상대방과 함께한 추억 중 가장 기억에 남는 순간은 무엇인가요?",
-        "상대방에게 고맙다고 말하고 싶은 일이 있다면 무엇인가요?",
-        "우리만의 특별한 하루를 계획한다면 무엇을 하고 싶나요?",
-        "상대방이 내게 가장 큰 용기를 준 순간은 언제인가요?",
-        "상대방과 함께 이루고 싶은 목표가 있다면 무엇인가요?",
-        "서로의 취향을 반영한 특별한 선물을 고른다면 무엇을 주고 싶나요?",
-        "상대방과의 관계에서 가장 소중하다고 느꼈던 순간은 언제인가요?",
-        "서로의 어린 시절 이야기를 나눠본 적 있나요? 기억나는 에피소드는?",
-        "함께 도전해보고 싶은 새로운 취미가 있다면 무엇인가요?",
-        "우리만의 특별한 기념일을 만든다면 어떤 날로 정하고 싶나요?",
-        "상대방이 나를 웃게 했던 가장 기억나는 순간은 무엇인가요?",
-        "서로에게 배우고 싶은 점이 있다면 무엇인가요?",
-        "상대방이 내게 준 가장 큰 감동은 무엇이었나요?",
-        "앞으로 함께하고 싶은 가장 큰 도전은 무엇인가요?",
-    ];
-
-    const onNicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.currentTarget.value.length > 25) {
-            const currentNickname = e.currentTarget.value.substring(0, 25);
-            if (!toast.isActive("nickname-warning")) {
-                toast.warn("닉네임은 25글자 이하로 설정해주세요!", {
-                    toastId: "nickname-warning", 
+    const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.length > 12) {
+            const truncatedValue = value.substring(0, 12);
+            if (!toast.isActive(nicknameToastId)) {
+                toast.warn("닉네임은 12글자 이하로 설정해주세요!", {
+                    toastId: nicknameToastId,
                     position: "top-center",
                     autoClose: 2000,
                 });
             }
-            props.setNickname(currentNickname);
-            setNickname(currentNickname);
+            updateNickname(truncatedValue);
+            setNickname(truncatedValue);
         } else {
-            const currentNickname = e.currentTarget.value;
-            props.setNickname(currentNickname);
-            setNickname(currentNickname);
+            updateNickname(value);
+            setNickname(value);
         }
     };
 
-    const onContentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const currentContent = e.currentTarget.value.substring(0, 100);
-        if (e.currentTarget.value.length > 100) {
-            if (!toast.isActive("content-warning")) {
-                toast.warn("100글자 이하로 작성해주세요!", {
-                    toastId: "content-warning", 
+    const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        if (value.length > 200) {
+            const truncatedValue = value.substring(0, 200);
+            if (!toast.isActive(contentToastId)) {
+                toast.warn("200글자 이하로 작성해주세요!", {
+                    toastId: contentToastId,
                     position: "top-center",
                     autoClose: 2000,
                 });
             }
-            props.setContent(currentContent);
-            setContent(currentContent);
-            setCountContent(100);
+            updateContent(truncatedValue);
+            setContent(truncatedValue);
+            setContentLength(200);
+            onContentChange?.(200);
         } else {
-            const currentContent = e.currentTarget.value;
-            props.setContent(currentContent);
-            setContent(currentContent);
-            setCountContent(e.currentTarget.value.length);
-        }
-        // 부모로 content 길이 전달
-        if (props.onContentChange) {
-            props.onContentChange(currentContent.length);
+            updateContent(value);
+            setContent(value);
+            setContentLength(value.length);
+            onContentChange?.(value.length);
+            // console.log("Current Content Length:", value.length)
         }
     };
 
-    // // 질문 섞기 핸들러
-    // const onShuffleQuestion = async () => {
-    //     const questionData = await getQuestion(); 
-    //     if (questionData) {
-    //         setRandomQuestion(questionData.question);
-    //     } else {
-    //         toast.error("질문을 가져오는 데 실패했습니다.");
-    //     }
-    // };
-
-    // 셔플 동작을 테스트
-    const onShuffleQuestion = () => {
-        const randomIndex = Math.floor(Math.random() * dummyQuestions.length); // 무작위 인덱스 선택
-        setRandomQuestion(dummyQuestions[randomIndex]); // 질문 업데이트
+    // 질문 섞기 핸들러
+    const onShuffleQuestion = async () => {
+        const questionData = await getQuestion(); 
+        if (questionData) {
+            setRandomQuestion(questionData);
+        } else {
+            toast.error("질문을 가져오는 데 실패했습니다.");
+        }
     };
 
     return (
-        <div>
-            <ToastContainer />
-            <div className="relative">
+        <div className="flex flex-col justify-center items-center mb-[20px] gap-[20px]">
+            {/* 닉네임 */}
+            <div className="relative flex flex-raw justify-center items-center gap-[11px] w-[316px]">
+                <p>닉네임</p>
                 <input
                     type="text"
                     value={nickname}
-                    className="w-[300px] h-[50px] mt-2 mb-4 text-center bg-pink-100 border-4 border-gray-300 outline-none rounded-lg"
-                    onChange={onNicknameHandler}
+                    className="flex min-w-[230px] max-w-[329px] p-2 items-center gap-2 rounded-[15px] border border-black bg-white flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]"
+                    onChange={handleNicknameChange}
                     placeholder="닉네임을 필수로 입력해주세요"
                 />
             </div>
-            <div className="text-right mb-5 ">
-                <div className="w-[300px] flex flex-row items-center justify-between ">
-                    <div className="w-[250px] h-[100px] flex text-center p-2 bg-gray-100 border-y-4 border-l-4 border-gray-300 outline-none rounded-tl-lg rounded-bl-lg">
-                        <h1>{randomQuestion}</h1>
-                    </div>
-                    <div>
-                        <ShuffleButton altText="질문 섞기 버튼" onShuffleClick={onShuffleQuestion} />
-                    </div>
+            {/* 질문 */}
+            <div className="flex flex-raw justify-center items-center gap-[10px]">
+                <div className="flex min-w-[230px] max-w-[329px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white">
+                    <img src={question_icon} alt="login_view_service_title" className="" />
+                    <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{randomQuestion}</h1>
                 </div>
+                <div>
+                 <ShuffleButton altText="질문 섞기 버튼" onShuffleClick={onShuffleQuestion} />
+                </div>
+            </div>
+            {/* 답변 */}
+            <div className="relative">
                 <textarea
                     value={content}
-                    className="block w-[300px] h-[300px] text-center mx-auto p-2 border-4 border-gray-300 outline-none rounded-lg resize-none"
-                    onChange={onContentHandler}
+                    className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-solid border-black bg-white flex-1 text-[#151517] text-center font-sans text-[18px] leading-[27px] tracking-[-0.408px]"
+                    onChange={handleContentChange}
                     placeholder="메세지를 작성해보세요(최소 10자)"
                 />
-                <span className="text-gray-400 pr-5">{countContent}/100</span>
+                <span className="absolute right-[10px] bottom-[10px] text-gray-400">{contentLength}/200</span>
             </div>
-        </div>
+        </div>       
     );
 }
 

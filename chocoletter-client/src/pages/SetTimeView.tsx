@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button } from "../components/common/Button";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
 import AmPmButton from "../components/set-time/button/AmPmButton"
 import HourDialButton from "../components/set-time/button/HourDialButton"

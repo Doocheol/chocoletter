@@ -9,7 +9,7 @@ const GoToMainMyEventButton = () => {
 
     return (
         <div>
-            <button onClick={goBackMainMyEvent}>내 초콜릿 상자로 돌아가기</button>
+            <button onClick={goBackMainMyEvent} className="text-center text-white text-lg font-normal font-sans leading-snug">내 선물상자로 바로 이동</button>
         </div>
     )
 }
