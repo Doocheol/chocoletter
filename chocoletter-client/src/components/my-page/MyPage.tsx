@@ -1,5 +1,3 @@
-// src/components/my-page/MyPage.tsx
-
 import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +8,7 @@ import { receivedGiftsAtom, sentGiftsAtom } from "../../atoms/gift/giftAtoms";
 
 import { FaUserCircle, FaHome } from "react-icons/fa"; // 사용자 아이콘 및 홈 아이콘
 import { FiLogOut } from "react-icons/fi"; // 로그아웃 아이콘
-import { Button } from "../common/Button";
+import home_icon from "../../assets/images/main/home_icon.svg"; // 홈 아이콘
 
 /**
  * 프로필 드롭다운 내용
@@ -71,7 +69,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
           className="absolute top-2 right-2 text-chocoletterPurpleBold hover:text-chocoletterPurpleDark"
           aria-label="홈"
         >
-          <FaHome className="w-6 h-6 hover:text-chocoletterPurple" />
+          <img src={home_icon} className="w-6 h-6" />
         </button>
 
         {/* 프로필 영역 */}

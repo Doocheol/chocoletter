@@ -1,8 +1,7 @@
-// src/components/main/my/before/modal/ChatModal.tsx
-
 import React from "react";
 import Modal from "../../../../common/Modal";
 import { FaComments } from "react-icons/fa6";
+import tutorial_icon from "../../../../../assets/images/main/chat_icon.svg";
 
 interface ChatModalProps {
   isOpen: boolean;
@@ -26,7 +25,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex flex-col justify-center items-center w-full">
           {/* 채팅 아이콘 */}
-          <FaComments className="w-6 h-6 text-chocoletterPurpleBold mb-2" />
+          <img src={tutorial_icon} className="w-6 h-6 mb-4" />
 
           {/* 제목 */}
           <div id="chat-modal-title" className="text-base font-medium">
