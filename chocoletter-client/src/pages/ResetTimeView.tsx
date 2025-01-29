@@ -43,10 +43,10 @@ const ResetTimeView = () => {
                     <img src={choco_with_wing} alt="wing-choco" />
                 </div>
                 <div className="flex flex-col gap-y-5 w-full px-5">
-                    <Button onClick={goToSetTimeHandler} className="py-5">
+                    <Button onClick={goToSetTimeHandler} className="py-5 bg-white">
                         다른 시간으로 <br /> 약속을 잡을래요!
                     </Button>
-                    <Button onClick={changeGeneralGiftHandler} className="py-5">
+                    <Button onClick={changeGeneralGiftHandler} className="py-5 bg-white">
                         일반 초콜릿으로 <br /> 바꿀래요!
                     </Button>
                 </div>
