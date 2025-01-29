@@ -1,5 +1,3 @@
-// src/pages/TestPage.tsx
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/common/Button";
@@ -10,48 +8,29 @@ const TestPage: React.FC = () => {
   // 모든 경로 목록을 배열로 관리
   const routes = [
     { path: "/", label: "LoginView (/)" },
-    {
-      path: "/main/my/before",
-      label: "MainMyBeforeView (/main/my/before)",
-    },
-    {
-      path: "/gift/list/before",
-      label: "GiftListBeforeView (/gift/list/before)",
-    },
-    {
-      path: "/gift/list/event",
-      label: "GiftListEventView (/gift/list/event)",
-		},
+    { path: "/main/my/before", label: "MainMyBeforeView (/main/my/before)" },
+    { path: "/main/your/before", label: "MainYourBeforeView (/main/your/before)" },
+    { path: "/gift/list/before", label: "GiftListBeforeView (/gift/list/before)" },
+    { path: "/gift/list/event", label: "GiftListEventView (/gift/list/event)" },
     { path: "/receive/2", label: "ReceiveView (/receive/2)" },
     { path: "/letter", label: "LetterView (/letter)" },
-    {
-      path: "/selectletter",
-      label: "SelectLetterTypeView (/selectletter)",
-    },
-    {
-      path: "/write/general",
-      label: "WriteGeneralLetterView (/write/general)",
-    },
-    {
-      path: "/write/question",
-      label: "WriteQuestionLetterView (/write/question)",
-    },
+    { path: "/selectletter", label: "SelectLetterTypeView (/selectletter)" },
+    { path: "/write/general", label: "WriteGeneralLetterView (/write/general)" },
+    { path: "/write/question", label: "WriteQuestionLetterView (/write/question)" },
     { path: "/sentgift", label: "SentGiftView (/sentgift)" },
     { path: "/selectgift", label: "SelectGiftTypeView (/selectgift)" },
-    {
-      path: "/video/waiting-room/12345",
-      label: "WaitingRoomView (/video/waiting-room/12345)",
-    },
+    { path: "/video/waiting-room/12345", label: "WaitingRoomView (/video/waiting-room/12345)" },
     { path: "/video/room", label: "VideoRoomView (/video/room)" },
     { path: "/reset-time", label: "ResetTimeView (/reset-time)" },
     { path: "/set-time", label: "SetTimeView (/set-time)" },
     { path: "/rejected", label: "RejectedView (/rejected)" },
     { path: "/error", label: "ErrorPage (/error)" },
     { path: "/*", label: "Wildcard Route (/*) - ErrorPage" },
-    // 누락된 경로 추가
     { path: "/auth/kakao/callback", label: "KakaoLoginCallback (/auth/kakao/callback)" },
-    { path: "/receive/1", label: "ReceiveView (/receive/1)" }, // 예시 동적 경로
-    { path: "/video/waiting-room/67890", label: "WaitingRoomView (/video/waiting-room/67890)" }, // 예시 동적 경로
+    { path: "/receive/1", label: "ReceiveView (/receive/1)" },
+    { path: "/video/waiting-room/67890", label: "WaitingRoomView (/video/waiting-room/67890)" },
+    { path: "/chat/list", label: "ChatRoomListView (/chat/list)" },
+    { path: "/my-box", label: "MyBoxView (/my-box)" },
   ];
 
   // 버튼 클릭 시 해당 경로로 이동

@@ -77,7 +77,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 캡처된 이미지 로드
         const capturedImage = new Image();
-        capturedImage.crossOrigin = "anonymous"; // CORS 문제 방지
+        // capturedImage.crossOrigin = "anonymous"; // CORS 문제 방지
         capturedImage.src = imageSrc;
 
         // 프레임 이미지 로드
@@ -118,16 +118,16 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 모든 이미지 로딩 완료 대기
         await Promise.all([
-          new Promise<void>((resolve, reject) => {
-            capturedImage.onload = () => {
-              console.log("Captured Image Loaded");
-              resolve();
-            };
-            capturedImage.onerror = () => {
-              console.error("Captured Image Failed to Load");
-              reject(new Error("Captured Image Failed to Load"));
-            };
-          }),
+          // new Promise<void>((resolve, reject) => {
+          //   capturedImage.onload = () => {
+          //     console.log("Captured Image Loaded");
+          //     resolve();
+          //   };
+          //   capturedImage.onerror = () => {
+          //     console.error("Captured Image Failed to Load");
+          //     reject(new Error("Captured Image Failed to Load"));
+          //   };
+          // }),
           new Promise<void>((resolve, reject) => {
             frame.onload = () => {
               console.log("Frame Image Loaded");
@@ -155,12 +155,12 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         canvas.height = capturedImage.height;
 
         // 캔버스에 캡처된 이미지 그리기
-        ctx.drawImage(capturedImage, 0, 0, canvas.width, canvas.height);
-        console.log("Captured Image Drawn on Canvas");
+        // ctx.drawImage(capturedImage, 0, 0, canvas.width, canvas.height);
+        // console.log("Captured Image Drawn on Canvas");
 
         // 캔버스에 프레임 그리기
         ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
-        console.log("Frame Image Drawn on Canvas");
+        // console.log("Frame Image Drawn on Canvas");
 
         // 캔버스에 선택된 giftbox_before 이미지 그리기 (160x160 픽셀, 중앙 위치)
         const giftboxWidth = 220; // 원하는 너비 (w-40)
@@ -171,7 +171,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         // 캔버스에 선택된 giftbox_before 이미지 그리기
         // 원하는 위치와 크기로 조정 가능 (예: 전체 캔버스 크기)
         ctx.drawImage(selectedGiftbox, giftboxX, giftboxY, giftboxWidth, giftboxHeight);
-        console.log("Selected Giftbox Image Drawn on Canvas");
+        // console.log("Selected Giftbox Image Drawn on Canvas");
 
         // 사용자 이름 텍스트 그리기
         const nameFontSize = Math.floor(canvas.width / 15); // 폰트 크기 조정
@@ -204,9 +204,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         const textY = canvas.height - fontSize * 2; // 하단에서 약간 위쪽
 
         wrapText(ctx, overlayText, maxTextWidth, textX, textY, lineHeight);
-        console.log("Overlay Text Drawn on Canvas");
+        // console.log("Overlay Text Drawn on Canvas");
       } catch (error) {
-        console.error("이미지 합성 중 오류 발생:", error);
+        // console.error("이미지 합성 중 오류 발생:", error);
         toast.error("이미지 합성에 실패했습니다.");
       }
     }
@@ -245,7 +245,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
   return (
     <Modal isOpen={isVisible} onClose={onClose}>
       <div
-        className={`p-4 flex flex-col items-center rounded-lg ${
+        className={`p-2 flex flex-col items-center rounded-lg ${
           isAnimating ? "jello-vertical" : ""
         }`}
       >
@@ -259,20 +259,20 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
             ></canvas>
 
             {/* 감성적인 문구 입력 필드 및 저장 버튼 */}
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-1">
               <input
                 type="text"
                 value={overlayText}
                 onChange={(e) => setOverlayText(e.target.value)}
                 placeholder="내용을 입력하세요."
-                className="mt-4 px-10 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-chocoletterPurple"
+                className="mt-4 px-10 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
               />
               <button
                 onClick={handleDownload}
-                className="mt-4 px-4 py-2 w-20 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-4 px-6 py-2 w-24 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isAnimating}
               >
-                {isAnimating ? "저장 중..." : "저장"}
+                {isAnimating ? "..." : "저장"}
               </button>
             </div>
           </>

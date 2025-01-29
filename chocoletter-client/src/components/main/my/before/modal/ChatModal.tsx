@@ -11,7 +11,7 @@ interface ChatModalProps {
 const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
   const messages = [
     "그날을 더욱 특별하게 만들어 줄 채팅방이 열립니다.",
-    "일반 초콜릿을 주고받은 사람들끼리만",
+    "'일반' 초콜릿을 주고받은 사람들끼리만",
     "만날 수 있는 비밀스러운 공간이에요.",
     "초콜릿과 함께 따뜻한 마음을 나누고,",
     "2월 14일에 다 같이 모여 즐거운 시간을 보내요!",
@@ -39,7 +39,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className="text-gray-400 whitespace-nowrap overflow-hidden text-xs wave-down"
+                className="text-gray-400 whitespace-nowrap overflow-hidden text-sm wave-down"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {" "}
