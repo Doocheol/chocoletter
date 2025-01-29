@@ -134,11 +134,11 @@ const VideoRoomView = () => {
                         )}
                     </div>
                     {/* 타이머 */}
-                    <div className={`absolute top-[calc(4rem-47%)] left-[calc(1rem+7.5dvh)] w-[clamp(120px,18dvh,140px)] px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-end items-center gap-[9px] inline-flex z-20 ${classes.flowingBorder}`}>
+                    <div className={`absolute top-[calc(4rem-47%)] left-[calc(1rem+7.5dvh)] !w-[clamp(120px,18dvh,140px)] px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-end items-center gap-[9px] inline-flex z-20 ${classes.flowingBorder}`}>
                         <div className="w-[18px] h-[18px] relative z-20">
-                            <img src={timerIcon} alt="타이머" className="w-[18px] h-[18px] left-0 top-0 absolute" />
+                            <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${leftTime <= 5? classes.alarmIcon : ""}`} />
                         </div>
-                        <div className="text-center text-chocoletterPurpleBold text-2xl font-normal font-sans leading-snug z-20">{leftTime}</div>
+                        <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning font-bold" :"text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{leftTime}</div>
                     </div>
                 </div>
 

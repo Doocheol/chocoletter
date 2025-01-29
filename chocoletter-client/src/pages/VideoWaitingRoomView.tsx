@@ -9,7 +9,7 @@ import timerIcon from "../assets/images/unboxing/timer.svg";
 import callTerminate from "../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
-import classes from "../styles/videoRoom.module.css";
+import classes from "../styles/videoRoom.module.css"
 
 // API를 받아옵니다.
 
@@ -85,7 +85,7 @@ const WaitingRoomView = () => {
                         stream.getTracks().forEach(track => track.stop());
                     }
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 10000);
+                }, 6000);
 
                 return () => clearTimeout(timeout);
             }
@@ -155,9 +155,9 @@ const WaitingRoomView = () => {
                         <div className="self-stretch text-center text-white text-[40px] font-normal font-sans leading-snug z-20">{wcomment}</div>
                         <div className="px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex z-20">
                             <div className="w-[18px] h-[18px] relative">
-                                <img src={timerIcon} alt="타이머" className="w-[18px] h-[18px] left-0 top-0 absolute" />
+                                <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${remainTime <= 10? classes.alarmIcon : ""}`} />
                             </div>
-                            <div className="text-center text-chocoletterPurpleBold text-2xl font-normal font-sans leading-snug z-20">{makeMMSS}</div>
+                            <div className={`text-center ${remainTime <= 10? "text-chocoletterWarning" : "text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{makeMMSS}</div>
                         </div>
                     </div>
                 </div>
