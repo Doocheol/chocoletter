@@ -72,7 +72,7 @@ const TestPage: React.FC = () => {
           <Button
             key={index}
             onClick={() => handleNavigation(route.path)}
-            className="w-full sm:w-48"
+            className="w-full sm:w-48 bg-white"
             aria-label={`Navigate to ${route.label}`}
           >
             {route.label}

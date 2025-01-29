@@ -41,7 +41,7 @@ export const CheckLetterUseButton = ({ onClick }: CheckLetterUseButtonProps) => 
     return(
         <>
             <EmergeProblemModal isOpen={isPropblemOpen} onClose={allModalCloseHandler} />
-            <Button onClick={checkLetterClickHandler}>
+            <Button onClick={checkLetterClickHandler} className="bg-white">
                 사용하기
             </Button>
         </>

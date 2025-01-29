@@ -46,7 +46,7 @@ const SentGiftView = () => {
           편지를 2개 받을 때마다 2월 14일 전에 하나를 먼저 열어볼 수 있답니다!
         </h3>
         <div className="mb-8 text-center">
-          <Button onClick={goBackMainMyEvent} className="w-[300px] h-[50px] px-1 mb-4">
+          <Button onClick={goBackMainMyEvent} className="w-[300px] h-[50px] px-1 mb-4 bg-white">
             내 초콜릿 상자로 이동하기
           </Button>
           <p className="text-sm">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</p>

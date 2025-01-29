@@ -1,6 +1,3 @@
-import React from "react";
-import go_back_arrow from "../../assets/images/button/go_back_arrow.svg";
-
 type GoBackButtonProps = {
     strokeColor?: string; // 아이콘의 stroke 색상
     altText?: string; // 접근성 텍스트

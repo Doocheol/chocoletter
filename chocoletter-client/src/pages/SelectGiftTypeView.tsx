@@ -36,7 +36,7 @@ function SelectGiftTypeView() {
                 <div className="mb-8 text-center">
                     <Button
                         onClick={handleAccept}
-                        className="w-[300px] h-[100px] px-1" 
+                        className="w-[300px] h-[100px] px-1 bg-white" 
                     >
                         <p className="text-xl">같이 개봉하기🥰</p>
                     </Button>
@@ -44,7 +44,7 @@ function SelectGiftTypeView() {
                 <div className="mb-8 text-center">
                     <Button
                         onClick={handleReject}
-                        className="w-[300px] h-[100px] px-1" 
+                        className="w-[300px] h-[100px] px-1 bg-white" 
                     >
                         <p className="text-xl">마음만 전할래요🫣 </p>
                     </Button>
