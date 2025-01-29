@@ -29,6 +29,7 @@ import VideoRoomView from "./pages/VideoRoomView";
 import GiftListEventView from "./pages/GiftListEventView";
 import ChatRoomListView from "./pages/ChatRoomListView";
 import MyBoxView from "./pages/MyBoxView";
+import MainYourBeforeView from "./pages/MainYourBeforeView";
 
 declare global {
   interface Window {
@@ -99,6 +100,7 @@ function App() {
             <Route path="/gift/list/event" element={<GiftListEventView />} />
             <Route path="/chat/list" element={<ChatRoomListView />} />
             <Route path="/my-box" element={<MyBoxView />} />
+            <Route path="/main/your/before" element={<MainYourBeforeView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
