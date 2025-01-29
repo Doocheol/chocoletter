@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 import QuestionLetterForm from "../components/write-letter/QuestionLetterForm";
 import { toast, ToastContainer } from "react-toastify";

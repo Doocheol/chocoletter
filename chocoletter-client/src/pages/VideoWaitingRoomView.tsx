@@ -38,7 +38,7 @@ const waitingWords = ["대기중.", "대기중..", "대기중..."]
 const WaitingRoomView = () => {
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(303);
+    const [remainTime, setRemainTime] = useState(301);
     const [makeMMSS, setMakeMMSS] = useState('');
     // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
@@ -84,7 +84,7 @@ const WaitingRoomView = () => {
                 console.log('here', sessionIdInit);
                 const timeout = await setTimeout(() => {
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 300000);
+                }, 5000);
 
                 return () => clearTimeout(timeout);
             }
