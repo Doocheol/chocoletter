@@ -5,7 +5,6 @@ import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.service.GiftService;
-import chocolate.chocoletter.common.annotation.DecryptedId;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,21 +49,21 @@ public class GiftController implements GiftSwagger {
     }
 
     @GetMapping("/{giftId}/receive")
-    public ResponseEntity<?> findReceiveGiftDetail(@PathVariable("giftId") @DecryptedId Long giftId) {
+    public ResponseEntity<?> findReceiveGiftDetail(@PathVariable("giftId") Long giftId) {
         Long memberId = 1L;
         GiftDetailResponseDto gift = giftService.findReceiveGiftDetail(memberId, giftId);
         return ResponseEntity.ok(gift);
     }
 
     @GetMapping("/{giftId}/send")
-    public ResponseEntity<?> findSendGiftDetail(@PathVariable("giftId") @DecryptedId Long giftId) {
+    public ResponseEntity<?> findSendGiftDetail(@PathVariable("giftId") Long giftId) {
         Long memberId = 2L;
         GiftDetailResponseDto gift = giftService.findSendGiftDetail(memberId, giftId);
         return ResponseEntity.ok(gift);
     }
 
     @GetMapping("/{giftId}/unboxing/invitation")
-    public ResponseEntity<?> findUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
+    public ResponseEntity<?> findUnboxingInvitation(@PathVariable Long giftId) {
         // 로그인 한 member를 가져오기
         Long memberId = 1L;
         GiftUnboxingInvitationResponseDto unboxingInvitation = giftService.findUnboxingInvitation(memberId, giftId);
@@ -73,7 +71,7 @@ public class GiftController implements GiftSwagger {
     }
 
     @PostMapping("/{giftId}/unboxing/invitation")
-    public ResponseEntity<?> sendUnboxingInvitation(@PathVariable @DecryptedId Long giftId,
+    public ResponseEntity<?> sendUnboxingInvitation(@PathVariable Long giftId,
                                                     @RequestBody @Valid UnboxingInvitationRequestDto requestDto) {
         // 로그인 한 유저가 sender
         Long senderId = 2L;
@@ -82,29 +80,24 @@ public class GiftController implements GiftSwagger {
     }
 
     @PatchMapping("{giftId}/unboxing/invitation/accept")
-    public ResponseEntity<?> acceptUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
+    public ResponseEntity<?> acceptUnboxingInvitation(@PathVariable Long giftId) {
         Long memberId = 1L;
         giftService.acceptUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{giftId}/unboxing/invitation/reject")
-    public ResponseEntity<?> rejectUnboxingInvitation(@PathVariable @DecryptedId Long giftId) {
+    public ResponseEntity<?> rejectUnboxingInvitation(@PathVariable Long giftId) {
         Long memberId = 1L;
         giftService.rejectUnboxingInvitation(memberId, giftId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{giftId}/type")
-    public ResponseEntity<?> changeToGeneralGift(@PathVariable @DecryptedId Long giftId) {
+    public ResponseEntity<?> changeToGeneralGift(@PathVariable Long giftId) {
         // 초대를 보낸 유저로 로그인을 한다고 가정
         Long memberId = 2L;
         giftService.changeToGeneralGift(memberId, giftId);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    public void getEncryptedIdForTest(@RequestParam Long id) throws Exception {
-        System.out.println(idEncryptionUtil.encrypt(id));
     }
 }
