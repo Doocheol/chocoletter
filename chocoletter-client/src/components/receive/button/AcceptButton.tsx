@@ -33,7 +33,7 @@ const AcceptButton: React.FC<AcceptButtonProps> = ({ giftId }) => {
         <div className="text-center">
             <Button 
                 onClick={clickAcceptHandler}
-                className="w-[300px] h-[100px]"
+                className="w-[300px] h-[100px] bg-white"
             >
                 와, 정말 기대돼요! <br />
                 2월 14일에 함께 열어봐요 😊

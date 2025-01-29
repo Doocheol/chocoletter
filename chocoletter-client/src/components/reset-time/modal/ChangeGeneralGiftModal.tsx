@@ -12,7 +12,7 @@ const changeGeneralGiftModal: React.FC<changeGeneralGiftProps> = ({ isOpen, onCl
         <div>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <p>모달 테스트</p>
-                <Button onClick={onClose}>내 초콜릿 상자로 이동하기</Button>
+                <Button onClick={onClose} className="bg-white">내 초콜릿 상자로 이동하기</Button>
             </Modal>
         </div>
     )

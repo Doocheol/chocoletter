@@ -11,7 +11,7 @@ function LoginView() {
       {/* 테스트 페이지 이동 */}
       <div className="w-full flex justify-end mt-1">
         <Link to="/test">
-          <Button className="text-xs sm:text-sm text-blue-500 hover:underline px-2 py-1">
+          <Button className="text-xs sm:text-sm text-blue-500 hover:underline px-2 py-1 bg-white">
             테스트
           </Button>
         </Link>
