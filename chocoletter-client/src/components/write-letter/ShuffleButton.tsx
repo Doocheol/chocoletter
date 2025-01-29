@@ -1,5 +1,5 @@
-import { IoShuffle } from "react-icons/io5";
 import React from "react";
+import shuffle_icon from "../../assets/images/letter/shuffle_icon.svg";
 
 type ShuffleButtonProps = {
     altText?: string; 
@@ -13,7 +13,7 @@ export const ShuffleButton = ({
     onShuffleClick,
 }: ShuffleButtonProps) => {
     const baseStyle =
-        "top-4 left-4 flex items-center justify-center w-[50px] h-[100px] bg-white border-y-4 border-r-4 border-gray-300 outline-none rounded-tr-lg rounded-br-lg shadow hover:bg-gray-100";
+        "flex w-[60px] h-[45px] justify-center items-center gap-2 rounded-[15px] border border-black bg-[#9E4AFF]";
     
     return (
         <button
@@ -21,7 +21,7 @@ export const ShuffleButton = ({
             className={`${baseStyle} ${className}`}
             aria-label={altText}
         >
-            <IoShuffle size={24} />
+            <img src={shuffle_icon} alt="랜덤 질문 섞기" />
         </button>
     );
 };

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
 import GeneralLetterForm from "../components/write-letter/GeneralLetterForm";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import chocoletter_login_view_logo from "../assets/images/logo/chocoletter_login_view_logo.png";
 import login_view_service_title from "../assets/images/logo/login_view_service_title.svg";
 
 // 편지지 선택 뷰 이후, 자유 형식 편지지 작성 화면
@@ -25,7 +23,7 @@ const WriteGeneralLetterView = () => {
             });
             return; 
         }
-        
+
         if (contentLength < 10) {
             // 메세지가 10글자 미만일 경우
             toast.error("메세지는 최소 10글자 이상 작성해야 합니다!", {
@@ -64,7 +62,7 @@ const WriteGeneralLetterView = () => {
                     <div className="relatvie text-center">
                         <Button
                             onClick={goBackMainMyEvent}
-                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-[#9E4AFF]" 
+                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold" 
                         >
                             <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">다음으로</p>
                         </Button>
