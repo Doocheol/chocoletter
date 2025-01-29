@@ -111,7 +111,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         <div className="relative aspect-square rounded-lg flex items-center justify-center">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
-            <ImageButton backgroundImage={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 ![background-size:55%] bg-no-repeat" />
+            <ImageButton src={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 ![background-size:55%] bg-no-repeat" />
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
             <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none" />
         </div>

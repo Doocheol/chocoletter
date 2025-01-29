@@ -96,20 +96,24 @@ export const leaveSession = async (
 ) => {
 	if (manageVideo.session) {
 		try {
-			// const Connections = await getConnections(manageVideo.session.sessionId);
-			// Connections["content"].map((connection: any) => {
-			// 	manageVideo.session?.forceDisconnect(connection);
-			// });
-
 			if (manageVideo.publisher) {
+				manageVideo.publisher.stream.getMediaStream().getTracks().forEach(track => {
+					track.stop();
+					track.enabled = false;
+				});
 				manageVideo.publisher.stream.disposeWebRtcPeer();
 				manageVideo.publisher.stream.disposeMediaStream();
-				// manageVideo.publisher.stream.getMediaStream().getTracks().forEach((track) => track.stop())
 				manageVideo.publisher = undefined;
 			}
+			manageVideo.subscribers.forEach(subscriber => {
+				subscriber.stream.getMediaStream().getTracks().forEach(track => {
+					track.stop()
+					track.enabled = false;
+				});
+			});
 			
-			deleteSession(manageVideo.session.sessionId);
 			manageVideo.session.disconnect();
+			deleteSession(manageVideo.session.sessionId);
 		} catch (err) {
 			console.log("연결 해제 오류 : ", err)
 		} finally {
