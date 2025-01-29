@@ -121,10 +121,12 @@ function OnboardingIntro() {
           scrollPosition > 460 ? "slide-in-bottom" : "collapse"
         }`}
       >
-        <GoToTopButton
-        // className="mb-" // 버튼의 너비와 높이 조정
-        // scrollThreshold={600} // 필요에 따라 조정
-        />
+        <div className="shake-vertical">
+          <GoToTopButton
+          // className="" // 버튼의 너비와 높이 조정
+          // scrollThreshold={600} // 필요에 따라 조정
+          />
+        </div>
       </div>
 
       {/* 초콜릿 상자 보러가기 링크 */}
