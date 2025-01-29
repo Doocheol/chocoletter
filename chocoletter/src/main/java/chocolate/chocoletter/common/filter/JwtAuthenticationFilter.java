@@ -1,6 +1,6 @@
 package chocolate.chocoletter.common.filter;
 
-import chocolate.chocoletter.common.util.JwtTokenProvider;
+import chocolate.chocoletter.common.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -31,14 +31,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsernameFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (StringUtils.hasText(token) && jwtTokenUtil.validateToken(token)) {
 
+            // 토큰에서 사용자 정보(id) 추출
+            String id = jwtTokenUtil.getIdFromToken(token).toString();
+
+            // UserDetails 객체 로드
+            UserDetails userDetails = userDetailsService.loadUserByUsername(id);
+
+            // Authentication 객체 생성
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            // 현재 요청 정보 설정
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+            // SecurityContext에 Authentication 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

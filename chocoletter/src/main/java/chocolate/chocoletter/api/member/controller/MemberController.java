@@ -1,14 +1,9 @@
 package chocolate.chocoletter.api.member.controller;
 
-import chocolate.chocoletter.api.member.dto.request.LoginResponseDto;
-import chocolate.chocoletter.api.member.dto.response.LogoutRequestDto;
 import chocolate.chocoletter.api.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,15 +14,14 @@ public class MemberController implements MemberSwagger {
 
     private final MemberService memberService;
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@AuthenticationPrincipal OAuth2User oAuth2User) {
-        LoginResponseDto loginResponse = memberService.login(oAuth2User);
-        return ResponseEntity.ok(loginResponse);
-    }
-
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody LogoutRequestDto request) {
-        memberService.logout(request.getAccessToken());
+    public ResponseEntity<Void> logout() {
+
+        /**
+         * 추후 리프레시 토큰을 만들거기 때문에
+         * 해당 리프레시 토큰을 블랙리스트에 (레디스에)등록하는 것 필요 (레디스로 주기적으로 삭제)
+         */
+
         return ResponseEntity.ok().build();
     }
 }

@@ -36,31 +36,26 @@ public class Member extends BaseTimeEntity implements OAuth2User, UserDetails {
 	@Column(name = "social_id", nullable = false)
 	private String socialId;
 
-	@Column(name = "phone_number")
-	private String phoneNumber;
-
-	@Column(name = "alarm_address")
-	private String alarmAddress;
+	@Column(name = "profile_img_url")
+	private String profileImgUrl;
 
 	@Column(name = "send_gift_count")
 	private Integer sendGiftCount;
 
 	@Builder
-	public Member(Long id, String name, String socialId, String phoneNumber, String alarmAddress, Integer sendGiftCount) {
+	public Member(Long id, String name, String socialId, String profileImgUrl, Integer sendGiftCount) {
 		this.id = id;
 		this.name = name;
 		this.socialId = socialId;
-		this.phoneNumber = phoneNumber;
-		this.alarmAddress = alarmAddress;
+		this.profileImgUrl = profileImgUrl;
 		this.sendGiftCount = sendGiftCount;
 	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
 		Map<String, Object> attributes = new HashMap<>();
-		attributes.put("id", id);
 		attributes.put("name", name);
-		attributes.put("social_id", socialId);
+		attributes.put("profileImgUrl", profileImgUrl);
 		return attributes;
 	}
 

@@ -106,6 +106,10 @@ public class GiftBoxService {
         return gift;
     }
 
+    public String findShareCodeByMemberId(Long memberId) {
+        return giftBoxRepository.findShareCodeByMemberId(memberId);
+    }
+
     private GiftBox findGiftBox(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {

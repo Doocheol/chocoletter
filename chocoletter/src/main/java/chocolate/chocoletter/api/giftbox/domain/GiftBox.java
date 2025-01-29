@@ -35,7 +35,7 @@ public class GiftBox extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer generalGiftCount;
 
-    @Column(nullable = false, length = 25, unique = true)
+    @Column(length = 25, unique = true)
     private String shareCode;
 
     @Builder
@@ -56,5 +56,9 @@ public class GiftBox extends BaseTimeEntity {
 
     public void usePreviewCount() {
         this.generalGiftCount -= 2;
+    }
+
+    public void updateShareCode(String shareCode) {
+        this.shareCode = shareCode;
     }
 }

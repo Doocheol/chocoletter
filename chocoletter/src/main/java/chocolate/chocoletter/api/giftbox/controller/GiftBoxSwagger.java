@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 public interface GiftBoxSwagger {
 
@@ -201,4 +202,36 @@ public interface GiftBoxSwagger {
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     public ResponseEntity<?> usePreviewCount();
+
+    @Operation(
+            summary = "선물함 공유 코드 조회",
+            description = "로그인한 사용자의 선물함 공유 코드를 조회합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "공유 코드 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string") // 또는 적절한 응답 DTO 클래스로 변경
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "사용자를 찾을 수 없습니다."
+            )
+    })
+    ResponseEntity<?> getShareCode(
+            @Parameter(
+                    description = "JWT 인증 토큰",
+                    required = true,
+                    schema = @Schema(type = "string", example = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+            )
+            @RequestHeader("Authorization") String token
+    );
 }
