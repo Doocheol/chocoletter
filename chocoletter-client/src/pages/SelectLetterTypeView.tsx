@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { GoArrowLeft } from "react-icons/go";
 import { Button } from "../components/common/Button";
-import blue from "../assets/images/letter/letter_blue.png"
-import pink from "../assets/images/letter/letter_pink.png"
+import blue from "../assets/images/letter/letter_blue.svg"
+import pink from "../assets/images/letter/letter_pink.svg"
 
 function SelectLetterTypeView() {
     const navigate = useNavigate();
