@@ -60,7 +60,7 @@ const WriteQuestionLetterView = () => {
                     <div className="relatvie text-center">
                         <Button
                             onClick={goBackMainMyEvent}
-                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold" 
+                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black chocoletterPurpleBold"
                         >
                             <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">다음으로</p>
                         </Button>
