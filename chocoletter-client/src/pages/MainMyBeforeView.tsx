@@ -34,6 +34,7 @@ import chat_icon from "../assets/images/main/chat_icon.svg";
 import choco_asset_1 from "../assets/images/main/choco_asset_1.svg";
 import tool_tip from "../assets/images/main/tool_tip.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
+import mybox_icon from "../assets/images/main/mybox_icon.svg";
 
 import { getGiftList } from "../services/giftApi";
 
@@ -99,6 +100,10 @@ const MainMyBeforeView: React.FC = () => {
     // toast.info("튜토리얼 아이콘 클릭!");
   };
 
+  const handleMybox = () => {
+    navigate("/my-box");
+  };
+
   const handleChat = () => {
     setIsChatModalOpen(true); // 채팅 모달 열기
     // toast.info("채팅방 아이콘 클릭!");
@@ -155,22 +160,15 @@ const MainMyBeforeView: React.FC = () => {
       */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
-        <div className="mt-6 mr-6 flex items-center justify-end ">
-          <div className="flex items-center gap-7">
-            {/**
-              튜토리얼 아이콘
-              - ref={tutorialIconRef}는 button에 달고
-              - 애니메이션은 자식 <span>에만 적용
-            */}
-            {/**
-              튜토리얼 아이콘과 텍스트를 감싸는 div
-              ref={tutorialContainerRef}를 부모 div에 할당
-            */}
+        <div className="mt-6 ml-6 flex items-center justify-between ">
+          <button onClick={handleTutorial} ref={tutorialIconRef}>
+            <img src={tutorial_icon} className="w-6 h-6" />
+          </button>
+          <div className="flex items-center gap-7 mr-6">
             <div className="flex flex-col items-center">
-              <button onClick={handleTutorial} ref={tutorialIconRef}>
-                <img src={tutorial_icon} className="w-6 h-6" />
+              <button onClick={handleMybox}>
+                <img src={mybox_icon} className="w-6 h-6" />
               </button>
-              {/* "튜토리얼" 텍스트는 오버레이 내에서만 표시되므로 여기서 제거 */}
             </div>
 
             <button onClick={handleChat}>

@@ -1,5 +1,6 @@
 import { MyUserInfo, ReissueTokenResponse } from "../types/user";
-import { axios, nonAuthAxios} from "./api";
+import api from "./api";
+import nonAuthAxios from "./api";
 import { deleteUserInfo, getUserInfo, savingUserInfo } from "./userInfo";
 
 /**
@@ -8,9 +9,7 @@ import { deleteUserInfo, getUserInfo, savingUserInfo } from "./userInfo";
  */
 export async function login(): Promise<string> {
   try {
-    const res = await nonAuthAxios.get(
-      `/api/v1/auth/login`
-    );
+    const res = await nonAuthAxios.get(`/api/v1/auth/login`);
     fetchUserInfo();
     return res.data;
   } catch (err) {
@@ -18,16 +17,13 @@ export async function login(): Promise<string> {
   }
 }
 
-
 /**
  * 로그아웃 API 호출
  * @returns 로그아웃 상태
  */
 export async function logout(): Promise<string> {
   try {
-    const res = await axios.get(
-      `/api/v1/auth/logout`
-    );
+    const res = await api.get(`/api/v1/auth/logout`);
     // 로그아웃 성공 시, 사용자 정보 삭제
     removeUserInfo();
     return res.data.status;
@@ -36,22 +32,18 @@ export async function logout(): Promise<string> {
   }
 }
 
-
 /**
  * 토큰을 재발급하는 함수
  * @returns 재발급된 토큰 데이터
  */
 export const reissueTokenApi = async (): Promise<ReissueTokenResponse> => {
   try {
-    const res = await axios.get<ReissueTokenResponse>(
-      `/api/v1/auth/retoken`
-    );
+    const res = await api.get<ReissueTokenResponse>(`/api/v1/auth/retoken`);
     return res.data;
   } catch (err) {
     throw err;
   }
 };
-
 
 /**
  * 사용자 정보를 저장하는 함수

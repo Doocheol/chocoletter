@@ -41,10 +41,10 @@ const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex flex-col justify-center items-center w-full">
           {/* 튜토리얼 아이콘 */}
-          <img src={tutorial_icon} className="w-6 h-6 mb-2" alt="Tutorial Icon" />
+          <img src={tutorial_icon} className="w-6 h-6 mb-4 ml-2" alt="Tutorial Icon" />
 
           {/* 제목 */}
-          <div id="tutorial-modal-title" className="text-xl font-medium">
+          <div id="tutorial-modal-title" className="text-xl font-medium mb-2 ml-2">
             초코레터 공지사항
           </div>
 
