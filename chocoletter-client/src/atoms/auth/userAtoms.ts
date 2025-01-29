@@ -32,3 +32,9 @@ export const isFirstLoginAtom = atom<boolean>({
   default: true, // 기본값은 true (최초 로그인 가정)
   effects_UNSTABLE: [persistAtom],
 });
+
+export const userGiftboxAtom = atom<number>({
+  key: "userGiftbox",
+  default: 1, // 초기값 (1-5)
+  effects_UNSTABLE: [persistAtom],
+});
