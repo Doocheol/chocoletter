@@ -73,7 +73,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
         </button>
 
         {/* 프로필 영역 */}
-        <div className="flex items-center mb-2">
+        <div className="flex items-center mt-2 mb-2 ml-1">
           {userProfileUrl ? (
             <img
               src={userProfileUrl}
