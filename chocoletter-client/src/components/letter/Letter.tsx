@@ -30,7 +30,7 @@ const Gift: React.FC<GiftProps> = ({ nickName, content, question, answer }) => {
             {/* 편지 내용 */}
             <div>
                 {content ? (
-                    <div className="flex w-[363px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
+                    <div className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
                         <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517]">{content}</p>
                     </div>
                 ) : (
@@ -40,7 +40,7 @@ const Gift: React.FC<GiftProps> = ({ nickName, content, question, answer }) => {
                             <p className="font-[Dovemayo_gothic] text-[18px] font-normal leading-[22px] tracking-[-0.408px]">{question}</p>
                         </div>
     
-                        <div className="flex w-[363px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
+                        <div className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
                             <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517]">{answer}</p>
                         </div>
                     </div>        
