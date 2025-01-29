@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import Modal from "../../../../common/Modal";
 import "../../../../../styles/animation.css";
-import frameImage from "../../../../../assets/images/letter/letter_pink.png";
+import frameImage from "../../../../../assets/images/letter/letter_pink.svg";
 
 import giftbox_before_1 from "../../../../../assets/images/giftbox/giftbox_before_1.svg";
 import giftbox_before_2 from "../../../../../assets/images/giftbox/giftbox_before_2.svg";
