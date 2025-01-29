@@ -5,7 +5,8 @@ type ImageButtonProps = {
   onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
-  backgroundImage?: string; // 배경 이미지
+  src?: string; // 이미지 소스
+  alt?: string; // 이미지 대체 텍스트
 };
 
 const ImageButton = ({
@@ -13,25 +14,16 @@ const ImageButton = ({
   onClick,
   children,
   className = "",
-  backgroundImage = "",
+  src = "",
+  alt = "button image",
 }: ImageButtonProps) => {
-  const baseStyle = "px-4 py-2 relative overflow-hidden";
-
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "contain", // 이미지 비율 유지 축소/확대
-        backgroundPosition: "center", // 중앙 정렬
-      }
-    : {};
-
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`${baseStyle} ${className}`}
-      style={backgroundStyle}
+      className={`${className} p-0 border-0`} // 패딩과 테두리 제거
     >
+      <img src={src} alt={alt} className="display-block" />
       {children}
     </button>
   );

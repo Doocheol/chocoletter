@@ -33,7 +33,7 @@ function OnboardingIntro() {
       {/* 첫 번째 소개 이미지 */}
 
       <div
-        className={`flex justify-center items-center pt-2 ${
+        className={`flex justify-center items-center ${
           scrollPosition < 90 ? "shake-vertical" : "scale-out-center hidden"
         }`}
         onClick={onMoreClick}
@@ -47,7 +47,7 @@ function OnboardingIntro() {
       </div>
 
       {/* 서비스 소개 제목 */}
-      <div className={`pt-1 mb-1 ${scrollPosition > 90 ? "slide-in-bottom" : "collapse"}`}>
+      <div className={`mb-1 ${scrollPosition > 90 ? "slide-in-bottom" : "collapse"}`}>
         <span className="flex justify-center items-center my-2">
           <p className="border-b border-chocoletterPurple w-1/4 my-4"></p>
           <p className="mx-4 text-sm text-chocoletterPurple textShadow-none">초코레터! 알아보기!</p>
@@ -56,7 +56,7 @@ function OnboardingIntro() {
       </div>
 
       {/* 서비스 설명 */}
-      <div className={`mb-6 ${scrollPosition > 110 ? "slide-in-bottom" : "collapse"}`}>
+      <div className={`mb-1 ${scrollPosition > 110 ? "slide-in-bottom" : "collapse"}`}>
         {/* <span className="text-xl flex justify-center text-white items-center textShadow ">
           <p className="mr-1 white text-hrtColorPink pr-2">익명 편지 서비스</p>
           <p className="mr-1 purple ">초코레터!</p>
@@ -83,7 +83,7 @@ function OnboardingIntro() {
       </div>
 
       {/* 추가 서비스 기능 설명 */}
-      <div className={`mb-5 ${scrollPosition > 220 ? "slide-in-bottom" : "collapse"}`}>
+      <div className={`mb-1 ${scrollPosition > 220 ? "slide-in-bottom" : "collapse"}`}>
         <div className="flex flex-col items-center mx-8">
           {/* 세 번째 소개 이미지 */}
           <img
@@ -117,19 +117,21 @@ function OnboardingIntro() {
 
       {/* 페이지 상단으로 가기 버튼 */}
       <div
-        className={`px-8 mb-4 flex justify-end ${
+        className={`px-12 pb-4 mb-4 flex justify-end ${
           scrollPosition > 460 ? "slide-in-bottom" : "collapse"
         }`}
       >
-        <GoToTopButton
-        // className="mb-" // 버튼의 너비와 높이 조정
-        // scrollThreshold={600} // 필요에 따라 조정
-        />
+        <div className="shake-vertical">
+          <GoToTopButton
+          // className="" // 버튼의 너비와 높이 조정
+          // scrollThreshold={600} // 필요에 따라 조정
+          />
+        </div>
       </div>
 
       {/* 초콜릿 상자 보러가기 링크 */}
       <a
-        className={`mx-4 mb-14 ml-10 heartbeat
+        className={`mx-4 ml-10 mb-14 heartbeat
           ${scrollPosition > 470 ? "slide-in-bottom" : "collapse"} `}
         href="https://www.chocolate-letter.com/"
       >

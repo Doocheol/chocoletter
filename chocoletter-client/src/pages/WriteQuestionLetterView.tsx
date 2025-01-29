@@ -9,10 +9,10 @@ import login_view_service_title from "../assets/images/logo/login_view_service_t
 
 // 편지지 선택 뷰 이후, 랜덤 질문 형식 편지지 작성 화면
 const WriteQuestionLetterView = () => {
-    const [nickname, setNickname] = useState("");
-    const [content, setContent] = useState("");
-    const [contentLength, setContentLength] = useState(0);
-    const navigate = useNavigate();
+  const [nickname, setNickname] = useState("");
+  const [content, setContent] = useState("");
+  const [contentLength, setContentLength] = useState(0);
+  const navigate = useNavigate();
 
     const goBackMainMyEvent = () => {
         if (nickname.length < 1) {
@@ -37,6 +37,10 @@ const WriteQuestionLetterView = () => {
         navigate("/selectgift");
     };
 
+  return (
+    <div className="relative flex flex-col items-center h-screen">
+      {/* 뒤로 가기 버튼 */}
+      <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" />
 
 	return (
 		<div className="relative flex flex-col items-center h-screen bg-letter-blue-background">

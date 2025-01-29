@@ -84,7 +84,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
             {/* 링크 복사 버튼 */}
             <button
               onClick={handleCopyLink}
-              className="flex justify-center items-center bg-sky-200 p-4 rounded-lg shadow hover:bg-sky-100 border border-black"
+              className="flex justify-center items-center bg-sky-200 p-4 rounded-lg shadow border border-black"
               aria-label="링크 복사"
             >
               <GoLink className="text-3xl text-gray-700" />
@@ -93,7 +93,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
             {/* QR 코드 생성 및 표시 버튼 */}
             <button
               onClick={handleShowQRCode}
-              className="flex justify-center items-center bg-gray-500 p-4 rounded-lg shadow hover:bg-gray-400 border border-black"
+              className="flex justify-center items-center bg-gray-500 p-4 rounded-lg shadow border border-black"
               aria-label="QR 코드 생성"
             >
               <BsQrCode className="text-3xl text-white" />

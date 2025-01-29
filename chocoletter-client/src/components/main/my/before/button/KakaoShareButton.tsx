@@ -6,8 +6,8 @@ const KakaoShareButton: React.FC = () => {
     const shareContent: Kakao.ShareOptions = {
       objectType: "feed",
       content: {
-        title: "딸기 치즈 케익",
-        description: "#케익 #딸기 #삼평동 #카페 #분위기 #소개팅",
+        title: "초코레터",
+        description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
         imageUrl:
           "https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png", // 이미지 URL 확인
         link: {
@@ -16,9 +16,9 @@ const KakaoShareButton: React.FC = () => {
         },
       },
       social: {
-        likeCount: 100,
-        commentCount: 200,
-        sharedCount: 300,
+        likeCount: 777,
+        commentCount: 777,
+        sharedCount: 777,
       },
       buttons: [
         {
@@ -45,7 +45,7 @@ const KakaoShareButton: React.FC = () => {
     <button
       onClick={handleKakaoShare}
       // className="flex justify-center items-center bg-chocoletterBackground-light rounded-lg shadow hover:bg-sky-100 border border-black"
-      className="flex justify-center items-center border border-black rounded-xl transition focus:outline-none p-1 bg-yellow-300 hover:bg-yellow-100"
+      className="flex justify-center items-center border border-black rounded-xl transition focus:outline-none p-1 bg-yellow-300"
       aria-label="카카오톡 공유"
     >
       <img

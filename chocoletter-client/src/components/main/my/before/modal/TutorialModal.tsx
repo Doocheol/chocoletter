@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "../../../../common/Modal";
-import { IoMdInformationCircleOutline } from "react-icons/io";
+import tutorial_icon from "../../../../../assets/images/main/tutorial_icon.svg"; // 적절한 아이콘 이미지 경로로 변경
 
 interface TutorialModalProps {
   isOpen: boolean;
@@ -8,53 +8,44 @@ interface TutorialModalProps {
 }
 
 const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
-  const tutorialSteps = [
-    {
-      title: "1. 초콜릿 받기",
-      description: "친구로부터 초콜릿을 받아보세요.",
-    },
-    {
-      title: "2. 초콜릿 개봉",
-      description: "받은 초콜릿을 개봉하여 내용을 확인하세요.",
-    },
-    {
-      title: "3. 채팅 참여",
-      description: "채팅방에 참여하여 친구들과 대화하세요.",
-    },
-    {
-      title: "4. 선물 보내기",
-      description: "다른 친구에게 초콜릿을 보내보세요.",
-    },
+  const messages = [
+    "[2월 14일 이전]",
+    "'일반' 초콜릿을 2개 받을 때마다 1개씩 편지를 열어볼 수 있습니다.",
+    " ",
+    " ",
+    "[2월 14일 발렌타인데이 당일]",
+    "1. 모든 편지를 확인할 수 있어요.",
+    "2. 비밀스러운 둘만의 채팅 공간과 영상 통화 공간이 열려요.",
+    "3. 2월 14일에 들어오면 나의 영상 통화 스케줄표와",
+    ".... 영상 통화 공간에 대한 링크를 전부 제공받을 수 있습니다.",
+    ".... 카카오톡 나에게 보내기로 일정을 보관하세요.",
+    ".... 누가 초콜릿을 만들어줬는지 미리 상상해봐요.",
   ];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
       <div
-        className="flex flex-col items-center px-4 py-4 text-sm tracking-tight leading-none text-center text-black bg-white rounded-3xl"
+        className="flex flex-col px-4 py-2 text-lg tracking-tight leading-none text-left text-black bg-white rounded-3xl"
         aria-labelledby="tutorial-modal-title"
       >
         <div className="flex flex-col justify-center items-center w-full">
           {/* 튜토리얼 아이콘 */}
-          <IoMdInformationCircleOutline className="w-6 h-6 text-chocoletterPurpleBold mb-2" />
+          <img src={tutorial_icon} className="w-6 h-6 mb-2" alt="Tutorial Icon" />
 
           {/* 제목 */}
-          <div id="tutorial-modal-title" className="text-base font-medium">
-            초콜릿 선물 가이드
+          <div id="tutorial-modal-title" className="text-xl font-medium">
+            초코레터 공지사항
           </div>
 
-          {/* 튜토리얼 단계 */}
-          <div className="flex flex-col justify-center items-center mt-4 space-y-2 w-full">
-            {tutorialSteps.map((step, index) => (
+          {/* 메시지 목록 */}
+          <div className="mt-4 space-y-1">
+            {messages.map((message, index) => (
               <div
                 key={index}
-                className="items-start space-x-2"
-                style={{ animationDelay: `${index * 0.2}s` }}
+                className="text-gray-400 whitespace-nowrap overflow-hidden text-xs wave-down"
+                style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="flex-shrink-0"></div>
-                <div>
-                  <div className="font-semibold text-gray-700">{step.title}</div>
-                  <div className="text-gray-500">{step.description}</div>
-                </div>
+                {message}
               </div>
             ))}
           </div>

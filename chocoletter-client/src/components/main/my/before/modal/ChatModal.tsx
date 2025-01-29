@@ -1,8 +1,7 @@
-// src/components/main/my/before/modal/ChatModal.tsx
-
 import React from "react";
 import Modal from "../../../../common/Modal";
 import { FaComments } from "react-icons/fa6";
+import chat_icon from "../../../../../assets/images/main/chat_icon.svg";
 
 interface ChatModalProps {
   isOpen: boolean;
@@ -21,16 +20,17 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
       <div
-        className="flex flex-col items-center px-4 py-2 text-sm tracking-tight leading-none text-center text-black bg-white rounded-3xl"
+        className="flex flex-col items-center px-4 py-2 text-base tracking-tight leading-none text-center text-black bg-white rounded-3xl"
         aria-labelledby="chat-modal-title"
       >
         <div className="flex flex-col justify-center items-center w-full">
           {/* 채팅 아이콘 */}
-          <FaComments className="w-6 h-6 text-chocoletterPurpleBold mb-2" />
+          <img src={chat_icon} className="w-6 h-6 mb-4" />
 
           {/* 제목 */}
           <div id="chat-modal-title" className="text-base font-medium">
-            2월 14일, 특별한 방이 열려요. <br />
+            2월 14일, 특별한 방이 열려요.
+            <br />
             우리, 그날 만나요!
           </div>
 
