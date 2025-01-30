@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { sessionAtom, tokenAtom, memberCntAtom } from "../atoms/video/videoAtoms"
+import { checkAuthVideoRoom } from "../services/openviduApi";
 
 import { MyFaceInVideoWaitingRoom } from "../components/video-waiting-room/MyFaceInVideoWaitingRoom";
 import timerIcon from "../assets/images/unboxing/timer.svg";
@@ -10,22 +11,6 @@ import callTerminate from "../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../styles/videoRoom.module.css"
-
-// API를 받아옵니다.
-
-const getRoomInfo = async () => {
-    try {
-        const response = await axios.post(`추후 방 정보(사람, 편지, 참석 유무, 약속 시간) api url`, {}, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer {access code}`
-            }, withCredentials: true,
-        });
-        return response.data;
-    } catch (err) {
-        console.log("API 통신 오류 : ", err)
-    }
-}
 
 const waitingWords = ["대기중.", "대기중..", "대기중..."]
 
@@ -58,6 +43,23 @@ const WaitingRoomView = () => {
     // video-room 연결 테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // token 동기화를 위해 localStorage 사용
+    useEffect(() => {
+        const getRoomInfo = async (sessionIdInit: string) => {
+            try {
+                const response = await checkAuthVideoRoom(sessionIdInit);
+                return response.data
+            } catch (err) {
+                console.log("API 통신 오류 : ", err)
+            }
+        } 
+
+        if (sessionIdInit) {
+            const inRoomData = getRoomInfo(sessionIdInit)
+        } else {
+            console.log("세션 값이 null입니다.")
+        }
+    }, [])
+
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
             if (event.key === 'isBothJoin' && event.newValue !== null && Number(event.newValue) > 1) {
