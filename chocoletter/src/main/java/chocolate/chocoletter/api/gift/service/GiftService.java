@@ -1,5 +1,8 @@
 package chocolate.chocoletter.api.gift.service;
 
+import chocolate.chocoletter.api.alarm.domain.Alarm;
+import chocolate.chocoletter.api.alarm.domain.AlarmType;
+import chocolate.chocoletter.api.alarm.service.AlarmService;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
@@ -31,6 +34,7 @@ public class GiftService {
     private final LetterService letterService;
     private final UnboxingRoomService unboxingRoomService;
     private final ChatRoomService chatRoomService;
+    private final AlarmService alarmService;
     private final DateTimeUtil dateTimeUtil;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
@@ -101,7 +105,14 @@ public class GiftService {
             throw new BadRequestException(ErrorMessage.ERR_ALREADY_ACCEPT_UNBOXING_INVITATION);
         }
         gift.updateUnBoxingTime(dateTimeUtil.parseTimeToDateTime(requestDto.unBoxingTime()));
-        // TODO : receiverId 에게 새로운 초대장 알림톡 발송
+        LetterDto letter = letterService.findLetter(giftId);
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.RECEIVE_SPECIAL)
+                .giftId(giftId)
+                .memberId(gift.getReceiverId())
+                .partnerName(letter.nickName())
+                .build();
+        alarmService.save(alarm);
     }
 
     public List<String> findReceiverUnboxingTimes(Long memberId) {
