@@ -5,11 +5,6 @@ import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +15,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +85,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     @Transactional
-    protected Member createNewMemberWithGiftBox(String socialId, String name, String profileImgUrl) {
+    public Member createNewMemberWithGiftBox(String socialId, String name, String profileImgUrl) {
 
         // 멤버 생성 및 저장
         Member newMember = Member.builder()
