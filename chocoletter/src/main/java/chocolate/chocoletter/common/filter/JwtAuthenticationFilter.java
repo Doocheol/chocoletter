@@ -30,11 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = getJwtFromRequest(request);
+        String jwtToken = detachBearer(token);
 
-        if (StringUtils.hasText(token) && jwtTokenUtil.validateToken(token)) {
+        if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
 
             // 토큰에서 사용자 정보(id) 추출
-            String id = jwtTokenUtil.getIdFromToken(token).toString();
+            String id = jwtTokenUtil.getIdFromToken(jwtToken).toString();
 
             // UserDetails 객체 로드
             UserDetails userDetails = userDetailsService.loadUserByUsername(id);
@@ -71,6 +72,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs") ||
                 path.startsWith("/swagger-resources");
+    }
+
+    private String detachBearer(String token) {
+        String jwtToken = token.substring(7);
+        return jwtToken;
     }
 
 }

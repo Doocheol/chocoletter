@@ -62,7 +62,7 @@ public class Member extends BaseTimeEntity implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return this.id.toString();
     }
 
     @Override
