@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.security.Principal;
+
 public interface GiftBoxSwagger {
 
     @Operation(
@@ -42,7 +44,8 @@ public interface GiftBoxSwagger {
                             schema = @Schema(implementation = GeneralFreeGiftRequestDto.class)
                     )
             )
-            @RequestBody GeneralFreeGiftRequestDto requestDto
+            @RequestBody GeneralFreeGiftRequestDto requestDto,
+            Principal principal
     );
 
     @Operation(
@@ -69,7 +72,8 @@ public interface GiftBoxSwagger {
                     )
             )
             @RequestBody
-            GeneralQuestionRequestDto requestDto);
+            GeneralQuestionRequestDto requestDto,
+            Principal principal);
 
     @Operation(
             summary = "특별 자유 선물 전송",
@@ -95,7 +99,8 @@ public interface GiftBoxSwagger {
                     )
             )
             @RequestBody
-            SpecialFreeGiftRequestDto requestDto);
+            SpecialFreeGiftRequestDto requestDto,
+            Principal principal);
 
     @Operation(
             summary = "특별 질문 선물 전송",
@@ -120,7 +125,8 @@ public interface GiftBoxSwagger {
                             schema = @Schema(implementation = SpecialQuestionGiftRequestDto.class)
                     )
             ) @RequestBody
-            SpecialQuestionGiftRequestDto requestDto);
+            SpecialQuestionGiftRequestDto requestDto,
+            Principal principal);
 
     @Operation(
             summary = "내 선물 갯수 조회",
@@ -137,7 +143,7 @@ public interface GiftBoxSwagger {
                     )),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content)
     })
-    ResponseEntity<?> findGiftCount();
+    ResponseEntity<?> findGiftCount(Principal principal);
 
     @Operation(
             summary = "내 선물 갯수 조회",
@@ -200,5 +206,7 @@ public interface GiftBoxSwagger {
                     )),
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
-    public ResponseEntity<?> usePreviewCount();
+    public ResponseEntity<?> usePreviewCount(Principal principal);
+
+    public ResponseEntity<?> getShareCode(Principal principal);
 }

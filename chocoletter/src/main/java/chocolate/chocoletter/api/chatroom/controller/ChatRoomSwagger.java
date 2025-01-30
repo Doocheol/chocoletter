@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
+
 public interface ChatRoomSwagger {
 
     @Operation(
@@ -24,5 +26,5 @@ public interface ChatRoomSwagger {
                     )),
             @ApiResponse(responseCode = "401", description = "인증되지 않았습니다.")
     })
-    ResponseEntity<?> findMyChatRooms();
+    ResponseEntity<?> findMyChatRooms(Principal principal);
 }

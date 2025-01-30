@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.security.Principal;
+
 public interface GiftSwagger {
 
     @Operation(
@@ -33,7 +35,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findAllGifts();
+    ResponseEntity<?> findAllGifts(Principal principal);
 
     @Operation(
             summary = "특별 선물 목록 조회",
@@ -52,7 +54,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findSpecialGifts();
+    ResponseEntity<?> findSpecialGifts(Principal principal);
 
     @Operation(
             summary = "일반 선물 목록 조회",
@@ -71,7 +73,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findGeneralGifts();
+    ResponseEntity<?> findGeneralGifts(Principal principal);
 
     @Operation(
             summary = "내가 받은 개별 선물 조회",
@@ -90,7 +92,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findReceiveGiftDetail(Long giftId);
+    ResponseEntity<?> findReceiveGiftDetail(Long giftId, Principal principal);
 
     @Operation(
             summary = "내가 보낸 개별 선물 조회",
@@ -109,7 +111,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findSendGiftDetail(Long giftId);
+    ResponseEntity<?> findSendGiftDetail(Long giftId, Principal principal);
 
     @Operation(
             summary = "언박싱 초대장 조회",
@@ -130,7 +132,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> findUnboxingInvitation(Long giftId);
+    ResponseEntity<?> findUnboxingInvitation(Long giftId, Principal principal);
 
     @Operation(
             summary = "언박싱 초대장 전송",
@@ -166,7 +168,8 @@ public interface GiftSwagger {
                             schema = @Schema(implementation = UnboxingInvitationRequestDto.class)
                     )
             ) @RequestBody
-            UnboxingInvitationRequestDto requestDto
+            UnboxingInvitationRequestDto requestDto,
+            Principal principal
     );
 
     @Operation(
@@ -187,7 +190,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> acceptUnboxingInvitation(Long giftId);
+    ResponseEntity<?> acceptUnboxingInvitation(Long giftId, Principal principal);
 
     @Operation(
             summary = "언박싱 초대장 거절",
@@ -207,7 +210,7 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> rejectUnboxingInvitation(Long giftId);
+    ResponseEntity<?> rejectUnboxingInvitation(Long giftId, Principal principal);
 
     @Operation(
             summary = "특별 선물에서 일반 선물 변경",
@@ -227,5 +230,5 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> changeToGeneralGift(Long giftId);
+    ResponseEntity<?> changeToGeneralGift(Long giftId, Principal principal);
 }

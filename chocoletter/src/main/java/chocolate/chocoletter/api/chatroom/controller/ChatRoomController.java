@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/v1/chat-room")
 @RequiredArgsConstructor
@@ -15,9 +17,9 @@ public class ChatRoomController implements ChatRoomSwagger {
     private final ChatRoomService chatRoomService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> findMyChatRooms() {
+    public ResponseEntity<?> findMyChatRooms(Principal principal) {
         // 로그인 한 멤버 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         ChatRoomsResponseDto myChatRooms = chatRoomService.findMyChatRooms(memberId);
         return ResponseEntity.ok(myChatRooms);
     }
