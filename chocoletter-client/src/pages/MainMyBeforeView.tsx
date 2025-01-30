@@ -15,8 +15,6 @@ import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorial
 import ChatModal from "../components/main/my/before/modal/ChatModal"; // ChatModal 임포트
 import TutorialModal from "../components/main/my/before/modal/TutorialModal"; // TutorialModal 임포트
 
-// === 공통 Dropdown
-import Dropdown from "../components/common/Dropdown";
 // === 프로필 드롭다운 내용
 import MyPage from "../components/my-page/MyPage";
 
@@ -34,9 +32,11 @@ import chat_icon from "../assets/images/main/chat_icon.svg";
 import choco_asset_1 from "../assets/images/main/choco_asset_1.svg";
 import tool_tip from "../assets/images/main/tool_tip.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
-import mybox_icon from "../assets/images/main/mybox_icon.svg";
+import bell_icon from "../assets/images/main/bell_icon.svg";
+import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
 import { getGiftList } from "../services/giftApi";
+import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 
 const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
@@ -71,6 +71,9 @@ const MainMyBeforeView: React.FC = () => {
 
   const [isChatModalOpen, setIsChatModalOpen] = useState(false); // 새로운 상태 추가
 
+  // (추가됨) 캘린더 모달
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+
   // 핸들러들
   const handleShare = () => {
     setIsShareModalOpen(true);
@@ -100,7 +103,12 @@ const MainMyBeforeView: React.FC = () => {
     // toast.info("튜토리얼 아이콘 클릭!");
   };
 
-  const handleMybox = () => {
+  // (추가됨) 캘린더 모달 열기
+  const handleCalendar = () => {
+    setIsCalendarModalOpen(true);
+  };
+
+  const handleNotification = () => {
     navigate("/my-box");
   };
 
@@ -161,13 +169,19 @@ const MainMyBeforeView: React.FC = () => {
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
         <div className="mt-6 ml-6 flex items-center justify-between ">
-          <button onClick={handleTutorial} ref={tutorialIconRef}>
-            <img src={tutorial_icon} className="w-6 h-6" />
-          </button>
-          <div className="flex items-center gap-7 mr-6">
+          <div className="flex items-center gap-6">
+            <button onClick={handleTutorial} ref={tutorialIconRef}>
+              <img src={tutorial_icon} className="w-6 h-6" />
+            </button>
+            <button onClick={handleCalendar}>
+              <img src={calendar_icon} className="w-7 h-7" />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-6 mr-6">
             <div className="flex flex-col items-center">
-              <button onClick={handleMybox}>
-                <img src={mybox_icon} className="w-6 h-6" />
+              <button onClick={handleNotification}>
+                <img src={bell_icon} className="w-7 h-7" />
               </button>
             </div>
 
@@ -307,6 +321,9 @@ const MainMyBeforeView: React.FC = () => {
 
         {/* 튜토리얼 모달 */}
         <TutorialModal isOpen={isTutorialModalOpen} onClose={() => setIsTutorialModalOpen(false)} />
+
+        {/* 새로 추가된 CalendarModal */}
+        <CalendarModal isOpen={isCalendarModalOpen} onClose={() => setIsCalendarModalOpen(false)} />
       </div>
     </div>
   );
