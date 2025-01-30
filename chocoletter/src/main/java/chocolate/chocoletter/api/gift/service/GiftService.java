@@ -160,6 +160,7 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
+// 추후 다시 살릴 수 있는 기능이기 때문에 일단 주석 처리
 //        gift.rejectUnboxing();
 //        if (gift.getRejectCount() == 3) {
 //            gift.changeToGeneralGift();
