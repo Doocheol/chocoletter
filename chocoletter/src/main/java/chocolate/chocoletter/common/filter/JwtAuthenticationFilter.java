@@ -1,7 +1,5 @@
 package chocolate.chocoletter.common.filter;
 
-import chocolate.chocoletter.common.exception.BadRequestException;
-import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -60,6 +58,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken;
         }
-        throw new BadRequestException(ErrorMessage.ERR_NO_TOKEN);
+        return null; // 이렇게 해야 바로 오류가 안터지고 shouldNotFilter가 먹힘
     }
+
+    /**
+     * SecurityConfig에서 허용해줘도 스웨거를 들어갈 때, 여기서 예외가 터져서
+     * 이거 넣어둬야함
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/swagger-ui/") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources");
+    }
+
 }
