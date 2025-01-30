@@ -15,7 +15,7 @@ public class AlarmService {
 
     public AlarmsResponseDto findMyAlarms(Long memberId) {
         return AlarmsResponseDto.of(alarmRepository.findByAlarms(memberId).stream()
-                .map(alarm -> AlarmResponseDto.of(alarm, giftService.findUnBoxingTimeByGiftId(alarm.getGiftId())))
+                .map(alarm -> AlarmResponseDto.of(alarm, giftService.findUnBoxingTime(alarm.getGiftId())))
                 .toList());
     }
 }
