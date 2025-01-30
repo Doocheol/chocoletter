@@ -63,14 +63,11 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             String name = (String) profile.get("nickname");
             String profileImgUrl = (String) profile.get("profile_image_url");
 
-            createNewMemberWithGiftBox(socialId, name, profileImgUrl);
+            Member member = createNewMemberWithGiftBox(socialId, name, profileImgUrl);
 
             // 사용자 권한 설정 (특별한 권한 없을때 설정하는 기본 권한)
             Collection<GrantedAuthority> authorities = Collections.singletonList(
                     new SimpleGrantedAuthority("ROLE_USER"));
-
-            Optional<Member> savedMember = memberRepository.findBySocialId(socialId);
-            Member member = savedMember.get();
 
             // 사용자 속성 설정
             Map<String, Object> attributes = new HashMap<>();

@@ -30,27 +30,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = getJwtFromRequest(request);
-        String jwtToken = detachBearer(token);
 
-        if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
+        if (token != null) {
+            String jwtToken = detachBearer(token);
 
-            // 토큰에서 사용자 정보(id) 추출
-            String id = jwtTokenUtil.getIdFromToken(jwtToken).toString();
+            if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
 
-            // UserDetails 객체 로드
-            UserDetails userDetails = userDetailsService.loadUserByUsername(id);
+                // 토큰에서 사용자 정보(id) 추출
+                String id = jwtTokenUtil.getIdFromToken(jwtToken).toString();
 
-            // Authentication 객체 생성
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                // UserDetails 객체 로드
+                UserDetails userDetails = userDetailsService.loadUserByUsername(id);
 
-            // 현재 요청 정보 설정
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // Authentication 객체 생성
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            // SecurityContext에 Authentication 객체 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 현재 요청 정보 설정
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                // SecurityContext에 Authentication 객체 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -71,7 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-resources");
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/h2-console");
     }
 
     private String detachBearer(String token) {

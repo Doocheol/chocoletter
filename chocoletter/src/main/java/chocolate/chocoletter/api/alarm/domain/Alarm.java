@@ -1,13 +1,7 @@
 package chocolate.chocoletter.api.alarm.domain;
 
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,17 +26,17 @@ public class Alarm extends BaseTimeEntity {
     private Long memberId;
 
     @Column(nullable = false)
-    private Boolean read;
+    private Boolean isRead;
 
     @Builder
     public Alarm(AlarmType type, Long giftId, Long memberId) {
         this.type = type;
         this.giftId = giftId;
         this.memberId = memberId;
-        this.read = false;
+        this.isRead = false;
     }
 
     public void readAlarm() {
-        this.read = true;
+        this.isRead = true;
     }
 }
