@@ -14,6 +14,8 @@ import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
+import chocolate.chocoletter.api.member.domain.Member;
+import chocolate.chocoletter.api.member.service.MemberService;
 import chocolate.chocoletter.api.unboxingRoom.domain.UnboxingRoom;
 import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
 import chocolate.chocoletter.common.exception.BadRequestException;
@@ -36,6 +38,7 @@ public class GiftService {
     private final ChatRoomService chatRoomService;
     private final AlarmService alarmService;
     private final DateTimeUtil dateTimeUtil;
+    private final MemberService memberService;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
@@ -131,7 +134,15 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         gift.acceptUnboxing();
-        // TODO : senderId에 맞는 유저한테 알림톡 전송
+        
+        Member receiver = memberService.findMember(memberId);
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.ACCEPT_SPECIAL)
+                .giftId(giftId)
+                .memberId(gift.getSenderId())
+                .partnerName(receiver.getName())
+                .build();
+        alarmService.save(alarm);
 
         UnboxingRoom unboxingRoom = UnboxingRoom.builder()
                 .gift(gift)

@@ -5,6 +5,7 @@ import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.domain.Alarm;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AlarmService {
                 .toList());
     }
 
+    @Transactional
     public void save(Alarm alarm) {
         alarmRepository.save(alarm);
     }
