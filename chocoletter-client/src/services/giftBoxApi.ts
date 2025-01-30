@@ -9,17 +9,16 @@ export const axios = baseAxios.create({
     withCredentials: true,
 });
 
-// AccessToken 가져오기
-const accessToken = '123' //  나중에 삭제!!
-// function getAccessToken(): string | null {
-//     return localStorage.getItem("accessToken"); 
-// }
+function getAccessToken(): string | null {
+    return localStorage.getItem("accessToken"); 
+}
 
 // 선물 카운트 사용
 export async function disPreviewCoin() {
-    try {
-        // const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
+    console.log("이거 뭐여요?", accessToken);
 
+    try {
         if (!accessToken) {
             throw new Error("AccessToken is missing");
         }
@@ -40,8 +39,10 @@ export async function disPreviewCoin() {
 
 // 내 선물 개수 조회
 export async function countMyGiftBox() {
+    const accessToken = getAccessToken();
+    console.log("이거 뭐예요?", accessToken);
+
     try {
-        // const accessToken = getAccessToken();
 
         if (!accessToken) {
             throw new Error("AccessToken is missing");
