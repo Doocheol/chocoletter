@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { selectedGiftIdAtom } from "../../../atoms/gift/giftAtoms";
 import outline_choco_button from '../../../assets/images/giftbox/outline_choco_button.svg';
 import bg_choco_button from '../../../assets/images/giftbox/bg_choco_button.svg'
+import {UnboxingTimeSticker} from "../UnboxingTimeSticker"
 
 const generalImages = import.meta.glob('../../../assets/images/chocolate/general/*.png', { eager: true });
 const specialImages = import.meta.glob('../../../assets/images/chocolate/special/*.png', { eager: true });
@@ -31,7 +32,7 @@ interface GiftOpenButtonProps {
     unboxingTime: string | null,
 }
 
-export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened }) => {
+export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
     const navigate = useNavigate();
@@ -111,9 +112,12 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         <div className="relative aspect-square rounded-lg flex items-center justify-center">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
-            <ImageButton src={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 ![background-size:55%] bg-no-repeat" />
+            <div className="[&>button>img]:w-[55%] [&>button>img]:h-[55%] [&>button>img]:hover:scale-110">
+                <ImageButton src={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 bg-no-repeat" />
+            </div>
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
-            <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none" />
+            <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none z-30" />
+            {!isOpened && <UnboxingTimeSticker unboxingTime={unboxingTime} />}
         </div>
     )
 }

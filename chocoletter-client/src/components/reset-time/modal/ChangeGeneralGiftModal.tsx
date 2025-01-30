@@ -1,6 +1,5 @@
 import React from "react";
-import Modal from "../../common/Modal";
-import { Button } from "../../common/Button";
+import { OneButtonModal } from "../../common/OneButtonModal";
 
 interface changeGeneralGiftProps {
     isOpen: boolean;
@@ -10,10 +9,10 @@ interface changeGeneralGiftProps {
 const changeGeneralGiftModal: React.FC<changeGeneralGiftProps> = ({ isOpen, onClose }) => {
     return (
         <div>
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <p>모달 테스트</p>
-                <Button onClick={onClose}>내 초콜릿 상자로 이동하기</Button>
-            </Modal>
+            <OneButtonModal isOpen={isOpen} onClose={onClose}>
+                <p>일반 초콜릿으로<br/>당신의 마음이 따듯하게 전달되었습니다.</p>
+                <p>OOO님도 분명히<br/> 그 달콤한 마음을 느낄 거예요!😊</p>
+            </OneButtonModal>
         </div>
     )
 }

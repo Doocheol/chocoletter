@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { Button } from "../../common/Button";
+import { PurpleButton } from "../../common/PurpleButton";
 import { disPreviewCoin } from "../../../services/giftBoxApi";
 import { EmergeProblemModal } from "../../gift-list/modal/EmergeProblemModal";
 import { availableGiftsAtom } from "../../../atoms/gift/giftAtoms";
@@ -41,9 +42,9 @@ export const CheckLetterUseButton = ({ onClick }: CheckLetterUseButtonProps) => 
     return(
         <>
             <EmergeProblemModal isOpen={isPropblemOpen} onClose={allModalCloseHandler} />
-            <Button onClick={checkLetterClickHandler}>
+            <PurpleButton onClick={checkLetterClickHandler} className="text-white bg-chocoletterPurpleBold border border-black">
                 사용하기
-            </Button>
+            </PurpleButton>
         </>
     )
 }

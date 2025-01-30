@@ -8,7 +8,7 @@ const KakaoLoginButton: React.FC = () => {
   return (
     <a href={kakaoAuthUrl} className="inline-block">
       <ImageButton
-        backgroundImage={kakao_login_button}
+        src={kakao_login_button}
         className="w-80 h-12 heartbeat" // 애니메이션 클래스 추가
       />
     </a>
