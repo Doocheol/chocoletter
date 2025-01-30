@@ -53,7 +53,7 @@ const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className="text-gray-400 whitespace-nowrap overflow-hidden text-sm wave-down"
+                className="text-gray-400 whitespace-nowrap overflow-hidden text-xs wave-down"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {message}
