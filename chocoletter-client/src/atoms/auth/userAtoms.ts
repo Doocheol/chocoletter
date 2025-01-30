@@ -38,3 +38,13 @@ export const userGiftboxAtom = atom<number>({
   default: 1, // 초기값 (1-5)
   effects_UNSTABLE: [persistAtom],
 });
+
+/**
+ * 백엔드에서 내려주는 giftBoxId를 저장 (number).
+ * - 로그인된 사용자마다 "어떤 박스에 연결"되어 있는지를 관리
+ */
+export const giftBoxIdAtom = atom<number | null>({
+  key: "giftBoxId",
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});

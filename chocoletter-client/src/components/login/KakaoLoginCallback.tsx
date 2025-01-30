@@ -6,6 +6,7 @@ import Loading from "../common/Loading";
 import { MyUserInfo } from "../../types/user";
 import { saveUserInfo } from "../../services/userApi";
 import {
+  giftBoxIdAtom,
   isFirstLoginAtom,
   isLoginAtom,
   userNameAtom,
@@ -18,6 +19,7 @@ const KakaoLoginCallback: React.FC = () => {
   const setUserName = useSetRecoilState(userNameAtom);
   const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
   const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
+  const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -27,6 +29,7 @@ const KakaoLoginCallback: React.FC = () => {
       const userName = urlParams.get("userName");
       const userProfileUrl = urlParams.get("userProfileUrl");
       const isFirstLoginParam = urlParams.get("isFirstLogin");
+      const giftBoxIdStr = urlParams.get("giftBoxId"); // 예: "123"
 
       if (!accessToken || !userName) {
         throw new Error("필수 로그인 정보가 누락되었습니다.");
@@ -49,9 +52,26 @@ const KakaoLoginCallback: React.FC = () => {
       setUserName(userName); // 서버에서 실제 이름을 제공하는 경우, 해당 값을 사용
       setUserProfileUrl(userProfileUrl || "");
 
-      // 로그인 성공 토스트 메시지
-      toast.success("로그인 성공!");
-      navigate("/main/my/before"); // 홈 페이지로 이동
+      // giftBoxId를 number로 파싱 (문자열일 수도 있으므로)
+      let giftBoxIdNum = null;
+      if (giftBoxIdStr) {
+        const parsed = parseInt(giftBoxIdStr, 10);
+        if (!isNaN(parsed)) {
+          giftBoxIdNum = parsed;
+        }
+      }
+
+      if (giftBoxIdNum !== null) {
+        setGiftBoxId(giftBoxIdNum);
+      }
+
+      // giftBoxId가 있다면 /main/my/before/:giftBoxId 로 이동
+      if (giftBoxIdNum) {
+        navigate(`/main/my/before/${giftBoxIdNum}`);
+      } else {
+        // giftBoxId 없거나 파싱 실패 시, 다른 fallback 경로로
+        navigate("/"); // 0 등으로 표시 or navigate("/error");
+      }
     };
 
     handleLogin();

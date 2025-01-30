@@ -1,5 +1,6 @@
 import React from "react";
 import { sendKakaoShare } from "../../../../../utils/sendKakaoTalk";
+import after_giftbox from "../../../../../assets/images/main/after_giftbox.svg";
 
 const KakaoShareButton: React.FC = () => {
   const handleKakaoShare = () => {
@@ -8,8 +9,7 @@ const KakaoShareButton: React.FC = () => {
       content: {
         title: "초코레터",
         description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
-        imageUrl:
-          "https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png", // 이미지 URL 확인
+        imageUrl: after_giftbox, // 이미지 URL 확인
         link: {
           mobileWebUrl: "https://yourdomain.com",
           webUrl: "https://yourdomain.com",
