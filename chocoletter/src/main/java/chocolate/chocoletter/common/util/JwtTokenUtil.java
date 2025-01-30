@@ -39,14 +39,10 @@ public class JwtTokenUtil {
     }
 
     public Long getIdFromToken(String token) {
-
-        // "Bearer " 제거하기
-        String jwtToken = token.substring(7);
-
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
-                    .parseClaimsJws(jwtToken)
+                    .parseClaimsJws(token)
                     .getBody();
 
             return Long.parseLong(claims.getSubject());
