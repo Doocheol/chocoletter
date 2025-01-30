@@ -15,8 +15,7 @@ import MainMyBeforeView from "./pages/MainMyBeforeView";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import { useSetRecoilState } from "recoil";
 import { isLoginAtom, userNameAtom, userProfileUrlAtom } from "./atoms/auth/userAtoms";
-import { fetchUserInfo, login } from "./services/userApi";
-import { getUserInfo } from "./services/userInfo";
+import { fetchUserInfo } from "./services/userApi";
 import KakaoLoginCallback from "./components/login/KakaoLoginCallback";
 import ResetTimeView from "./pages/ResetTimeView";
 import SetTimeView from "./pages/SetTimeView";
@@ -86,6 +85,7 @@ function App() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
+            <Route path="/main/my/before/:giftBoxId" element={<MainMyBeforeView />} />
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/selectletter" element={<SelectLetterTypeView />} />
