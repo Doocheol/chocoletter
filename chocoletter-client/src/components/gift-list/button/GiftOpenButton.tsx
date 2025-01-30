@@ -46,17 +46,17 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     const navigate = useNavigate();
     const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom)
 
-  const [buttonImage, setButtonImage] = useState("");
+    const [buttonImage, setButtonImage] = useState("");
 
-  // 초콜릿 정보 가져오기
-  const getGiftDetailCall = async () => {
-    try {
-      const res = await getGiftDetail(giftId);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    // 초콜릿 정보 가져오기
+    const getGiftDetailCall = async () => {
+        try {
+            const res = await getGiftDetail(giftId);
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
   // 1. 안 열린 일반 초콜릿
   // 횟수를 사용하는 모달로 안내
@@ -68,55 +68,31 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
   // 열지 못한다는 안내 모달로 이동
 
   // localStorage에서 이미지 로드
-  useEffect(() => {
-    const savedImage = localStorage.getItem(`giftImage_${giftId}`);
-    if (savedImage) {
-      setButtonImage(savedImage);
-    } else {
-      let chocoRandomImage;
-      if (giftType === "SPECIAL") {
-        chocoRandomImage = specialChocos[Math.floor(Math.random() * specialChocos.length)];
-      } else {
-        chocoRandomImage = generalChocos[Math.floor(Math.random() * generalChocos.length)];
-      }
+    useEffect(() => {
+        const savedImage = localStorage.getItem(`giftImage_${giftId}`);
+        if (savedImage) {
+        setButtonImage(savedImage);
+        } else {
+        let chocoRandomImage;
+        if (giftType === "SPECIAL") {
+            chocoRandomImage = specialChocos[Math.floor(Math.random() * specialChocos.length)];
+        } else {
+            chocoRandomImage = generalChocos[Math.floor(Math.random() * generalChocos.length)];
+        }
 
-      setButtonImage(chocoRandomImage);
-      localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
-    }
-    console.log(giftId, savedImage);
-  }, []);
+        setButtonImage(chocoRandomImage);
+        localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
+        }
+        console.log(giftId, savedImage);
+    }, []);
 
-  const closeRTCModal = () => {
-    setIsRTC(false);
-  };
+    const closeRTCModal = () => {
+        setIsRTC(false);
+    };
 
-  const closeGeneralModal = () => {
-    setIsNonOpen(false);
-  };
-
-  // 버튼 onClick 메서드
-  const giftOpenButtonClickHandler = async () => {
-    // const giftData = await getGiftDetailCall();
-    // 나중에 giftData.chocoType으로 변경
-    const giftDatum = giftData[Math.floor(Math.random() * 10)];
-    if (giftType === "SPECIAL") {
-      setIsRTC(true);
-    } else {
-      setAtomGiftId(giftId);
-      if (isOpened) {
-        navigate("/letter", {
-          state: {
-            nickName: giftDatum.nickName,
-            content: giftDatum.content,
-            question: giftDatum.question,
-            answer: giftDatum.answer,
-          },
-        });
-      } else {
-        setIsNonOpen(true);
-      }
-    }
-  };
+    const closeGeneralModal = () => {
+        setIsNonOpen(false);
+    };
 
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
