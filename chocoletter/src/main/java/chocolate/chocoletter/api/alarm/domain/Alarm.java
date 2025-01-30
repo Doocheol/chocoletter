@@ -23,17 +23,21 @@ public class Alarm extends BaseTimeEntity {
     private Long giftId;
 
     @Column(nullable = false)
+    private String partnerName;
+
+    @Column(nullable = false)
     private Long memberId;
 
     @Column(nullable = false)
     private Boolean isRead;
 
     @Builder
-    public Alarm(AlarmType type, Long giftId, Long memberId) {
+    public Alarm(AlarmType type, Long giftId, Long memberId, String partnerName) {
         this.type = type;
         this.giftId = giftId;
         this.memberId = memberId;
         this.isRead = false;
+        this.partnerName = partnerName;
     }
 
     public void readAlarm() {
