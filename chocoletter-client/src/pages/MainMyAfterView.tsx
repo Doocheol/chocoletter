@@ -30,7 +30,6 @@ import after_text from "../assets/images/main/after_text.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
-import { getGiftList } from "../services/giftApi";
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 
 const MainMyAfterView: React.FC = () => {
@@ -90,35 +89,35 @@ const MainMyAfterView: React.FC = () => {
   };
 
   // 데이터 fetching 및 Recoil 상태 업데이트
-  useEffect(() => {
-    const fetchGifts = async () => {
-      try {
-        // 'available'과 'received' 타입의 선물 리스트를 가져옵니다.
-        const [availableData, receivedData] = await Promise.all([
-          getGiftList("available"),
-          getGiftList("received"),
-        ]);
+  // useEffect(() => {
+  //   const fetchGifts = async () => {
+  //     try {
+  //       // 'available'과 'received' 타입의 선물 리스트를 가져옵니다.
+  //       const [availableData, receivedData] = await Promise.all([
+  //         getGiftList("available"),
+  //         getGiftList("received"),
+  //       ]);
 
-        // 데이터가 성공적으로 반환되었는지 확인
-        if (availableData && availableData.gifts) {
-          setAvailableGifts(availableData.gifts.length);
-        } else {
-          setAvailableGifts(0);
-        }
+  //       // 데이터가 성공적으로 반환되었는지 확인
+  //       if (availableData && availableData.gifts) {
+  //         setAvailableGifts(availableData.gifts.length);
+  //       } else {
+  //         setAvailableGifts(0);
+  //       }
 
-        if (receivedData && receivedData.gifts) {
-          setReceivedGifts(receivedData.gifts.length);
-        } else {
-          setReceivedGifts(0);
-        }
-      } catch (error) {
-        console.error("Gift 데이터를 불러오는 중 오류 발생:", error);
-        // 필요시 에러 핸들링 추가 (예: 사용자에게 알림)
-      }
-    };
+  //       if (receivedData && receivedData.gifts) {
+  //         setReceivedGifts(receivedData.gifts.length);
+  //       } else {
+  //         setReceivedGifts(0);
+  //       }
+  //     } catch (error) {
+  //       console.error("Gift 데이터를 불러오는 중 오류 발생:", error);
+  //       // 필요시 에러 핸들링 추가 (예: 사용자에게 알림)
+  //     }
+  //   };
 
-    fetchGifts();
-  }, [setAvailableGifts, setReceivedGifts]);
+  //   fetchGifts();
+  // }, [setAvailableGifts, setReceivedGifts]);
 
   return (
     <div className="flex justify-center w-full bg-white">
