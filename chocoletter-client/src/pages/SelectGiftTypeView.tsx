@@ -3,22 +3,43 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
 import general from "../assets/images/chocolate/general/gen_choco_1.png"
 import special from "../assets/images/chocolate/special/rtc_choco_1.png"
-import { freeLetterState } from "../atoms/letter/letterAtoms";
-import { questionLetterState } from "../atoms/letter/letterAtoms" ;
+import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { useRecoilValue } from "recoil";
+import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftApi"
 
 function SelectGiftTypeView() {
     const freeLetter = useRecoilValue(freeLetterState);
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
+    const giftBoxId = 123; // 주소에서 받아오기?
 
     const handleAccept = () => {
         navigate("/set-time"); 
     };
 
-    const handleReject = () => {
-        navigate("/sentgift");
+    const handleReject = async () => {
+        try {
+            if (questionLetter.question) {
+                // 질문이 있는 경우 QuestionGift API 호출
+                await sendGeneralQuestionGift(
+                    giftBoxId,
+                    questionLetter.nickname,
+                    questionLetter.question,
+                    questionLetter.answer
+                );
+            } else {
+                // 질문이 없는 경우 FreeGift API 호출
+                await sendGeneralFreeGift(
+                    giftBoxId,
+                    freeLetter.nickname,
+                    freeLetter.content
+                );
+            }
+            navigate("/sentgift");
+        } catch (error) {
+            console.error("Gift sending failed:", error);
+        }
     };
 
     return (

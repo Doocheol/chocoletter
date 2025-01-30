@@ -27,6 +27,22 @@ export async function getGiftList(giftType: string) {
 }
 
 // 일반 자유 선물 보내기
+export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, content: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
+      nickName: nickName,
+      content: content,
+    });
+    const data = res.data;
+    console.log("GeneralFreeGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendGeneralFreeGift API 호출 중 에러 발생:", err);
+    return null;
+  }
+}
+
+// 일반 질문 선물 보내기
 export async function sendGeneralQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/question`, {
@@ -43,22 +59,39 @@ export async function sendGeneralQuestionGift(giftBoxId: number, nickName: strin
   }
 }
 
-// 일반 질문 선물 보내기
-export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, content: string) {
+
+// 특별 자유 선물 보내기
+export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, content: string, unBoxingTime: string) {
   try {
-    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/free`, {
       nickName: nickName,
       content: content,
+      unBoxingTime: unBoxingTime,
     });
     const data = res.data;
-    console.log("GeneralFreeGift :", data);
+    console.log("SpecialFreeGift :", data);
     return data;
   } catch (err) {
-    console.error("sendGeneralFreeGift API 호출 중 에러 발생:", err);
+    console.error("sendSpecialFreeGift API 호출 중 에러 발생:", err);
     return null;
   }
 }
 
-// 특별 자유 선물 보내기
 
 // 특별 질문 선물 보내기
+export async function sendSpecialQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string, unBoxingTime: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/question`, {
+      nickName: nickName,
+      question: question,
+      answer: answer,
+      unBoxingTime: unBoxingTime,
+    });
+    const data = res.data;
+    console.log("SpecialQuestionGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendSpecialQuestionGift API 호출 중 에러 발생:", err);
+    return null;
+  }
+}
