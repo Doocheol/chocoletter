@@ -3,16 +3,43 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
 import general from "../assets/images/chocolate/general/gen_choco_1.png"
 import special from "../assets/images/chocolate/special/rtc_choco_1.png"
+import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
+import { useRecoilValue } from "recoil";
+import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftApi"
 
 function SelectGiftTypeView() {
+    const freeLetter = useRecoilValue(freeLetterState);
+    const questionLetter = useRecoilValue(questionLetterState);
+    const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
+    const giftBoxId = 1; // TODO: 주소에서 받아오기
 
     const handleAccept = () => {
         navigate("/set-time"); 
     };
 
-    const handleReject = () => {
-        navigate("/sentgift");
+    const handleReject = async () => {
+        try {
+            if (questionLetter.question) {
+                // 질문이 있는 경우 QuestionGift API 호출
+                await sendGeneralQuestionGift(
+                    giftBoxId,
+                    questionLetter.nickname,
+                    questionLetter.question,
+                    questionLetter.answer
+                );
+            } else {
+                // 질문이 없는 경우 FreeGift API 호출
+                await sendGeneralFreeGift(
+                    giftBoxId,
+                    freeLetter.nickname,
+                    freeLetter.content
+                );
+            }
+            navigate("/sentgift");
+        } catch (error) {
+            console.error("Gift sending failed:", error);
+        }
     };
 
     return (
@@ -42,6 +69,11 @@ function SelectGiftTypeView() {
                             지정한 시간에 화면 너머로 
                             따스한 마음을 나눌 수 있습니다.
                         </p>
+                        {/* JSON 형태로 전체 상태 보기 */}
+                            <div className="mt-4 p-4 bg-gray-200 border rounded">
+                            <h3 className="text-lg font-bold mb-2">Recoil 상태 확인</h3>
+                            <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
+                            </div>
                     </div>
                     <Button
                         onClick={handleAccept}

@@ -1,34 +1,9 @@
-import baseAxios from "axios";
-
-// giftAPI 인스턴스 설정
-export const axios = baseAxios.create({
-  baseURL: import.meta.env.VITE_API_SERVER_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-});
-
-// AccessToken 가져오기
-const accessToken = "123"; //  나중에 삭제!!
-// function getAccessToken(): string | null {
-//     return localStorage.getItem("accessToken");
-// }
+import api from "./api";
 
 // 선물 정보 가져오기
 export async function getGiftDetail(giftId: number) {
   try {
-    // const accessToken = getAccessToken();
-
-    if (!accessToken) {
-      throw new Error("AccessToken is missing");
-    }
-
-    const res = await axios.get(`/api/v1/gift/${giftId}/receive`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await api.get(`/api/v1/gift/${giftId}/receive`);
     const data = res.data;
     console.log("Gift 데이터:", data);
     return data;
@@ -41,17 +16,7 @@ export async function getGiftDetail(giftId: number) {
 // 선물 리스트 가져오기(filter 별)
 export async function getGiftList(giftType: string) {
   try {
-    // const accessToken = getAccessToken();
-
-    if (!accessToken) {
-      throw new Error("AccessToken is missing");
-    }
-
-    const res = await axios.get(`/api/v1/gift/${giftType}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await api.get(`/api/v1/gift/${giftType}`);
     const data = res.data;
     console.log("Gift List:", data);
     return data;
@@ -61,6 +26,72 @@ export async function getGiftList(giftType: string) {
   }
 }
 
+// 일반 자유 선물 보내기
+export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, content: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
+      nickName: nickName,
+      content: content,
+    });
+    const data = res.data;
+    console.log("GeneralFreeGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendGeneralFreeGift API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
+
+// 일반 질문 선물 보내기
+export async function sendGeneralQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/question`, {
+      nickName: nickName,
+      question: question,
+      answer: answer
+    });
+    const data = res.data;
+    console.log("GeneralQuestionGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendGeneralQuestionGift API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
+
+
 // 특별 자유 선물 보내기
+export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, content: string, unBoxingTime: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/free`, {
+      nickName: nickName,
+      content: content,
+      unBoxingTime: unBoxingTime,
+    });
+    const data = res.data;
+    console.log("SpecialFreeGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendSpecialFreeGift API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
+
 
 // 특별 질문 선물 보내기
+export async function sendSpecialQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string, unBoxingTime: string) {
+  try {
+    const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/question`, {
+      nickName: nickName,
+      question: question,
+      answer: answer,
+      unBoxingTime: unBoxingTime,
+    });
+    const data = res.data;
+    console.log("SpecialQuestionGift :", data);
+    return data;
+  } catch (err) {
+    console.error("sendSpecialQuestionGift API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
