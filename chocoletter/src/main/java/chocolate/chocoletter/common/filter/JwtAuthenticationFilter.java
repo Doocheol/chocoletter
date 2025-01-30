@@ -68,9 +68,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/swagger-ui/") ||
-                path.startsWith("/v3/api-docs") ||
-                path.startsWith("/swagger-resources");
+        return path.startsWith("/"); // 프론트 api 붙여야해서 일단 다 풀어둠
+//        return path.startsWith("/swagger-ui/") ||
+//                path.startsWith("/v3/api-docs") ||
+//                path.startsWith("/swagger-resources");
     }
 
 }

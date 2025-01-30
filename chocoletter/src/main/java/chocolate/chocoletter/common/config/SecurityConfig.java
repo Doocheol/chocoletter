@@ -30,11 +30,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 소셜로그인에서 불필요
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
-                                "/webjars/**").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/**").permitAll() // 프론트에서 일단 api 붙이는 동안에는 풀어주기
+//                        .requestMatchers("/swagger-ui/**",
+//                                "/swagger-resources/**",
+//                                "/v3/api-docs/**",
+//                                "/webjars/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(kakaoOAuth2UserService))
