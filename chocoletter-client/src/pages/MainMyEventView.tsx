@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 
@@ -22,44 +22,29 @@ import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
 // 이미지 리소스 예시
-import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
+import giftbox_event_1 from "../assets/images/giftbox/giftbox_event_1.svg";
 import Backdrop from "../components/common/Backdrop";
-import share_button from "../assets/images/button/share_button.svg";
-import { ImageButton } from "../components/common/ImageButton";
-import capture_button from "../assets/images/button/capture_button.svg";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 import chat_icon from "../assets/images/main/chat_icon.svg";
-import choco_asset_1 from "../assets/images/main/choco_asset_1.svg";
-import tool_tip from "../assets/images/main/tool_tip.svg";
-import my_count_background from "../assets/images/main/my_count_background.svg";
+import open_text from "../assets/images/main/open_text.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
 import { getGiftList } from "../services/giftApi";
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 
-const MainMyBeforeView: React.FC = () => {
+const MainMyEventView: React.FC = () => {
   const navigate = useNavigate();
 
   // (1) 주소창 높이 보정 훅
   useViewportHeight();
 
   // Recoil 상태
-  const availableGifts = useRecoilValue(availableGiftsAtom);
-  const receivedGifts = useRecoilValue(receivedGiftsAtom);
   const [isFirstLogin, setIsFirstLogin] = useRecoilState(isFirstLoginAtom);
 
   // Recoil 상태 업데이트를 위한 setter
   const setAvailableGifts = useSetRecoilState(availableGiftsAtom);
   const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
-
-  // 공유 모달
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-
-  // 캡처 모달
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
-  const captureRef = useRef<HTMLDivElement>(null);
 
   const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false); // 새로운 상태 추가
 
@@ -75,28 +60,6 @@ const MainMyBeforeView: React.FC = () => {
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
   // 핸들러들
-  const handleShare = () => {
-    setIsShareModalOpen(true);
-  };
-
-  const handleCapture = async () => {
-    if (captureRef.current) {
-      try {
-        setIsCaptureModalVisible(true);
-        const canvas = await html2canvas(captureRef.current);
-        const imageData = canvas.toDataURL("image/png");
-        setCapturedImage(imageData);
-      } catch (error) {
-        // toast.error("캡처 실패!");
-        setIsCaptureModalVisible(false);
-      }
-    }
-  };
-
-  // const handleHome = () => {
-  //   navigate("/");
-  //   toast.info("홈으로 이동!");
-  // };
 
   const handleTutorial = () => {
     setIsTutorialModalOpen(true); // 튜토리얼 모달 열기
@@ -123,9 +86,7 @@ const MainMyBeforeView: React.FC = () => {
   };
 
   const handleMyChocolateBox = () => {
-    navigate("/gift/list/before");
-
-    // toast.info("내 초콜릿 박스 아이콘 클릭!");
+    navigate("/gift/list/event");
   };
 
   // 데이터 fetching 및 Recoil 상태 업데이트
@@ -194,55 +155,17 @@ const MainMyBeforeView: React.FC = () => {
           </div>
         </div>
 
-        {/** 초콜릿 개봉/받은 정보 카드 (jello-vertical) */}
-        <div className="mt-6 mx-auto relative">
-          {/* 배경 이미지 */}
-          <img
-            src={my_count_background}
-            alt="Background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />{" "}
-          <div className="flex flex-col items-center gap-2.5 px-9 py-4 relative">
-            <div className="flex flew-row">
-              <div className="text-2xl font-normal text-center">개봉 가능한&nbsp;</div>
-              <img src={choco_asset_1} className="w-7 h-7" />
-              <div className="text-2xl font-normal text-center">&nbsp;:&nbsp;</div>
-              <div className="text-2xl font-normal text-center text-chocoletterPurpleBold">
-                {availableGifts}
-              </div>
-              <div className="text-2xl font-normal text-center">개</div>
-            </div>
-            <div className="flex flew-row">
-              <div className="text-sm text-gray-500 text-center">지금까지 받은&nbsp;</div>
-              <img src={choco_asset_1} className="h-4 w-4" />
-              <div className="text-sm text-gray-500 text-center">&nbsp;:&nbsp;</div>
-              <div className="text-sm text-center text-chocoletterPurple">{receivedGifts}</div>
-              <div className="text-sm text-gray-500 text-center">개</div>
-            </div>
-          </div>
-        </div>
-
         {/** 초콜릿 박스 & 안내 문구 */}
-        <div className="mt-8 flex flex-col items-center px-4">
+        <div className="mt-36 flex flex-col items-center px-4">
           {/** 캡처 영역 (heartbeat 애니메이션) */}
-          <div ref={captureRef} className="heartbeat">
+          <div className="heartbeat">
             <button
               onClick={handleMyChocolateBox}
               className="w-[255px] pl-8 flex items-center justify-center"
             >
-              <img src={giftbox_before_2} alt="giftbox_before_2" className="p-2 max-h-60" />
+              <img src={giftbox_event_1} alt="giftbox_before_2" className="p-2 max-h-60" />
             </button>
           </div>
-
-          {/** 안내 문구 (shake-horizontal) */}
-          <div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
-            <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
-            <p className="text-xs text-gray-500 leading-snug">
-              개봉 가능한 일반 초콜릿이 있다면
-              <br />
-              박스를 클릭하여 편지를 읽어볼 수 있어요.
-            </p>
-          </div>
         </div>
 
         {/*
@@ -255,59 +178,9 @@ const MainMyBeforeView: React.FC = () => {
           "공유하기" 버튼 위에만 나타나도록 수정
           (위아래로 움직이는 애니메이션: shake-vertical)
         */}
-        <div className="mt-14 px-4 flex flex-row items-center gap-2.5">
-          {/* 공유하기 버튼을 감싸는 relative div */}
-          <div className="relative group">
-            {/* 툴팁 */}
-            <div className="absolute bottom-full mb-1 left-4 w-max">
-              <img src={tool_tip} />
-            </div>
-
-            {/* 공유하기 버튼 */}
-            <ImageButton
-              onClick={handleShare}
-              src={share_button}
-              className="flex h-14 w-[270px] items-center justify-center hover:bg-chocoletterPurple rounded-[15px] border border-black group"
-            />
-
-            {/* <button
-              onClick={handleShare}
-              className="flex h-14 w-[270px] items-center justify-center gap-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple rounded-[15px] border border-black group"
-              aria-label="공유하기"
-            >
-              <FiShare className="w-6 h-6 text-white" />
-              <span className="font-display-1 text-white text-xl">공유하기</span>
-            </button> */}
-          </div>
-
-          {/* 캡처 버튼 */}
-          <ImageButton
-            onClick={handleCapture}
-            src={capture_button}
-            className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
-          />
-          {/* <button
-            onClick={handleCapture}
-            className="w-[81px] h-14 flex items-center justify-center bg-white hover:bg-chocoletterPurple rounded-[15px] border border-black group"
-            aria-label="캡처"
-          >
-            <FiCamera className="w-6 h-6 text-black text-opacity-80" />
-          </button> */}
+        <div className="mt-2 flex flex-row justify-center items-center gap-2.5">
+          <img src={open_text} alt="open_text" className="" />
         </div>
-
-        {/** 모달 & 튜토리얼 오버레이 */}
-        <CaptureModal
-          isVisible={isCaptureModalVisible}
-          imageSrc={capturedImage}
-          onClose={() => setIsCaptureModalVisible(false)}
-        />
-        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
-        {isFirstLogin && (
-          <FirstLoginTutorialOverlay
-            targetRef={tutorialIconRef}
-            onClose={() => setIsFirstLogin(false)}
-          />
-        )}
 
         {isProfileOpen && (
           <>
@@ -329,4 +202,4 @@ const MainMyBeforeView: React.FC = () => {
   );
 };
 
-export default MainMyBeforeView;
+export default MainMyEventView;

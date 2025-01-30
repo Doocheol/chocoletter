@@ -34,7 +34,7 @@ const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} className="max-w-md ml-1">
       <div
         className="flex flex-col px-4 py-2 tracking-tight leading-none text-left text-black bg-white rounded-3xl"
         aria-labelledby="tutorial-modal-title"
