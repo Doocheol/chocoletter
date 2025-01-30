@@ -85,7 +85,6 @@ function App() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
-            <Route path="/main/my/before/:giftBoxId" element={<MainMyBeforeView />} />
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/selectletter" element={<SelectLetterTypeView />} />

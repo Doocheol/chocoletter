@@ -30,14 +30,15 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 
   const handleLogout = () => {
     setIsLogin(false);
-    toast.info("로그아웃 되었습니다.");
+    toast.info("로그아웃 완료!");
     onClose(); // 로그아웃 후 닫기
+    navigate("/"); // 홈으로 이동
   };
 
   const handleHome = () => {
-    navigate("/");
-    toast.info("홈으로 이동!");
+    toast.info("내 선물상자로 이동!");
     onClose(); // 홈으로 이동 후 MyPage 닫기
+    navigate("/main/my/before");
   };
 
   const dropdownRef = useRef<HTMLDivElement>(null);
