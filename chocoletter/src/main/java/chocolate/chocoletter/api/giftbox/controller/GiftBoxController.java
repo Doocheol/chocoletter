@@ -10,13 +10,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/gift-box")
@@ -84,6 +80,16 @@ public class GiftBoxController implements GiftBoxSwagger {
     @GetMapping("/{giftBoxId}/unboxing/schedule")
     public ResponseEntity<?> findUnboxingTimes(@PathVariable("giftBoxId") Long giftBoxId) {
         return ResponseEntity.ok(giftBoxService.findUnBoxingTimes(giftBoxId));
+    }
+
+    /**
+     * Principle이 Authentication에 비해 정보를 더 적게 제공해줌
+     * -> 필요한것만 제공해주는게 Principle이기 때문에 이거 사용
+     */
+    @GetMapping("/link")
+    public ResponseEntity<?> getShareCode(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return ResponseEntity.ok(giftBoxService.findShareCodeByMemberId(memberId));
     }
 
 }
