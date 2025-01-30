@@ -25,7 +25,7 @@ import { atom } from "recoil";
 // });
 
 export const freeLetterState = atom({
-  key: "letterState",
+  key: "freeLetterState",
   default: {
     nickname: "",
     content: "",
@@ -34,7 +34,7 @@ export const freeLetterState = atom({
 });
 
 export const questionLetterState = atom({
-  key: "letterState",
+  key: "questionLetterState",
   default: {
     nickname: "",
     question: "",

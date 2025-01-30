@@ -4,10 +4,13 @@ import { Button } from "../components/common/Button";
 import general from "../assets/images/chocolate/general/gen_choco_1.png"
 import special from "../assets/images/chocolate/special/rtc_choco_1.png"
 import { freeLetterState } from "../atoms/letter/letterAtoms";
+import { questionLetterState } from "../atoms/letter/letterAtoms" ;
 import { useRecoilValue } from "recoil";
 
 function SelectGiftTypeView() {
-    const letter = useRecoilValue(freeLetterState); // 상태 읽기
+    const freeLetter = useRecoilValue(freeLetterState);
+    const questionLetter = useRecoilValue(questionLetterState);
+    const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
 
     const handleAccept = () => {
@@ -46,10 +49,10 @@ function SelectGiftTypeView() {
                             따스한 마음을 나눌 수 있습니다.
                         </p>
                         {/* JSON 형태로 전체 상태 보기 */}
-        <div className="mt-4 p-4 bg-gray-200 border rounded">
-          <h3 className="text-lg font-bold mb-2">Recoil 상태 확인</h3>
-          <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
-        </div>
+                            <div className="mt-4 p-4 bg-gray-200 border rounded">
+                            <h3 className="text-lg font-bold mb-2">Recoil 상태 확인</h3>
+                            <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
+                            </div>
                     </div>
                     <Button
                         onClick={handleAccept}

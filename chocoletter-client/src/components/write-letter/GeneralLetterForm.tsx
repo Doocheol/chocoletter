@@ -5,50 +5,50 @@ import "react-toastify/dist/ReactToastify.css";
 import { freeLetterState } from "../../atoms/letter/letterAtoms" ;
 
 const GeneralLetterForm: React.FC = () => {
-  const [letter, setLetter] = useRecoilState(freeLetterState);
+    const [letter, setLetter] = useRecoilState(freeLetterState);
 
-  const nicknameToastId = "nickname-warning";
-  const contentToastId = "content-warning";
+    const nicknameToastId = "nickname-warning";
+    const contentToastId = "content-warning";
 
-  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value.length > 12) {
-      if (!toast.isActive(nicknameToastId)) {
-        toast.warn("닉네임은 12글자 이하로 설정해주세요!", {
-          toastId: nicknameToastId,
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-      setLetter((prev) => ({ ...prev, nickname: value.substring(0, 12) }));
-    } else {
-      setLetter((prev) => ({ ...prev, nickname: value }));
-    }
-  };
+    const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.length > 12) {
+            if (!toast.isActive(nicknameToastId)) {
+                toast.warn("닉네임은 12글자 이하로 설정해주세요!", {
+                    toastId: nicknameToastId,
+                    position: "top-center",
+                    autoClose: 2000,
+                });
+            }
+            setLetter((prev) => ({ ...prev, nickname: value.substring(0, 12) }));
+            } else {
+            setLetter((prev) => ({ ...prev, nickname: value }));
+            }
+        };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    if (value.length > 200) {
-      if (!toast.isActive(contentToastId)) {
-        toast.warn("200글자 이하로 작성해주세요!", {
-          toastId: contentToastId,
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-      setLetter((prev) => ({
-        ...prev,
-        content: value.substring(0, 200),
-        contentLength: 200,
-      }));
-    } else {
-      setLetter((prev) => ({
-        ...prev,
-        content: value,
-        contentLength: value.length,
-      }));
-    }
-  };
+    const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        if (value.length > 200) {
+        if (!toast.isActive(contentToastId)) {
+            toast.warn("200글자 이하로 작성해주세요!", {
+            toastId: contentToastId,
+            position: "top-center",
+            autoClose: 2000,
+            });
+        }
+        setLetter((prev) => ({
+            ...prev,
+            content: value.substring(0, 200),
+            contentLength: 200,
+        }));
+        } else {
+        setLetter((prev) => ({
+            ...prev,
+            content: value,
+            contentLength: value.length,
+        }));
+        }
+    };
 
   return (
     <div className="flex flex-col justify-center items-center mb-[20px]">
