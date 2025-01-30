@@ -16,17 +16,19 @@ public class DateTimeUtil {
     private String openDay;
 
     public LocalDateTime parseTimeToDateTime(String time) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        LocalDate baseDate = LocalDate.parse(openDay, dateFormatter);
-
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime parsedTime = LocalTime.parse(time, timeFormatter);
 
-        return LocalDateTime.of(baseDate, parsedTime);
+        return LocalDateTime.of(getOpenDay(), parsedTime);
     }
 
     public String formatDateTime(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return dateTime.format(formatter);
+    }
+
+    public LocalDate getOpenDay() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return LocalDate.parse(openDay, dateFormatter);
     }
 }
