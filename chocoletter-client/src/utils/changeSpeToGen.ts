@@ -1,11 +1,27 @@
-export const changeSpeToGen = (unboxingTime: string) => {
+import { changeSpecialToGeneral } from "../services/giftApi";
+
+interface changeSpeToGen {
+    unboxingTime: string;
+    giftId: string;
+}
+
+export const changeSpeToGen = ({unboxingTime, giftId}: changeSpeToGen) => {
     const changeDate = async () => {
         const checkDate = new Date(unboxingTime);
         const currentDate = new Date()
+
         if (checkDate >= currentDate) {
-            console.log("미완성")
+            try {
+                const res = changeSpecialToGeneral(giftId)
+                return res;
+            } catch (err) {
+                console.log("", err)
+                return null;
+            }
+            
         }
     };
 
-    changeDate();
+    const result = changeDate();
+    return result;
 }

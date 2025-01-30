@@ -66,24 +66,23 @@ export async function getGiftList(giftType: string) {
 // 특별 질문 선물 보내기
 
 // 특별 선물을 일반 설문으로 변경
-// export async function getGiftList(giftType: string) {
-//   try {
-//     // const accessToken = getAccessToken();
+export async function changeSpecialToGeneral(giftId: string) {
+  try {
+    // const accessToken = getAccessToken();
 
-//     if (!accessToken) {
-//       throw new Error("AccessToken is missing");
-//     }
+    if (!accessToken) {
+      throw new Error("AccessToken is missing");
+    }
 
-//     const res = await axios.get(`/api/v1/gift/${giftType}`, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-//     const data = res.data;
-//     console.log("Gift List:", data);
-//     return data;
-//   } catch (err) {
-//     console.error("getGiftList API 호출 중 에러 발생:", err);
-//     return null;
-//   }
-// }
+    await axios.patch(`/api/v1/gift/${giftId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    return "변환 성공!!"
+  } catch (err) {
+    console.error("getGiftList API 호출 중 에러 발생:", err);
+    return null;
+  }
+}
