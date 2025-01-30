@@ -140,7 +140,7 @@ const FirstLoginTutorialOverlay: React.FC<FirstLoginTutorialOverlayProps> = ({
         className="flex flex-col items-center text-center text-white"
       >
         <p className="mb-4">여기서 초코레터를 자세히 볼 수 있어요!</p>
-        <Button onClick={onClose} className="text-md">
+        <Button onClick={onClose} className="text-md bg-white">
           알겠어요!
         </Button>
       </div>

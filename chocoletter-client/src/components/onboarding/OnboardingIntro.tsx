@@ -133,7 +133,7 @@ function OnboardingIntro() {
       <a
         className={`mx-4 ml-10 mb-14 heartbeat
           ${scrollPosition > 470 ? "slide-in-bottom" : "collapse"} `}
-        href="https://www.chocolate-letter.com/"
+        href="https://www.chocolate-letter.com/main/your/before"
       >
         <img
           src={login_view_move_to_teambox}

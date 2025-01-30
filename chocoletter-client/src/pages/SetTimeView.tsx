@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "../components/common/Button";
 import { GoBackButton } from "../components/common/GoBackButton";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
-import AmPmButton from "../components/set-time/button/AmPmButton"
-import HourDialButton from "../components/set-time/button/HourDialButton"
-import MinuteButton from "../components/set-time/button/MinuteButton"
+import AmPmDial from "../components/set-time/button/AmPmDial"
+import HourDial from "../components/set-time/button/HourDial"
+import MinuteDial from "../components/set-time/button/MinuteDial"
 import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
 
 // 특별 선물 선택 이후, 화상 연결 시간 설정하는 화면
 const SetTimeView = () => {
     const [unboxingTimes, setUnboxingTimes] = useState<string[] | null>(null);
-    const [selectedAmPm, setSelectedAmPm] = useState<"AM" | "PM">("AM");
-    const [selectedHour, setSelectedHour] = useState<string>("01");
+    const [selectedAmPm, setSelectedAmPm] = useState<string>("오전");
+    const [selectedHour, setSelectedHour] = useState<string>("1");
     const [selectedMinute, setSelectedMinute] = useState("00");
     const [disabledMinutes, setDisabledMinutes] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,15 +25,15 @@ const SetTimeView = () => {
     }, []); // 빈 배열을 사용하여 함수 객체를 고정
 
     // 12시간제를 24시간제로 변환
-    const convertTo24Hour = (amPm: "AM" | "PM", hour: string) => {
+    const convertTo24Hour = (amPm: string, hour: string) => {
         let hour24 = parseInt(hour, 10);
-        if (amPm === "PM" && hour24 !== 12) hour24 += 12;
-        if (amPm === "AM" && hour24 === 12) hour24 = 0;
+        if (amPm === "오후" && hour24 !== 12) hour24 += 12;
+        if (amPm === "오전" && hour24 === 12) hour24 = 0;
         return hour24;
     };
 
     // 특정 시간에 따른 비활성화된 분 계산
-    const calculateDisabledMinutes = (amPm: "AM" | "PM", hour: string) => {
+    const calculateDisabledMinutes = (amPm: string, hour: string) => {
         if (!unboxingTimes) return [];
         const hour24 = convertTo24Hour(amPm, hour);
         return unboxingTimes
@@ -42,9 +42,9 @@ const SetTimeView = () => {
     };
 
     // AM/PM 변경
-    const handleAmPmChange = (value: "AM" | "PM") => {
-        setSelectedAmPm(value);
-        const updatedDisabledMinutes = calculateDisabledMinutes(value, selectedHour);
+    const handleAmPmChange = (amPm: string) => {
+        setSelectedAmPm(amPm);
+        const updatedDisabledMinutes = calculateDisabledMinutes(amPm, selectedHour);
         setDisabledMinutes(updatedDisabledMinutes); // 새로운 비활성화된 분 업데이트
         setSelectedMinute("00"); // 선택된 분 초기화
     };
@@ -81,78 +81,104 @@ const SetTimeView = () => {
         navigate("/sentgift"); // 원하는 경로로 이동
     };
 
-	return (
-        <div className="relative flex flex-col items-center h-screen">
-            {/* UnboxingSchedule: 데이터만 로드 */}
-            <UnboxingSchedule giftBoxId={1} onTimeFetched={handleTimeFetched} />
-            
+    return (
+        <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
             {/* 모달 컴포넌트 : 카카오톡 전송 완료 안내 & 편지 전송 완료 안내 화면으로 이동 */}
             <MessageSentSuccessfullyModal
-                    isOpen={isModalOpen}
-                    onClose={closeModalAndNavigate}
+                isOpen={isModalOpen}
+                onClose={closeModalAndNavigate}
             />
-            {/* 페이지 콘텐츠 */}
-            <GoBackButton altText="뒤로가기 버튼" />
-            <div className="absolute mt-24 flex flex-col items-center">
-                <h1 className="text-xl font-bold mb-12">
-                    함께 설렘을 나눌 수 있는 시간이에요!<br />
-                    2월 14일, 당신만을 위한<br />
-                    특별한 날에 원하는 시각을 설정해주세요 🤩
-                </h1>
-
-                {/* 시간 선택  */}
-                <div className="h-[250px] flex flex-raw my-8">
-                    {/* AmPmButton */}
-                    <AmPmButton selected={selectedAmPm} onSelect={handleAmPmChange} />
-
-                    {/* HourDialButton */}
-                    <HourDialButton onHourChange={handleHourChange} />
-
-                    {/* MinuteButton */}
-                    <MinuteButton
-                        selected={selectedMinute}
-                        onSelect={handleMinuteChange}
-                        disabledMinutes={disabledMinutes} // 비활성화된 분 전달
-                    />
-
-                    {/* <div className="flex flex-col justify-center text-3xl"> : </div> */}
-
-                </div>
-
-                {/* 선택된 시간 표시 */}
-                <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg shadow-md w-[300px] mb-12">
-                    <p className="text-gray-700 text-sm font-semibold">선택된 시간</p>
-                    <p className="text-gray-500 text-sm mb-2">2025년 2월 14일</p>
-                    <div className="flex gap-2 text-3xl font-bold text-blue-600">
-                        <span>{selectedHour}</span>
-                        <span>시</span>
-                        <span>{selectedMinute}</span>
-                        <span>분</span>
-                        <span>{selectedAmPm}</span>
+            
+            {/* 상단 bar */}
+            <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
+                <div className="self-stretch justify-between items-center inline-flex">
+                    <div className="w-6 h-6 justify-center items-center flex">
+                        <GoBackButton />
                     </div>
+                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">시간 선택하기</div>
+                    <div className="w-6 h-6" />
                 </div>
-                {/* <div className="w-[300px] mb-12 p-4">
-                    <p className="text-lg font-bold">
-                        선택된 시간 <br />
-                        2월 14일 {" "}
-                        <span>
-                            {selectedHour}시 {selectedMinute}분 {selectedAmPm}
-                        </span>
-                    </p>
-                </div> */}
+            </div>
 
-                {/* 초대장 전송 버튼 */}
+            {/* 화면 문구 */}
+            <div className="mt-24 flex w-[284px] px-[16px] py-[10px] justify-center items-center gap-[10px] rounded-[11px] bg-white">
+                <p className="text-center font-sans text-[15px] leading-[22px] tracking-[-0.408px]">
+                    함께 설렘을 나눌 수 있는 시간이에요. <br />
+                    2월 14일, 당신만을 위한 특별한 날에<br />
+                    원하시는 시각을 설정해 주세요!😊
+                </p>
+            </div>
+
+            {/* 추후 삭제!! 선택된 시간 표시 */}
+            <div className="flex flex-col items-center p-4 w-[300px]">
+                <p className="text-gray-700 text-sm text-center font-semibold">(확인용 추후 삭제 예정) <br/> 선택된 시간</p>
+                <p className="text-gray-500 text-sm mb-2">2025년 2월 14일</p>
+                <div className="flex gap-2 text-3xl font-bold text-chocoletterPurpleBold">
+                    <span>{selectedAmPm}</span>
+                    <span>{selectedHour}</span>
+                    <span>시</span>
+                    <span>{selectedMinute}</span>
+                    <span>분</span>
+                </div>
+            </div>
+            
+            {/* 다이얼 */}
+            {/* mt-[78px] */}
+            <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[20px] gap-[10px] ">
+                {/* 흰색 박스 */}
+                <div className="absolute z-10 w-[252px] h-[80px] bg-white rounded-[10px] border border-black"></div>
+                
+                {/* 다이얼 */}
+                <div className="relative z-20 flex flex-row items-center justify-center gap-[10px]">
+                    <AmPmDial onAmPmChange={handleAmPmChange} />
+                    <HourDial onHourChange={handleHourChange} />
+                    <div className="text-[40px] leading-[50px] tracking-[-0.408px]"> : </div>
+                    <MinuteDial onHourChange={handleMinuteChange} />
+                </div>
+            </div>
+
+
+            {/* 초콜릿 보내기 */}
+            <div className="mt-[50px]">
                 <Button 
                     onClick={() => {
                         sentGiftHandler();
                         saveHandler();
                     }}
-                    className="py-5"
+                    className="flex w-[186px] h-[56px] justify-center items-center gap-[8px] shrink-0 rounded-[15px] border border-black bg-chocoletterPurpleBold text-white"
                 >
-                        초콜릿 개봉 초대장 보내기 📮
+                    <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">초콜릿 보내기 📮</p>
                 </Button>
             </div>
-		</div>
+        </div>
+        // <div className="relative flex flex-col items-center h-screen">
+        //     {/* UnboxingSchedule: 데이터만 로드 */}
+        //     <UnboxingSchedule giftBoxId={1} onTimeFetched={handleTimeFetched} />
+            // >
+        //     {/* 페이지 콘텐츠 */}
+        //     <GoBackButton altText="뒤로가기 버튼" />
+        //     <div className="absolute mt-24 flex flex-col items-center">
+        //         {/* 시간 선택  */}
+        //         <div className="h-[250px] flex flex-raw my-8">
+        //             {/* AmPmButton */}
+        //             <AmPmButton selected={selectedAmPm} onSelect={handleAmPmChange} />
+
+        //             {/* HourDialButton */}
+        //             <HourDialButton onHourChange={handleHourChange} />
+
+        //             {/* MinuteButton */}
+        //             <MinuteButton
+        //                 selected={selectedMinute}
+        //                 onSelect={handleMinuteChange}
+        //                 disabledMinutes={disabledMinutes} // 비활성화된 분 전달
+        //             />
+
+        //             {/* <div className="flex flex-col justify-center text-3xl"> : </div> */}
+
+        //         </div>
+
+        //     </div>
+		// </div>
 	);
 };
 

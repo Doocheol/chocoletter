@@ -20,7 +20,7 @@ export const IsOpenGeneralGiftModal: React.FC<IsOpenGeneralGiftModalProps> = ({ 
             <p>현재 개봉 가능한 횟수 : {remainOpenCount}개</p>
             <div>
                 <CheckLetterUseButton onClick={onClose} />
-                <Button onClick={onClose}>
+                <Button onClick={onClose} className="bg-white">
                     나중에 열기
                 </Button>
             </div>
