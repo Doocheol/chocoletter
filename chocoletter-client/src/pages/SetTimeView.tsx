@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from "recoil";
 import { Button } from "../components/common/Button";
 import { GoBackButton } from "../components/common/GoBackButton";
 import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSentSuccessfullyModal";
@@ -7,6 +8,12 @@ import AmPmDial from "../components/set-time/button/AmPmDial"
 import HourDial from "../components/set-time/button/HourDial"
 import MinuteDial from "../components/set-time/button/MinuteDial"
 import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
+import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
+import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
+
+// 1. 이미 있는 일정 못선택하게 하기
+// 2. 질문 있냐 없냐에 따라 api post
+// 3. 초대장 요청
 
 // 특별 선물 선택 이후, 화상 연결 시간 설정하는 화면
 const SetTimeView = () => {
@@ -17,6 +24,10 @@ const SetTimeView = () => {
     const [disabledMinutes, setDisabledMinutes] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+    const giftBoxId = 1; // TODO: 주소에서 받아오기
+    const freeLetter = useRecoilValue(freeLetterState);
+    const questionLetter = useRecoilValue(questionLetterState);
+    const letter = questionLetter.question ? questionLetter : freeLetter;
 
     // Unboxing Schedule 불러오기
     const handleTimeFetched = useCallback((times: string[] | null) => {
@@ -64,10 +75,36 @@ const SetTimeView = () => {
 
     // 선택된 시간을 서버에 저장하기
     const saveHandler = async () => {
-        const hour24 = convertTo24Hour(selectedAmPm, selectedHour);
-        const unBoxingTime = `${hour24.toString().padStart(2, "0")}:${selectedMinute}`;
-        // console.log("저장된 값:", { unBoxingTime }); // 출력 확인
-        // TODO: await send~~({ unBoxingTime });
+        try {
+            // 24시간 형식 변환
+            const hour24 = convertTo24Hour(selectedAmPm, selectedHour);
+            const unBoxingTime = `${hour24.toString().padStart(2, "0")}:${selectedMinute}`;
+
+            console.log("저장된 값:", { unBoxingTime }); // 디버깅 출력
+
+            // 질문이 있는 경우 SpecialQuestionGift API 호출
+            if (questionLetter.question) {
+                await sendSpecialQuestionGift(
+                    giftBoxId,
+                    questionLetter.nickname,
+                    questionLetter.question,
+                    questionLetter.answer,
+                    unBoxingTime
+                );
+            } else {
+                // 질문이 없는 경우 SpecialFreeGift API 호출
+                await sendSpecialFreeGift(
+                    giftBoxId,
+                    freeLetter.nickname,
+                    freeLetter.content,
+                    unBoxingTime
+                );
+            }
+
+            navigate("/sentgift");
+        } catch (error) {
+            console.error("Gift sending failed:", error);
+        }
     };
 
     // 초콜릿 만들기 버튼 누르면, 카카오톡 전송 완료 모달 띄우기
@@ -80,6 +117,10 @@ const SetTimeView = () => {
         setIsModalOpen(false);
         navigate("/sentgift"); // 원하는 경로로 이동
     };
+
+    // 삭제하기 
+    const hour24 = convertTo24Hour(selectedAmPm, selectedHour);
+const unBoxingTime = `${hour24.toString().padStart(2, "0")}:${selectedMinute}`;
 
     return (
         <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
@@ -110,7 +151,7 @@ const SetTimeView = () => {
             </div>
 
             {/* 추후 삭제!! 선택된 시간 표시 */}
-            <div className="flex flex-col items-center p-4 w-[300px]">
+            {/* <div className="flex flex-col items-center p-4 w-[300px]">
                 <p className="text-gray-700 text-sm text-center font-semibold">(확인용 추후 삭제 예정) <br/> 선택된 시간</p>
                 <p className="text-gray-500 text-sm mb-2">2025년 2월 14일</p>
                 <div className="flex gap-2 text-3xl font-bold text-chocoletterPurpleBold">
@@ -120,10 +161,16 @@ const SetTimeView = () => {
                     <span>{selectedMinute}</span>
                     <span>분</span>
                 </div>
+            </div> */}
+
+            {/* JSON 형태로 전체 상태 보기 */}
+            <div className="mt-4 p-4 bg-gray-200 border rounded">
+            <h3 className="text-lg font-bold mb-2">Recoil 상태 확인</h3>
+            <pre className="text-sm">{JSON.stringify({ ...letter, unBoxingTime }, null, 2)}</pre>
             </div>
             
             {/* 다이얼 */}
-            {/* mt-[78px] */}
+            {/* TODO : mt-[78px] */}
             <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[20px] gap-[10px] ">
                 {/* 흰색 박스 */}
                 <div className="absolute z-10 w-[252px] h-[80px] bg-white rounded-[10px] border border-black"></div>

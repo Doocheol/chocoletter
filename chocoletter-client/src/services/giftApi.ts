@@ -38,7 +38,7 @@ export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, c
     return data;
   } catch (err) {
     console.error("sendGeneralFreeGift API 호출 중 에러 발생:", err);
-    return null;
+    throw err;
   }
 }
 
@@ -55,7 +55,7 @@ export async function sendGeneralQuestionGift(giftBoxId: number, nickName: strin
     return data;
   } catch (err) {
     console.error("sendGeneralQuestionGift API 호출 중 에러 발생:", err);
-    return null;
+    throw err;
   }
 }
 
@@ -73,7 +73,7 @@ export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, c
     return data;
   } catch (err) {
     console.error("sendSpecialFreeGift API 호출 중 에러 발생:", err);
-    return null;
+    throw err;
   }
 }
 
@@ -92,6 +92,6 @@ export async function sendSpecialQuestionGift(giftBoxId: number, nickName: strin
     return data;
   } catch (err) {
     console.error("sendSpecialQuestionGift API 호출 중 에러 발생:", err);
-    return null;
+    throw err;
   }
 }

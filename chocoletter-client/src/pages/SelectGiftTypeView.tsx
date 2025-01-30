@@ -12,7 +12,7 @@ function SelectGiftTypeView() {
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
-    const giftBoxId = 123; // 주소에서 받아오기?
+    const giftBoxId = 1; // TODO: 주소에서 받아오기
 
     const handleAccept = () => {
         navigate("/set-time"); 
