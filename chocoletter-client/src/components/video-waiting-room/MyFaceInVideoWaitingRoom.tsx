@@ -1,7 +1,10 @@
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect } from "react";
 
-export const MyFaceInVideoWaitingRoom = () => {
-    const videoRef = useRef<HTMLVideoElement>(null);
+interface MyFaceInVideoWaitingRoomProps {
+    videoRef: RefObject<HTMLVideoElement>;
+}
+
+export const MyFaceInVideoWaitingRoom = ({ videoRef }: MyFaceInVideoWaitingRoomProps) => {
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -16,6 +19,7 @@ export const MyFaceInVideoWaitingRoom = () => {
 
         return () => {
             if (videoRef.current && videoRef.current.srcObject) {
+                console.log("대기방 정리 함수 호출")
                 const stream = videoRef.current.srcObject as MediaStream;
                 stream.getTracks().forEach(track => track.stop());
             }

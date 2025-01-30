@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../../common/Button";
 import readLetterIcon from "../../../assets/images/unboxing/read_letter_icon.svg";
 
 interface LetterInVideoOpenButtonProps {

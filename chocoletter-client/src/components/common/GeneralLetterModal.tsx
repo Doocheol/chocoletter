@@ -61,7 +61,7 @@ const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, sender, rec
                             보내주신 초콜릿이에요!🍫
                         </div>
                     </div>
-                    <div className="w-full h-[calc(100%-6rem)] p-5 bg-white rounded-[15px] border border-black">
+                    <div className="w-full h-[calc(100%-6rem)] p-5 bg-white rounded-[15px] border-2 border-dashed border-black">
                         <div className="w-full h-full grow shrink basis-0 text-center text-chocoletterCharacter text-lg font-normal font-sans leading-normal overflow-y-auto">편지 내용</div>
                     </div>
                 </div>

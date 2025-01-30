@@ -1,9 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import Modal from "../../common/Modal";
-import { Button } from "../../common/Button";
+import { OtherModal } from "../../common/OtherModal";
+import { PurpleButton } from "../../common/PurpleButton";
 import { CheckLetterUseButton } from "../../gift-list-before/button/CheckLetterUseButton";
 import { availableGiftsAtom } from "../../../atoms/gift/giftAtoms";
+import readLetterIcon from "../../../assets/images/unboxing/letter_purple.svg"
 
 interface IsOpenGeneralGiftModalProps {
     isOpen: boolean;
@@ -14,16 +15,24 @@ export const IsOpenGeneralGiftModal: React.FC<IsOpenGeneralGiftModalProps> = ({ 
     const remainOpenCount = useRecoilValue(availableGiftsAtom)
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} >
-            <p>초콜릿을 열어 편지를 확인하실건가요❓</p>
-            <p>개봉 가능한 초콜릿 수가 차감됩니다❗❣️❗</p>
-            <p>현재 개봉 가능한 횟수 : {remainOpenCount}개</p>
-            <div>
-                <CheckLetterUseButton onClick={onClose} />
-                <Button onClick={onClose} className="bg-white">
-                    나중에 열기
-                </Button>
+        <OtherModal isOpen={isOpen} onClose={onClose} >
+            <div className="text-center flex flex-col justify-center items-center gap-6">
+                <div className="w-7 h-7">
+                    <img src={readLetterIcon} alt="편지 아이콘" className="w-full h-full" />
+                </div>
+                <div className="flex flex-col gap-4">
+                    <p>초콜릿을 열어 편지를 확인하시겠어요❓<br/>개봉 가능한 초콜릿 수가 차감됩니다❣️</p>
+                    <div className="h-7 px-[15px] py-[5px] bg-[#efe1ff] rounded-[18px] justify-start items-center gap-1 inline-flex">
+                        <div className="text-center text-[#5800be] text-[13px] font-normal font-['Pretendard'] leading-[18.20px]">현재 개봉 가능한 횟수 : {remainOpenCount}개</div>
+                    </div>
+                </div>
+                <div className="w-full flex justify-evenly">
+                    <PurpleButton onClick={onClose} className="bg-white text-black border border-black">
+                        아낄래요
+                    </PurpleButton>
+                    <CheckLetterUseButton onClick={onClose} />
+                </div>
             </div>
-        </Modal>
+        </OtherModal>
     )
 }

@@ -33,7 +33,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
     }
 
     return (
-        <div className={`w-full grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-4 overflow-y-auto scrollbar-hidden p-4 ${classes.giftlist}`}>
+        <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[110px]`}>
             {/* api 연동 후 추가 수정 */}
             {dummyChocolates.map((chocolate) => (
                 <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime}/>

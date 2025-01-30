@@ -5,21 +5,21 @@ export const FilterButton = () => {
     const [selectedValue, setSelectedValue] = useRecoilState(selectedGiftTypeAtom);
 
     const options = [
-        { id: "all", label: "모든 초콜릿" },
-        { id: "general", label: "일반 초콜릿" },
-        { id: "special", label: "특별 초콜릿" },
+        { id: "all", label: "전체" },
+        { id: "general", label: "일반" },
+        { id: "special", label: "특별" },
     ];
 
     return (
-    <div className="flex gap-4">
+    <div className="flex gap-2">
         {options.map((option) => (
         <label
             key={option.id}
-            className={`cursor-pointer px-4 py-2 rounded-full border 
+            className={`cursor-pointer px-2 pb-2 hover:text-chocoletterYellow text-lg
             ${
                 selectedValue === option.id
-                ? "bg-blue-500 text-white border-blue-500 text-sm"
-                : "bg-white text-gray-700 border-gray-300 text-sm"
+                ? "text-chocoletterYellow texthi border-b-2 border-chocoletterYellow"
+                : "text-white"
             }`}
         >
             <input

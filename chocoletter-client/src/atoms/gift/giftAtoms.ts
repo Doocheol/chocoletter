@@ -5,7 +5,7 @@ import { atom } from "recoil";
  */
 export const availableGiftsAtom = atom<number>({
   key: "availableGifts",
-  default: 10,
+  default: 0,
 });
 
 /**

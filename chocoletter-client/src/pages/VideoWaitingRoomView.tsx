@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useRecoilState } from "recoil";
@@ -9,7 +9,7 @@ import timerIcon from "../assets/images/unboxing/timer.svg";
 import callTerminate from "../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../components/video-waiting-room/button/LetterInVideoOpenButton";
-import classes from "../styles/videoRoom.module.css";
+import classes from "../styles/videoRoom.module.css"
 
 // API를 받아옵니다.
 
@@ -27,27 +27,21 @@ const getRoomInfo = async () => {
     }
 }
 
-const waitingComment = [
-    "잠시만 기다려 주세요. 상대방을 기다리고 있어요!",
-    "5분 안에 연결되지 않으면 화상채팅 기회가 사라져요 ㅠㅠ",
-    "화면을 유지해 주세요. 연결이 끊길 수 있어요!",
-    "편지 열기 버튼을 눌러보세요. 특별 초콜릿 안에에 편지를 볼 수 있어요!"];
-
 const waitingWords = ["대기중.", "대기중..", "대기중..."]
 
 const WaitingRoomView = () => {
+    const videoRef = useRef<HTMLVideoElement>(null);
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(301);
+    const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
     // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
-    const [comment, setComment] = useState(waitingComment[2]);
     const [wcomment, setWcomment] = useState(waitingWords[2]);
-    const [cnt, setCnt] = useState(0);
     const [wcnt, setWcnt] = useState(0);
+    const [isIn, setIsIn] = useState(true);
 
     const navigate = useNavigate();
 
@@ -80,30 +74,27 @@ const WaitingRoomView = () => {
         localStorage.setItem('isBothJoin', isBothJoin.toString());
         console.log('is', isBothJoin, 'and', sessionIdInit);
         const goView = async () => {
+            console.log('isIn', isIn)
             if (isBothJoin >= 2) {
                 console.log('here', sessionIdInit);
                 const timeout = await setTimeout(() => {
+                    if (!isIn) return;
+                    if (videoRef.current && videoRef.current.srcObject) {
+                        console.log("wowwowwow")
+                        const stream = videoRef.current.srcObject as MediaStream;
+                        stream.getTracks().forEach(track => track.stop());
+                    }
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 5000);
+                }, 6000);
 
                 return () => clearTimeout(timeout);
             }
         };
         goView();
-    }, [isBothJoin]);
+    }, [isBothJoin, isIn]);
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
-
-    // 3초마다 상단 메세지가 변경
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setComment(waitingComment[cnt]);
-            setCnt((n) => (n + 1) % waitingComment.length);
-        }, 3000);
-
-        return () => clearInterval(interval);
-    }, [cnt]);
 
     // 0.5초마다 대기중 변경
     useEffect(() => {
@@ -141,6 +132,7 @@ const WaitingRoomView = () => {
     }, [isTimerOn, remainTime, navigate])
 
     const handleBackClick = () => {
+        setIsIn(false);
         window.history.back(); // 브라우저 이전 페이지로 이동
     };
 
@@ -153,7 +145,7 @@ const WaitingRoomView = () => {
                 receiver="수신자"
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
-                <MyFaceInVideoWaitingRoom />
+                <MyFaceInVideoWaitingRoom videoRef={videoRef} />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
                 <div className="w-full h-[107px] px-3 top-[35px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
                     <div className="w-8 h-8 z-10" >
@@ -163,15 +155,17 @@ const WaitingRoomView = () => {
                         <div className="self-stretch text-center text-white text-[40px] font-normal font-sans leading-snug z-20">{wcomment}</div>
                         <div className="px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex z-20">
                             <div className="w-[18px] h-[18px] relative">
-                                <img src={timerIcon} alt="타이머" className="w-[18px] h-[18px] left-0 top-0 absolute" />
+                                <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${remainTime <= 10? classes.alarmIcon : ""}`} />
                             </div>
-                            <div className="text-center text-chocoletterPurpleBold text-2xl font-normal font-sans leading-snug z-20">{makeMMSS}</div>
+                            <div className={`text-center ${remainTime <= 10? "text-chocoletterWarning" : "text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{makeMMSS}</div>
                         </div>
                     </div>
                 </div>
-                <button onClick={handleBackClick} className="p-5 w-[11dvh] h-[11dvh] bottom-[10dvh] absolute bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20" >
-                    <img src={callTerminate} alt="뒤로가기 버튼" />
-                </button>
+                <div className="w-[11dvh] h-[11dvh] bottom-[10dvh] absolute bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
+                    <button onClick={handleBackClick} className="w-full h-full aspect-square flex justify-center items-center" >
+                        <img src={callTerminate} alt="뒤로가기 버튼" className="w-[50%] h-[50%]" />
+                    </button>
+                </div>
             </div>
         </div>
     );

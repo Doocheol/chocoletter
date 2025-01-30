@@ -6,6 +6,7 @@ import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal'
 import LetterInVideoModal from '../components/video-waiting-room/modal/LetterInVideoModal';
 import LetterInVideoOpenButton from '../components/video-waiting-room/button/LetterInVideoOpenButton';
 import timerIcon from "../assets/images/unboxing/timer.svg";
+import classes from "../styles/videoRoom.module.css"
 import { AiOutlineAudio } from "react-icons/ai";
 import { AiOutlineAudioMuted } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa6";
@@ -19,7 +20,7 @@ const VideoRoomView = () => {
     const navigate = useNavigate();
     const { sessionIdInit } = location.state
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(61);
+    const [leftTime, setLeftTime] = useState(60);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
@@ -97,7 +98,7 @@ const VideoRoomView = () => {
 
     return (
         <>
-            <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
+            <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
                 {isTerminate && (
                     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center">
                         <OutVideoRoomModal />
@@ -116,7 +117,13 @@ const VideoRoomView = () => {
                     {/* 내 화면 */}
                     <div 
                         id="my-video" 
-                        className="absolute top-7 left-4 w-[15dvh] h-[15dvh] rounded-full border border-sky-400 shadow-xl overflow-hidden z-30" 
+                        className={`absolute top-7 left-4 rounded-full shadow-xl overflow-hidden z-30 ${classes.flowingBorder}`}
+                        style={{
+                            '--bg-color': 'var(--chocoletter-giftbox-bg)',
+                            '--custom-width': '15dvh',
+                            '--custom-height': '15dvh',
+                            'aspect-ratio': '1/1'
+                        } as React.CSSProperties} 
                     >
                         {videoState.publisher && (
                             <video 
@@ -127,11 +134,11 @@ const VideoRoomView = () => {
                         )}
                     </div>
                     {/* 타이머 */}
-                    <div className="absolute top-[calc(4rem-47%)] left-[calc(1rem+7.5dvh)] w-[clamp(120px,18dvh,140px)] px-[15px] py-[5px] border border-sky-400 bg-chocoletterGiftBoxBg rounded-[17px] justify-end items-center gap-[9px] inline-flex z-20">
-                        <div className="w-[18px] h-[18px] relative">
-                            <img src={timerIcon} alt="타이머" className="w-[18px] h-[18px] left-0 top-0 absolute" />
+                    <div className={`absolute top-[calc(4rem-47%)] left-[calc(1rem+7.5dvh)] !w-[clamp(120px,18dvh,140px)] px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-end items-center gap-[9px] inline-flex z-20 ${classes.flowingBorder}`}>
+                        <div className="w-[18px] h-[18px] relative z-20">
+                            <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${leftTime <= 5? classes.alarmIcon : ""}`} />
                         </div>
-                        <div className="text-center text-chocoletterPurpleBold text-2xl font-normal font-sans leading-snug z-20">{leftTime}</div>
+                        <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning font-bold" :"text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{leftTime}</div>
                     </div>
                 </div>
 
