@@ -134,7 +134,7 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         gift.acceptUnboxing();
-        
+
         Member receiver = memberService.findMember(memberId);
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.ACCEPT_SPECIAL)
@@ -160,17 +160,25 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        gift.rejectUnboxing();
-        if (gift.getRejectCount() == 3) {
-            gift.changeToGeneralGift();
-            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), gift.getSenderId());
-            if (receiverGift != null) {
-                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
-            }
-            // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
-            return;
-        }
-        // TODO : senderId 에게 언박싱 일정 거절 알림 전송
+//        gift.rejectUnboxing();
+//        if (gift.getRejectCount() == 3) {
+//            gift.changeToGeneralGift();
+//            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), gift.getSenderId());
+//            if (receiverGift != null) {
+//                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
+//            }
+//            // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
+//            return;
+//        }
+        gift.changeToGeneralGift();
+        Member receiver = memberService.findMember(memberId);
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.REJECT_SPECIAL)
+                .giftId(giftId)
+                .memberId(gift.getSenderId())
+                .partnerName(receiver.getName())
+                .build();
+        alarmService.save(alarm);
     }
 
     @Transactional
