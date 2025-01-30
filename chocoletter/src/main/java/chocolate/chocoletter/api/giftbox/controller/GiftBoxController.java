@@ -6,26 +6,19 @@ import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.service.GiftBoxService;
-import chocolate.chocoletter.common.util.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/gift-box")
 @RequiredArgsConstructor
 public class GiftBoxController implements GiftBoxSwagger {
     private final GiftBoxService giftBoxService;
-    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/{giftBoxId}/gift/general/free")
     public ResponseEntity<?> sendGeneralFreeGift(@PathVariable("giftBoxId") Long giftBoxId, @Valid @RequestBody
@@ -89,12 +82,14 @@ public class GiftBoxController implements GiftBoxSwagger {
         return ResponseEntity.ok(giftBoxService.findUnBoxingTimes(giftBoxId));
     }
 
+    /**
+     * Principle이 Authentication에 비해 정보를 더 적게 제공해줌
+     * -> 필요한것만 제공해주는게 Principle이기 때문에 이거 사용
+     */
     @GetMapping("/link")
-    public ResponseEntity<?> getShareCode(@RequestHeader("Authorization") String token) {
-        // "Bearer " 제거하기
-        String jwtToken = token.substring(7);
-        Long memberId = jwtTokenUtil.getIdFromToken(jwtToken);
-
+    public ResponseEntity<?> getShareCode(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
         return ResponseEntity.ok(giftBoxService.findShareCodeByMemberId(memberId));
     }
+
 }

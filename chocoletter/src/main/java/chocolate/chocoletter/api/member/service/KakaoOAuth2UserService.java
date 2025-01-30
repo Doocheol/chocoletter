@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -20,6 +21,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
@@ -92,7 +94,6 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
                 .socialId(socialId)
                 .name(name)
                 .profileImgUrl(profileImgUrl)
-                .sendGiftCount(0)
                 .build();
         Member savedMember = memberRepository.save(newMember);
 
@@ -106,10 +107,10 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         String shareCode = null;
         try {
             shareCode = idEncryptionUtil.encrypt(savedGiftBox.getId());
+            savedGiftBox.updateShareCode(shareCode);
         } catch (Exception e) {
-            System.out.println(e.getMessage()); // 이거 에러 처리 찝찝한디..
+            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
-        giftBoxRepository.updateShareCode(savedGiftBox.getId(), shareCode);
 
         return savedMember;
     }

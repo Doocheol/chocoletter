@@ -1,6 +1,8 @@
 package chocolate.chocoletter.api.member.service;
 
 import chocolate.chocoletter.api.member.repository.MemberRepository;
+import chocolate.chocoletter.common.exception.ErrorMessage;
+import chocolate.chocoletter.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +18,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         return memberRepository.findById(Long.parseLong(id))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ERR_NOT_FOUND_USER));
     }
 }

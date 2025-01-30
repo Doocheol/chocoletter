@@ -9,6 +9,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxShareCodeResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
@@ -106,8 +107,8 @@ public class GiftBoxService {
         return gift;
     }
 
-    public String findShareCodeByMemberId(Long memberId) {
-        return giftBoxRepository.findShareCodeByMemberId(memberId);
+    public GiftBoxShareCodeResponseDto findShareCodeByMemberId(Long memberId) {
+        return GiftBoxShareCodeResponseDto.of(giftBoxRepository.findShareCodeByMemberId(memberId));
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {

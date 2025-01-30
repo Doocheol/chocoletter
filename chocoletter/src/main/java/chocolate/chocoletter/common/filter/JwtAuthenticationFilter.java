@@ -1,5 +1,7 @@
 package chocolate.chocoletter.common.filter;
 
+import chocolate.chocoletter.common.exception.BadRequestException;
+import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -56,8 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+            return bearerToken;
         }
-        return null;
+        throw new BadRequestException(ErrorMessage.ERR_NO_TOKEN);
     }
 }
