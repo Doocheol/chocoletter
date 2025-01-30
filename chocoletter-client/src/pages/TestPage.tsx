@@ -10,6 +10,8 @@ const TestPage: React.FC = () => {
     { path: "/", label: "LoginView (/)" },
     { path: "/main/my/before", label: "MainMyBeforeView (/main/my/before)" },
     { path: "/main/your/before", label: "MainYourBeforeView (/main/your/before)" },
+    { path: "/main/my/event", label: "MainMyEventView (/main/my/event)" },
+    { path: "/main/my/after", label: "MainMyAfterView (/main/my/after)" },
     { path: "/gift/list/before", label: "GiftListBeforeView (/gift/list/before)" },
     { path: "/gift/list/event", label: "GiftListEventView (/gift/list/event)" },
     { path: "/receive/2", label: "ReceiveView (/receive/2)" },
