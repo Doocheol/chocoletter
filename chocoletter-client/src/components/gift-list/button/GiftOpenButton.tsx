@@ -25,19 +25,19 @@ const specialChocos = Object.values(specialImages).map(
 
 // 더미 데이터
 const giftData = [
-  { nickName: "Amy", content: "Why", question: "wow", answer: "sad" },
-  { nickName: "Temmy", content: "하이", question: "null", answer: "null" },
-  { nickName: "Poty", content: "null", question: "when", answer: "where" },
-  { nickName: "Yumi", content: "thankyou", question: "wow", answer: "sad" },
-  { nickName: "Posty", content: "qwer", question: "asdf", answer: "zxcv" },
-  { nickName: "chicky", content: "null", question: "I do", answer: "Do I?" },
+    { nickName: "Amy", content: "Why", question: "wow", answer: "sad" },
+    { nickName: "Temmy", content: "하이", question: "null", answer: "null" },
+    { nickName: "Poty", content: "null", question: "when", answer: "where" },
+    { nickName: "Yumi", content: "thankyou", question: "wow", answer: "sad" },
+    { nickName: "Posty", content: "qwer", question: "asdf", answer: "zxcv" },
+    { nickName: "chicky", content: "null", question: "I do", answer: "Do I?" },
 ];
 
 interface GiftOpenButtonProps {
-  giftId: number;
-  giftType: string;
-  isOpened: boolean;
-  unboxingTime: string | null;
+    giftId: number;
+    giftType: string;
+    isOpened: boolean;
+    unboxingTime: string | null;
 }
 
 export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime }) => {
@@ -66,6 +66,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
 
   // 3. RTC 초콜릿
   // 열지 못한다는 안내 모달로 이동
+  // 14일 시간 지난 경우 
 
   // localStorage에서 이미지 로드
     useEffect(() => {
@@ -125,7 +126,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             </div>
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
             <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none z-30" />
-            {!isOpened && <UnboxingTimeSticker unboxingTime={unboxingTime} />}
+            {!isOpened && <UnboxingTimeSticker giftType={giftType} unboxingTime={unboxingTime} />}
         </div>
     )
 }

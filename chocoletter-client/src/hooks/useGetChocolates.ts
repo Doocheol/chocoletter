@@ -11,9 +11,10 @@ export const useFetchChocolates = (filter: string) => {
             try {
                 // API 호출로 데이터 가져오기
                 const chocolates = await getGiftList(filter);
+                console.log("is in" ,chocolates)
                 setCachedData((prev) => ({
                     ...prev,
-                    [filter]: chocolates, // filter별 데이터 저장
+                    [filter]: chocolates.gifts, // filter별 데이터 저장
                 }));
             } catch (error) {
                 console.error("Error fetching chocolates:", error);

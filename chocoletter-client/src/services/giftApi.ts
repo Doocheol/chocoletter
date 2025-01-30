@@ -93,5 +93,16 @@ export async function sendSpecialQuestionGift(giftBoxId: number, nickName: strin
   } catch (err) {
     console.error("sendSpecialQuestionGift API 호출 중 에러 발생:", err);
     throw err;
+
+// 특별 선물을 일반 설문으로 변경
+export async function changeSpecialToGeneral(giftId: string) {
+  try {
+    const res = await api.patch(`/api/v1/gift/${giftId}`, {});
+    const data = res.data;
+    console.log("변환 성공 : ", data)
+    return data
+  } catch (err) {
+    console.error("변환 중 에러 발생:", err);
+    throw err;
   }
 }
