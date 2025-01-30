@@ -47,12 +47,13 @@ public class GiftService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional
     public GiftDetailResponseDto findReceiveGiftDetail(Long memberId, Long giftId) {
         Gift gift = giftRepository.findGiftById(giftId);
         if (!memberId.equals(gift.getReceiverId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        LocalDate restrictedDate = LocalDate.of(2025, 2, 14);
+        LocalDate restrictedDate = dateTimeUtil.getOpenDay();
         LocalDate today = LocalDate.now();
         if (today.isBefore(restrictedDate) && gift.getType() == GiftType.SPECIAL) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_SPECIAL_BEFORE_DATE);
