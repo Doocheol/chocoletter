@@ -28,11 +28,11 @@ module.exports = {
         // 절대 경로로 이미지를 설정
         'letter-pink-background': `url(${path.resolve(
           __dirname,
-          "./src/assets/images/letter/letter_pink.png"
+          "./src/assets/images/letter/letter_pink.svg"
         )})`,
         'letter-blue-background': `url(${path.resolve(
           __dirname,
-          "./src/assets/images/letter/letter_blue.png"
+          "./src/assets/images/letter/letter_blue.svg"
         )})`,
       },
       height: { screen: '100dvh' },

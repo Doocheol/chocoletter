@@ -11,7 +11,7 @@ export const EmergeProblemModal = ({ isOpen, onClose }: EmergeProblemProps) => {
         <>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <p>문제가 발생했습니다!</p>
-                <Button onClick={onClose}>확인</Button>
+                <Button onClick={onClose} className="bg-white">확인</Button>
             </Modal>
         </>
     )

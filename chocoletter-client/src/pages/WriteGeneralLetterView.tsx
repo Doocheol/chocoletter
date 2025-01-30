@@ -9,10 +9,10 @@ import login_view_service_title from "../assets/images/logo/login_view_service_t
 
 // 편지지 선택 뷰 이후, 자유 형식 편지지 작성 화면
 const WriteGeneralLetterView = () => {
-    const [nickname, setNickname] = useState("");
-    const [content, setContent] = useState("");
-    const [contentLength, setContentLength] = useState(0);
-    const navigate = useNavigate();
+  const [nickname, setNickname] = useState("");
+  const [content, setContent] = useState("");
+  const [contentLength, setContentLength] = useState(0);
+  const navigate = useNavigate();
 
     const goBackMainMyEvent = () => {
         if (nickname.length < 1) {
