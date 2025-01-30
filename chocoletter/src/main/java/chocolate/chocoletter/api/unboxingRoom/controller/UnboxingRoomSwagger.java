@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
+
 public interface UnboxingRoomSwagger {
 
     @Operation(
@@ -27,7 +29,7 @@ public interface UnboxingRoomSwagger {
                     @ApiResponse(responseCode = "404", description = "올바르지 않은 언박싱 룸 ID 입니다.")
             }
     )
-    ResponseEntity<?> hasAccessToUnboxingRoom(Long unboxingRoomId);
+    ResponseEntity<?> hasAccessToUnboxingRoom(Long unboxingRoomId, Principal principal);
 
     @Operation(
             summary = "언박싱 종료",
@@ -47,5 +49,5 @@ public interface UnboxingRoomSwagger {
                     @ApiResponse(responseCode = "404", description = "올바르지 않은 언박싱 룸 ID 입니다.")
             }
     )
-    ResponseEntity<?> endUnBoxingRoom(Long roomId);
+    ResponseEntity<?> endUnBoxingRoom(Long roomId, Principal principal);
 }

@@ -4,11 +4,9 @@ import chocolate.chocoletter.api.unboxingRoom.dto.response.HasAccessUnboxingRoom
 import chocolate.chocoletter.api.unboxingRoom.service.UnboxingRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @RestController
@@ -19,15 +17,15 @@ public class UnboxingRoomController implements UnboxingRoomSwagger {
     private final UnboxingRoomService unboxingRoomService;
 
     @GetMapping("/{roomId}/verify")
-    public ResponseEntity<?> hasAccessToUnboxingRoom(@PathVariable Long roomId) {
-        Long memberId = 1L;
+    public ResponseEntity<?> hasAccessToUnboxingRoom(@PathVariable Long roomId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
         HasAccessUnboxingRoomResponseDto gift = unboxingRoomService.hasAccessToUnboxingRoom(memberId, roomId);
         return ResponseEntity.ok(gift);
     }
 
     @PatchMapping("{roomId}/end")
-    public ResponseEntity<?> endUnBoxingRoom(@PathVariable Long roomId) {
-        Long memberId = 1L;
+    public ResponseEntity<?> endUnBoxingRoom(@PathVariable Long roomId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
         unboxingRoomService.endUnBoxingRoom(memberId, roomId);
         return ResponseEntity.ok().build();
     }

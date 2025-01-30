@@ -22,52 +22,52 @@ public class GiftBoxController implements GiftBoxSwagger {
 
     @PostMapping("/{giftBoxId}/gift/general/free")
     public ResponseEntity<?> sendGeneralFreeGift(@PathVariable("giftBoxId") Long giftBoxId, @Valid @RequestBody
-    GeneralFreeGiftRequestDto requestDto) {
+    GeneralFreeGiftRequestDto requestDto, Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         giftBoxService.sendGeneralFreeGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{giftBoxId}/gift/general/question")
     public ResponseEntity<?> sendGeneralQuestionGift(@PathVariable("giftBoxId") Long giftBoxId, @Valid @RequestBody
-    GeneralQuestionRequestDto requestDto) {
+    GeneralQuestionRequestDto requestDto, Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         giftBoxService.sendGeneralQuestionGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{giftBoxId}/gift/special/free")
     public ResponseEntity<?> sendSpecialFreeGift(@PathVariable("giftBoxId") Long giftBoxId, @Valid @RequestBody
-    SpecialFreeGiftRequestDto requestDto) {
+    SpecialFreeGiftRequestDto requestDto, Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         giftBoxService.sendSpecialFreeGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{giftBoxId}/gift/special/question")
     public ResponseEntity<?> sendSpecialQuestionGift(@PathVariable("giftBoxId") Long giftBoxId, @Valid @RequestBody
-    SpecialQuestionGiftRequestDto requestDto) {
+    SpecialQuestionGiftRequestDto requestDto, Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         giftBoxService.sendSpecialQuestionGift(memberId, giftBoxId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/count")
-    public ResponseEntity<?> findGiftCount() {
+    public ResponseEntity<?> findGiftCount(Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         GiftCountResponseDto responseDto = giftBoxService.findGiftCount(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/preview")
-    public ResponseEntity<?> usePreviewCount() {
+    public ResponseEntity<?> usePreviewCount(Principal principal) {
         // 로그인 한 유저 찾아오기
-        Long memberId = 1L;
+        Long memberId = Long.parseLong(principal.getName());
         giftBoxService.usePreviewCount(memberId);
         return ResponseEntity.ok().build();
     }
