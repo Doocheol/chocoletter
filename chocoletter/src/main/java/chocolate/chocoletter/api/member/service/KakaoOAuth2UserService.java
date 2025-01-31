@@ -44,6 +44,9 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             Collection<GrantedAuthority> authorities = Collections.singletonList(
                     new SimpleGrantedAuthority("ROLE_USER"));
 
+            GiftBox giftBox = giftBoxRepository.findByMemberId(member.getId());
+            String shareCode = giftBox.getShareCode();
+
             // 사용자 속성 설정
             Map<String, Object> attributes = new HashMap<>();
             // 아래에서 주요 식별자로 "id"를 사용할 것이기 때문에 넣어줌
@@ -51,6 +54,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("name", member.getName());
             attributes.put("profileImgUrl", member.getProfileImgUrl());
             attributes.put("isFirstLogin", "false");
+            attributes.put("shareCode", shareCode);
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -63,7 +67,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             String name = (String) profile.get("nickname");
             String profileImgUrl = (String) profile.get("profile_image_url");
 
-            Member member = createNewMemberWithGiftBox(socialId, name, profileImgUrl);
+            Map<String, String> result = createNewMemberWithGiftBox(socialId, name, profileImgUrl);
 
             // 사용자 권한 설정 (특별한 권한 없을때 설정하는 기본 권한)
             Collection<GrantedAuthority> authorities = Collections.singletonList(
@@ -73,10 +77,11 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             Map<String, Object> attributes = new HashMap<>();
 
             // 아래에서 주요 식별자로 "id"를 사용할 것이기 때문에 넣어줌
-            attributes.put("id", member.getId());
+            attributes.put("id", result.get("memberId"));
             attributes.put("name", name);
             attributes.put("profileImgUrl", profileImgUrl);
             attributes.put("isFirstLogin", "true");
+            attributes.put("shareCode", result.get("shareCode"));
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -84,7 +89,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     @Transactional
-    public Member createNewMemberWithGiftBox(String socialId, String name, String profileImgUrl) {
+    public Map<String, String> createNewMemberWithGiftBox(String socialId, String name, String profileImgUrl) {
 
         // 멤버 생성 및 저장
         Member newMember = Member.builder()
@@ -101,14 +106,23 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         GiftBox savedGiftBox = giftBoxRepository.save(newGiftBox);
 
         // 공유 코드 생성 및 저장
-        String shareCode = null;
+        String shareCode = encryptId(savedGiftBox.getId());
+        savedGiftBox.updateShareCode(shareCode);
+        giftBoxRepository.save(savedGiftBox);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("memberId", savedMember.getId().toString());
+        result.put("shareCode", savedGiftBox.getShareCode());
+
+        return result;
+    }
+
+    private String encryptId(Long giftBoxId) {
         try {
-            shareCode = idEncryptionUtil.encrypt(savedGiftBox.getId());
-            savedGiftBox.updateShareCode(shareCode);
+            return idEncryptionUtil.encrypt(giftBoxId);
         } catch (Exception e) {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
-
-        return savedMember;
+        return null;
     }
 }
