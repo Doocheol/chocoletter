@@ -64,7 +64,7 @@ const SentGiftView = () => {
           2월 14일 전에 하나를 먼저 열어볼 수 있답니다!
         </h3>
         <div className="flex flex-col justify-center items-center mb-8 text-center">
-          <Button onClick={goBackMainMyEvent} className="w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
+          <Button onClick={goBackMainMyEvent} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
             내 초콜릿 상자로 이동하기
           </Button>
           <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#ffc1cc] text-sm">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
