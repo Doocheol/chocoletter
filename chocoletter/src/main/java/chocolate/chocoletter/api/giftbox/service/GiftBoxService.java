@@ -15,6 +15,8 @@ import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
+import chocolate.chocoletter.api.member.domain.Member;
+import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
@@ -23,9 +25,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class GiftBoxService {
+    private final MemberRepository memberRepository;
     private final GiftBoxRepository giftBoxRepository;
     private final GiftService giftService;
     private final LetterService letterService;
@@ -37,6 +42,10 @@ public class GiftBoxService {
         Gift gift = generateGeneralGift(senderId, giftBoxId);
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
+
+        Optional<Member> member = memberRepository.findById(senderId);
+        Member sendMember = member.get();
+        sendMember.increaseSendGiftCount();
     }
 
     @Transactional
@@ -45,6 +54,10 @@ public class GiftBoxService {
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
+
+        Optional<Member> member = memberRepository.findById(senderId);
+        Member sendMember = member.get();
+        sendMember.increaseSendGiftCount();
     }
 
     @Transactional
@@ -52,6 +65,10 @@ public class GiftBoxService {
         Gift gift = generateSpecialGift(senderId, giftBoxId, requestDto.unBoxingTime());
         Letter letter = Letter.createGeneralLetter(gift, requestDto.nickName(), requestDto.content());
         letterService.saveLetter(letter);
+
+        Optional<Member> member = memberRepository.findById(senderId);
+        Member sendMember = member.get();
+        sendMember.increaseSendGiftCount();
     }
 
     @Transactional
@@ -60,6 +77,10 @@ public class GiftBoxService {
         Letter letter = Letter.createQuestionLetter(gift, requestDto.nickName(), requestDto.question(),
                 requestDto.answer());
         letterService.saveLetter(letter);
+
+        Optional<Member> member = memberRepository.findById(senderId);
+        Member sendMember = member.get();
+        sendMember.increaseSendGiftCount();
     }
 
     public GiftCountResponseDto findGiftCount(Long memberId) {
