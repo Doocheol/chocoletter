@@ -177,4 +177,8 @@ public class GiftService {
         return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL);
     }
 
+    public String findUnBoxingTime(Long giftId) {
+        return dateTimeUtil.formatDateTime(giftRepository.findGiftByIdOrThrow(giftId).getUnBoxingTime());
+    }
+
 }

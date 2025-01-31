@@ -1,6 +1,9 @@
 package chocolate.chocoletter.api.alarm.service;
 
+import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
+import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
+import chocolate.chocoletter.api.gift.service.GiftService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,4 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AlarmService {
     private final AlarmRepository alarmRepository;
+    private final GiftService giftService;
+
+    public AlarmsResponseDto findMyAlarms(Long memberId) {
+        return AlarmsResponseDto.of(alarmRepository.findByAlarms(memberId).stream()
+                .map(alarm -> AlarmResponseDto.of(alarm, giftService.findUnBoxingTime(alarm.getGiftId())))
+                .toList());
+    }
 }
