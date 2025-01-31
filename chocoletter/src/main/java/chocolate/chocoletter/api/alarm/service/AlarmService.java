@@ -1,16 +1,15 @@
 package chocolate.chocoletter.api.alarm.service;
 
+import chocolate.chocoletter.api.alarm.domain.Alarm;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
-import chocolate.chocoletter.api.alarm.domain.Alarm;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
