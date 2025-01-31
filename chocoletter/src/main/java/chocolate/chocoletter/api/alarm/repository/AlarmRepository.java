@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
-    @Query("select a from Alarm a where a.memberId = :memberId")
+    @Query("select a from Alarm a where a.memberId = :memberId order by a.createdAt desc")
     List<Alarm> findByAlarms(Long memberId);
 }
