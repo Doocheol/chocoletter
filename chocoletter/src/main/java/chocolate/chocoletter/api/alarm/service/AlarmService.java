@@ -1,6 +1,5 @@
 package chocolate.chocoletter.api.alarm.service;
 
-import chocolate.chocoletter.api.alarm.domain.Alarm;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
