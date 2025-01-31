@@ -20,7 +20,7 @@ const ChatRoonListView = () => {
     // }, []);
 
     // const handleRoomClick = (session) => {
-    //     navigate(`/chat/${nickName}`); 
+    //     navigate(`/chat/room/${session}`); 
     // };
 
     const handleRoomClick = () => {
@@ -49,11 +49,11 @@ const ChatRoonListView = () => {
                 </div>
             </div>
             {/* 채팅방 리스트 */}
-            <div className="w-full md:max-w-[343px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4" >
+            <div className="w-full flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4" >
                 {chatRooms.map((room, index) => (
                 <div
                     key={index}
-                    className="flex h-[71px] px-[20px] py-[10px] justify-between items-center self-stretch rounded-[15px] border border-black bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer hover:bg-gray-100"
+                    className="h-[71px] px-[20px] py-[10px] mx-4 flex justify-between items-center self-stretch rounded-[15px] border border-black bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer hover:bg-gray-100"
                     onClick={() => handleRoomClick()}
                 >
                     {/* 왼쪽 닉네임 + 채팅방 텍스트 */}

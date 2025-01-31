@@ -40,7 +40,7 @@ function SelectGiftTypeView() {
                     freeLetter.content
                 );
             }
-            navigate("/sentgift");
+            navigate("/sent-gift");
         } catch (error) {
             console.error("Gift sending failed:", error);
         }

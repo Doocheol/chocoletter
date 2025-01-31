@@ -86,13 +86,13 @@ function App() {
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
             <Route path="/main/my/before/:giftBoxId" element={<MainMyBeforeView />} />
-            <Route path="/receive/:giftId" element={<ReceiveView />} />
+            {/* <Route path="/receive/:giftId" element={<ReceiveView />} /> */}
             <Route path="/letter" element={<LetterView />} />
-            <Route path="/selectletter" element={<SelectLetterTypeView />} />
+            <Route path="/select-letter" element={<SelectLetterTypeView />} />
             <Route path="/write/general" element={<WriteGeneralLetterView />} />
             <Route path="/write/question" element={<WriteQuestionLetterView />} />
-            <Route path="/sentgift" element={<SentGiftView />} />
-            <Route path="/selectgift" element={<SelectGiftTypeView />} />
+            <Route path="/sent-gift" element={<SentGiftView />} />
+            <Route path="/select-gift" element={<SelectGiftTypeView />} />
             <Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
             <Route path="/video/room" element={<VideoRoomView />} />
             <Route path="/reset-time" element={<ResetTimeView />} />
