@@ -212,4 +212,7 @@ public class GiftService {
         return dateTimeUtil.formatDateTime(giftRepository.findGiftByIdOrThrow(giftId).getUnBoxingTime());
     }
 
+    public List<Object[]> findUnBoxingTimes(List<Long> giftIds) {
+        return giftRepository.findUnBoxingTimesByGiftIds(giftIds);
+    }
 }
