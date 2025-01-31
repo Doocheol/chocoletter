@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
-    @Query("select a from Alarm a where a.memberId = :memberId order by a.createdAt desc")
+    @Query("select a from Alarm a where a.member.id = :memberId order by a.createdAt desc")
     List<Alarm> findByAlarms(@Param("memberId") Long memberId);
 
-    @Query("select count(*) from Alarm a where a.memberId = :memberId and a.isRead = :isRead")
+    @Query("select count(*) from Alarm a where a.member.id = :memberId and a.isRead = :isRead")
     Integer countNewAlarm(@Param("memberId") Long memberId, @Param("isRead") Boolean isRead);
 }
