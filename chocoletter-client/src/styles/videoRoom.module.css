@@ -31,7 +31,7 @@
 .flowingBorder {
     width: var(--custom-width, auto);
     height: var(--custom-height, auto);
-    border: 3px solid transparent !important; /* 실제 테두리 투명화 */
+    border: 2px solid transparent !important; /* 실제 테두리 투명화 */
     background: 
         linear-gradient(
             var(--bg-color, #efe1ff), 
@@ -39,11 +39,11 @@
         ) padding-box, /* 내부 배경 고정 */
         linear-gradient(
             45deg,
-            #60efff,
-            #00ff87,
-            #0061ff,
-            #00ff87,
-            #60efff
+            #E4CDD3,
+            #E24767,
+            #5E081E,
+            #E24767,
+            #E4CDD3
         ) border-box; /* 테두리 부분에만 그라데이션 */
     background-size: 300% 300%;
     animation: gradientFlow 4s linear infinite;

@@ -37,6 +37,7 @@ const VideoRoomView = () => {
     const username = "User" + Math.floor(Math.random() * 100); // 사용자 예비 이름
     const onEnd = () => {
         console.log("끝났을 때라도", videoState)
+        setIsTerminate(true)
         leaveSession(videoState, setVideoState, setIsTerminate);
     }
 
@@ -113,33 +114,31 @@ const VideoRoomView = () => {
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
                 </div>
-                <div className="absolute top-4 left-4 h-[77px] flex flex-col justify-start items-center gap-[23px]">
-                    {/* 내 화면 */}
-                    <div 
-                        id="my-video" 
-                        className={`absolute top-7 left-4 rounded-full shadow-xl overflow-hidden z-30 ${classes.flowingBorder}`}
-                        style={{
-                            '--bg-color': 'var(--chocoletter-giftbox-bg)',
-                            '--custom-width': '15dvh',
-                            '--custom-height': '15dvh',
-                            'aspect-ratio': '1/1'
-                        } as React.CSSProperties} 
-                    >
-                        {videoState.publisher && (
-                            <video 
-                                autoPlay 
-                                className="w-full h-full object-cover"
-                                ref={(el) => el && videoState.publisher?.addVideoElement(el)}
-                            />
-                        )}
+                {/* 내 화면 */}
+                <div 
+                    id="my-video" 
+                    className={`absolute bottom-[20dvh] right-6 rounded-[12px] shadow-xl overflow-hidden z-30 ${classes.flowingBorder}`}
+                    style={{
+                        '--bg-color': 'var(--chocoletter-giftbox-bg)',
+                        '--custom-width': '18dvh',
+                        '--custom-height': '24dvh',
+                        'aspect-ratio': '1/1'
+                    } as React.CSSProperties} 
+                >
+                    {videoState.publisher && (
+                        <video 
+                            autoPlay 
+                            className="w-full h-full object-cover"
+                            ref={(el) => el && videoState.publisher?.addVideoElement(el)}
+                        />
+                    )}
+                </div>
+                {/* 타이머 */}
+                <div className="absolute top-9 px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex">
+                    <div className="w-[18px] h-[18px] relative">
+                        <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${leftTime <= 5? classes.alarmIcon : ""}`} />
                     </div>
-                    {/* 타이머 */}
-                    <div className={`absolute top-[calc(4rem-47%)] left-[calc(1rem+7.5dvh)] !w-[clamp(120px,18dvh,140px)] px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-end items-center gap-[9px] inline-flex z-20 ${classes.flowingBorder}`}>
-                        <div className="w-[18px] h-[18px] relative z-20">
-                            <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${leftTime <= 5? classes.alarmIcon : ""}`} />
-                        </div>
-                        <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning font-bold" :"text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{leftTime}</div>
-                    </div>
+                    <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning" : "text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{leftTime}</div>
                 </div>
 
                 {/* 상대방 화면 */}
@@ -153,7 +152,7 @@ const VideoRoomView = () => {
                         </div>
                     ))}
                 </div>
-                <div className="flex w-full bottom-[10dvh] justify-center gap-x-7 items-center absolute">
+                <div className="flex w-full bottom-[8dvh] justify-center gap-x-7 items-center absolute">
                     <div className={`w-[9dvh] h-[9dvh] ${isAudio ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                         <button onClick={muteOrNotHandler} className="w-full h-full aspect-square flex justify-center items-center" >
                             {isAudio ? (
