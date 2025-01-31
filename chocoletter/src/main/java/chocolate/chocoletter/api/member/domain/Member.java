@@ -69,4 +69,8 @@ public class Member extends BaseTimeEntity implements OAuth2User, UserDetails {
     public String getPassword() {
         return null;
     } // OAuth2는 비밀번호 없음
+
+    public int increaseSendGiftCount() {
+        return ++sendGiftCount;
+    }
 }
