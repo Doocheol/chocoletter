@@ -44,7 +44,7 @@ const MainYourBeforeView: React.FC = () => {
       setIsNotLoginModalOpen(true);
       return;
     }
-    navigate("/selectletter");
+    navigate("/select-letter");
   };
 
   // 로그인 페이지로 이동

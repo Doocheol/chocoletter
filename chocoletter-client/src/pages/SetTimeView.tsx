@@ -141,7 +141,7 @@ const SetTimeView = () => {
     // 모달 닫기 + 페이지 이동
     const closeModalAndNavigate = () => {
         setIsModalOpen(false);
-        navigate("/sentgift"); // 원하는 경로로 이동
+        navigate("/sent-gift"); // 원하는 경로로 이동
     };
 
     // 삭제하기 
