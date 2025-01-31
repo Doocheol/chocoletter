@@ -276,28 +276,30 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         className={`p-2 flex flex-col items-center rounded-lg ${
           isAnimating ? "jello-vertical" : ""
         }`}
-      >
+      > 
+        {/* 닫기버튼과 너무 가까워서 공백 생성 */}
+        <div className="h-[10px]"></div> 
         {imageSrc ? (
           <>
             {/* 캔버스를 프리뷰로 표시 */}
             <canvas
               ref={canvasRef}
-              className="max-w-full h-auto rounded-md"
+              className="max-w-[95%] h-auto rounded-md"
               style={{ border: "1px solid #ccc" }}
             ></canvas>
 
             {/* 감성적인 문구 입력 필드 및 저장 버튼 */}
-            <div className="flex flex-row items-center gap-1">
+            <div className="flex flex-row items-center gap-2 w-full max-w-[95%]">
               <input
                 type="text"
                 value={overlayText}
                 onChange={(e) => setOverlayText(e.target.value)}
                 placeholder="내용을 입력하세요."
-                className="mt-4 px-10 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
+                className="mt-4 px-4 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
               />
               <button
                 onClick={handleDownload}
-                className="mt-4 px-6 py-2 w-24 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-4 px-2 py-2 w-20 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isAnimating}
               >
                 {isAnimating ? "..." : "저장"}
