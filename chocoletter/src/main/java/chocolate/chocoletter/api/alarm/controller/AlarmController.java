@@ -23,7 +23,7 @@ public class AlarmController implements AlarmSwagger {
         return ResponseEntity.ok(myAlarms);
     }
 
-    @GetMapping("count")
+    @GetMapping("/count")
     public ResponseEntity<?> countMyAlarms(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         NewAlarmResponseDto newAlarms = alarmService.findNewAlarms(memberId);
