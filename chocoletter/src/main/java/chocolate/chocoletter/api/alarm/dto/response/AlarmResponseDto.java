@@ -14,7 +14,7 @@ public record AlarmResponseDto(Long alarmId, AlarmType alarmType, String partner
                 .partnerName(alarm.getPartnerName())
                 .unBoxingTime(unBoxingTime)
                 .giftId(alarm.getGiftId())
-                .read(alarm.getRead())
+                .read(alarm.getIsRead())
                 .build();
     }
 }
