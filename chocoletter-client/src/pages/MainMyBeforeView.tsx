@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
-import { isFirstLoginAtom } from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom, isFirstLoginAtom } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
@@ -35,11 +35,17 @@ import my_count_background from "../assets/images/main/my_count_background.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
-import { getGiftList } from "../services/giftApi";
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
+import { countMyGiftBox } from "../services/giftBoxApi";
 
 const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
+
+  // (1) URL 파라미터 (ex: /main/my/before/123 -> giftBoxId = "123")
+  const { giftBoxId } = useParams<{ giftBoxId?: string }>();
+
+  // (2) 만약 giftBoxIdAtom을 쓴다면 Recoil에서 읽기
+  const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 
   // (1) 주소창 높이 보정 훅
   useViewportHeight();
@@ -128,36 +134,45 @@ const MainMyBeforeView: React.FC = () => {
     // toast.info("내 초콜릿 박스 아이콘 클릭!");
   };
 
-  // 데이터 fetching 및 Recoil 상태 업데이트
+  // 실제 giftBoxId(number)로 변환
+  let finalGiftBoxId: number | null = null;
+  if (giftBoxId) {
+    const parsed = parseInt(giftBoxId, 10);
+    if (!isNaN(parsed)) {
+      finalGiftBoxId = parsed;
+    }
+  }
+
+  // 만약 Recoil 저장분도 고려한다면, 아래 로직 이용:
+  if (!finalGiftBoxId && savedGiftBoxId) {
+    finalGiftBoxId = savedGiftBoxId;
+  }
+
+  // 예: mount 시점에 gift 개수 호출
   useEffect(() => {
-    const fetchGifts = async () => {
+    if (finalGiftBoxId === null) {
+      console.log("giftBoxId가 없거나 잘못된 형식이므로, 기본 박스 로직 or 안내");
+      // 여기서 navigate("/error")하거나,
+      // 혹은 그냥 '내 박스'로 동작시킬 수 있음
+    } else {
+      console.log("최종 giftBoxId:", finalGiftBoxId);
+      // 이 박스에 대한 로직 (getGiftBoxDetail(finalGiftBoxId) 등)
+    }
+
+    async function fetchGiftCount() {
       try {
-        // 'available'과 'received' 타입의 선물 리스트를 가져옵니다.
-        const [availableData, receivedData] = await Promise.all([
-          getGiftList("available"),
-          getGiftList("received"),
-        ]);
-
-        // 데이터가 성공적으로 반환되었는지 확인
-        if (availableData && availableData.gifts) {
-          setAvailableGifts(availableData.gifts.length);
-        } else {
-          setAvailableGifts(0);
-        }
-
-        if (receivedData && receivedData.gifts) {
-          setReceivedGifts(receivedData.gifts.length);
-        } else {
-          setReceivedGifts(0);
-        }
-      } catch (error) {
-        console.error("Gift 데이터를 불러오는 중 오류 발생:", error);
-        // 필요시 에러 핸들링 추가 (예: 사용자에게 알림)
+        const { giftCount, canOpenGiftCount } = await countMyGiftBox();
+        // canOpenGiftCount -> available
+        setAvailableGifts(canOpenGiftCount);
+        // giftCount -> received
+        setReceivedGifts(giftCount);
+      } catch (err) {
+        console.error("Gift Box count API 실패:", err);
       }
-    };
+    }
 
-    fetchGifts();
-  }, [setAvailableGifts, setReceivedGifts]);
+    fetchGiftCount();
+  }, [finalGiftBoxId, setAvailableGifts, setReceivedGifts]);
 
   return (
     <div className="flex justify-center w-full bg-white">

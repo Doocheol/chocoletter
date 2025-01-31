@@ -1,11 +1,24 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import login_view_service_title from "../assets/images/logo/login_view_service_title.svg";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
 import { Button } from "../components/common/Button";
+import { isLoginAtom } from "../atoms/auth/userAtoms";
+import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
 
 function LoginView() {
+  const isLogin = useRecoilValue(isLoginAtom);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) {
+      // 이미 로그인됨 → 메인 페이지로 이동
+      navigate("/main/my/before");
+    }
+  }, [isLogin, navigate]);
+
   return (
     <div className="h-[calc((var(--vh, 1vh) * 100)-8rem)] flex flex-col items-center justify-center px-4">
       {/* 테스트 페이지 이동 */}
