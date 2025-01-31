@@ -2,6 +2,7 @@ package chocolate.chocoletter.api.alarm.service;
 
 import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
+import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
 import chocolate.chocoletter.api.alarm.domain.Alarm;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
@@ -24,5 +25,9 @@ public class AlarmService {
     @Transactional
     public void save(Alarm alarm) {
         alarmRepository.save(alarm);
+    }
+
+    public NewAlarmResponseDto findNewAlarms(Long memberId) {
+        return NewAlarmResponseDto.of(alarmRepository.countNewAlarm(memberId, false));
     }
 }
