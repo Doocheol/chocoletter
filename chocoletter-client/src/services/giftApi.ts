@@ -1,5 +1,6 @@
 import api from "./api";
 
+// const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzM4MjMwMjY2LCJleHAiOjE3Mzg4MzUwNjZ9.BCOFNjcRsaIBTDr_4ksQ1UHu2kprGvgTb-SNZ7Hjjd4' // 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImlhdCI6MTczODI3OTk3MSwiZXhwIjoxNzM4ODg0NzcxfQ.i7E3fDn9tkwcJBQQCIy0y8Ev6dyfCICx79QBxJol4I0'
 // 선물 정보 가져오기
 export async function getGiftDetail(giftId: number) {
   try {
@@ -59,7 +60,6 @@ export async function sendGeneralQuestionGift(giftBoxId: number, nickName: strin
   }
 }
 
-
 // 특별 자유 선물 보내기
 export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, content: string, unBoxingTime: string) {
   try {
@@ -77,6 +77,26 @@ export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, c
   }
 }
 
+// export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, content: string, unBoxingTime: string) {
+//   try {
+//     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/free`, {
+//       nickName: nickName,
+//       content: content,
+//       unBoxingTime: unBoxingTime,
+//     },
+//     {
+//       headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//       }
+//     });
+//     const data = res.data;
+//     console.log("SpecialFreeGift :", data);
+//     return data;
+//   } catch (err) {
+//     console.error("sendSpecialFreeGift API 호출 중 에러 발생:", err);
+//     throw err;
+//   }
+// }
 
 // 특별 질문 선물 보내기
 export async function sendSpecialQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string, unBoxingTime: string) {

@@ -11,7 +11,7 @@ import MinuteDial from "../components/set-time/button/MinuteDial"
 import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
-import { getUnboxingSchedule } from "../services/unboxingApi";
+import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
 
 // 1. 이미 있는 일정 못선택하게 하기
 // 2. 질문 있냐 없냐에 따라 api post ⭕
@@ -26,7 +26,7 @@ const SetTimeView = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [hasToastShown, setHasToastShown] = useState(false); // 토스트 상태
-    const giftBoxId = 4; // TODO: 주소에서 받아오기
+    const giftBoxId = 2; // TODO: 주소에서 받아오기
     const freeLetter = useRecoilValue(freeLetterState);
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
@@ -39,7 +39,7 @@ const SetTimeView = () => {
                 const data = await getUnboxingSchedule(giftBoxId);
                 if (data && data.unboxingTimes) {
                     setDisableTimes(data.unboxingTimes);
-                    console.log("Fetched disableTimes:", data.unboxingTimes);
+                    // console.log("Fetched disableTimes:", data.unboxingTimes);
                 } else {
                     console.error("No unboxing times received from API");
                 }
@@ -103,7 +103,15 @@ const SetTimeView = () => {
         if (disableTimes.includes(unBoxingTime)) return;
 
         try {
-            console.log("저장된 값:", { unBoxingTime }); // 디버깅 출력
+            // console.log("저장된 값:", { unBoxingTime }); // 디버깅 출력
+
+            // `sendUnboxingTime` API 호출
+            // const response = await sendUnboxingTime(giftId, unBoxingTime);
+            // if (response) {
+            //     console.log("Unboxing Time 전송 성공:", response);
+            // } else {
+            //     throw new Error("Unboxing Time 전송 실패");
+            // }
 
             // 질문이 있는 경우 SpecialQuestionGift API 호출
             if (questionLetter.question) {
@@ -116,6 +124,7 @@ const SetTimeView = () => {
                 );
             } else {
                 // 질문이 없는 경우 SpecialFreeGift API 호출
+                console.log(giftBoxId, freeLetter.nickname, freeLetter.content, unBoxingTime)
                 await sendSpecialFreeGift(
                     giftBoxId,
                     freeLetter.nickname,
