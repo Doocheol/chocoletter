@@ -53,8 +53,4 @@ public class AlarmService {
                         row -> (String) row[1] // unboxingTime
                 ));
     }
-
-    public NewAlarmResponseDto findNewAlarms(Long memberId) {
-        return NewAlarmResponseDto.of(alarmRepository.countNewAlarm(memberId, false));
-    }
 }
