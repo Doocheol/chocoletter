@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
@@ -13,12 +13,22 @@ import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
 
 import { joinSession, leaveSession } from '../utils/openvidu';
-import { VideoState } from '../types/openvidu';
 
-const VideoRoomView = () => {
-    const location = useLocation();
+import { WaitingTest } from '../components/video-room/VideoWaiting';
+import { Publisher, Session, StreamManager, Subscriber } from "openvidu-browser";
+
+interface VideoState {
+    session?: Session;
+    mainStreamManager?: StreamManager;
+    publisher?: Publisher;
+    subscribers: Subscriber;
+}
+
+const TestVideoRoomView = () => {
     const navigate = useNavigate();
-    const { sessionIdInit } = location.state
+    const { sessionIdInit, giftId } = useParams();
+    const { isStart, setIsStart} = useState(false);
+
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(60);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
@@ -31,7 +41,7 @@ const VideoRoomView = () => {
         session: undefined,
         mainStreamManager: undefined,
         publisher: undefined,
-        subscribers: [],
+        subscribers: undefined,
     }); // 비디오 상태
 
     const username = "User" + Math.floor(Math.random() * 1000); // 사용자 예비 이름
@@ -99,6 +109,7 @@ const VideoRoomView = () => {
 
     return (
         <>
+            {!isTalkStart && <WaitingTest />}
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
                 {isTerminate && (
                     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center">
@@ -180,4 +191,4 @@ const VideoRoomView = () => {
     )
 };
 
-export default VideoRoomView;
+export default TestVideoRoomView;
