@@ -70,7 +70,7 @@ const SetTimeView = () => {
         const toastId = "time-disabled-toast"; 
 
         if (disabled && !toast.isActive(toastId)) {
-            toast.error("선택하신 시간은 사용할 수 없습니다.", {
+            toast.error("해당 시간은 이미 예약되었습니다.", {
                 toastId, // 고유 ID를 설정해 중복 방지
                 position: "bottom-center",
                 autoClose: 3000,
