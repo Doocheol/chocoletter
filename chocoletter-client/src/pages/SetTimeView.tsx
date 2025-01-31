@@ -39,7 +39,7 @@ const SetTimeView = () => {
                 const data = await getUnboxingSchedule(giftBoxId);
                 if (data && data.unboxingTimes) {
                     setDisableTimes(data.unboxingTimes);
-                    // console.log("Fetched disableTimes:", data.unboxingTimes);
+                    console.log("Fetched disableTimes:", data.unboxingTimes);
                 } else {
                     console.error("No unboxing times received from API");
                 }
