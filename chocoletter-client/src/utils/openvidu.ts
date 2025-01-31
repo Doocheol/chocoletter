@@ -144,6 +144,7 @@ const createSession = async (roomId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+		withCredentials: true,
 	});
 	return response.data; // The sessionId
 };
@@ -154,6 +155,7 @@ const createToken = async (sessionId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+		withCredentials: true,
 	});
 	return response.data; // The token
 };
