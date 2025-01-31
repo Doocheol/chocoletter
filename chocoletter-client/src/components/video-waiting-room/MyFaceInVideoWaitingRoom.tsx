@@ -31,6 +31,8 @@ export const MyFaceInVideoWaitingRoom = ({ videoRef }: MyFaceInVideoWaitingRoomP
             <video 
                 ref={videoRef} 
                 autoPlay={true}
+                playsInline
+                muted
                 className="w-full h-full object-cover absolute"
                 style={{ transform: "scaleX(-1)" }}
             />

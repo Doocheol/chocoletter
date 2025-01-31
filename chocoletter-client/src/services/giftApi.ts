@@ -28,7 +28,11 @@ export async function getGiftList(giftType: string) {
 }
 
 // 일반 자유 선물 보내기
-export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, content: string) {
+export async function sendGeneralFreeGift(
+  giftBoxId: number, 
+  nickName: string, 
+  content: string
+) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
       nickName: nickName,
@@ -44,12 +48,17 @@ export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, c
 }
 
 // 일반 질문 선물 보내기
-export async function sendGeneralQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string) {
+export async function sendGeneralQuestionGift(
+  giftBoxId: number,
+  nickName: string,
+  question: string,
+  answer: string
+) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/question`, {
       nickName: nickName,
       question: question,
-      answer: answer
+      answer: answer,
     });
     const data = res.data;
     console.log("GeneralQuestionGift :", data);
@@ -61,7 +70,12 @@ export async function sendGeneralQuestionGift(giftBoxId: number, nickName: strin
 }
 
 // 특별 자유 선물 보내기
-export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, content: string, unBoxingTime: string) {
+export async function sendSpecialFreeGift(
+  giftBoxId: number,
+  nickName: string,
+  content: string,
+  unBoxingTime: string
+) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/free`, {
       nickName: nickName,
@@ -98,8 +112,15 @@ export async function sendSpecialFreeGift(giftBoxId: number, nickName: string, c
 //   }
 // }
 
+
 // 특별 질문 선물 보내기
-export async function sendSpecialQuestionGift(giftBoxId: number, nickName: string, question: string, answer: string, unBoxingTime: string) {
+export async function sendSpecialQuestionGift(
+  giftBoxId: number,
+  nickName: string,
+  question: string,
+  answer: string,
+  unBoxingTime: string
+) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/question`, {
       nickName: nickName,

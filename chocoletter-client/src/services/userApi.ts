@@ -7,15 +7,15 @@ import { deleteUserInfo, getUserInfo, savingUserInfo } from "./userInfo";
  * 사용자 정보 확인(로그인) 함수
  * @returns 로그인 응답 데이터
  */
-export async function login(): Promise<string> {
-  try {
-    const res = await nonAuthAxios.get(`/api/v1/auth/login`);
-    fetchUserInfo();
-    return res.data;
-  } catch (err) {
-    return Promise.reject(err);
-  }
-}
+// export async function login(): Promise<string> {
+//   try {
+//     const res = await nonAuthAxios.get(`/api/v1/auth/login`);
+//     fetchUserInfo();
+//     return res.data;
+//   } catch (err) {
+//     return Promise.reject(err);
+//   }
+// }
 
 /**
  * 로그아웃 API 호출
