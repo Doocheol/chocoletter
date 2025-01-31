@@ -107,7 +107,8 @@ public class GiftBoxService {
         myGiftBox.usePreviewCount();
     }
 
-    private Gift generateGeneralGift(Long senderId, Long giftBoxId) {
+    @Transactional
+    public Gift generateGeneralGift(Long senderId, Long giftBoxId) {
         checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createGeneralGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId());
@@ -118,7 +119,8 @@ public class GiftBoxService {
         return gift;
     }
 
-    private Gift generateSpecialGift(Long senderId, Long giftBoxId, String unBoxingTime) {
+    @Transactional
+    public Gift generateSpecialGift(Long senderId, Long giftBoxId, String unBoxingTime) {
         checkGiftExists(senderId, giftBoxId);
         GiftBox receiverGiftBox = findGiftBox(giftBoxId);
         Gift gift = Gift.createSpecialGift(receiverGiftBox, senderId, receiverGiftBox.getMember().getId(),
@@ -146,7 +148,8 @@ public class GiftBoxService {
         }
     }
 
-    private void makeChattingRoom(Long senderId, Long receiverId, Long senderGiftId) {
+    @Transactional
+    public void makeChattingRoom(Long senderId, Long receiverId, Long senderGiftId) {
         Gift receiverGift = giftService.findGeneralGiftEachOther(senderId, receiverId);
         if (receiverGift != null) {
             chatRoomService.saveChatRoom(senderId, receiverId, senderGiftId, receiverGift.getId());
