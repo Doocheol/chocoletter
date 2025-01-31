@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
@@ -6,11 +7,14 @@ import special from "../assets/images/chocolate/special/rtc_choco_1.png"
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { useRecoilValue } from "recoil";
 import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftApi"
+import readLetterIcon from "../assets/images/letter/letter_icon.svg"
+import { BsEnvelopeHeart, BsEnvelopeOpenHeart } from "react-icons/bs";
 
 function SelectGiftTypeView() {
     const freeLetter = useRecoilValue(freeLetterState);
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
+    const [isFirstIcon, setIsFirstIcon] = useState(true);
     const navigate = useNavigate();
     const giftBoxId = 1; // TODO: 주소에서 받아오기
 
@@ -42,15 +46,24 @@ function SelectGiftTypeView() {
         }
     };
 
+    // 아이콘 자동 변경
+    useEffect(() => {
+        const interval = setInterval(() => {
+        setIsFirstIcon((prev) => !prev); // true ↔ false 전환
+        }, 500); // 2000ms = 2초
+
+        return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 제거
+    }, []);
+
     return (
         <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
             {/* 상단 bar */}
-            <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
+            <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">
                     <div className="w-6 h-6 justify-center items-center flex">
-                        <GoBackButton />
+                        <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" />
                     </div>
-                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">편지지 선택하기</div>
+                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug"></div>
                     <div className="w-6 h-6" />
                 </div>
             </div>
@@ -59,21 +72,32 @@ function SelectGiftTypeView() {
 
                 {/* 일반/특별 버튼 */}
                 <div className="flex flex-col items-center justify-center m-4 gap-[30px]">
-                    <div className="flex flex-col px-[15px]">
-                        <p className="text-2xl font-bold text-left">
-                            같이 개봉하실래요?
-                        </p>
+                    <div className="w-[291px] h-[75px] flex flex-col px-[15px] gap-[29px] justify-center items-center mt-[30px] mb-[100px]">
+                        <div className="flex flex-col justify-center items-center gap-[15px] ">
+                            <div style={{ textAlign: "center", marginTop: "50px" }}>
+                            {/* 아이콘 변경 */}
+                            {isFirstIcon ? (
+                                <BsEnvelopeHeart className="text-chocoletterPurpleBold text-[40px] transition-opacity duration-500" />
+                            ) : (
+                                <BsEnvelopeOpenHeart className="text-chocoletterPurpleBold text-[40px] transition-opacity duration-500" />
+                            )}
+                            </div>
+                            {/* <img src={readLetterIcon} alt="편지 보기 아이콘" /> */}
+                            <p className="text-2xl font-bold text-left">
+                                같이 개봉하실래요?
+                            </p>
+                        </div>                        
                         <p className="self-stretch font-[Pretendard] text-[13px] leading-[140%]">
                             같이 개봉하는 경우 지정된 시간에 
-                            편지를 전해드리고, <br/>
-                            지정한 시간에 화면 너머로 
+                            편지를 전해드리고, 
+                            화면 너머로 
                             따스한 마음을 나눌 수 있습니다.
                         </p>
                         {/* JSON 형태로 전체 상태 보기 */}
-                            <div className="mt-4 p-4 bg-gray-200 border rounded">
+                            {/* <div className="mt-4 p-4 bg-gray-200 border rounded">
                             <h3 className="text-lg font-bold mb-2">Recoil 상태 확인</h3>
                             <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
-                            </div>
+                            </div> */}
                     </div>
                     <Button
                         onClick={handleAccept}
