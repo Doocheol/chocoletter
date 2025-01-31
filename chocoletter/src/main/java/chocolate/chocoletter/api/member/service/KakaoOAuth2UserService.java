@@ -5,6 +5,7 @@ import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -29,6 +29,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
     private final IdEncryptionUtil idEncryptionUtil;
 
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -103,16 +104,15 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         GiftBox newGiftBox = GiftBox.builder()
                 .member(savedMember)
                 .build();
-        GiftBox savedGiftBox = giftBoxRepository.save(newGiftBox);
+        giftBoxRepository.save(newGiftBox);
 
         // 공유 코드 생성 및 저장
-        String shareCode = encryptId(savedGiftBox.getId());
-        savedGiftBox.updateShareCode(shareCode);
-        giftBoxRepository.save(savedGiftBox);
+        String shareCode = encryptId(newGiftBox.getId());
+        newGiftBox.updateShareCode(shareCode);
 
         Map<String, String> result = new HashMap<>();
         result.put("memberId", savedMember.getId().toString());
-        result.put("shareCode", savedGiftBox.getShareCode());
+        result.put("shareCode", newGiftBox.getShareCode());
 
         return result;
     }
