@@ -1,4 +1,7 @@
 package chocolate.chocoletter.api.alarm.dto.response;
 
-public class NewAlarmResponseDto {
+public record NewAlarmResponseDto(Integer count) {
+    public static NewAlarmResponseDto of(Integer count) {
+        return new NewAlarmResponseDto(count);
+    }
 }
