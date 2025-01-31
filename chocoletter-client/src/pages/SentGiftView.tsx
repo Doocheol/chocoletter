@@ -30,10 +30,10 @@ const SentGiftView = () => {
     navigate("/main/my/before"); // 추후 수정 예정
   };
 
-  return (
-    <div className="relative flex flex-col items-center h-screen bg-[#FFEEFD]">
+  return ( //[#FFEEFD]
+    <div className="relative flex flex-col items-center h-screen bg-chocoletterGiftBoxBg"> 
       <div className="absolute mt-24 px-8">
-        <div className="relative flex items-center justify-center mb-24">
+        <div className="relative flex items-center justify-center mb-16 shake-vertical">
           {/* 왼쪽 날개 */}
           <img
             src={wing_right}
@@ -55,11 +55,11 @@ const SentGiftView = () => {
             className="w-[40px] relative -ml-4 z-10"
           />
         </div>
-        <h1 className="text-[24px] font-bold mb-4">
-          달콤한 초콜릿 편지가 무사히 전달되었어요!
-          내 초콜릿 상자도 함께 나누며 행복을 더해보세요. 🍫💕 <br />
+        <h1 className="text-center text-[18px] font-bold mb-4">
+          달콤한 초콜릿 편지가 무사히 전해졌어요! <br />
+          내 초콜릿 상자도 전해보세요.💕
         </h1>
-        <h3 className="text-sm text-gray-500 font-bold mb-24">
+        <h3 className="text-center text-sm text-gray-500 font-bold mb-24">
           편지를 2개 받을 때마다 <br />
           2월 14일 전에 하나를 먼저 열어볼 수 있답니다!
         </h3>
@@ -67,7 +67,7 @@ const SentGiftView = () => {
           <Button onClick={goBackMainMyEvent} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
             내 초콜릿 상자로 이동하기
           </Button>
-          <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#ffc1cc] text-sm">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
+          <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#b29ce4] text-sm text-white">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
         </div>
       </div>
     </div>
