@@ -14,8 +14,7 @@ public interface GiftBoxRepository extends JpaRepository<GiftBox, Long> {
     @Query("select gb from GiftBox gb where gb.member.id = :memberId")
     GiftBox findGiftBoxByMemberId(@Param("memberId") Long memberId);
 
-    @Query("select gb.giftCount from GiftBox gb where gb.member.id = :memberId")
-    Integer findGiftCountByGiftBoxId(@Param("memberId") Long memberId);
-
     String findShareCodeByMemberId(Long memberId);
+
+    GiftBox findByMemberId(Long memberId);
 }
