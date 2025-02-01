@@ -158,7 +158,7 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-01T23:59:59" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
+                        <WaitingTest unboxing="2025-02-02T00:30:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
                     </div>
                 )}
                 <LetterInVideoModal
