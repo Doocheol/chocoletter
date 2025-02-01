@@ -37,17 +37,29 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
     }
   }, [loaded, error]);
 
-  // 모달 열릴 때 공유 링크 생성
   useEffect(() => {
     async function fetchShareCode() {
-      setIsLinkLoading(true);
-      setSharedLink(""); // 이전 링크 초기화
-      const shareCode = await getGiftBoxShareCode();
-      console.log("getGiftBoxShareCode 응답:", shareCode);
-      if (!shareCode || shareCode.trim() === "") {
+      try {
+        setIsLinkLoading(true);
+        setSharedLink(""); // 이전 링크 초기화
+        const shareCode = await getGiftBoxShareCode();
+        console.log("getGiftBoxShareCode 응답:", shareCode);
+        if (!shareCode || shareCode.trim() === "") {
+          setSharedLink(window.location.href);
+        } else {
+          setSharedLink(`https://www.chocolate-letter.com/${shareCode}`);
+        }
+      } catch (e) {
+        console.error("Error fetching shareCode:", e);
+        // 만약 e가 Error 인스턴스라면, 메시지와 스택 정보를 로그로 찍습니다.
+        if (e instanceof Error) {
+          console.error("에러 메시지:", e.message);
+          console.error("에러 스택:", e.stack);
+        }
+        // 에러 발생 시 fallback으로 현재 URL을 사용
         setSharedLink(window.location.href);
-      } else {
-        setSharedLink(`https://www.chocolate-letter.com/${shareCode}`);
+      } finally {
+        setIsLinkLoading(false);
       }
     }
 
