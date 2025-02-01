@@ -30,6 +30,7 @@ import SelectGiftBoxView from "./pages/SelectGiftBoxView";
 import MainYourBeforeView from "./pages/MainYourBeforeView";
 import MainMyEventView from "./pages/MainMyEventView";
 import MainMyAfterView from "./pages/MainMyAfterView";
+import ShareCodeRouter from "./pages/ShareCodeRouter";
 
 declare global {
   interface Window {
@@ -55,7 +56,10 @@ function App() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
-            <Route path="/:shareCode" element={<MainMyBeforeView />} />
+            {/*
+              URL의 shareCode와 Recoil의 shareCode를 비교하여 적절한 컴포넌트를 렌더링하는 라우트
+            */}
+            <Route path="/:shareCode" element={<ShareCodeRouter />} />{" "}
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/selectletter" element={<SelectLetterTypeView />} />
@@ -72,10 +76,9 @@ function App() {
             <Route path="/gift/list/event" element={<GiftListEventView />} />
             <Route path="/chat/list" element={<ChatRoomListView />} />
             <Route path="/select-giftbox" element={<SelectGiftBoxView />} />
-            <Route path="/:shareCode" element={<MainYourBeforeView />} />
+            <Route path="/main/your/before" element={<MainYourBeforeView />} />
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
-            <Route path="/:shareCode" element={<MainMyAfterView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
