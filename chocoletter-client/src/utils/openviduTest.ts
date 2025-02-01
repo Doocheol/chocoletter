@@ -1,7 +1,6 @@
 import { OpenVidu } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidutest";
 import { getUserInfo } from '../services/userInfo';
-import { Publisher } from 'openvidu-browser';
 
 import axios from 'axios';
 import React from 'react';
@@ -180,6 +179,7 @@ const countConnection = async (sessionId: string) => {
     try {
         const res = await axios.get(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}/connection`, {
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`
             },
             withCredentials: true,

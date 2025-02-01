@@ -144,6 +144,7 @@ const createSession = async (roomId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+		withCredentials: true,
 	});
 	return response.data; // The sessionId
 };
@@ -154,6 +155,7 @@ const createToken = async (sessionId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+		withCredentials: true,
 	});
 	return response.data; // The token
 };
@@ -163,7 +165,9 @@ const deleteSession = async (sessionId: string) => {
 
 	await axios.delete(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}/`, {
 		headers: {
+			'Content-Type': 'application/json',
 			'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`,
-		}
+		},
+		withCredentials: true,
 	})
 }
