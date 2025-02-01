@@ -11,7 +11,7 @@ import giftbox_before_3 from "../../../../../assets/images/giftbox/giftbox_befor
 import giftbox_before_4 from "../../../../../assets/images/giftbox/giftbox_before_4.svg";
 import giftbox_before_5 from "../../../../../assets/images/giftbox/giftbox_before_5.svg";
 import { useRecoilValue } from "recoil";
-import { userGiftboxAtom, userNameAtom } from "../../../../../atoms/auth/userAtoms";
+import { giftBoxNumAtom, userNameAtom } from "../../../../../atoms/auth/userAtoms";
 
 type CaptureModalProps = {
   isVisible: boolean;
@@ -27,7 +27,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
   // Recoil에서 사용자 이름과 상자 정보를 불러옴
   const userName = useRecoilValue(userNameAtom);
-  const userGiftbox = useRecoilValue(userGiftboxAtom); // userGiftboxAtom이 현재 사용자의 상자 번호를 저장한다고 가정
+  const giftBoxNum = useRecoilValue(giftBoxNumAtom); // userGiftboxAtom이 현재 사용자의 상자 번호를 저장한다고 가정
 
   useEffect(() => {
     if (isVisible && imageSrc) {
@@ -96,7 +96,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 사용자의 상자 번호에 맞는 giftbox_before 이미지 선택 (랜덤)
         let selectedGiftboxImage: string;
-        if (userGiftbox >= 1 && userGiftbox <= 5) {
+        if (giftBoxNum >= 1 && giftBoxNum <= 5) {
           // 해당 상자 번호에 맞는 이미지 배열 인덱스 (1-5 -> 0-4)
           const imagesForBox = [
             giftbox_before_1,
@@ -105,7 +105,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
             giftbox_before_4,
             giftbox_before_5,
           ];
-          selectedGiftboxImage = imagesForBox[userGiftbox - 1];
+          selectedGiftboxImage = imagesForBox[giftBoxNum - 1];
         } else {
           // userGiftbox가 1-5 범위를 벗어나면 전체 이미지 중에서 랜덤으로 선택
           selectedGiftboxImage = giftboxImages[Math.floor(Math.random() * giftboxImages.length)];
