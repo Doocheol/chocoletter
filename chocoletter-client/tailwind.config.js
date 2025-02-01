@@ -80,7 +80,8 @@ module.exports = {
         chocoletterDarkBlue: "#290059",
         chocoletterLightPurple: "#7d1cee",
         chocoletterWarning: "#ff3838",
-        chocoletterLetterBg: "#ffeefd",
+        chocoletterLetterBgPink: "#ffeefd",
+        chocoletterLetterBgBlue: "#FAFCFF",
         chocoletterCharacter: "#151517",
         chocoletterBackground: {
           light: "#E6F5FF",

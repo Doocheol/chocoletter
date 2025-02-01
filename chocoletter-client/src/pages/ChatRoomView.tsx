@@ -17,6 +17,8 @@ const ChatRoonView = () => {
                 isOpen={isOpenLetter}
                 onClose={() => setIsOpenLetter(false)}
                 nickName={nickName}
+                question="질문이"
+                answer="답변!"
             />
             {/* 나의 채팅방 목록 */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
