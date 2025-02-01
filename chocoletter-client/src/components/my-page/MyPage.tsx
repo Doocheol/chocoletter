@@ -3,12 +3,18 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { isLoginAtom, userNameAtom, userProfileUrlAtom } from "../../atoms/auth/userAtoms";
+import {
+  isLoginAtom,
+  shareCodeAtom,
+  userNameAtom,
+  userProfileUrlAtom,
+} from "../../atoms/auth/userAtoms";
 import { receivedGiftsAtom, sentGiftsAtom } from "../../atoms/gift/giftAtoms";
 
 import { FaUserCircle, FaHome } from "react-icons/fa"; // 사용자 아이콘 및 홈 아이콘
 import { FiLogOut } from "react-icons/fi"; // 로그아웃 아이콘
 import home_icon from "../../assets/images/main/home_icon.svg"; // 홈 아이콘
+import { logout, removeUserInfo } from "../../services/userApi";
 
 /**
  * 프로필 드롭다운 내용
@@ -21,6 +27,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
   const userName = useRecoilValue(userNameAtom);
   const userProfileUrl = useRecoilValue(userProfileUrlAtom);
+  const shareCode = useRecoilValue(shareCodeAtom); // Recoil에서 shareCode 확인
 
   // 보낸/받은 초콜릿
   const sentGifts = useRecoilValue(sentGiftsAtom);
@@ -28,16 +35,24 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     setIsLogin(false);
-    toast.info("로그아웃 되었습니다.");
+    toast.info("로그아웃 완료!");
     onClose(); // 로그아웃 후 닫기
+    navigate("/"); // 홈으로 이동
   };
 
   const handleHome = () => {
-    navigate("/");
-    toast.info("홈으로 이동!");
+    toast.info("내 선물상자로 이동!");
     onClose(); // 홈으로 이동 후 MyPage 닫기
+    if (shareCode) {
+      navigate(`/${shareCode}`);
+    } else {
+      toast.error("다시 로그인해주세요!");
+      removeUserInfo();
+      navigate("/");
+    }
   };
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -109,7 +124,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
           aria-label="로그아웃"
         >
           <FiLogOut className="w-5 h-5 mr-2" />
-          초코레터 떠나기
+          로그아웃
         </button>
       </div>
     </div>

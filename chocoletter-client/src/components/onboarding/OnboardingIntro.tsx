@@ -118,7 +118,7 @@ function OnboardingIntro() {
       {/* 페이지 상단으로 가기 버튼 */}
       <div
         className={`px-12 pb-4 mb-4 flex justify-end ${
-          scrollPosition > 460 ? "slide-in-bottom" : "collapse"
+          scrollPosition > 410 ? "slide-in-bottom" : "collapse"
         }`}
       >
         <div className="shake-vertical">
@@ -132,8 +132,8 @@ function OnboardingIntro() {
       {/* 초콜릿 상자 보러가기 링크 */}
       <a
         className={`mx-4 ml-10 mb-14 heartbeat
-          ${scrollPosition > 470 ? "slide-in-bottom" : "collapse"} `}
-        href="https://www.chocolate-letter.com/main/your/before"
+          ${scrollPosition > 420 ? "slide-in-bottom" : "collapse"} `}
+        href="https://www.chocolate-letter.com/"
       >
         <img
           src={login_view_move_to_teambox}

@@ -11,7 +11,7 @@ import giftbox_before_3 from "../../../../../assets/images/giftbox/giftbox_befor
 import giftbox_before_4 from "../../../../../assets/images/giftbox/giftbox_before_4.svg";
 import giftbox_before_5 from "../../../../../assets/images/giftbox/giftbox_before_5.svg";
 import { useRecoilValue } from "recoil";
-import { userGiftboxAtom, userNameAtom } from "../../../../../atoms/auth/userAtoms";
+import { giftBoxNumAtom, userNameAtom } from "../../../../../atoms/auth/userAtoms";
 
 type CaptureModalProps = {
   isVisible: boolean;
@@ -27,7 +27,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
   // Recoil에서 사용자 이름과 상자 정보를 불러옴
   const userName = useRecoilValue(userNameAtom);
-  const userGiftbox = useRecoilValue(userGiftboxAtom); // userGiftboxAtom이 현재 사용자의 상자 번호를 저장한다고 가정
+  const giftBoxNum = useRecoilValue(giftBoxNumAtom); // userGiftboxAtom이 현재 사용자의 상자 번호를 저장한다고 가정
 
   useEffect(() => {
     if (isVisible && imageSrc) {
@@ -96,7 +96,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 사용자의 상자 번호에 맞는 giftbox_before 이미지 선택 (랜덤)
         let selectedGiftboxImage: string;
-        if (userGiftbox >= 1 && userGiftbox <= 5) {
+        if (giftBoxNum >= 1 && giftBoxNum <= 5) {
           // 해당 상자 번호에 맞는 이미지 배열 인덱스 (1-5 -> 0-4)
           const imagesForBox = [
             giftbox_before_1,
@@ -105,7 +105,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
             giftbox_before_4,
             giftbox_before_5,
           ];
-          selectedGiftboxImage = imagesForBox[userGiftbox - 1];
+          selectedGiftboxImage = imagesForBox[giftBoxNum - 1];
         } else {
           // userGiftbox가 1-5 범위를 벗어나면 전체 이미지 중에서 랜덤으로 선택
           selectedGiftboxImage = giftboxImages[Math.floor(Math.random() * giftboxImages.length)];
@@ -150,17 +150,45 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
           }),
         ]);
 
+        
         // 캔버스 크기 설정
         canvas.width = capturedImage.width;
         canvas.height = capturedImage.height;
 
         // 캔버스에 캡처된 이미지 그리기
-        // ctx.drawImage(capturedImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(capturedImage, 0, 0, canvas.width, canvas.height);
         // console.log("Captured Image Drawn on Canvas");
 
         // 캔버스에 프레임 그리기
-        ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        // ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         // console.log("Frame Image Drawn on Canvas");
+
+        // 프레임 원본 이미지 크롭을 위한 변수 설정
+        const cropX = 0; // 프레임 원본의 크롭 시작 X 좌표
+        const cropY = 0; // 프레임 원본의 크롭 시작 Y 좌표
+        const cropWidth = frame.width; // 프레임의 크롭할 너비
+        const cropHeight = frame.width; // 프레임의 크롭할 높이
+        console.log(frame.width, frame.height)
+
+        // 캔버스에서 프레임을 그릴 위치
+        const drawX = 0;
+        const drawY = 0;
+        const drawWidth = canvas.width;
+        const drawHeight = canvas.height;
+
+        // 크롭하여 프레임 그리기
+        ctx.drawImage(
+            frame,         // 원본 이미지
+            cropX,         // 크롭 시작 X 좌표
+            cropY,         // 크롭 시작 Y 좌표
+            cropWidth,     // 크롭할 너비
+            cropHeight,    // 크롭할 높이
+            drawX,         // 캔버스에 그릴 X 좌표
+            drawY,         // 캔버스에 그릴 Y 좌표
+            drawWidth,     // 캔버스에 그릴 너비
+            drawHeight     // 캔버스에 그릴 높이
+        );
+
 
         // 캔버스에 선택된 giftbox_before 이미지 그리기 (160x160 픽셀, 중앙 위치)
         const giftboxWidth = 220; // 원하는 너비 (w-40)
@@ -171,7 +199,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         // 캔버스에 선택된 giftbox_before 이미지 그리기
         // 원하는 위치와 크기로 조정 가능 (예: 전체 캔버스 크기)
         ctx.drawImage(selectedGiftbox, giftboxX, giftboxY, giftboxWidth, giftboxHeight);
-        // console.log("Selected Giftbox Image Drawn on Canvas");
+        console.log("Selected Giftbox Image Drawn on Canvas");
 
         // 사용자 이름 텍스트 그리기
         const nameFontSize = Math.floor(canvas.width / 15); // 폰트 크기 조정
@@ -212,34 +240,63 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (canvasRef.current) {
       setIsAnimating(true); // 애니메이션 시작
 
-      // 애니메이션이 끝난 후 다운로드 실행
-      setTimeout(() => {
+      // 애니메이션이 끝난 후 처리
+      setTimeout(async () => {
         try {
           const canvas = canvasRef.current;
           if (!canvas) throw new Error("Canvas가 존재하지 않습니다.");
 
+          // 캔버스의 data URL (PNG)
           const finalImageSrc = canvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = finalImageSrc;
-          link.download = "my-chocolate-box.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          toast.success("저장 완료! 사람들에게 공유해보세요!");
+
+          // Blob으로 변환 (Web Share API에 필요한 경우)
+          const response = await fetch(finalImageSrc);
+          const blob = await response.blob();
+          const file = new File([blob], "my-chocolate-box.png", { type: "image/png" });
+
+          // 만약 모바일 환경 등에서 Web Share API가 지원된다면 공유 시도
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: "내 초콜릿 상자",
+                text: "내 초콜릿 상자 이미지를 공유해보세요!",
+                files: [file],
+              });
+              toast.success("공유 성공!");
+            } catch (shareError) {
+              console.error("공유에 실패했습니다.", shareError);
+              // 공유 실패시에도 다운로드 링크를 실행
+              downloadFile(finalImageSrc);
+            }
+          } else {
+            // Web Share API를 지원하지 않으면 다운로드 방식으로 진행
+            downloadFile(finalImageSrc);
+          }
 
           setIsAnimating(false); // 애니메이션 종료
           onClose(); // 모달 닫기
         } catch (error) {
-          console.error("이미지 다운로드 중 오류 발생:", error);
-          toast.error("이미지 다운로드에 실패했습니다.");
+          console.error("이미지 다운로드/공유 중 오류 발생:", error);
+          toast.error("이미지 다운로드/공유에 실패했습니다.");
           setIsAnimating(false);
         }
-      }, 500); // 애니메이션 지속 시간 (jello-vertical: 0.5s)에 맞춤
+      }, 500); // 애니메이션 지속 시간 (예: 0.5초)
     }
+  };
+
+  // 다운로드 전용 함수 (파일 다운로드 링크 생성)
+  const downloadFile = (imageSrc: string) => {
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.download = "my-chocolate-box.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("저장 완료! 사람들에게 공유해보세요!");
   };
 
   return (
@@ -248,28 +305,30 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         className={`p-2 flex flex-col items-center rounded-lg ${
           isAnimating ? "jello-vertical" : ""
         }`}
-      >
+      > 
+        {/* 닫기버튼과 너무 가까워서 공백 생성 */}
+        <div className="h-[10px]"></div> 
         {imageSrc ? (
           <>
             {/* 캔버스를 프리뷰로 표시 */}
             <canvas
               ref={canvasRef}
-              className="max-w-full h-auto rounded-md"
+              className="max-w-[95%] h-auto rounded-md"
               style={{ border: "1px solid #ccc" }}
             ></canvas>
 
             {/* 감성적인 문구 입력 필드 및 저장 버튼 */}
-            <div className="flex flex-row items-center gap-1">
+            <div className="flex flex-row items-center gap-2 w-full max-w-[95%]">
               <input
                 type="text"
                 value={overlayText}
                 onChange={(e) => setOverlayText(e.target.value)}
                 placeholder="내용을 입력하세요."
-                className="mt-4 px-10 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
+                className="mt-4 px-4 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
               />
               <button
                 onClick={handleDownload}
-                className="mt-4 px-6 py-2 w-24 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-4 px-2 py-2 w-20 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isAnimating}
               >
                 {isAnimating ? "..." : "저장"}
