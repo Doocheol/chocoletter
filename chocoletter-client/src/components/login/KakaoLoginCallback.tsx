@@ -32,8 +32,8 @@ const KakaoLoginCallback: React.FC = () => {
 
       if (!accessToken || !userName || !shareCode) {
         removeUserInfo();
-        toast.error("필수 로그인 정보가 누락되었습니다. 다시 로그인해주세요!");
-        navigate("/login");
+        toast.error("다시 로그인해주세요!");
+        navigate("/");
         return;
       }
 

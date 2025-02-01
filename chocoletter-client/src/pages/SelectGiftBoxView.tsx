@@ -83,7 +83,7 @@ const SelectGiftBoxView: React.FC = () => {
       {/* 선택 완료 버튼 */}
       <Button
         onClick={handleConfirmSelection}
-        className="px-6 py-3 bg-chocoletterPurpleBold text-xl font-semibold text-white rounded-lg shadow"
+        className="px-6 py-3 bg-chocoletterPurpleBold text-xl font-medium text-white rounded-lg shadow"
       >
         이걸로 할게요!
       </Button>
