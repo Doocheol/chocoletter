@@ -1,5 +1,6 @@
 import { OpenVidu } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidu";
+import { getUserInfo } from '../services/userInfo';
 
 import axios from 'axios';
 import React from 'react';
@@ -7,6 +8,8 @@ import React from 'react';
 const APPLICATION_SERVER_URL = import.meta.env.VITE_API_SERVER_URL;
 const OPENVIDU_URL = import.meta.env.VITE_OPENVIDU_SERVER_URL
 const OPENVIDU_SECRET_BASE = import.meta.env.VITE_OPENVIDU_SECRET_BASE
+
+const userInfo = getUserInfo();
 
 export const joinSession = async (
 	user: User,
@@ -137,14 +140,22 @@ const getToken = async (roomId: string) => {
 
 const createSession = async (roomId: string) => {
 	const response = await axios.post(APPLICATION_SERVER_URL + '/api/v1/openvidu/sessions', { customSessionId: roomId }, {
-		headers: { 'Content-Type': 'application/json', },
+		headers: { 
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${userInfo?.accessToken}`
+		},
+		withCredentials: true,
 	});
 	return response.data; // The sessionId
 };
 
 const createToken = async (sessionId: string) => {
 	const response = await axios.post(APPLICATION_SERVER_URL + '/api/v1/openvidu/sessions/' + sessionId + '/connections', {}, {
-		headers: { 'Content-Type': 'application/json', },
+		headers: { 
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${userInfo?.accessToken}`
+		},
+		withCredentials: true,
 	});
 	return response.data; // The token
 };

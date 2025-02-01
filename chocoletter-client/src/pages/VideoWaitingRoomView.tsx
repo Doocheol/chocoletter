@@ -16,9 +16,10 @@ const waitingWords = ["대기중.", "대기중..", "대기중..."]
 
 const WaitingRoomView = () => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const { sessionIdInit } = useParams();
     const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(300);
+    const [remainTime, setRemainTime] = useState(600);
     const [makeMMSS, setMakeMMSS] = useState('');
     // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
@@ -43,22 +44,22 @@ const WaitingRoomView = () => {
     // video-room 연결 테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // token 동기화를 위해 localStorage 사용
-    useEffect(() => {
-        const getRoomInfo = async (sessionIdInit: string) => {
-            try {
-                const response = await checkAuthVideoRoom(sessionIdInit);
-                return response.data
-            } catch (err) {
-                console.log("API 통신 오류 : ", err)
-            }
-        } 
+    // useEffect(() => {
+    //     const getRoomInfo = async (sessionIdInit: string) => {
+    //         try {
+    //             const response = await checkAuthVideoRoom(sessionIdInit);
+    //             return response.data
+    //         } catch (err) {
+    //             console.log("API 통신 오류 : ", err)
+    //         }
+    //     } 
 
-        if (sessionIdInit) {
-            const inRoomData = getRoomInfo(sessionIdInit)
-        } else {
-            console.log("세션 값이 null입니다.")
-        }
-    }, [])
+    //     if (sessionIdInit) {
+    //         const inRoomData = getRoomInfo(sessionIdInit)
+    //     } else {
+    //         console.log("세션 값이 null입니다.")
+    //     }
+    // }, [])
 
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
@@ -76,24 +77,26 @@ const WaitingRoomView = () => {
         localStorage.setItem('isBothJoin', isBothJoin.toString());
         console.log('is', isBothJoin, 'and', sessionIdInit);
         const goView = async () => {
-            console.log('isIn', isIn)
             if (isBothJoin >= 2) {
                 console.log('here', sessionIdInit);
-                const timeout = await setTimeout(() => {
-                    if (!isIn) return;
-                    if (videoRef.current && videoRef.current.srcObject) {
-                        console.log("wowwowwow")
-                        const stream = videoRef.current.srcObject as MediaStream;
-                        stream.getTracks().forEach(track => track.stop());
-                    }
+                if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                timeoutRef.current = setTimeout(() => {
+                    if (!isIn) {return};
                     navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 6000);
-
-                return () => clearTimeout(timeout);
+                }, 10000);
             }
         };
         goView();
-    }, [isBothJoin, isIn]);
+
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            if (videoRef.current && videoRef.current.srcObject) {
+                console.log("꺼졌나요?")
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [isBothJoin, isIn, navigate, sessionIdInit]);
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
     // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
@@ -123,6 +126,10 @@ const WaitingRoomView = () => {
                     }
                     return `${minute}:${second}`;
                 } else {
+                    if (videoRef.current?.srcObject) {
+                        const stream = videoRef.current.srcObject as MediaStream;
+                        stream.getTracks().forEach(track => track.stop());
+                    }
                     clearInterval(interval);
                     navigate('/main/my/event')
                     return '00:00';

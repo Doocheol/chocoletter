@@ -41,7 +41,7 @@ const WriteGeneralLetterView = () => {
       return;
     }
 
-    navigate("/selectgift");
+    navigate("/select-gift");
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { useRecoilState } from "recoil";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -65,6 +65,12 @@ const QuestionLetterForm: React.FC = () => {
             toast.error("질문을 가져오는 데 실패했습니다.");
         }
     };
+
+    // 페이지가 로딩될 때 한 번 실행
+    useEffect(() => {
+        onShuffleQuestion();
+    }, []); // 빈 배열을 넣어 최초 렌더링 시 실행
+
 
     return (
         <div className="flex flex-col justify-center items-center mb-[20px] gap-[20px]">

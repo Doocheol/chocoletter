@@ -34,7 +34,7 @@ const VideoRoomView = () => {
         subscribers: [],
     }); // 비디오 상태
 
-    const username = "User" + Math.floor(Math.random() * 100); // 사용자 예비 이름
+    const username = "User" + Math.floor(Math.random() * 1000); // 사용자 예비 이름
     const onEnd = () => {
         console.log("끝났을 때라도", videoState)
         setIsTerminate(true)

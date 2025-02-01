@@ -38,7 +38,7 @@ const MainYourBeforeView: React.FC = () => {
       setIsNotLoginModalOpen(true);
       return;
     }
-    navigate("/selectletter");
+    navigate("/select-letter");
   };
 
   // 로그인 페이지로 이동할 때, 현재 경로를 state로 전달하여 로그인 후 복귀할 수 있도록 함
