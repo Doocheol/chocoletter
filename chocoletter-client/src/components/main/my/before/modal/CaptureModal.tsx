@@ -212,34 +212,63 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (canvasRef.current) {
       setIsAnimating(true); // 애니메이션 시작
 
-      // 애니메이션이 끝난 후 다운로드 실행
-      setTimeout(() => {
+      // 애니메이션이 끝난 후 처리
+      setTimeout(async () => {
         try {
           const canvas = canvasRef.current;
           if (!canvas) throw new Error("Canvas가 존재하지 않습니다.");
 
+          // 캔버스의 data URL (PNG)
           const finalImageSrc = canvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = finalImageSrc;
-          link.download = "my-chocolate-box.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          toast.success("저장 완료! 사람들에게 공유해보세요!");
+
+          // Blob으로 변환 (Web Share API에 필요한 경우)
+          const response = await fetch(finalImageSrc);
+          const blob = await response.blob();
+          const file = new File([blob], "my-chocolate-box.png", { type: "image/png" });
+
+          // 만약 모바일 환경 등에서 Web Share API가 지원된다면 공유 시도
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: "내 초콜릿 상자",
+                text: "내 초콜릿 상자 이미지를 공유해보세요!",
+                files: [file],
+              });
+              toast.success("공유 성공!");
+            } catch (shareError) {
+              console.error("공유에 실패했습니다.", shareError);
+              // 공유 실패시에도 다운로드 링크를 실행
+              downloadFile(finalImageSrc);
+            }
+          } else {
+            // Web Share API를 지원하지 않으면 다운로드 방식으로 진행
+            downloadFile(finalImageSrc);
+          }
 
           setIsAnimating(false); // 애니메이션 종료
           onClose(); // 모달 닫기
         } catch (error) {
-          console.error("이미지 다운로드 중 오류 발생:", error);
-          toast.error("이미지 다운로드에 실패했습니다.");
+          console.error("이미지 다운로드/공유 중 오류 발생:", error);
+          toast.error("이미지 다운로드/공유에 실패했습니다.");
           setIsAnimating(false);
         }
-      }, 500); // 애니메이션 지속 시간 (jello-vertical: 0.5s)에 맞춤
+      }, 500); // 애니메이션 지속 시간 (예: 0.5초)
     }
+  };
+
+  // 다운로드 전용 함수 (파일 다운로드 링크 생성)
+  const downloadFile = (imageSrc: string) => {
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.download = "my-chocolate-box.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("저장 완료! 사람들에게 공유해보세요!");
   };
 
   return (
