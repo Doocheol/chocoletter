@@ -15,6 +15,7 @@ import {
 
 const KakaoLoginCallback: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // useLocation는 최상위에서 호출합니다.
   const setIsLogin = useSetRecoilState(isLoginAtom);
   const setUserName = useSetRecoilState(userNameAtom);
   const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
@@ -53,8 +54,8 @@ const KakaoLoginCallback: React.FC = () => {
       setUserProfileUrl(userProfileUrl || "");
       setShareCode(shareCode);
 
-      const locationState = useLocation().state as { redirect?: string } | null;
-      const redirectPath = locationState?.redirect;
+      // 최상위에서 선언한 location을 사용합니다.
+      const redirectPath = (location.state as { redirect?: string } | null)?.redirect;
       if (redirectPath) {
         navigate(redirectPath);
         return;
@@ -74,13 +75,20 @@ const KakaoLoginCallback: React.FC = () => {
         navigate("/");
         return;
       }
-      // 에러 발생 시 추가 처리 필요함
     };
 
     handleLogin();
-  }, [navigate, setIsLogin, setUserName, setUserProfileUrl, setIsFirstLogin, setShareCode]);
+  }, [
+    navigate,
+    location, // location을 의존성 배열에 추가합니다.
+    setIsLogin,
+    setUserName,
+    setUserProfileUrl,
+    setIsFirstLogin,
+    setShareCode,
+  ]);
 
-  return <Loading />; // 로딩 컴포넌트 렌더링
+  return <Loading />;
 };
 
 export default KakaoLoginCallback;

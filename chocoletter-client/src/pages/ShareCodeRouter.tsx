@@ -30,12 +30,12 @@ const ShareCodeRouter: React.FC = () => {
   const whiteDay = new Date(eventDate);
   whiteDay.setMonth(eventDate.getMonth() + 1);
 
-  if ((urlShareCode && savedShareCode === "") || urlShareCode !== savedShareCode) {
+  if (urlShareCode && savedShareCode === "") {
     return <MainYourBeforeView />;
   }
 
   // 발신자: URL과 Recoil의 shareCode가 모두 존재하고 동일한 경우
-  if (urlShareCode && savedShareCode && urlShareCode === savedShareCode) {
+  if (urlShareCode && savedShareCode !== "" && urlShareCode === savedShareCode) {
     if (today < eventDate) {
       return <MainMyBeforeView />;
     } else if (today.toDateString() === eventDate.toDateString()) {
