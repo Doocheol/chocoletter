@@ -31,6 +31,7 @@ export const joinSession = async (
     session.on("connectionCreated", async () => {
         try {
             if (user.sessionId && await countConnection(user.sessionId) === 2) setIsItThere(true);
+            console.log("여기 왔나요?")
         } catch (err) {
             console.log("연결 확인 오류 : ", err)
         }

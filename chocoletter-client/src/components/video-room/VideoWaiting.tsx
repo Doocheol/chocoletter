@@ -26,7 +26,6 @@ interface WaitingRoomProps {
 export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, videoState }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
-    const { sessionIdInit } = useParams();
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
@@ -103,7 +102,7 @@ export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, vi
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
+        <div className="flex w-full justify-center items-center min-h-screen">
             <LetterInVideoModal
                 isOpen={isOpenLetter}
                 onPush={hideRTCLetter}
@@ -111,7 +110,7 @@ export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, vi
                 receiver="수신자"
                 content={content}
             />
-            <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
+            <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
                 <div className="w-full h-[107px] px-3 top-[35px] absolute flex-col justify-start items-end gap-0.5 inline-flex">

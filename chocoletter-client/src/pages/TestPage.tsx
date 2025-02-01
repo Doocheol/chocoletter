@@ -33,7 +33,7 @@ const TestPage: React.FC = () => {
     { path: "/video/waiting-room/67890", label: "WaitingRoomView (/video/waiting-room/67890)" },
     { path: "/chat/list", label: "ChatRoomListView (/chat/list)" },
     { path: "/my-box", label: "MyBoxView (/my-box)" },
-    { path: "/test/video/13579", label: "TestVideo (/test/video/13579/)"},
+    { path: "/video-test/13579", label: "VideoTest (/video-test/13579)"},
   ];
 
   // 버튼 클릭 시 해당 경로로 이동

@@ -29,7 +29,7 @@ const TestVideoRoomView = () => {
     const [ isItThere, setIsItThere ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(60);
+    const [leftTime, setLeftTime] = useState(6000);
     console.log(isItThere)
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
@@ -137,9 +137,9 @@ const TestVideoRoomView = () => {
                         <OutVideoRoomModal />
                     </div>
                 )}
-                {!isItThere && (
-                    <div className="z-[9999]">
-                        <WaitingTest unboxing="2025-02-01T20:10:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
+                {isItThere ? null : (
+                    <div className="absolute inset-0 z-50 flex justify-center items-center">
+                        <WaitingTest unboxing="2025-02-01T22:10:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
                     </div>
                 )}
                 <LetterInVideoModal
