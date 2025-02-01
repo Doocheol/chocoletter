@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { toast } from "react-toastify";
 import Loading from "../common/Loading";
 import { MyUserInfo } from "../../types/user";
-import { saveUserInfo } from "../../services/userApi";
+import { removeUserInfo, saveUserInfo } from "../../services/userApi";
 import {
-  giftBoxIdAtom,
   isFirstLoginAtom,
   isLoginAtom,
+  shareCodeAtom,
   userNameAtom,
   userProfileUrlAtom,
 } from "../../atoms/auth/userAtoms";
@@ -19,7 +19,7 @@ const KakaoLoginCallback: React.FC = () => {
   const setUserName = useSetRecoilState(userNameAtom);
   const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
   const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
-  const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
+  const setShareCode = useSetRecoilState(shareCodeAtom);
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -29,10 +29,12 @@ const KakaoLoginCallback: React.FC = () => {
       const userName = urlParams.get("userName");
       const userProfileUrl = urlParams.get("userProfileUrl");
       const isFirstLoginParam = urlParams.get("isFirstLogin");
-      const giftBoxIdStr = urlParams.get("giftBoxId"); // 예: "123"
+      const shareCode = urlParams.get("shareCode"); // 이제 shareCode를 받음
 
-      if (!accessToken || !userName) {
+      if (!accessToken || !userName || !shareCode) {
         throw new Error("필수 로그인 정보가 누락되었습니다.");
+        removeUserInfo();
+        toast.error("다시 로그인해주세요!");
       }
 
       const isFirstLogin = isFirstLoginParam === "true";
@@ -42,6 +44,7 @@ const KakaoLoginCallback: React.FC = () => {
       const userInfo: MyUserInfo = {
         userName,
         accessToken,
+        shareCode,
       };
 
       // 사용자 정보 저장 (로컬 스토리지)
@@ -51,31 +54,31 @@ const KakaoLoginCallback: React.FC = () => {
       setIsLogin(true);
       setUserName(userName); // 서버에서 실제 이름을 제공하는 경우, 해당 값을 사용
       setUserProfileUrl(userProfileUrl || "");
+      setShareCode(shareCode);
 
-      // giftBoxId를 number로 파싱 (문자열일 수도 있으므로)
-      let giftBoxIdNum = null;
-      if (giftBoxIdStr) {
-        const parsed = parseInt(giftBoxIdStr, 10);
-        if (!isNaN(parsed)) {
-          giftBoxIdNum = parsed;
-        }
+      const location = useLocation() as { state: { redirect?: string } };
+      const redirectPath = location.state?.redirect;
+      if (redirectPath) {
+        navigate(redirectPath);
       }
 
-      if (giftBoxIdNum !== null) {
-        setGiftBoxId(giftBoxIdNum);
-      }
-
-      // giftBoxId가 있다면 /main/my/before/:giftBoxId 로 이동
-      if (giftBoxIdNum) {
-        navigate(`/main/my/before/${giftBoxIdNum}`);
+      // isFirstLogin이 true면, 먼저 /select-giftbox로 이동
+      if (isFirstLogin) {
+        navigate("/select-giftbox");
       } else {
-        // giftBoxId 없거나 파싱 실패 시, 다른 fallback 경로로
-        navigate("/"); // 0 등으로 표시 or navigate("/error");
+        // 그 외에는 shareCode를 기반으로 메인 페이지로 이동
+        if (shareCode) {
+          navigate(`/${shareCode}`);
+        } else {
+          navigate("/");
+          removeUserInfo();
+          toast.error("다시 로그인해주세요!");
+        }
       }
     };
 
     handleLogin();
-  }, [navigate, setIsLogin, setUserName, setUserProfileUrl, setIsFirstLogin]);
+  }, [navigate, setIsLogin, setUserName, setUserProfileUrl, setIsFirstLogin, setShareCode]);
 
   return <Loading />; // 로딩 컴포넌트 렌더링
 };
