@@ -19,6 +19,8 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
         storage_engine: innodb
+        jdbc:
+          batch_size: 50
 
   security:
     oauth2:

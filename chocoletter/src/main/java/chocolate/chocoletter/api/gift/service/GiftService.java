@@ -112,7 +112,7 @@ public class GiftService {
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.RECEIVE_SPECIAL)
                 .giftId(giftId)
-                .memberId(gift.getReceiverId())
+                .member(memberService.findMember(gift.getReceiverId()))
                 .partnerName(letter.nickName())
                 .build();
         alarmService.save(alarm);
@@ -139,7 +139,7 @@ public class GiftService {
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.ACCEPT_SPECIAL)
                 .giftId(giftId)
-                .memberId(gift.getSenderId())
+                .member(memberService.findMember(gift.getReceiverId()))
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
@@ -176,7 +176,7 @@ public class GiftService {
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.REJECT_SPECIAL)
                 .giftId(giftId)
-                .memberId(gift.getSenderId())
+                .member(memberService.findMember(gift.getReceiverId()))
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
@@ -212,4 +212,7 @@ public class GiftService {
         return dateTimeUtil.formatDateTime(giftRepository.findGiftByIdOrThrow(giftId).getUnBoxingTime());
     }
 
+    public List<Object[]> findUnBoxingTimes(List<Long> giftIds) {
+        return giftRepository.findUnBoxingTimesByGiftIds(giftIds);
+    }
 }

@@ -5,6 +5,7 @@ import chocolate.chocoletter.api.letter.domain.Question;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.dto.response.RandomQuestionResponseDto;
 import chocolate.chocoletter.api.letter.repository.LetterRepository;
+import jakarta.transaction.Transactional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class LetterService {
         return LetterDto.of(letter);
     }
 
+    @Transactional
     public void saveLetter(Letter letter) {
         letterRepository.save(letter);
     }
