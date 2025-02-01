@@ -99,8 +99,8 @@ function App() {
             <Route path="/reset-time" element={<ResetTimeView />} />
             <Route path="/set-time" element={<SetTimeView />} />
             <Route path="/rejected" element={<RejectedView />} />
-            <Route path="/gift/list/before" element={<GiftListBeforeView />} />
-            <Route path="/gift/list/event" element={<GiftListEventView />} />
+            <Route path="/gift-list/before" element={<GiftListBeforeView />} />
+            <Route path="/gift-list/event" element={<GiftListEventView />} />
             <Route path="/chat/list" element={<ChatRoomListView />} />
             <Route path="/my-box" element={<MyBoxView />} />
             <Route path="/main/your/before" element={<MainYourBeforeView />} />

@@ -6,13 +6,11 @@ const { persistAtom } = recoilPersist();
 export const sessionAtom = atom<string>({
     key: 'sessionAtom',
     default: '',
-    effects_UNSTABLE: [persistAtom],
 });
 
 export const tokenAtom = atom<string>({
     key: 'tokenAtom',
     default: '',
-    effects_UNSTABLE: [persistAtom],
 });
 
 // 로컬 테스트용입니다. 오로지

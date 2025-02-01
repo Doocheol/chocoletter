@@ -29,8 +29,7 @@ const TestVideoRoomView = () => {
     const [ isItThere, setIsItThere ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(6000);
-    console.log(isItThere)
+    const [leftTime, setLeftTime] = useState(60);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
@@ -55,6 +54,7 @@ const TestVideoRoomView = () => {
             await deleteSession(videoState.session.sessionId);
         }
         await leaveSession(videoState, setVideoState);
+        // if (sessionIdInit) terminateVideoRoom(sessionIdInit);
     }
 
     const onSemiEnd = async () => {
@@ -77,6 +77,7 @@ const TestVideoRoomView = () => {
 
     // 편지 찾기(추후 추가)
 
+    // 세션 및 토큰 발급
     useEffect(() => {
         if (didJoin.current) return;
         didJoin.current = true;
@@ -98,18 +99,35 @@ const TestVideoRoomView = () => {
 
         initSession();
     }, [])
+
     //////////////////////////////////////////////////////////////////
+    // 내 영상 publish
     useEffect(() => {
+        if (!isItThere) return;
+
+        pushPublish(videoState);
+        console.log("publish do")
+        
+    }, [isItThere])
+
+    // 1분 타이머 지나면 방 폭파
+    useEffect(() => {
+        if (!isItThere) return;
+
         const timerInterval = setInterval(() => {
-            setLeftTime((prevTime) => prevTime - 1);
+            setLeftTime((prevTime) => {
+                if (prevTime <= 1) {
+                    clearInterval(timerInterval);
+                    onEnd();
+                    return 0;
+                }
+
+                return prevTime - 1;
+            });
         }, 1000);
 
-        if (leftTime <= 0) {
-            onEnd();
-        }
-
         return () => clearInterval(timerInterval);
-    }, [leftTime]);
+    }, [isItThere]);
 
     const muteOrNotHandler = () => {
         videoState.publisher?.publishAudio(!videoState.publisher.stream.audioActive);
