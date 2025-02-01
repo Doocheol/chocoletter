@@ -15,7 +15,6 @@ import MainMyBeforeView from "./pages/MainMyBeforeView";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import { useSetRecoilState } from "recoil";
 import { isLoginAtom, userNameAtom, userProfileUrlAtom } from "./atoms/auth/userAtoms";
-import { fetchUserInfo } from "./services/userApi";
 import KakaoLoginCallback from "./components/login/KakaoLoginCallback";
 import ResetTimeView from "./pages/ResetTimeView";
 import SetTimeView from "./pages/SetTimeView";
@@ -27,7 +26,7 @@ import WaitingRoomView from "./pages/VideoWaitingRoomView";
 import VideoRoomView from "./pages/VideoRoomView";
 import GiftListEventView from "./pages/GiftListEventView";
 import ChatRoomListView from "./pages/ChatRoomListView";
-import MyBoxView from "./pages/MyBoxView";
+import SelectGiftBoxView from "./pages/SelectGiftBoxView";
 import MainYourBeforeView from "./pages/MainYourBeforeView";
 import MainMyEventView from "./pages/MainMyEventView";
 import MainMyAfterView from "./pages/MainMyAfterView";
@@ -45,35 +44,6 @@ function App() {
 
   useViewportHeight(); // 커스텀 훅 호출
 
-  useEffect(() => {
-    // const initializeUser = async () => {
-    //   try {
-    fetchUserInfo();
-    //     if (userInfo) {
-    //       // 서버에서 사용자 정보를 검증하는 API 호출 (필요 시)
-    //       const response = await login();
-    //       const { userName, userProfileUrl } = JSON.parse(response);
-
-    //       // Recoil 상태 업데이트
-    //       setIsLogin(true);
-    //       setUserName(userName);
-    //       setUserProfileUrl(userProfileUrl);
-    //     }
-    //   } catch (error) {
-    //     console.log("사용자 정보 조회 실패:", error);
-    //     setIsLogin(false);
-    //     setUserName("");
-    //     setUserProfileUrl("");
-    //   }
-    // };
-
-    // 로그인 상태 확인
-    // const userInfo = getUserInfo();
-    // if (userInfo) {
-    //   initializeUser();
-    // }
-  }, [setIsLogin, setUserName, setUserProfileUrl]);
-
   return (
     <div className="mx-auto w-full md:max-w-sm lg:min-h-screen bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
       <ErrorBoundary>
@@ -85,6 +55,7 @@ function App() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
+            <Route path="/:shareCode" element={<MainMyBeforeView />} />
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/selectletter" element={<SelectLetterTypeView />} />
@@ -100,10 +71,11 @@ function App() {
             <Route path="/gift/list/before" element={<GiftListBeforeView />} />
             <Route path="/gift/list/event" element={<GiftListEventView />} />
             <Route path="/chat/list" element={<ChatRoomListView />} />
-            <Route path="/my-box" element={<MyBoxView />} />
-            <Route path="/main/your/before" element={<MainYourBeforeView />} />
+            <Route path="/select-giftbox" element={<SelectGiftBoxView />} />
+            <Route path="/:shareCode" element={<MainYourBeforeView />} />
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
+            <Route path="/:shareCode" element={<MainMyAfterView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
