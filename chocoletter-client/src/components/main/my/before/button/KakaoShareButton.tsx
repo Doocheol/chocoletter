@@ -7,13 +7,16 @@ interface KakaoShareButtonProps {
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
   const handleKakaoShare = () => {
+    // 현재 호스트의 origin을 사용해 public 폴더의 파일 경로를 절대 URL로 지정합니다.
+    const imageUrl = `${window.location.origin}/chocoletter_kakao_logo.svg`;
+
     // Kakao 링크에 사용될 옵션
     const shareContent: Kakao.ShareOptions = {
       objectType: "feed",
       content: {
         title: "초코레터",
         description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
-        imageUrl: "/chocoletter_kakao_logo.svg",
+        imageUrl: imageUrl,
         link: {
           mobileWebUrl: shareLink, // (2) shareLink 사용
           webUrl: shareLink,

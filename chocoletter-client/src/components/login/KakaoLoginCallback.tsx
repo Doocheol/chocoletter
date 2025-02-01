@@ -33,6 +33,8 @@ const KakaoLoginCallback: React.FC = () => {
 
       if (!accessToken || !userName || !shareCode) {
         removeUserInfo();
+        setIsLogin(false);
+
         toast.error("다시 로그인해주세요!");
         navigate("/");
         return;
@@ -66,15 +68,7 @@ const KakaoLoginCallback: React.FC = () => {
         return;
       }
 
-      if (shareCode) {
-        navigate(`/${shareCode}`);
-        return;
-      } else {
-        removeUserInfo();
-        toast.error("다시 로그인해주세요!");
-        navigate("/");
-        return;
-      }
+      navigate(`/${shareCode}`);
     };
 
     handleLogin();

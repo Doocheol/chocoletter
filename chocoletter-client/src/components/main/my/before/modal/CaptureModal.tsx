@@ -150,7 +150,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
           }),
         ]);
 
-        
         // 캔버스 크기 설정
         canvas.width = capturedImage.width;
         canvas.height = capturedImage.height;
@@ -168,7 +167,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         const cropY = 0; // 프레임 원본의 크롭 시작 Y 좌표
         const cropWidth = frame.width; // 프레임의 크롭할 너비
         const cropHeight = frame.width; // 프레임의 크롭할 높이
-        console.log(frame.width, frame.height)
+        console.log(frame.width, frame.height);
 
         // 캔버스에서 프레임을 그릴 위치
         const drawX = 0;
@@ -178,17 +177,16 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 크롭하여 프레임 그리기
         ctx.drawImage(
-            frame,         // 원본 이미지
-            cropX,         // 크롭 시작 X 좌표
-            cropY,         // 크롭 시작 Y 좌표
-            cropWidth,     // 크롭할 너비
-            cropHeight,    // 크롭할 높이
-            drawX,         // 캔버스에 그릴 X 좌표
-            drawY,         // 캔버스에 그릴 Y 좌표
-            drawWidth,     // 캔버스에 그릴 너비
-            drawHeight     // 캔버스에 그릴 높이
+          frame, // 원본 이미지
+          cropX, // 크롭 시작 X 좌표
+          cropY, // 크롭 시작 Y 좌표
+          cropWidth, // 크롭할 너비
+          cropHeight, // 크롭할 높이
+          drawX, // 캔버스에 그릴 X 좌표
+          drawY, // 캔버스에 그릴 Y 좌표
+          drawWidth, // 캔버스에 그릴 너비
+          drawHeight // 캔버스에 그릴 높이
         );
-
 
         // 캔버스에 선택된 giftbox_before 이미지 그리기 (160x160 픽셀, 중앙 위치)
         const giftboxWidth = 220; // 원하는 너비 (w-40)
@@ -305,9 +303,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
         className={`p-2 flex flex-col items-center rounded-lg ${
           isAnimating ? "jello-vertical" : ""
         }`}
-      > 
+      >
         {/* 닫기버튼과 너무 가까워서 공백 생성 */}
-        <div className="h-[10px]"></div> 
+        <div className="h-[10px]"></div>
         {imageSrc ? (
           <>
             {/* 캔버스를 프리뷰로 표시 */}
