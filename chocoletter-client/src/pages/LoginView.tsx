@@ -1,23 +1,25 @@
 import { Link, useNavigate } from "react-router";
-import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
+import giftbox_event_1 from "../assets/images/giftbox/giftbox_event_1.svg";
 import login_view_service_title from "../assets/images/logo/login_view_service_title.svg";
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
 import { Button } from "../components/common/Button";
-import { isLoginAtom } from "../atoms/auth/userAtoms";
+import { isLoginAtom, shareCodeAtom } from "../atoms/auth/userAtoms";
 import { useRecoilValue } from "recoil";
 import { useEffect } from "react";
 
 function LoginView() {
   const isLogin = useRecoilValue(isLoginAtom);
+  const shareCode = useRecoilValue(shareCodeAtom);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isLogin) {
       // 이미 로그인됨 → 메인 페이지로 이동
-      navigate("/main/my/before");
+      navigate(`/${shareCode}`);
     }
-  }, [isLogin, navigate]);
+  }, [isLogin, shareCode, navigate]);
 
   return (
     <div className="h-[calc((var(--vh, 1vh) * 100)-8rem)] flex flex-col items-center justify-center px-4">
@@ -31,8 +33,12 @@ function LoginView() {
       </div>
 
       {/* 로고 이미지 */}
-      <div className="flex justify-center items-center mt-8 mb-4">
-        <img src={giftbox_before_5} alt="giftbox_before_5" className="pl-10 max-h-60" />
+      <div className="flex justify-center items-center mt-8 mb-10 pl-6">
+        <img
+          src={giftbox_event_1}
+          alt="giftbox_event_1"
+          style={{ width: "240px", height: "auto" }}
+        />{" "}
       </div>
 
       {/* 서비스 타이틀 및 서브타이틀 */}

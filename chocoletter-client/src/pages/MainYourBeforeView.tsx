@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../atoms/auth/userAtoms";
 
@@ -9,27 +9,22 @@ import Backdrop from "../components/common/Backdrop";
 import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
-import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
+import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
+import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 
 const MainYourBeforeView: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 상대방 닉네임 (예시 데이터, 실제 데이터 연동 필요)
-  const recipientNickname = "초코레터팀"; // 실제 값은 prop 또는 API를 통해 받아올 수 있음
-
-  // 로그인 여부 확인 (Recoil 전역 상태 사용)
+  const recipientNickname = "초코레터팀";
   const isLoggedIn = useRecoilValue(isLoginAtom);
 
-  // 프로필 드롭다운 열림 여부
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  // 로그인 필요 모달 상태
   const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);
 
-  // 프로필 드롭다운 토글
   const handleProfile = () => {
     if (!isLoggedIn) {
       setIsNotLoginModalOpen(true);
@@ -38,7 +33,6 @@ const MainYourBeforeView: React.FC = () => {
     setIsProfileOpen((prev) => !prev);
   };
 
-  // 초콜릿 보내기 버튼 클릭
   const handleSendGift = () => {
     if (!isLoggedIn) {
       setIsNotLoginModalOpen(true);
@@ -47,14 +41,21 @@ const MainYourBeforeView: React.FC = () => {
     navigate("/select-letter");
   };
 
-  // 로그인 페이지로 이동
+  // 로그인 페이지로 이동할 때, 현재 경로를 state로 전달하여 로그인 후 복귀할 수 있도록 함
   const handleGoToLogin = () => {
-    navigate("/");
+    navigate("/", { state: { redirect: location.pathname } });
   };
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const eventDate = new Date(currentYear, 1, 14); // 2월 14일
+  const whiteDay = new Date(currentYear, 2, 14); // 3월 14일
+
+  const shouldShowCountdown = today >= eventDate && today < whiteDay;
+  const [isCountdownOpen, setIsCountdownOpen] = useState(shouldShowCountdown);
 
   return (
     <div className="flex justify-center w-full">
-      {/* 메인 컨테이너 */}
       <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
         {/* 상단 아이콘 바 */}
         <div className="mt-6 ml-6 flex items-center justify-end">
@@ -65,7 +66,6 @@ const MainYourBeforeView: React.FC = () => {
 
         {/* 상대방의 선물상자 컨테이너 */}
         <div className="mt-10 mb-10 mx-auto relative">
-          {/* 배경 이미지 */}
           <img
             src={my_count_background}
             alt="Background"
@@ -79,7 +79,7 @@ const MainYourBeforeView: React.FC = () => {
         </div>
 
         <div className="flex flex-col items-center pl-10 mb-6">
-          <img src={giftbox_before_2} alt="giftbox_before_2" className="p-2 max-h-60" />
+          <img src={giftbox_before_5} alt="giftbox_before_5" className="p-2 max-h-60" />
         </div>
 
         {/* 선물하기 버튼 */}
@@ -107,6 +107,13 @@ const MainYourBeforeView: React.FC = () => {
             <MyPage onClose={() => setIsProfileOpen(false)} />
           </>
         )}
+
+        {/* D-DAY 모달 (화이트데이까지 남은 일수 표시) */}
+        <WhiteDayCountdownModal
+          targetDate={whiteDay}
+          isOpen={isCountdownOpen}
+          onClose={() => setIsCountdownOpen(false)}
+        />
       </div>
     </div>
   );

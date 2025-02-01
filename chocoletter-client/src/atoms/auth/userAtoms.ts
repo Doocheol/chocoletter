@@ -33,18 +33,16 @@ export const isFirstLoginAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const userGiftboxAtom = atom<number>({
-  key: "userGiftbox",
-  default: 1, // 초기값 (1-5)
+// giftBoxId 대신 shareCode (string)를 저장합니다.
+export const shareCodeAtom = atom<string>({
+  key: "shareCode",
+  default: "",
   effects_UNSTABLE: [persistAtom],
 });
 
-/**
- * 백엔드에서 내려주는 giftBoxId를 저장 (number).
- * - 로그인된 사용자마다 "어떤 박스에 연결"되어 있는지를 관리
- */
-export const giftBoxIdAtom = atom<number | null>({
-  key: "giftBoxId",
-  default: null,
+// 새로 추가: 사용자가 선택한 선물상자 번호 (1 ~ 5)
+export const giftBoxNumAtom = atom<number>({
+  key: "giftBoxNum",
+  default: 1,
   effects_UNSTABLE: [persistAtom],
 });
