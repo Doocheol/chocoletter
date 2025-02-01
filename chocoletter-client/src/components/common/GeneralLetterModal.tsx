@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
 import FocusLock from "react-focus-lock";
 
@@ -7,13 +7,13 @@ interface ModalProps {
     onClose: () => void;
     sender?: string;
     receiver?: string;
+    content: string;
     children?: React.ReactNode;
     className?: string;
 }
 
-const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, sender, receiver, children, className }) => {
+const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, content, sender, receiver, children, className }) => {
     // 편지 담을 state
-    const [letter] = useState("Sweet Valentine Letter");
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
@@ -42,7 +42,7 @@ const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, sender, rec
 
     return (
         <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackdropClick}
         >
         <FocusLock>
@@ -57,12 +57,12 @@ const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, sender, rec
                 <div className="w-full h-full flex flex-col justify-center items-center gap-[27px] pt-7">
                     <div className="h-16 flex flex-col justify-center items-center">
                         <div className="text-center text-black text-2xl font-normal font-sans leading-snug">
-                            {sender}님이 정성 가득 담아 <br/>
-                            보내주신 초콜릿이에요!🍫
+                            정성이 가득 담긴 <br/>
+                            초콜릿 편지예요!🍫
                         </div>
                     </div>
                     <div className="w-full h-[calc(100%-6rem)] p-5 bg-white rounded-[15px] border-2 border-dashed border-black">
-                        <div className="w-full h-full grow shrink basis-0 text-center text-chocoletterCharacter text-lg font-normal font-sans leading-normal overflow-y-auto">편지 내용</div>
+                        <div className="w-full h-full grow shrink basis-0 text-center text-chocoletterCharacter text-lg font-normal font-sans leading-normal overflow-y-auto">{content}</div>
                     </div>
                 </div>
             </div>
