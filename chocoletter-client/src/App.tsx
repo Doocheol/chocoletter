@@ -107,6 +107,7 @@ function App() {
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
             <Route path="/chat/room" element={<ChatRoomView />} />
+            {/* <Route path="/chat/room/:roomId" element={<ChatRoomView />} /> */}
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>

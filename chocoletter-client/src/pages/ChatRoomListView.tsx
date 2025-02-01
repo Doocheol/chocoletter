@@ -1,43 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
-// import { getChatRooms } from "../api/chatRooms";
+import { getChatRooms } from "../services/chatApi";
 
 interface ChatRoom {
+    roomId: number;
     nickName: string;
-    chatNum: number;
+    chatNum: number; // TODO: 여기서 삭제, pros로 받아오기 
 }
 
 const ChatRoonListView = () => {
 
-    // TODO : 채팅리스트 API 불러오기 (get : 닉네임, 채팅방번호, 안읽은 채팅 개수?)
+    // TODO : 채팅리스트 API 불러오기 
     // 제일 최근에 온 채팅방 위로 올리기?
     // const [chatRooms, setChatRooms] = useState([]);
     const navigate = useNavigate();
 
+    // 채팅방 목록 불러오기
     // useEffect(() => {
     //     const loadChatRooms = async () => {
-    //         const data = await getChatRooms(); // API 호출
+    //         const data = await getChatRooms(); 
     //         setChatRooms(data); // 상태 업데이트
     //     };
 
     //     loadChatRooms();
     // }, []);
 
-    // const handleRoomClick = (session) => {
-    //     navigate(`/chat/${nickName}`); 
+    // const handleRoomClick = (room : ChatRoom) => {
+    //     navigate(`/chat/room/${room.roomId}` }); // nickName을 state로 전달
     // };
 
-    const handleRoomClick = (room : ChatRoom) => {
-        navigate(`/chat/room`, { state: { nickName: room.nickName } }); // nickName을 state로 전달
+    const handleRoomClick = (room: ChatRoom) => {
+        console.log(room.roomId)
+        navigate(`/chat/room`, { state: { roomId: room.roomId, nickName: room.nickName } }); // nickName을 state로 전달
     };
 
     // 더미 데이터 (나중에 서버에서 받아올 데이터)
     const chatRooms = [
-        { nickName: "보라돌이", chatNum: 5 },
-        { nickName: "뚜비", chatNum: 2 },
-        { nickName: "나나", chatNum: 0 },
-        { nickName: "뽀", chatNum: 1 },
+        { roomId: 1, nickName: "보라돌이", chatNum: 5 },
+        { roomId: 2, nickName: "뚜비", chatNum: 2 },
+        { roomId: 3, nickName: "나나", chatNum: 0 },
+        { roomId: 4, nickName: "뽀", chatNum: 1 },
+        { roomId: 5, nickName: "보라돌이", chatNum: 5 },
+        { roomId: 6, nickName: "뚜비", chatNum: 2 },
+        { roomId: 7, nickName: "나나", chatNum: 0 },
+        { roomId: 8, nickName: "뽀", chatNum: 1 },
+        { roomId: 9, nickName: "보라돌이", chatNum: 5 },
+        { roomId: 10, nickName: "뚜비", chatNum: 2 },
+        { roomId: 11, nickName: "나나", chatNum: 0 },
+        { roomId: 12, nickName: "뽀", chatNum: 1 },
+        { roomId: 13, nickName: "보라돌이", chatNum: 5 },
+        { roomId: 14, nickName: "뚜비", chatNum: 2 },
+        { roomId: 15, nickName: "나나", chatNum: 0 },
+        { roomId: 16, nickName: "뽀", chatNum: 1 },
     ];
 
     return (
