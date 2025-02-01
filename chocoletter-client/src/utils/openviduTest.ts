@@ -1,6 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
-import { User, VideoState } from "../types/openvidu";
+import { User, VideoState } from "../types/openvidutest";
 import { getUserInfo } from '../services/userInfo';
+import { Publisher } from 'openvidu-browser';
 
 import axios from 'axios';
 import React from 'react';
@@ -13,9 +14,10 @@ const userInfo = getUserInfo();
 
 export const joinSession = async (
 	user: User,
-	setSessionId: React.Dispatch<React.SetStateAction<string | undefined>>,
 	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
 	setIsTerminate: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsItThere: React.Dispatch<React.SetStateAction<boolean>>,
+    // setLocalPreviewElement?: (publisher: Publisher) => void
 ) => {
 	if (!user.sessionId) return;
 
@@ -25,35 +27,45 @@ export const joinSession = async (
 	// 세션 생성
 	const session = OV.initSession();
 
+    // 인원 확인
+    session.on("connectionCreated", async () => {
+        try {
+            if (user.sessionId && await countConnection(user.sessionId) === 2) setIsItThere(true);
+        } catch (err) {
+            console.log("연결 확인 오류 : ", err)
+        }
+    });
+
 	// stream 생성
-	session.on("streamCreated", (event) => {
+	session.on("streamCreated", async (event) => {
 		try {
 			const subscriber = session.subscribe(event.stream, undefined)
-			setVideo((prevVideo) => ({
+			await setVideo((prevVideo) => ({
 				...prevVideo,
-				subscribers: [...prevVideo.subscribers, subscriber],
+				subscribers: subscriber,
 			}));
 		} catch (err) {
 			console.log("stream 생성 중 오류 발생! : ", err);
 		}
 	});
 
-	session.on("streamDestroyed", (event) => {
+	session.on("streamDestroyed", () => {
 		setVideo((prevVideo) => {
-			const StreamManager = event.stream.streamManager;
 			return {
 				...prevVideo,
-				subscribers: prevVideo.subscribers.filter(
-					(sub) => sub !== StreamManager
-				)
+				subscribers: undefined
 			}
 		})
 	});
 
-	session.on("connectionDestroyed", (event) => {
+    session.on("connectionDestroyed", (event) => {
+        console.log("상대방의 연결이 잠시 끊겼습니다.", event.reason);
+    });
+
+    session.on("sessionDisconnected", (event) => {
 		console.log("회의 종료", event.type)
 		setIsTerminate(true)
-	})
+    });
 
 	// On every asynchronous exception...
 	session.on('exception', (exception) => {
@@ -75,10 +87,12 @@ export const joinSession = async (
 					frameRate: 30, // 프레임 레이트
 					mirror: true, // 거울모드
 				});
+                
+                // if (setLocalPreviewElement) {
+                //     setLocalPreviewElement(publisher);
+                // }
 
-				session.publish(publisher);
-
-				// Set the main video in the page to display our webcam and store our Publisher
+				// 비디오 상태 저장
 				setVideo((prev) => ({
 					...prev,
 					session: session,
@@ -92,12 +106,20 @@ export const joinSession = async (
 	});
 }
 
+export const pushPublish = async (
+    manageVideo: VideoState
+) => {
+    if (manageVideo.publisher) {
+        manageVideo.session?.publish(manageVideo.publisher)
+    }
+}
+
 export const leaveSession = async (
 	manageVideo: VideoState,
 	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
-	setIsTerminate: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
 	if (manageVideo.session) {
+        console.log(manageVideo.session)
 		try {
 			if (manageVideo.publisher) {
 				manageVideo.publisher.stream.getMediaStream().getTracks().forEach(track => {
@@ -108,15 +130,8 @@ export const leaveSession = async (
 				manageVideo.publisher.stream.disposeMediaStream();
 				manageVideo.publisher = undefined;
 			}
-			manageVideo.subscribers.forEach(subscriber => {
-				subscriber.stream.getMediaStream().getTracks().forEach(track => {
-					track.stop()
-					track.enabled = false;
-				});
-			});
-			
-			manageVideo.session.disconnect();
-			deleteSession(manageVideo.session.sessionId);
+
+            manageVideo.session.disconnect();
 		} catch (err) {
 			console.log("연결 해제 오류 : ", err)
 		} finally {
@@ -125,9 +140,8 @@ export const leaveSession = async (
 				session: undefined,
 				mainStreamManager: undefined,
 				publisher: undefined,
-				subscribers: [],
+				subscribers: undefined,
 			}));
-			setIsTerminate(true);
 		}
 	}
 }
@@ -144,6 +158,7 @@ const createSession = async (roomId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+        withCredentials: true,
 	});
 	return response.data; // The sessionId
 };
@@ -154,16 +169,39 @@ const createToken = async (sessionId: string) => {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userInfo?.accessToken}`
 		},
+        withCredentials: true,
 	});
 	return response.data; // The token
 };
 
-const deleteSession = async (sessionId: string) => {
-	if (sessionId === undefined) return;
+const countConnection = async (sessionId: string) => {
+    if (!sessionId) return;
+    try {
+        const res = await axios.get(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}/connection`, {
+            headers: {
+                'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`
+            },
+            withCredentials: true,
+        });
+        return res.data?.numberOfElements
+    } catch (err) {
+        console.log("연결 인원을 찾을 수 없습니다.", err)
+        return -1;
+    }
+};
 
-	await axios.delete(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}/`, {
-		headers: {
-			'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`,
-		}
-	})
-}
+export const deleteSession = async (sessionId: string) => {
+    if (!sessionId) return;
+    try {
+        const res = await axios.delete(`${OPENVIDU_URL}openvidu/api/sessions/${sessionId}`, {
+            headers: {
+                'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`
+            },
+            withCredentials: true,
+        });
+        return res.data
+    } catch (err) {
+        console.log("세션 삭제 실패 : ", err);
+        return null;
+    }
+};

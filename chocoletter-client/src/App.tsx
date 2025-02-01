@@ -106,7 +106,7 @@ function App() {
             <Route path="/main/your/before" element={<MainYourBeforeView />} />
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
-            <Route path="/test/video/:sessionIdInit/:giftId" element={<TestVideoRoomView />} />
+            <Route path="/test/video/:sessionIdInit" element={<TestVideoRoomView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>

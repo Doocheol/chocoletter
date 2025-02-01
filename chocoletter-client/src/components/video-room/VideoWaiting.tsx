@@ -1,26 +1,34 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { memberCntAtom } from "../../atoms/video/videoAtoms"
-import { checkAuthVideoRoom } from "../../services/openviduApi";
 
-import { MyFaceInVideoWaitingRoom } from "../../components/video-waiting-room/MyFaceInVideoWaitingRoom";
+
+import { MyFaceInVideoWaitingRoom } from "../../components/video-waiting-room/TestMyFaceInVideoWaitingRoom"
 import timerIcon from "../../assets/images/unboxing/timer.svg";
 import callTerminate from "../../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../../styles/videoRoom.module.css"
+import { VideoState } from "../../types/openvidutest";
 
 const waitingWords = ["대기중.", "대기중..", "대기중..."]
 
-export const WaitingTest = () => {
+interface WaitingRoomProps {
+    unboxing: string,
+    onEnd: () => void,
+    onSemiEnd: () => void,
+    isItThere: boolean,
+    content: string,
+    videoState: VideoState,
+}
+
+export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, videoState }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout>();
     const { sessionIdInit } = useParams();
-    const [isTimerOn, setIsTimerOn] = useState(true);
-    const [remainTime, setRemainTime] = useState(600);
+    const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
-    // const [isBothJoin, setIsBothJoin] = useState(0);
     const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
@@ -38,67 +46,46 @@ export const WaitingTest = () => {
         setIsOpenLetter(false);
     }
 
-    // 방 참가 인원 API 요청 부분(예정)
-
-    // video-room 연결 테스트
-    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
-    // token 동기화를 위해 localStorage 사용
-    // useEffect(() => {
-    //     const getRoomInfo = async (sessionIdInit: string) => {
-    //         try {
-    //             const response = await checkAuthVideoRoom(sessionIdInit);
-    //             return response.data
-    //         } catch (err) {
-    //             console.log("API 통신 오류 : ", err)
-    //         }
-    //     } 
-
-    //     if (sessionIdInit) {
-    //         const inRoomData = getRoomInfo(sessionIdInit)
-    //     } else {
-    //         console.log("세션 값이 null입니다.")
-    //     }
-    // }, [])
-
+    // 남은 시간 계산
     useEffect(() => {
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === 'isBothJoin' && event.newValue !== null && Number(event.newValue) > 1) {
-                navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-            }
-        };
+        const targetTime = new Date(unboxing);
+        const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000);
+        
+        const now = new Date();
+        const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
 
-        window.addEventListener('storage', handleStorageChange);
+        const timeDiff = targetUTC.getTime() - nowUtc.getTime();
 
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, [navigate, sessionIdInit]);
+        const secondDiff = Math.floor(timeDiff / 1000);
+        setRemainTime(secondDiff);
+    }, [])
 
+    // 5분동안 타이머
     useEffect(() => {
-        localStorage.setItem('isBothJoin', isBothJoin.toString());
-        console.log('is', isBothJoin, 'and', sessionIdInit);
-        const goView = async () => {
-            if (isBothJoin >= 2) {
-                console.log('here', sessionIdInit);
-                if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                timeoutRef.current = setTimeout(() => {
-                    if (!isIn) {return};
-                    navigate('/video/room', { state: { sessionIdInit: sessionIdInit } });
-                }, 10000);
-            }
-        };
-        goView();
+        timeoutRef.current = setInterval(() => {
+            setRemainTime((time) => time - 1);
+            setMakeMMSS(() => {
+                const minute = Math.floor(remainTime / 60);
+                const second = remainTime - minute * 60;
+                if (second <= 9) {
+                    return `${minute}:0${second}`;
+                }
+                return `${minute}:${second}`;
+            });
+        }, 1000);
 
         return () => {
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-            if (videoRef.current && videoRef.current.srcObject) {
-                console.log("꺼졌나요?")
-                const stream = videoRef.current.srcObject as MediaStream;
-                stream.getTracks().forEach(track => track.stop());
-            }
+            if (timeoutRef.current) clearInterval(timeoutRef.current);
         };
-    }, [isBothJoin, isIn, navigate, sessionIdInit]);
-    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
-    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
-    // 테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트
+    }, [remainTime])
+
+    // 5분 후 방 폭파
+    useEffect(() => {
+        if (remainTime <= 0 && !isItThere) {
+            console.log("아쉽게도 연결이 안되었습니다.")
+            onEnd();
+        }
+    }, [isItThere, remainTime, onEnd])
 
     // 0.5초마다 대기중 변경
     useEffect(() => {
@@ -110,37 +97,8 @@ export const WaitingTest = () => {
         return () => clearInterval(interval);
     }, [wcnt]);
 
-    // 5분동안 타이머 및 지나면 방 폭파
-    useEffect(() => {
-        if (!isTimerOn) return;
-
-        const interval = setInterval(() => {
-            setRemainTime((time) => time - 1);
-            setMakeMMSS(() => {
-                if (remainTime >= 1) {
-                    const minute = Math.floor(remainTime / 60);
-                    const second = remainTime - minute * 60;
-                    if (second <= 9) {
-                        return `${minute}:0${second}`;
-                    }
-                    return `${minute}:${second}`;
-                } else {
-                    if (videoRef.current?.srcObject) {
-                        const stream = videoRef.current.srcObject as MediaStream;
-                        stream.getTracks().forEach(track => track.stop());
-                    }
-                    clearInterval(interval);
-                    navigate('/main/my/event')
-                    return '00:00';
-                }
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [isTimerOn, remainTime, navigate])
-
     const handleBackClick = () => {
-        setIsIn(false);
+        onSemiEnd();
         window.history.back(); // 브라우저 이전 페이지로 이동
     };
 
@@ -151,9 +109,10 @@ export const WaitingTest = () => {
                 onPush={hideRTCLetter}
                 sender="송신자"
                 receiver="수신자"
+                content={content}
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
-                <MyFaceInVideoWaitingRoom videoRef={videoRef} />
+                <MyFaceInVideoWaitingRoom videoState={videoState} />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
                 <div className="w-full h-[107px] px-3 top-[35px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
                     <div className="w-8 h-8 z-10" >

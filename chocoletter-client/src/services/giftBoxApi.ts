@@ -7,30 +7,32 @@ import api from "./api";
  * 선물 프리뷰 코인(개봉 가능 횟수 등) 사용 API
  */
 export async function disPreviewCoin() {
-  try {
-    // api.patch 호출: /api/v1/gift-box/preview
-    const res = await api.patch(`/api/v1/gift-box/preview`);
-    const data = res.data;
-    console.log("카운트 사용 성공!", data);
-    return data;
-  } catch (err) {
-    console.error("disPreviewCoin API 호출 중 에러 발생:", err);
-    return err;
-  }
+    try {
+        // api.patch 호출: /api/v1/gift-box/preview
+        const res = await api.patch(`/api/v1/gift-box/preview`, {});
+        const data = res.data;
+        console.log("카운트 사용 성공!", data);
+        return data;
+    } catch (err) {
+        console.error("disPreviewCoin API 호출 중 에러 발생:", err);
+        return err;
+    }
 }
 
 /**
  * 내 선물(기프트박스) 개수 조회 API
  */
 export async function countMyGiftBox() {
-  try {
-    // api.get 호출: /api/v1/gift-box/count
-    const res = await api.get(`/api/v1/gift-box/count`);
-    const data = res.data;
-    console.log("개수 조회 성공 :", data);
-    return data;
-  } catch (err) {
-    console.error("countMyGiftBox API 호출 중 에러 발생:", err);
-    return err;
-  }
+    try {
+        // api.get 호출: /api/v1/gift-box/count
+        const res = await api.get(`/api/v1/gift-box/count`);
+
+        // key: giftCount, canOpenGiftCount
+        const data = res.data;
+        console.log("개수 조회 성공 :", data);
+        return data;
+    } catch (err) {
+        console.error("countMyGiftBox API 호출 중 에러 발생:", err);
+        return err;
+    }
 }
