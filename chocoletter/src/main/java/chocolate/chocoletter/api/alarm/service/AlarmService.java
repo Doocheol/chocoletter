@@ -5,7 +5,7 @@ import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
-import chocolate.chocoletter.api.gift.service.GiftService;
+import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AlarmService {
     private final AlarmRepository alarmRepository;
-    private final GiftService giftService;
+    private final GiftRepository giftRepository;
 
     @Transactional
     public AlarmsResponseDto findMyAlarms(Long memberId) {
@@ -44,7 +44,7 @@ public class AlarmService {
     }
 
     private Map<Long, String> findUnBoxingTimes(List<Long> giftIds) {
-        List<Object[]> results = giftService.findUnBoxingTimes(giftIds);
+        List<Object[]> results = giftRepository.findUnBoxingTimesByGiftIds(giftIds);
         return results.stream()
                 .collect(Collectors.toMap(
                         row -> (Long) row[0],  // giftId
