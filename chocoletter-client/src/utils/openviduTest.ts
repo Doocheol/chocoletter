@@ -182,7 +182,6 @@ const countConnection = async (sessionId: string) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`
             },
-            withCredentials: true,
         });
         return res.data?.numberOfElements
     } catch (err) {
@@ -198,7 +197,6 @@ export const deleteSession = async (sessionId: string) => {
             headers: {
                 'Authorization': `Basic ${OPENVIDU_SECRET_BASE}`
             },
-            withCredentials: true,
         });
         return res.data
     } catch (err) {
