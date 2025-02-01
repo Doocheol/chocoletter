@@ -37,12 +37,12 @@ const ChatRoonListView = () => {
 
     // 더미 데이터 (나중에 서버에서 받아올 데이터)
     const chatRooms = [
-        { roomId: 1, nickName: "보라돌이", chatNum: 5 },
-        { roomId: 2, nickName: "뚜비", chatNum: 2 },
-        { roomId: 3, nickName: "나나", chatNum: 0 },
-        { roomId: 4, nickName: "뽀", chatNum: 1 },
-        { roomId: 5, nickName: "보라돌이", chatNum: 5 },
-        { roomId: 6, nickName: "뚜비", chatNum: 2 },
+        { roomId: 1, nickName: "예슬", chatNum: 5 },
+        { roomId: 2, nickName: "준희", chatNum: 2 },
+        { roomId: 3, nickName: "두철", chatNum: 0 },
+        { roomId: 4, nickName: "훈서", chatNum: 1 },
+        { roomId: 5, nickName: "한송", chatNum: 5 },
+        { roomId: 6, nickName: "지수", chatNum: 2 },
         { roomId: 7, nickName: "나나", chatNum: 0 },
         { roomId: 8, nickName: "뽀", chatNum: 1 },
         { roomId: 9, nickName: "보라돌이", chatNum: 5 },
@@ -79,7 +79,7 @@ const ChatRoonListView = () => {
                     {/* 왼쪽 닉네임 + 채팅방 텍스트 */}
                     <div className="flex flex-row gap-1">
                         <p className="text-[18px] leading-[22px]">{room.nickName}</p>
-                        <p className="text-[15px] leading-[22px] text-[#696A73]">님의 채팅방</p>
+                        <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
                     </div>
                     
                     {/* 오른쪽 채팅 숫자 */}

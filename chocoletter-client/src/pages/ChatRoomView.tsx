@@ -6,9 +6,29 @@ import LetterInChatOpenButton from "../components/chat-room/button/LetterInChatO
 
 const ChatRoonView = () => {
     const location = useLocation();
-    const nickName = location.state?.nickName;
+    const sender = location.state?.nickName;
     const roomId = location.state?.roomId;
     const [isOpenLetter, setIsOpenLetter] = useState(false);
+
+    // TODO : 데이터 get
+    // 더미데이터
+    const Letters = [
+        {
+            nickName: "예슬", 
+            content: "내가 누구게 ?????",
+            question: null,
+            answer: null
+        },
+        
+        {
+            nickName: "준희",
+            content: null,
+            question: "우리 둘이 함께했던 장소 중에서 가장 기억에 남는 곳은 어디야?",
+            answer: "롯데타워"
+        }
+    ]
+
+    const ReceivedData = Letters.find(letter => letter.nickName === sender);
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
@@ -16,17 +36,18 @@ const ChatRoonView = () => {
             <LetterInChatModal
                 isOpen={isOpenLetter}
                 onClose={() => setIsOpenLetter(false)}
-                nickName={nickName}
-                question="질문이"
-                answer="답변!"
+                nickName={sender}
+                content={ReceivedData?.content ?? ""} 
+                question={ReceivedData?.question ?? ""}
+                answer={ReceivedData?.answer ?? ""}
             />
-            {/* 나의 채팅방 목록 */}
+            {/* 상단바 */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">
                     <div className="w-6 h-6 justify-center items-center flex">
                         <GoBackButton />
                     </div>
-                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">{nickName}</div>
+                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">{sender}님과의 채팅방</div>
                     <div className="w-6 h-6"><LetterInChatOpenButton onPush={() => setIsOpenLetter(true)} /></div>
                 </div>
             </div>
