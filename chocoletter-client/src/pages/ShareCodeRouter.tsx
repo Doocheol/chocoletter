@@ -30,7 +30,7 @@ const ShareCodeRouter: React.FC = () => {
   const whiteDay = new Date(eventDate);
   whiteDay.setMonth(eventDate.getMonth() + 1);
 
-  if (urlShareCode && savedShareCode === "") {
+  if ((urlShareCode && savedShareCode === "") || urlShareCode !== savedShareCode) {
     return <MainYourBeforeView />;
   }
 
