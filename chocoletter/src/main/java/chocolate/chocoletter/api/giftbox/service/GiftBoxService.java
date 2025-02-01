@@ -131,7 +131,7 @@ public class GiftBoxService {
     }
 
     public GiftBoxShareCodeResponseDto findShareCodeByMemberId(Long memberId) {
-        return GiftBoxShareCodeResponseDto.of(giftBoxRepository.findShareCodeByMemberId(memberId));
+        return GiftBoxShareCodeResponseDto.of(giftBoxRepository.findByMemberId(memberId));
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {
