@@ -1,6 +1,5 @@
 import React from "react";
 import { sendKakaoShare } from "../../../../../utils/sendKakaoTalk";
-import chocoletter_kakao_loogo from "../../../../../../public/chocoletter_kakao_logo.svg";
 
 interface KakaoShareButtonProps {
   shareLink: string; // 부모(ShareModal)에서 받은 공유 링크
@@ -14,7 +13,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
       content: {
         title: "초코레터",
         description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
-        imageUrl: chocoletter_kakao_loogo,
+        imageUrl: "/chocoletter_kakao_logo.svg",
         link: {
           mobileWebUrl: shareLink, // (2) shareLink 사용
           webUrl: shareLink,
