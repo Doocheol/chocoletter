@@ -76,6 +76,7 @@ const TestVideoRoomView = () => {
     // }
 
     // 편지 찾기(추후 추가)
+    // 위의 checkAuth에 존재
 
     // 세션 및 토큰 발급
     useEffect(() => {
