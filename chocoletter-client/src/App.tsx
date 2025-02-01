@@ -31,6 +31,7 @@ import MyBoxView from "./pages/MyBoxView";
 import MainYourBeforeView from "./pages/MainYourBeforeView";
 import MainMyEventView from "./pages/MainMyEventView";
 import MainMyAfterView from "./pages/MainMyAfterView";
+import ChatRoomView from "./pages/ChatRoomView";
 
 declare global {
   interface Window {
@@ -105,6 +106,7 @@ function App() {
             <Route path="/main/your/before" element={<MainYourBeforeView />} />
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
+            <Route path="/chat/room" element={<ChatRoomView />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
