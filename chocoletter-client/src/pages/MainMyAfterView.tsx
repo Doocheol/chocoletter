@@ -131,8 +131,8 @@ const MainMyAfterView: React.FC = () => {
         <div className="mt-6 ml-6 flex items-center justify-between "></div>
 
         {/** 초콜릿 박스 & 안내 문구 */}
-        <div className="mt-36 flex flex-col items-center px-4">
-          <button className="w-[255px] pl-4 flex items-center justify-center" onClick={handleLogin}>
+        <div className="mt-32 flex flex-col items-center px-4">
+          <button className="w-[300px] pl-4 flex items-center justify-center" onClick={handleLogin}>
             <img src={after_giftbox} alt="after_giftbox" className="p-2 max-h-60" />
           </button>
         </div>
