@@ -29,7 +29,7 @@ const TestVideoRoomView = () => {
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
     const { sessionIdInit } = useParams();
-    const [ isItThere, setIsItThere ] = useState(true);
+    const [ isItThere, setIsItThere ] = useState(false);
     const [ isReady, setIsReady ] = useState(false);
     const [ countFive, setCountFive ] = useState(false);
 
@@ -169,7 +169,7 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-02T18:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
+                        <WaitingTest unboxing="2025-02-02T21:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
                     </div>
                 )}
                 <LetterInVideoModal
