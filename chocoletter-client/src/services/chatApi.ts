@@ -8,6 +8,6 @@ export async function getChatRooms() {
     return data;
   } catch (err) {
     console.error("getChatRooms API 호출 중 에러 발생:", err);
-    return null;
+    throw err;
   }
 }
