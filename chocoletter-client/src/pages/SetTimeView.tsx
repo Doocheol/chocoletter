@@ -8,7 +8,7 @@ import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSe
 import AmPmDial from "../components/set-time/button/AmPmDial"
 import HourDial from "../components/set-time/button/HourDial"
 import MinuteDial from "../components/set-time/button/MinuteDial"
-import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
+// import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
 import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
