@@ -39,6 +39,7 @@ const TestPage: React.FC = () => {
     { path: "/main/your/before", label: "MyBoxView (/main/your/before)" },
     { path: "/main/my/event", label: "MyBoxView (/main/my/event)" },
     { path: "/main/my/after", label: "MyBoxView (/main/my/after)" },
+    { path: "/chat/room/9997", label: "ChatRoomView (/chat/room/9997)" },
   ];
 
   // 버튼 클릭 시 해당 경로로 이동

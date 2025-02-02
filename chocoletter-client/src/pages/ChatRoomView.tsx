@@ -9,15 +9,15 @@ import { ImageButton } from "../components/common/ImageButton";
 import send_icon from "../assets/images/main/send_icon.svg";
 // import { useSelector } from "react-redux"
 import { Client, Stomp } from "@stomp/stompjs";
+import { changeKSTDate } from "../utils/changeKSTDate";
 // npm install react-redux
 // npm install @stomp/stompjs
-
 
 
 // ✅Todo : 수정하기
 interface MessageType {
     // roomId: number;
-    senderId: number; // 숫자 타입으로 수정
+    senderId: number; 
     // senderName: string; // 메시지 데이터에 없는 경우, 기본값이나 null로 설정 가능
     content: string;
     createdAt: string; // 메시지 생성 시간
@@ -26,8 +26,10 @@ interface MessageType {
 
 const ChatRoonView = () => {
     const location = useLocation();
-    const sender = location.state?.nickName;
-    const roomId = location.state?.roomId;
+    const sender = location.state?.nickName  ?? "예슬";
+    // const roomId = location.state?.roomId;
+    const { roomId } = useParams()
+    const parsedRoomId = parseInt(roomId ?? "0", 10)
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
@@ -92,8 +94,8 @@ const ChatRoonView = () => {
     const fetchMessages = async () => {
         try {
             console.log("기존 메시지 불러오는 중...");
-            const baseUrl = import.meta.env.VITE_CHAT_WEBSOCKET_URL;
-            const response = await axios.get(`${baseUrl}/api/v1/chat/${roomId}/all?page=0&size=20`); // ✅ TODO 수정
+            const baseUrl = import.meta.env.VITE_CHAT_API_URL;
+            const response = await axios.get(`${baseUrl}/api/v1/chat/${parsedRoomId}/all?page=0&size=20`); // ✅ TODO 수정
 
             if (response.data && Array.isArray(response.data)) {
                 setMessages(response.data);
@@ -115,10 +117,10 @@ const ChatRoonView = () => {
             heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
 
             onConnect: () => {
-                console.log("WebSocket 연결 성공! (채팅방 ID:", roomId, ")");
+                console.log("WebSocket 연결 성공! (채팅방 ID:", parsedRoomId, ")");
                 
                 // 채팅방 메시지 구독
-                stompClient.current?.subscribe(`/topic/${roomId}`, (message) => {
+                stompClient.current?.subscribe(`/topic/${parsedRoomId}`, (message) => {
                     const newMessage = JSON.parse(message.body);
                     console.log("Received message:", newMessage);
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -145,7 +147,7 @@ const ChatRoonView = () => {
     const sendMessage = () => {
         if (stompClient.current && message.trim()) {
             const msgObject = {
-                roomId: roomId,       
+                roomId: parsedRoomId,       
                 senderId: testSenderId, // currentUser.id, // 현재 로그인한 사용자 ID
                 senderName: "none",
                 content: message,   
@@ -165,12 +167,14 @@ const ChatRoonView = () => {
         return () => {
             stompClient.current?.deactivate(); // 컴포넌트 언마운트 시 연결 해제
         };
-    }, [roomId]);
+    }, [parsedRoomId]);
 
     // 최하단 자동 스크롤
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
+
+
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
@@ -195,17 +199,35 @@ const ChatRoonView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[343px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 overflow-y-auto">
+            <div className="flex-1 w-full md:max-w-[343px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto">
                 {messages.map((msg, index) => (
-                    <div 
-                        key={index} 
-                        className={clsx(
-                            "max-w-[70%] p-3 rounded-lg shadow-md break-words",
-                            msg.senderId === Number(testSenderId) ? "bg-blue-500 text-white self-end" : "bg-gray-200 text-gray-700 self-start"
+                    <div key={index} className={clsx(
+                        "flex items-end mx-2",
+                        msg.senderId === Number(testSenderId) ? "justify-end" : "justify-start"
+                    )}>
+                        {/* 상대방 말풍선 */}
+                        {msg.senderId !== Number(testSenderId) && (
+                            <div className="flex w-full gap-[5px]">
+                                <div 
+                                    className="max-w-[200px] flex p-[10px_15px] rounded-r-[15px] rounded-bl-[15px] break-words bg-white border border-black"
+                                >
+                                    <div className="text-sans text-[15px]">{msg.content}</div>
+                                </div>
+                                <div className="font-[Pretendard] text-[12px] text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                            </div>
                         )}
-                    >
-                        <div className="text-sm font-semibold">{msg.senderId === Number(testSenderId) ? "나" : "상대방"}</div>
-                        <div className="text-base">{msg.content}</div>
+
+                        {/* 내 말풍선 */}
+                        {msg.senderId === Number(testSenderId) && (
+                            <div className="flex items-center space-x-2">
+                                <div className="font-[Pretendard] text-xs text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                <div 
+                                    className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white"
+                                >
+                                    <div className="text-sans text-[15px]">{msg.content}</div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
@@ -215,16 +237,16 @@ const ChatRoonView = () => {
             {/* 입력창 */}
             <div
                 className={clsx(
-                    "absolute inset-x-0 p-[7px_15px] bg-[#F7F7F8] flex flex-row justify-between mx-auto w-full md:max-w-sm gap-[15px] transition-all duration-300",
+                    "fixed inset-x-0 p-[7px_15px] bg-[#F7F7F8] flex flex-row justify-between mx-auto w-full md:max-w-sm gap-[15px] transition-all duration-300",
                     isKeyboardOpen ? `bottom-[${keyboardHeight}px]` : "bottom-0"
                 )}
             >
-                {/* senderId 입력창 (테스트용) */}
-                <div className="p-2 bg-gray-100 rounded-md mb-2">
+                {/* ✅추후 삭제 senderId 입력창 (테스트용) */}
+                <div className="w-[80px] h-[30px] bg-gray-100 rounded-md mb-2">
                     <input
                         type="text"
-                        placeholder="테스트용 senderId 입력"
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="senderId 입력"
+                        className="w-full h-full border border-gray-300 rounded-md text-[10px]"
                         value={testSenderId}
                         onChange={(e) => setTestSenderId(e.target.value)}
                     />
