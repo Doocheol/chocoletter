@@ -152,6 +152,7 @@ const WaitingRoomView = () => {
                 onClose={hideRTCLetter}
                 sender="송신자"
                 receiver="수신자"
+                content="loving"
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
                 <MyFaceInVideoWaitingRoom videoRef={videoRef} />

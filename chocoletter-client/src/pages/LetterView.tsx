@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from 'recoil';
 import { selectedGiftIdAtom } from "../atoms/gift/giftAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { GoArrowLeft } from "react-icons/go";
 import { getGiftDetail } from "../services/giftApi";
 import Gift from "../components/letter/Letter";
 import Loading from "../components/common/Loading"
@@ -56,11 +55,11 @@ const LetterView = () => {
             <GoBackButton strokeColor="#9E4AFF" />
 
             {/* 추후 삭제!! 선택된 Gift ID 표시 */}
-            <div className="mt-4 text-center text-gray-600">
+            {/* <div className="mt-4 text-center text-gray-600">
                 <p>
                     <strong>Selected Gift ID:</strong> {selectedGiftId}
                 </p>
-            </div>
+            </div> */}
 
             {/* 메인 콘텐츠 렌더링 */}
             {loading ? (
@@ -71,11 +70,11 @@ const LetterView = () => {
                 <div className="absolute mt-[41px] m-4">
                     <GiftView
                         giftData={
-                            giftData || {
-                                nickName: "Anonymous",
-                                content: null,
-                                question: "No question provided",
-                                answer: "No answer provided",
+                                    giftData || {
+                                        nickName: "Anonymous",
+                                        content: "No content",
+                                        question: null ,
+                                answer: null,
                             }
                         }
                     />

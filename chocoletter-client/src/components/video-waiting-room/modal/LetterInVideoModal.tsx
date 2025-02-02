@@ -8,6 +8,7 @@ interface LetterInVideoModalProps {
   onClose: () => void;
   sender: string;
   receiver: string;
+  content: string;
 }
 
 const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, sender, receiver }) => {

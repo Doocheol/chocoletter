@@ -23,7 +23,7 @@ import { deleteUserInfo, getUserInfo, savingUserInfo } from "./userInfo";
  */
 export async function logout(): Promise<string> {
   try {
-    const res = await api.get(`/api/v1/auth/logout`);
+    const res = await api.post(`/api/v1/auth/logout`);
     // 로그아웃 성공 시, 사용자 정보 삭제
     removeUserInfo();
     return res.data.status;
@@ -66,4 +66,21 @@ export function fetchUserInfo(): MyUserInfo | null {
  */
 export function removeUserInfo(): void {
   deleteUserInfo();
+}
+
+/**
+ * 2) /api/v1/gift-box/link 에서 shareCode를 받아오는 함수
+ * @returns shareCode (문자열)
+ * 
+ * 해당 API는 서버에서 { shareCode: string } 형태로 반환된다고 가정
+ */
+export async function getGiftBoxShareCode(): Promise<string> {
+  try {
+    // GET /api/v1/gift-box/link
+    const res = await api.get<{ shareCode: string }>(`/api/v1/gift-box/link`);
+    return res.data.shareCode;
+  } catch (err) {
+    console.error("Error retrieving share code from /api/v1/gift-box/link:", err);
+    throw err;
+  }
 }

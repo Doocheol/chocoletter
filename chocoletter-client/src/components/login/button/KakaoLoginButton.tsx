@@ -5,29 +5,33 @@ import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "../../../services/userInfo";
 import { useRecoilValue } from "recoil";
-import { giftBoxIdAtom } from "../../../atoms/auth/userAtoms";
+import { shareCodeAtom } from "../../../atoms/auth/userAtoms";
+import { logout, removeUserInfo } from "../../../services/userApi";
+import { toast } from "react-toastify";
 
 const KakaoLoginButton: React.FC = () => {
   const navigate = useNavigate();
   // 로컬 스토리지의 유저 정보(로그인 여부) 확인
   const userInfo = getUserInfo();
-  // Recoil의 giftBoxIdAtom 값 (로그인 후 서버 콜백 시 저장되었다고 가정)
-  const giftBoxId = useRecoilValue(giftBoxIdAtom);
+  const shareCode = useRecoilValue(shareCodeAtom);
 
   // 로딩 표시
   const [isLoading, setIsLoading] = useState(false);
 
   const kakaoAuthUrl = `${import.meta.env.VITE_API_SERVER_URL}/api/v1/auth/kakao`;
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // 이미 로그인 정보가 있다면 (한 번이라도 로그인됨)
     if (userInfo?.accessToken) {
       // giftBoxId가 있다면 /main/my/before/:giftBoxId 로 이동
       // 없다면 기본 /main/my/before 로 이동
-      if (giftBoxId) {
-        navigate(`/main/my/before/${giftBoxId}`);
+      if (shareCode) {
+        navigate(`/${shareCode}`);
       } else {
-        navigate("/main/my/before");
+        removeUserInfo();
+        await logout();
+        navigate("/");
+        toast.error("다시 로그인해주세요.");
       }
     } else {
       // 처음 로그인 -> 백엔드로 리다이렉트

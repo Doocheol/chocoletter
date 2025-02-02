@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
 import FocusLock from "react-focus-lock";
 import question_icon from "../../assets/images/letter/question_icon.svg";

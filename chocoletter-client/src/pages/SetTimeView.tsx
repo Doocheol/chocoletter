@@ -39,7 +39,7 @@ const SetTimeView = () => {
                 const data = await getUnboxingSchedule(giftBoxId);
                 if (data && data.unboxingTimes) {
                     setDisableTimes(data.unboxingTimes);
-                    // console.log("Fetched disableTimes:", data.unboxingTimes);
+                    console.log("Fetched disableTimes:", data.unboxingTimes);
                 } else {
                     console.error("No unboxing times received from API");
                 }
@@ -70,7 +70,7 @@ const SetTimeView = () => {
         const toastId = "time-disabled-toast"; 
 
         if (disabled && !toast.isActive(toastId)) {
-            toast.error("선택하신 시간은 사용할 수 없습니다.", {
+            toast.error("해당 시간은 이미 예약되었습니다.", {
                 toastId, // 고유 ID를 설정해 중복 방지
                 position: "bottom-center",
                 autoClose: 3000,
@@ -141,7 +141,7 @@ const SetTimeView = () => {
     // 모달 닫기 + 페이지 이동
     const closeModalAndNavigate = () => {
         setIsModalOpen(false);
-        navigate("/sentgift"); // 원하는 경로로 이동
+        navigate("/sent-gift"); // 원하는 경로로 이동
     };
 
     // 삭제하기 

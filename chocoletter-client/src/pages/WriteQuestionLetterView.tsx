@@ -43,7 +43,7 @@ const WriteQuestionLetterView = () => {
             return;
         }
 
-        navigate("/selectgift");
+        navigate("/select-gift");
     };
 
     return (

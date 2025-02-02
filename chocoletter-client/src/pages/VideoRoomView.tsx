@@ -110,6 +110,7 @@ const VideoRoomView = () => {
                     onPush={hideRTCLetter}
                     sender="송신자"
                     receiver="수신자"
+                    content="loving"
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
