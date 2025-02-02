@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { getChatRooms } from "../services/chatApi";
+import Loading from "../components/common/Loading";
 
 interface ChatRoom {
     roomId: number;
@@ -16,6 +17,7 @@ const ChatRoonListView = () => {
     // TODO : 채팅리스트 API 불러오기 
     // 제일 최근에 온 채팅방 위로 올리기?
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const memberId = 9999 //✅ TODO 수정하기
     const navigate = useNavigate();
 
@@ -29,12 +31,15 @@ const ChatRoonListView = () => {
     // 채팅방 목록 불러오기
     useEffect(() => {
         const loadChatRooms = async () => {
+            setIsLoading(true)
             try {
                 const data = await getChatRooms();
                 setChatRooms(data); 
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패!", error);
                 setChatRooms(dummyChatRooms); // ✅ todo 추후 삭제
+            } finally {
+                setIsLoading(false);
             }
         };
         loadChatRooms();
@@ -107,26 +112,31 @@ const ChatRoonListView = () => {
             </div>
             {/* 채팅방 리스트 */}
             <div className="w-full max-w-[90%] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4" >
-                {chatRooms.map((room, index) => (
-                <div
-                    key={index}
-                    className="flex h-[71px] px-[20px] py-[10px] justify-between items-center self-stretch rounded-[15px] border border-black bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleRoomClick(room)}
-                >
-                    {/* 왼쪽 닉네임 + 채팅방 텍스트 */}
-                    <div className="flex flex-row gap-1">
-                        <p className="text-[18px] leading-[22px]">{room.nickName}</p>
-                        <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
-                    </div>
-                    
-                    {/* 오른쪽 채팅 숫자 */}
-                    {room?.unreadCount && room.unreadCount > 0 && (
-                        <div className="w-8 h-6 bg-red-400 rounded-xl text-white text-center">
-                            {room.unreadCount}
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    // {
+                    chatRooms.map((room, index) => (
+                        <div
+                            key={index}
+                            className="flex h-[71px] px-[20px] py-[10px] justify-between items-center self-stretch rounded-[15px] border border-black bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer hover:bg-gray-100"
+                            onClick={() => handleRoomClick(room)}
+                        >
+                            {/* 왼쪽 닉네임 + 채팅방 텍스트 */}
+                            <div className="flex flex-row gap-1">
+                                <p className="text-[18px] leading-[22px]">{room.nickName}</p>
+                                <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
+                            </div>
+                            
+                            {/* 오른쪽 채팅 숫자 */}
+                            {room?.unreadCount && room.unreadCount > 0 && (
+                                <div className="w-8 h-6 bg-red-400 rounded-xl text-white text-center">
+                                    {room.unreadCount}
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
-            ))}
+                    ))
+                )}
             </div>
         </div>
     )
