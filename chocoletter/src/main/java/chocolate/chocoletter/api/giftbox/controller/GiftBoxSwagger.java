@@ -32,8 +32,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> sendGeneralFreeGift(
             @Parameter(
-                    description = "선물을 전송할 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBoxId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -59,8 +59,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> sendGeneralQuestionGift(
             @Parameter(
-                    description = "선물을 전송할 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBoxId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -86,8 +86,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> sendSpecialFreeGift(
             @Parameter(
-                    description = "선물을 전송할 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBoxId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -113,8 +113,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> sendSpecialQuestionGift(
             @Parameter(
-                    description = "선물을 전송할 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBoxId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -163,8 +163,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> findGiftBox(
             @Parameter(
-                    description = "정보를 볼 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBoxId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId);
 
@@ -186,8 +186,8 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> findUnboxingTimes(
             @Parameter(
-                    description = "일정을 볼 GiftBox의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftBox Id (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftBoxId") Long giftBoxId);
 
@@ -208,5 +208,5 @@ public interface GiftBoxSwagger {
     })
     public ResponseEntity<?> usePreviewCount(Principal principal);
 
-    public ResponseEntity<?> getShareCode(Principal principal);
+    public ResponseEntity<?> getGiftBoxId(Principal principal);
 }

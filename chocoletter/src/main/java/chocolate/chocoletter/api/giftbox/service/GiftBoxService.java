@@ -9,7 +9,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
-import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxShareCodeResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxIdResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
@@ -21,12 +21,15 @@ import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
+import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GiftBoxService {
@@ -36,6 +39,7 @@ public class GiftBoxService {
     private final LetterService letterService;
     private final ChatRoomService chatRoomService;
     private final DateTimeUtil dateTimeUtil;
+    private final IdEncryptionUtil idEncryptionUtil;
 
     @Transactional
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
@@ -90,7 +94,8 @@ public class GiftBoxService {
 
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
         GiftBox friendGiftBox = findGiftBox(giftBoxId);
-        return GiftBoxResponseDto.of(friendGiftBox);
+        String encryptedGiftBoxId = encryptGiftBoxId(friendGiftBox.getId());
+        return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId);
     }
 
     public UnboxingTimesResponseDto findUnBoxingTimes(Long giftBoxId) {
@@ -130,8 +135,9 @@ public class GiftBoxService {
         return gift;
     }
 
-    public GiftBoxShareCodeResponseDto findShareCodeByMemberId(Long memberId) {
-        return GiftBoxShareCodeResponseDto.of(giftBoxRepository.findByMemberId(memberId));
+    public GiftBoxIdResponseDto findGiftBoxIdByMemberId(Long memberId) {
+        GiftBox giftBox = giftBoxRepository.findByMemberId(memberId);
+        return GiftBoxIdResponseDto.of(encryptGiftBoxId(giftBox.getId()));
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {
@@ -154,5 +160,15 @@ public class GiftBoxService {
         if (receiverGift != null) {
             chatRoomService.saveChatRoom(senderId, receiverId, senderGiftId, receiverGift.getId());
         }
+    }
+
+    private String encryptGiftBoxId(Long giftBoxId) {
+        try {
+            String encryptGiftBoxId = idEncryptionUtil.encrypt(giftBoxId);
+            return encryptGiftBoxId;
+        } catch (Exception e) {
+            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
+        }
+        return null;
     }
 }
