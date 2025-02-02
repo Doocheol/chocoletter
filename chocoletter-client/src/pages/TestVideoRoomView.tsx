@@ -4,6 +4,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
 import { userNameAtom } from '../atoms/auth/userAtoms';
+import { FiveSecondModal } from '../components/video-waiting-room/modal/FiveSecondModal';
 
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
@@ -28,10 +29,12 @@ const TestVideoRoomView = () => {
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
     const { sessionIdInit } = useParams();
-    const [ isItThere, setIsItThere ] = useState(false);
+    const [ isItThere, setIsItThere ] = useState(true);
+    const [ isReady, setIsReady ] = useState(false);
+    const [ countFive, setCountFive ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(60);
+    const [leftTime, setLeftTime] = useState(65);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
@@ -81,10 +84,6 @@ const TestVideoRoomView = () => {
     // 위의 checkAuth에 존재
 
     // 세션 및 토큰 발급
-    useEffect(() => {
-        if (didJoin.current) return;
-        didJoin.current = true;
-
         const initSession = async () => {
             try {
                 console.log("세션 생성 중")
@@ -100,17 +99,18 @@ const TestVideoRoomView = () => {
             }
         };
 
-        initSession();
-    }, [])
-
     //////////////////////////////////////////////////////////////////
-    // 내 영상 publish
+    // 내 영상 publishAudio 활성화
     useEffect(() => {
         if (!isItThere) return;
+        setCountFive(true);
+        const timer = setTimeout(() => {
+            pushPublish(videoState);
+            console.log("publish do");
+            setCountFive(false);
+        }, 5000);
 
-        pushPublish(videoState);
-        console.log("publish do")
-        
+        return () => clearTimeout(timer);       
     }, [isItThere])
 
     // 1분 타이머 지나면 방 폭파
@@ -150,15 +150,18 @@ const TestVideoRoomView = () => {
         setIsOpenLetter(false);
     }
 
-    const transRemoteMuted = () => {
+    const transRemoteMuted = async () => {
+        await initSession();
         const newMute = !isRemoteMuted;
         setIsRemoteMuted(newMute);
+        setIsReady(true);
         if (remoteVideoRef.current) remoteVideoRef.current.muted = newMute;
     }
 
     return (
         <>
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
+                {isItThere && countFive ? <FiveSecondModal leftTime={leftTime} /> : null}
                 {isTerminate && (
                     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center">
                         <OutVideoRoomModal />
@@ -166,15 +169,14 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-02T15:30:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
+                        <WaitingTest unboxing="2025-02-02T18:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
                     </div>
                 )}
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
-                    sender="송신자"
-                    receiver="수신자"
-                    content="love"
+                    nickName="도리도리"
+                    content="Is it LOVE? all not,"
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
@@ -182,7 +184,7 @@ const TestVideoRoomView = () => {
                 {/* 내 화면 */}
                 <div 
                     id="my-video" 
-                    className={`absolute bottom-[20dvh] right-6 rounded-[12px] shadow-xl overflow-hidden z-30 ${classes.flowingBorder}`}
+                    className={`absolute bottom-[18dvh] right-6 rounded-[12px] shadow-xl overflow-hidden z-30 ${classes.flowingBorder}`}
                     style={{
                         '--bg-color': 'var(--chocoletter-giftbox-bg)',
                         '--custom-width': '18dvh',
@@ -201,12 +203,11 @@ const TestVideoRoomView = () => {
                     )}
                 </div>
                 {/* 타이머 */}
-                <div className="absolute top-9 px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex">
+                <div className="absolute top-9 px-[15px] py-[5px] bg-chocoletterGiftBoxBg rounded-[17px] justify-center items-center gap-[9px] inline-flex z-20">
                     <div className="w-[18px] h-[18px] relative">
                         <img src={timerIcon} alt="타이머" className={`w-[18px] h-[18px] left-0 top-0 absolute ${leftTime <= 5? classes.alarmIcon : ""}`} />
                     </div>
-                    <div className="text-black">{isItThere}</div>
-                    <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning" : "text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug z-20`}>{leftTime}</div>
+                    <div className={`text-center ${leftTime <= 5? "text-chocoletterWarning" : "text-chocoletterPurpleBold"} text-2xl font-normal font-sans leading-snug`}>{leftTime}</div>
                 </div>
 
                 {/* 상대방 화면 */}
@@ -228,17 +229,8 @@ const TestVideoRoomView = () => {
 
                     )}
                 </div>
-                <div className="flex w-full bottom-[5dvh] justify-center gap-x-5 items-center absolute pt-3">
-                    <div className={`w-[8dvh] h-[8dvh] ${isRemoteMuted ? "bg-black" : "bg-white"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
-                        <button onClick={transRemoteMuted} className="w-full h-full aspect-square flex justify-center items-center" >
-                            {isRemoteMuted ? (
-                                <MdHeadsetOff color="white" className="w-[50%] h-[50%]" />
-                            ) : (
-                                <MdHeadset className="w-[50%] h-[50%]" />
-                            )}
-                        </button>
-                    </div>
-                    <div className={`w-[8dvh] h-[8dvh] ${isAudio ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                <div className="flex w-full bottom-[5dvh] justify-center gap-x-7 items-center absolute pt-3">
+                    <div className={`w-[9dvh] h-[9dvh] ${isAudio ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                         <button onClick={muteOrNotHandler} className="w-full h-full aspect-square flex justify-center items-center" >
                             {isAudio ? (
                                 <AiOutlineAudio className="w-[50%] h-[50%]" />
@@ -247,7 +239,7 @@ const TestVideoRoomView = () => {
                             )}
                         </button>
                     </div>
-                    <div className={`w-[8dvh] h-[8dvh] ${isVideo ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                    <div className={`w-[9dvh] h-[9dvh] ${isVideo ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                         <button onClick={videoOffOrNotHandler} className="w-full h-full aspect-square flex justify-center items-center" >
                             {isVideo ? (
                                 <FaVideo className="w-[50%] h-[50%]" />
@@ -256,8 +248,8 @@ const TestVideoRoomView = () => {
                             )}
                         </button>
                     </div>
-                    <div className="pl-5">
-                        <div className="w-[8dvh] h-[8dvh] bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
+                    <div className="pl-10">
+                        <div className="w-[9dvh] h-[9dvh] bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
                             <CloseVideoRoomButton onEnd={onEnd} />
                         </div>
                     </div>

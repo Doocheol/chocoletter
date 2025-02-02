@@ -81,16 +81,14 @@ export const joinSession = async (
 				const publisher = await OV.initPublisherAsync(undefined, {
 					audioSource: undefined, // 기본 마이크
 					videoSource: undefined, // 기본 카메라
-					publishAudio: true, // 오디오 송출 여부
+					publishAudio: false, // 오디오 송출 여부
 					publishVideo: true, // 비디오 송출 여부
 					resolution: '640x480', // 해상도
 					frameRate: 30, // 프레임 레이트
 					mirror: true, // 거울모드
 				});
                 
-                // if (setLocalPreviewElement) {
-                //     setLocalPreviewElement(publisher);
-                // }
+                session.publish(publisher)
 
 				// 비디오 상태 저장
 				setVideo((prev) => ({
@@ -110,7 +108,7 @@ export const pushPublish = async (
     manageVideo: VideoState
 ) => {
     if (manageVideo.publisher) {
-        manageVideo.session?.publish(manageVideo.publisher)
+        manageVideo.publisher.publishAudio(true);
     }
 }
 
