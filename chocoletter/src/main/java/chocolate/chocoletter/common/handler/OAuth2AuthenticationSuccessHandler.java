@@ -41,9 +41,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             profileImgUrl = (String) oAuth2User.getAttributes().get("profileImgUrl");
         }
         String isFirstLogin = (String) oAuth2User.getAttributes().get("isFirstLogin");
-        String shareCode = (String) oAuth2User.getAttributes().get("shareCode");
+        String giftBoxId = (String) oAuth2User.getAttributes().get("giftBoxId");
 
         String accessToken = jwtTokenUtil.createAccessToken(id);
+        System.out.println(accessToken);
 
         // 리다이렉트 URL 생성
         String redirectUrl = frontendUrl + "/auth/kakao/callback"
@@ -51,7 +52,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 + "&userName=" + URLEncoder.encode(name, StandardCharsets.UTF_8)
                 + "&userProfileUrl=" + URLEncoder.encode(profileImgUrl, StandardCharsets.UTF_8)
                 + "&isFirstLogin=" + URLEncoder.encode(isFirstLogin, StandardCharsets.UTF_8)
-                + "&shareCode=" + URLEncoder.encode(shareCode, StandardCharsets.UTF_8);
+                + "&giftBoxId=" + URLEncoder.encode(giftBoxId, StandardCharsets.UTF_8);
 
         // 리다이렉트 수행
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);

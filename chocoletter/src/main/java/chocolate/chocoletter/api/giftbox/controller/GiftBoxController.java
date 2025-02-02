@@ -87,10 +87,10 @@ public class GiftBoxController implements GiftBoxSwagger {
      * Principle이 Authentication에 비해 정보를 더 적게 제공해줌
      * -> 필요한것만 제공해주는게 Principle이기 때문에 이거 사용
      */
-    @GetMapping("/link")
-    public ResponseEntity<?> getShareCode(Principal principal) {
+    @GetMapping("/id")
+    public ResponseEntity<?> getGiftBoxId(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
-        return ResponseEntity.ok(giftBoxService.findShareCodeByMemberId(memberId));
+        return ResponseEntity.ok(giftBoxService.findGiftBoxIdByMemberId(memberId));
     }
 
 }

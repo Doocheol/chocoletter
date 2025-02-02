@@ -46,7 +46,8 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
                     new SimpleGrantedAuthority("ROLE_USER"));
 
             GiftBox giftBox = giftBoxRepository.findByMemberId(member.getId());
-            String shareCode = giftBox.getShareCode();
+            Long giftBoxId = giftBox.getId();
+            String encryptedGiftBoxId = encryptId(giftBoxId);
 
             // 사용자 속성 설정
             Map<String, Object> attributes = new HashMap<>();
@@ -55,7 +56,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("name", member.getName());
             attributes.put("profileImgUrl", member.getProfileImgUrl());
             attributes.put("isFirstLogin", "false");
-            attributes.put("shareCode", shareCode);
+            attributes.put("giftBoxId", encryptedGiftBoxId);
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -82,7 +83,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("name", name);
             attributes.put("profileImgUrl", profileImgUrl);
             attributes.put("isFirstLogin", "true");
-            attributes.put("shareCode", result.get("shareCode"));
+            attributes.put("giftBoxId", result.get("giftBoxId"));
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -107,12 +108,11 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         giftBoxRepository.save(newGiftBox);
 
         // 공유 코드 생성 및 저장
-        String shareCode = encryptId(newGiftBox.getId());
-        newGiftBox.updateShareCode(shareCode);
+        String encryptedGiftBoxId = encryptId(newGiftBox.getId());
 
         Map<String, String> result = new HashMap<>();
         result.put("memberId", savedMember.getId().toString());
-        result.put("shareCode", newGiftBox.getShareCode());
+        result.put("giftBoxId", encryptedGiftBoxId);
 
         return result;
     }

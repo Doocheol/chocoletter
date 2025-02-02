@@ -208,5 +208,5 @@ public interface GiftBoxSwagger {
     })
     public ResponseEntity<?> usePreviewCount(Principal principal);
 
-    public ResponseEntity<?> getShareCode(Principal principal);
+    public ResponseEntity<?> getGiftBoxId(Principal principal);
 }
