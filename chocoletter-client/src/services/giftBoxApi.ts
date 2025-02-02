@@ -15,7 +15,7 @@ export async function disPreviewCoin() {
     return data;
   } catch (err) {
     console.error("disPreviewCoin API 호출 중 에러 발생:", err);
-    return err;
+    throw err;
   }
 }
 

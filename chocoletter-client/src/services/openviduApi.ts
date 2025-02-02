@@ -8,7 +8,7 @@ export async function checkAuthVideoRoom(roomId: string) {
         return res.data;
     } catch (err) {
         console.error("언박싱 거절 종류 : ", err);
-        return err;
+        throw err;
     }
 }
 
@@ -20,6 +20,6 @@ export async function terminateVideoRoom(roomId: string) {
         return res.data;
     } catch (err) {
         console.log("종료 오류 : ", err);
-        return err;
+        throw err;
     }
 }

@@ -149,7 +149,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             </div>
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
             <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none z-30" />
-            {!isOpened && <UnboxingTimeSticker giftType={giftType} unboxingTime={unboxingTime} />}
+            <UnboxingTimeSticker giftType={giftType} unboxingTime={unboxingTime} isOpened={isOpened} />
         </div>
     )
 }

@@ -132,10 +132,10 @@ export async function sendSpecialQuestionGift(
   }
 }
 
-// 특별 선물을 일반 설문으로 변경
+// 특별 선물을 일반 선물로 변경
 export async function changeSpecialToGeneral(giftId: string) {
   try {
-    const res = await api.patch(`/api/v1/gift/${giftId}`, {});
+    const res = await api.patch(`/api/v1/gift/${giftId}/type`, {});
     const data = res.data;
     console.log("변환 성공 : ", data);
     return data;
