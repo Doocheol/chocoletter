@@ -1,19 +1,20 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
 import blue from "../assets/images/letter/letter_blue.svg"
 import pink from "../assets/images/letter/letter_pink.svg"
 
 function SelectLetterTypeView() {
+    const { giftBoxId } = useParams();
     const navigate = useNavigate();
 
     const handleAccept = () => {
-        navigate("/write/general"); 
+        navigate(`/write/general/${giftBoxId}`); 
     };
 
     const handleReject = () => {
-        navigate("/write/question");
+        navigate(`/write/question/${giftBoxId}`);
     };
 
     return (
