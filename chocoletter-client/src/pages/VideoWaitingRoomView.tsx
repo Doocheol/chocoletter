@@ -149,7 +149,7 @@ const WaitingRoomView = () => {
         <div className="flex justify-center items-center min-h-screen">
             <LetterInVideoModal
                 isOpen={isOpenLetter}
-                onPush={hideRTCLetter}
+                onClose={hideRTCLetter}
                 sender="송신자"
                 receiver="수신자"
                 content="loving"

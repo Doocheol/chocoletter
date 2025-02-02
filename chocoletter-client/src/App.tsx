@@ -30,6 +30,7 @@ import SelectGiftBoxView from "./pages/SelectGiftBoxView";
 import MainYourBeforeView from "./pages/MainYourBeforeView";
 import MainMyEventView from "./pages/MainMyEventView";
 import MainMyAfterView from "./pages/MainMyAfterView";
+import ChatRoomView from "./pages/ChatRoomView";
 import TestVideoRoomView from "./pages/TestVideoRoomView";
 import ShareCodeRouter from "./pages/ShareCodeRouter";
 
@@ -80,6 +81,8 @@ function App() {
             <Route path="/main/your/before" element={<MainYourBeforeView />} />
             <Route path="/main/my/event" element={<MainMyEventView />} />
             <Route path="/main/my/after" element={<MainMyAfterView />} />
+            {/* <Route path="/chat/room" element={<ChatRoomView />} /> */}
+            <Route path="/chat/room/:roomId" element={<ChatRoomView />} />
             <Route path="/video-test/:sessionIdInit" element={<TestVideoRoomView />} />
           </Routes>
         </BrowserRouter>
