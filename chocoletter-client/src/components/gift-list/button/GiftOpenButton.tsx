@@ -34,7 +34,7 @@ const giftData = [
 ];
 
 interface GiftOpenButtonProps {
-    giftId: number;
+    giftId: string;
     giftType: string;
     isOpened: boolean;
     unboxingTime: string | null;

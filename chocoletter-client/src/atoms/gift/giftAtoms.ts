@@ -28,9 +28,9 @@ export const sentGiftsAtom = atom<number>({
 /**
  * 선택된 특정 초콜릿 ID
  */
-export const selectedGiftIdAtom = atom<number>({
+export const selectedGiftIdAtom = atom<string>({
   key: "selectedGiftId",
-  default: -1,
+  default: "",
 });
 
 /**

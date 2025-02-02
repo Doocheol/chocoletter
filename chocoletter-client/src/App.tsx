@@ -63,14 +63,14 @@ function App() {
             <Route path="/letter" element={<LetterView />} />
             <Route path="/select-letter" element={<SelectLetterTypeView />} />
             <Route path="/select-letter/:giftBoxId" element={<SelectLetterTypeView />} />
-            <Route path="/write/general" element={<WriteGeneralLetterView />} />
-            <Route path="/write/question" element={<WriteQuestionLetterView />} />
+            <Route path="/write/general/:giftBoxId" element={<WriteGeneralLetterView />} />
+            <Route path="/write/question/:giftBoxId" element={<WriteQuestionLetterView />} />
             <Route path="/sent-gift" element={<SentGiftView />} />
-            <Route path="/select-gift" element={<SelectGiftTypeView />} />
+            <Route path="/select-gift/:giftBoxId" element={<SelectGiftTypeView />} />
             <Route path="/video/waiting-room/:sessionIdInit" element={<WaitingRoomView />} />
             <Route path="/video/room" element={<VideoRoomView />} />
             <Route path="/reset-time" element={<ResetTimeView />} />
-            <Route path="/set-time" element={<SetTimeView />} />
+            <Route path="/set-time/:giftBoxId" element={<SetTimeView />} />
             <Route path="/rejected" element={<RejectedView />} />
             <Route path="/gift-list/before" element={<GiftListBeforeView />} />
             <Route path="/gift-list/event" element={<GiftListEventView />} />
