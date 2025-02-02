@@ -43,6 +43,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
     console.log(chocolates)
     return (
         <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[110px]`}>
+            {chocolates.length === 0 ? (<p className="text-sans">받은 초콜릿이 없어요...</p>) : null}
             {/* api 연동 후 추가 수정 */}
             {chocolates.map((chocolate) => (
                 <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime}/>

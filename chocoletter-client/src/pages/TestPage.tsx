@@ -35,7 +35,7 @@ const TestPage: React.FC = () => {
     { path: "/gift/list/event", label: "MyBoxView (/gift/list/event)" },
     { path: "/chat/list", label: "ChatRoomListView (/chat/list)" },
     { path: "/my-box", label: "MyBoxView (/my-box)" },
-    { path: "/video-test/13579", label: "VideoTest (/video-test/13579)"},
+    { path: "/video/13579", label: "VideoTest (/video/13579)"},
     { path: "/main/your/before", label: "MyBoxView (/main/your/before)" },
     { path: "/main/my/event", label: "MyBoxView (/main/my/event)" },
     { path: "/main/my/after", label: "MyBoxView (/main/my/after)" },

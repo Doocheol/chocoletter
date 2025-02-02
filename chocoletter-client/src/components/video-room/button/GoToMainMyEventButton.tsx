@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 const GoToMainMyEventButton = () => {
     const navigate = useNavigate();
+    const giftBoxId = localStorage.getItem("giftBoxId");
 
     const goBackMainMyEvent = () => {
-        navigate('/main/my/event')
+        navigate(`/main/${giftBoxId}`)
     }
 
     return (
