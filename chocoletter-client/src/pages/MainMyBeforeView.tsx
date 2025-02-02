@@ -316,8 +316,6 @@ const MainMyBeforeView: React.FC = () => {
             isOpen={isCalendarModalOpen}
             onClose={() => setIsCalendarModalOpen(false)}
           />
-          {/* NotificationModal 등 추가 모달은 필요 시 아래에 배치 */}
-          예시:
           <NotificationModal
             isOpen={isNotificationModalOpen}
             onClose={() => setIsNotificationModalOpen(false)}
