@@ -1,59 +1,91 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { getChatRooms } from "../services/chatApi";
 
 interface ChatRoom {
     roomId: number;
     nickName: string;
-    chatNum: number; // TODO: 여기서 삭제, pros로 받아오기 
+    unreadCount?: number;
+    lastMessage?: string;
 }
 
 const ChatRoonListView = () => {
 
     // TODO : 채팅리스트 API 불러오기 
     // 제일 최근에 온 채팅방 위로 올리기?
-    // const [chatRooms, setChatRooms] = useState([]);
+    const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+    const memberId = 9999 //✅ TODO 수정하기
     const navigate = useNavigate();
 
+    // 더미 데이터 (나중에 서버에서 받아올 데이터)
+    const dummyChatRooms = [
+        { roomId: 9997, nickName: "예슬" },
+        { roomId: 9998, nickName: "준희" },
+        { roomId: 9999, nickName: "두철" },
+    ];
+    
     // 채팅방 목록 불러오기
-    // useEffect(() => {
-    //     const loadChatRooms = async () => {
-    //         const data = await getChatRooms(); 
-    //         setChatRooms(data); // 상태 업데이트
-    //     };
+    useEffect(() => {
+        const loadChatRooms = async () => {
+            try {
+                const data = await getChatRooms();
+                setChatRooms(data); // 상태 업데이트
+            } catch (error) {
+                console.error("채팅방 목록 불러오기 실패!", error);
+                setChatRooms(dummyChatRooms); // ✅ todo 추후 삭제
+            }
+        };
+        loadChatRooms();
+    }, []);
 
-    //     loadChatRooms();
-    // }, []);
+    // 안읽은 채팅 개수 & 마지막 메세지 불러오기
+    useEffect(() => {
+        if (chatRooms.length > 0) {
+            const loadLastMessages = async () => {
+                try {
+                    console.log("메시지 불러오는 중...");
+                    const baseUrl = import.meta.env.VITE_CHAT_WEBSOCKET_URL;
+                    const updatedRooms = await Promise.all(
+                        chatRooms.map(async (room) => {
+                            try {
+                                const response = await axios.get(
+                                    `${baseUrl}/api/v1/chat/${room.roomId}/${memberId}/last`
+                                );
+
+                                return {
+                                    ...room,
+                                    unreadCount: response.data?.count || 0,
+                                    lastMessage: response.data?.Message || "",
+                                };
+                            } catch (error) {
+                                console.error(`채팅방(${room.roomId}) 마지막 메시지 불러오기 실패!`, error);
+                                return { ...room, unreadCount: 0 }; // 오류 시 기본값 유지
+                            }
+                        })
+                    );
+
+                    setChatRooms(updatedRooms);
+                } catch (error) {
+                    console.error("안 읽은 메시지 불러오기 실패!", error);
+                }
+            };
+
+            loadLastMessages();
+        }
+    }, [chatRooms]);
 
     // const handleRoomClick = (room : ChatRoom) => {
     //     navigate(`/chat/room/${room.roomId}` }); // nickName을 state로 전달
     // };
-
+    
+    // 채팅방 입장 
     const handleRoomClick = (room: ChatRoom) => {
         console.log(room.roomId)
-        navigate(`/chat/room`, { state: { roomId: room.roomId, nickName: room.nickName } }); // nickName을 state로 전달
+        navigate(`/chat/room/${room.roomId}`, { state: { roomId: room.roomId, nickName: room.nickName } }); // nickName을 state로 전달
     };
 
-    // 더미 데이터 (나중에 서버에서 받아올 데이터)
-    const chatRooms = [
-        { roomId: 1, nickName: "예슬", chatNum: 5 },
-        { roomId: 2, nickName: "준희", chatNum: 2 },
-        { roomId: 3, nickName: "두철", chatNum: 0 },
-        { roomId: 4, nickName: "훈서", chatNum: 1 },
-        { roomId: 5, nickName: "한송", chatNum: 5 },
-        { roomId: 6, nickName: "지수", chatNum: 2 },
-        { roomId: 7, nickName: "나나", chatNum: 0 },
-        { roomId: 8, nickName: "뽀", chatNum: 1 },
-        { roomId: 9, nickName: "보라돌이", chatNum: 5 },
-        { roomId: 10, nickName: "뚜비", chatNum: 2 },
-        { roomId: 11, nickName: "나나", chatNum: 0 },
-        { roomId: 12, nickName: "뽀", chatNum: 1 },
-        { roomId: 13, nickName: "보라돌이", chatNum: 5 },
-        { roomId: 14, nickName: "뚜비", chatNum: 2 },
-        { roomId: 15, nickName: "나나", chatNum: 0 },
-        { roomId: 16, nickName: "뽀", chatNum: 1 },
-    ];
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
@@ -83,9 +115,9 @@ const ChatRoonListView = () => {
                     </div>
                     
                     {/* 오른쪽 채팅 숫자 */}
-                    {room.chatNum > 0 && (
+                    {room?.unreadCount && room.unreadCount > 0 && (
                         <div className="w-8 h-6 bg-red-400 rounded-xl text-white text-center">
-                            {room.chatNum}
+                            {room.unreadCount}
                         </div>
                     )}
                 </div>
