@@ -9,6 +9,8 @@ import wing_right from "../assets/images/chocolate/wing_right.svg"
 const SentGiftView = () => {
   const [remainTime, setRemainTime] = useState(1000);
   const navigate = useNavigate();
+  const giftBoxId = localStorage.getItem("giftBoxId");
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,8 +28,8 @@ const SentGiftView = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const goBackMainMyEvent = () => {
-    navigate("/main/my/before"); // 추후 수정 예정
+  const goBackMainMyBefore = () => {
+    navigate(`/main/${giftBoxId}`)
   };
 
   return ( //[#FFEEFD]
@@ -64,7 +66,7 @@ const SentGiftView = () => {
           2월 14일 전에 하나를 먼저 열어볼 수 있답니다!
         </h3>
         <div className="flex flex-col justify-center items-center mb-8 text-center">
-          <Button onClick={goBackMainMyEvent} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
+          <Button onClick={goBackMainMyBefore} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
             내 초콜릿 상자로 이동하기
           </Button>
           <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#b29ce4] text-sm text-white">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
