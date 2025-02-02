@@ -10,8 +10,7 @@ import send_icon from "../assets/images/main/send_icon.svg";
 // import { useSelector } from "react-redux"
 import { Client, Stomp } from "@stomp/stompjs";
 import { changeKSTDate } from "../utils/changeKSTDate";
-// npm install react-redux
-// npm install @stomp/stompjs
+import useViewportHeight from "../hooks/useViewportHeight";
 
 
 // ✅Todo : 수정하기
@@ -25,6 +24,8 @@ interface MessageType {
 }
 
 const ChatRoonView = () => {
+    useViewportHeight();
+    
     const location = useLocation();
     const sender = location.state?.nickName  ?? "예슬";
     // const roomId = location.state?.roomId;

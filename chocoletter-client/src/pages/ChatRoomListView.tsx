@@ -4,6 +4,7 @@ import axios from "axios";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { getChatRooms } from "../services/chatApi";
 import Loading from "../components/common/Loading";
+import useViewportHeight from "../hooks/useViewportHeight";
 
 interface ChatRoom {
     roomId: number;
@@ -13,6 +14,7 @@ interface ChatRoom {
 }
 
 const ChatRoomListView = () => { 
+    useViewportHeight();
     
         // 더미 데이터
         const dummyChatRooms = [
