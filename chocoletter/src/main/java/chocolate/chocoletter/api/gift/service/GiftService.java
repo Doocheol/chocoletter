@@ -22,13 +22,16 @@ import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
+import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GiftService {
@@ -39,19 +42,34 @@ public class GiftService {
     private final AlarmService alarmService;
     private final DateTimeUtil dateTimeUtil;
     private final MemberService memberService;
+    private final IdEncryptionUtil idEncryptionUtil;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
-        return GiftsResponseDto.of(gifts.stream()
-                .map(GiftResponseDto::of)
-                .collect(Collectors.toList()));
+        List<GiftResponseDto> giftResponseDtos = gifts.stream()
+                .map(gift -> {
+                    // gift의 id를 암호화
+                    String encryptedId = encryptGiftId(gift.getId());
+                    // Gift 객체를 GiftResponseDto로 변환
+                    return GiftResponseDto.of(gift, encryptedId);
+                })
+                .collect(Collectors.toList());
+
+        return GiftsResponseDto.of(giftResponseDtos);
     }
 
     public GiftsResponseDto findSpecialGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.SPECIAL);
-        return GiftsResponseDto.of(gifts.stream()
-                .map(GiftResponseDto::of)
-                .collect(Collectors.toList()));
+        List<GiftResponseDto> giftResponseDtos = gifts.stream()
+                .map(gift -> {
+                    // gift의 id를 암호화
+                    String encryptedId = encryptGiftId(gift.getId());
+                    // Gift 객체를 GiftResponseDto로 변환
+                    return GiftResponseDto.of(gift, encryptedId);
+                })
+                .collect(Collectors.toList());
+
+        return GiftsResponseDto.of(giftResponseDtos);
     }
 
     @Transactional
@@ -81,9 +99,16 @@ public class GiftService {
 
     public GiftsResponseDto findGeneralGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.GENERAL);
-        return GiftsResponseDto.of(gifts.stream()
-                .map(GiftResponseDto::of)
-                .collect(Collectors.toList()));
+        List<GiftResponseDto> giftResponseDtos = gifts.stream()
+                .map(gift -> {
+                    // gift의 id를 암호화
+                    String encryptedId = encryptGiftId(gift.getId());
+                    // Gift 객체를 GiftResponseDto로 변환
+                    return GiftResponseDto.of(gift, encryptedId);
+                })
+                .collect(Collectors.toList());
+
+        return GiftsResponseDto.of(giftResponseDtos);
     }
 
     public GiftUnboxingInvitationResponseDto findUnboxingInvitation(Long memberId, Long giftId) {
@@ -214,5 +239,16 @@ public class GiftService {
 
     public List<Object[]> findUnBoxingTimes(List<Long> giftIds) {
         return giftRepository.findUnBoxingTimesByGiftIds(giftIds);
+    }
+
+    // try catch 반복되서 메서드로 뺌
+    private String encryptGiftId(Long giftId) {
+        try {
+            String encryptedId = idEncryptionUtil.encrypt(giftId);
+            return encryptedId;
+        } catch (Exception e) {
+            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
+        }
+        return null;
     }
 }

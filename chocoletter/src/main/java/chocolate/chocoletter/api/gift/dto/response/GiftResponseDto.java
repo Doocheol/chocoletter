@@ -7,10 +7,10 @@ import chocolate.chocoletter.api.gift.domain.GiftType;
 import lombok.Builder;
 
 @Builder
-public record GiftResponseDto(Long giftId, GiftType giftType, Boolean isOpened, LocalDateTime unBoxingTime) {
-	public static GiftResponseDto of(Gift gift) {
+public record GiftResponseDto(String giftId, GiftType giftType, Boolean isOpened, LocalDateTime unBoxingTime) {
+	public static GiftResponseDto of(Gift gift, String encryptedId) {
 		return GiftResponseDto.builder()
-			.giftId(gift.getId())
+			.giftId(encryptedId)
 			.giftType(gift.getType())
 			.isOpened(gift.getIsOpened())
 			.unBoxingTime(gift.getUnBoxingTime())

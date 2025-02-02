@@ -92,7 +92,11 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "401", description = "인증 실패")
             }
     )
-    ResponseEntity<?> findReceiveGiftDetail(Long giftId, Principal principal);
+    ResponseEntity<?> findReceiveGiftDetail(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId, Principal principal);
 
     @Operation(
             summary = "내가 보낸 개별 선물 조회",
@@ -132,7 +136,11 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> findUnboxingInvitation(Long giftId, Principal principal);
+    ResponseEntity<?> findUnboxingInvitation(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId, Principal principal);
 
     @Operation(
             summary = "언박싱 초대장 전송",
@@ -156,8 +164,8 @@ public interface GiftSwagger {
     )
     ResponseEntity<?> sendUnboxingInvitation(
             @Parameter(
-                    description = "언박싱 초대장을 보낼 선물의 ID",
-                    required = true
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
             )
             @PathVariable("giftId") Long giftId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -190,7 +198,11 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> acceptUnboxingInvitation(Long giftId, Principal principal);
+    ResponseEntity<?> acceptUnboxingInvitation(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId, Principal principal);
 
     @Operation(
             summary = "언박싱 초대장 거절",
@@ -210,7 +222,11 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> rejectUnboxingInvitation(Long giftId, Principal principal);
+    ResponseEntity<?> rejectUnboxingInvitation(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId, Principal principal);
 
     @Operation(
             summary = "특별 선물에서 일반 선물 변경",
@@ -230,5 +246,9 @@ public interface GiftSwagger {
                     @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
             }
     )
-    ResponseEntity<?> changeToGeneralGift(Long giftId, Principal principal);
+    ResponseEntity<?> changeToGeneralGift(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId, Principal principal);
 }
