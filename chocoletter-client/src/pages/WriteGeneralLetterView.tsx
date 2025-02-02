@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
@@ -11,6 +11,7 @@ import { freeLetterState } from "../atoms/letter/letterAtoms" ;
 
 const WriteGeneralLetterView = () => {
     const [letter, setLetter] = useRecoilState(freeLetterState);
+    const { giftBoxId } = useParams();
     const navigate = useNavigate();
     
     const resetLetterState = () => {
@@ -41,7 +42,7 @@ const WriteGeneralLetterView = () => {
       return;
     }
 
-    navigate("/select-gift");
+    navigate(`/select-gift/${giftBoxId}`);
   };
 
   return (
