@@ -163,7 +163,7 @@ const ChatRoonView = () => {
     
     useEffect(() => {
         connect(); // 웹소켓 연결
-        // fetchMessages(); // ✅ TODO : 주석 풀기 //이전 메세지 불러오기
+        fetchMessages(); // ✅ TODO : 주석 풀기 //이전 메세지 불러오기
         return () => {
             stompClient.current?.deactivate(); // 컴포넌트 언마운트 시 연결 해제
         };
