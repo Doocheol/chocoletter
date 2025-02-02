@@ -1,7 +1,7 @@
 import api from "./api";
 
 // 언박싱 전체 일정 조회(giftBoxId의 언박싱 전체 스케줄)
-export async function getUnboxingSchedule(giftBoxId: number) {
+export async function getUnboxingSchedule(giftBoxId: string) {
   try {
     const res = await api.get(`/api/v1/gift-box/${giftBoxId}/unboxing/schedule`);
     return res.data;
