@@ -20,7 +20,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
   const [sharedLink, setSharedLink] = useState("");
   const [showQRCode, setShowQRCode] = useState(false);
   const [qrLoading, setQrLoading] = useState(false);
-  const [isLinkLoading, setIsLinkLoading] = useState(false); // shareCode 준비 여부
+  const [isLinkLoading, setIsLinkLoading] = useState(false); // giftBoxId 준비 여부
 
   // Kakao SDK 로드
   const { loaded, error } = useScript({
@@ -72,7 +72,6 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
   // (A) 복사 + 모바일 공유 시도
   const handleCopyAndShare = async () => {
     if (!sharedLink) {
-      alert("공유 링크가 아직 준비되지 않았습니다.");
       return;
     }
 
@@ -92,14 +91,12 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
       }
     } catch (err) {
       console.error("공유 중 오류:", err);
-      alert("링크 공유에 실패했습니다.");
     }
   };
 
   // (B) QR 코드 표시
   const handleShowQRCode = () => {
     if (!sharedLink) {
-      alert("공유 링크가 준비되지 않았습니다.");
       return;
     }
     setQrLoading(true);

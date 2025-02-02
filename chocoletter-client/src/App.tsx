@@ -62,6 +62,7 @@ function App() {
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/select-letter" element={<SelectLetterTypeView />} />
+            <Route path="/select-letter/:giftBoxId" element={<SelectLetterTypeView />} />
             <Route path="/write/general" element={<WriteGeneralLetterView />} />
             <Route path="/write/question" element={<WriteQuestionLetterView />} />
             <Route path="/sent-gift" element={<SentGiftView />} />

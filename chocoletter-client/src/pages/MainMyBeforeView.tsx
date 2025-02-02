@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
-import html2canvas from "html2canvas";
 
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
 import { isFirstLoginAtom, giftBoxNumAtom, giftBoxIdAtom } from "../atoms/auth/userAtoms";
@@ -66,7 +65,6 @@ const MainMyBeforeView: React.FC = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // 캡처 모달
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
 
@@ -117,17 +115,9 @@ const MainMyBeforeView: React.FC = () => {
     setIsShareModalOpen(true);
   };
 
-  const handleCapture = async () => {
-    if (captureRef.current) {
-      try {
-        setIsCaptureModalVisible(true);
-        const canvas = await html2canvas(captureRef.current);
-        const imageData = canvas.toDataURL("image/png");
-        setCapturedImage(imageData);
-      } catch (error) {
-        setIsCaptureModalVisible(false);
-      }
-    }
+  // 캡처 버튼 핸들러 (모달을 단순히 열어줌)
+  const handleCapture = () => {
+    setIsCaptureModalVisible(true);
   };
 
   const handleTutorial = () => {
@@ -226,16 +216,12 @@ const MainMyBeforeView: React.FC = () => {
 
         {/* 초콜릿 박스 & 안내 문구 */}
         <div className="mt-8 flex flex-col items-center px-4">
-          {/* 캡처 영역 */}
-          <div ref={captureRef} className="heartbeat">
+          {/* 캡처 영역에 고유 id 부여 */}
+          <div ref={captureRef} id="capture-target" className="heartbeat">
             <button
               onClick={handleMyChocolateBox}
               className="w-[255px] pl-8 flex items-center justify-center"
             >
-              {/*
-                giftBoxNum에 따른 이미지를 보여줍니다.
-                giftBoxNum이 Recoil에 없으면 위 useEffect에서 이미 /select-giftbox로 이동합니다.
-              */}
               <img
                 src={giftBoxImages[giftBoxNum]}
                 alt={`giftbox_before_${giftBoxNum}`}
@@ -275,10 +261,11 @@ const MainMyBeforeView: React.FC = () => {
         </div>
 
         {/* 모달 & 튜토리얼 오버레이 */}
+        {/* 캡처 모달 호출 시, 캡처 대상의 id를 전달 */}
         <CaptureModal
           isVisible={isCaptureModalVisible}
-          imageSrc={capturedImage}
           onClose={() => setIsCaptureModalVisible(false)}
+          captureTargetId="capture-target"
         />
         <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         {isFirstLogin && (

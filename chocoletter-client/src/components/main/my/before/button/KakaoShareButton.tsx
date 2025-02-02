@@ -13,7 +13,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
       content: {
         title: "초코레터",
         description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
-        imageUrl: "https://www.chocolate-letter.com/chocoletter_kakao_logo.svg",
+        imageUrl: "https://www.chocolate-letter.com/chocoletter_kakao_logo.png",
         link: {
           mobileWebUrl: shareLink, // (2) shareLink 사용
           webUrl: shareLink,
