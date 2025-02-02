@@ -13,7 +13,6 @@ import { Client, Stomp } from "@stomp/stompjs";
 // npm install @stomp/stompjs
 
 
-
 // ✅Todo : 수정하기
 interface MessageType {
     // roomId: number;
@@ -27,7 +26,9 @@ interface MessageType {
 const ChatRoonView = () => {
     const location = useLocation();
     const sender = location.state?.nickName;
-    const roomId = location.state?.roomId;
+    // const roomId = location.state?.roomId;
+    const { roomId } = useParams()
+    const parsedRoomId = parseInt(roomId ?? "0", 10)
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
@@ -92,8 +93,8 @@ const ChatRoonView = () => {
     const fetchMessages = async () => {
         try {
             console.log("기존 메시지 불러오는 중...");
-            const baseUrl = import.meta.env.VITE_CHAT_WEBSOCKET_URL;
-            const response = await axios.get(`${baseUrl}/api/v1/chat/${roomId}/all?page=0&size=20`); // ✅ TODO 수정
+            const baseUrl = import.meta.env.VITE_CHAT_API_URL;
+            const response = await axios.get(`${baseUrl}/api/v1/chat/${parsedRoomId}/all?page=0&size=20`); // ✅ TODO 수정
 
             if (response.data && Array.isArray(response.data)) {
                 setMessages(response.data);
@@ -115,10 +116,10 @@ const ChatRoonView = () => {
             heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
 
             onConnect: () => {
-                console.log("WebSocket 연결 성공! (채팅방 ID:", roomId, ")");
+                console.log("WebSocket 연결 성공! (채팅방 ID:", parsedRoomId, ")");
                 
                 // 채팅방 메시지 구독
-                stompClient.current?.subscribe(`/topic/${roomId}`, (message) => {
+                stompClient.current?.subscribe(`/topic/${parsedRoomId}`, (message) => {
                     const newMessage = JSON.parse(message.body);
                     console.log("Received message:", newMessage);
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -145,7 +146,7 @@ const ChatRoonView = () => {
     const sendMessage = () => {
         if (stompClient.current && message.trim()) {
             const msgObject = {
-                roomId: roomId,       
+                roomId: parsedRoomId,       
                 senderId: testSenderId, // currentUser.id, // 현재 로그인한 사용자 ID
                 senderName: "none",
                 content: message,   
@@ -165,7 +166,7 @@ const ChatRoonView = () => {
         return () => {
             stompClient.current?.deactivate(); // 컴포넌트 언마운트 시 연결 해제
         };
-    }, [roomId]);
+    }, [parsedRoomId]);
 
     // 최하단 자동 스크롤
     useEffect(() => {

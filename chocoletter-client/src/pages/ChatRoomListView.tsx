@@ -31,7 +31,7 @@ const ChatRoonListView = () => {
         const loadChatRooms = async () => {
             try {
                 const data = await getChatRooms();
-                setChatRooms(data); // 상태 업데이트
+                setChatRooms(data); 
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패!", error);
                 setChatRooms(dummyChatRooms); // ✅ todo 추후 삭제
@@ -42,11 +42,13 @@ const ChatRoonListView = () => {
 
     // 안읽은 채팅 개수 & 마지막 메세지 불러오기
     useEffect(() => {
+        if (chatRooms.length === 0) return;
+        
         if (chatRooms.length > 0) {
             const loadLastMessages = async () => {
                 try {
                     console.log("메시지 불러오는 중...");
-                    const baseUrl = import.meta.env.VITE_CHAT_WEBSOCKET_URL;
+                    const baseUrl = import.meta.env.VITE_CHAT_API_URL;
                     const updatedRooms = await Promise.all(
                         chatRooms.map(async (room) => {
                             try {
@@ -66,7 +68,10 @@ const ChatRoonListView = () => {
                         })
                     );
 
-                    setChatRooms(updatedRooms);
+                    setChatRooms((prevRooms) => {
+                    // 기존 데이터와 비교하여 변경된 경우에만 상태 업데이트
+                    return JSON.stringify(prevRooms) !== JSON.stringify(updatedRooms) ? updatedRooms : prevRooms;
+                    });
                 } catch (error) {
                     console.error("안 읽은 메시지 불러오기 실패!", error);
                 }
@@ -74,7 +79,7 @@ const ChatRoonListView = () => {
 
             loadLastMessages();
         }
-    }, [chatRooms]);
+    }, [JSON.stringify(chatRooms)]);
 
     // const handleRoomClick = (room : ChatRoom) => {
     //     navigate(`/chat/room/${room.roomId}` }); // nickName을 state로 전달
@@ -93,7 +98,7 @@ const ChatRoonListView = () => {
             {/* 나의 채팅방 목록 */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">
-                    <div className="w-6 h-6 justify-center items-centㄴer flex">
+                    <div className="w-6 h-6 justify-center items-center flex">
                         <GoBackButton />
                     </div>
                     <div className="text-center text-white text-2xl font-normal font-sans leading-snug">나의 채팅방 목록</div>
