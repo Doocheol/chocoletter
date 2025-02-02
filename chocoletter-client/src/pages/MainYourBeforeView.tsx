@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../atoms/auth/userAtoms";
 
@@ -18,6 +18,7 @@ import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDa
 const MainYourBeforeView: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
   const recipientNickname = "초코레터팀";
   const isLoggedIn = useRecoilValue(isLoginAtom);
@@ -38,7 +39,7 @@ const MainYourBeforeView: React.FC = () => {
       setIsNotLoginModalOpen(true);
       return;
     }
-    navigate("/select-letter");
+    navigate(`/select-letter/${giftBoxId}`);
   };
 
   // 로그인 페이지로 이동할 때, 현재 경로를 state로 전달하여 로그인 후 복귀할 수 있도록 함
