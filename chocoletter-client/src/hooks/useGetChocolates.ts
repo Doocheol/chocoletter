@@ -25,8 +25,8 @@ export const useFetchChocolates = (filter: string) => {
 
         fetchData(); // 초기 데이터 로드
 
-        // 5분마다 데이터 갱신
-        const interval = setInterval(fetchData, 300000); // 300,000ms
+        // 10분마다 데이터 갱신
+        const interval = setInterval(fetchData, 300000); 
         return () => clearInterval(interval); // 컴포넌트 언마운트 시 정리
     }, [filter]);
 

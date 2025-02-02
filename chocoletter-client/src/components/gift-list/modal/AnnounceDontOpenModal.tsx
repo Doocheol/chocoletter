@@ -12,18 +12,12 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
 
     useEffect(() => {
         const openAnnounce = async () => {
-            const currentDate = new Date().toISOString();
-            const currentDay = changeKSTDate({'givenDate': currentDate, 'format':'DD'});
-            if (currentDay !== '14') {
                 setComment(
                     <>
                         <p>특별 초콜릿은 2월 14일</p>
                         <p>⭐약속한 시간⭐에만 열 수 있어요!</p>
                     </>
                 );
-            } else {
-                setComment(<p>⭐약속한 시간⭐을 기다려주세요❣️'</p>)
-            }
         }
 
         openAnnounce()
