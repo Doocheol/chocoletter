@@ -19,7 +19,7 @@ function SelectGiftTypeView() {
     const { giftBoxId } = useParams<{ giftBoxId: string }>();
 
     const handleAccept = () => {
-        navigate("/set-time"); 
+        navigate(`/set-time/${giftBoxId}`); 
     };
 
     const handleReject = async () => {
@@ -40,7 +40,7 @@ function SelectGiftTypeView() {
                     freeLetter.content
                 );
             }
-            navigate(`/sent-gift/${giftBoxId}`);
+            navigate(`/sent-gift`);
         } catch (error) {
             console.error("Gift sending failed:", error);
         }
