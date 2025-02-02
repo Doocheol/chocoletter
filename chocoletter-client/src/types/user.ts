@@ -4,7 +4,7 @@
 export interface MyUserInfo {
   userName: string;
   accessToken: string;
-  shareCode: string;
+  giftBoxId: string;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface MyUserInfo {
 export interface LocalMyUserInfo {
   userName: string;
   accessToken: string;
-  shareCode: string;
+  giftBoxId: string;
 }
 
 export interface ReissueTokenResponse {

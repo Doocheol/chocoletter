@@ -32,7 +32,7 @@ import MainMyEventView from "./pages/MainMyEventView";
 import MainMyAfterView from "./pages/MainMyAfterView";
 import ChatRoomView from "./pages/ChatRoomView";
 import TestVideoRoomView from "./pages/TestVideoRoomView";
-import ShareCodeRouter from "./pages/ShareCodeRouter";
+import GiftBoxIdRouter from "./pages/GiftBoxIdRouter";
 
 declare global {
   interface Window {
@@ -58,10 +58,7 @@ function App() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/auth/kakao/callback" element={<KakaoLoginCallback />} />
             <Route path="/main/my/before" element={<MainMyBeforeView />} />
-            {/*
-              URL의 shareCode와 Recoil의 shareCode를 비교하여 적절한 컴포넌트를 렌더링하는 라우트
-            */}
-            <Route path="/:shareCode" element={<ShareCodeRouter />} />{" "}
+            <Route path="/main/:giftBoxId" element={<GiftBoxIdRouter />} />{" "}
             <Route path="/receive/:giftId" element={<ReceiveView />} />
             <Route path="/letter" element={<LetterView />} />
             <Route path="/select-letter" element={<SelectLetterTypeView />} />

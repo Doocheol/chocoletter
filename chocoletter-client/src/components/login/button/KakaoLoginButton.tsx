@@ -5,7 +5,7 @@ import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "../../../services/userInfo";
 import { useRecoilValue } from "recoil";
-import { shareCodeAtom } from "../../../atoms/auth/userAtoms";
+import { giftBoxIdAtom } from "../../../atoms/auth/userAtoms";
 import { logout, removeUserInfo } from "../../../services/userApi";
 import { toast } from "react-toastify";
 
@@ -13,7 +13,7 @@ const KakaoLoginButton: React.FC = () => {
   const navigate = useNavigate();
   // 로컬 스토리지의 유저 정보(로그인 여부) 확인
   const userInfo = getUserInfo();
-  const shareCode = useRecoilValue(shareCodeAtom);
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
   // 로딩 표시
   const [isLoading, setIsLoading] = useState(false);
@@ -25,8 +25,8 @@ const KakaoLoginButton: React.FC = () => {
     if (userInfo?.accessToken) {
       // giftBoxId가 있다면 /main/my/before/:giftBoxId 로 이동
       // 없다면 기본 /main/my/before 로 이동
-      if (shareCode) {
-        navigate(`/${shareCode}`);
+      if (giftBoxId) {
+        navigate(`/${giftBoxId}`);
       } else {
         removeUserInfo();
         await logout();

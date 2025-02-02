@@ -69,18 +69,18 @@ export function removeUserInfo(): void {
 }
 
 /**
- * 2) /api/v1/gift-box/link 에서 shareCode를 받아오는 함수
- * @returns shareCode (문자열)
- * 
- * 해당 API는 서버에서 { shareCode: string } 형태로 반환된다고 가정
+ * 2) /api/v1/gift-box/id 에서 giftBoxId 받아오는 함수
+ * @returns giftBoxId (문자열)
+ *
+ * 해당 API는 서버에서 { giftBoxId: string } 형태로 반환된다고 가정
  */
-export async function getGiftBoxShareCode(): Promise<string> {
+export async function getGiftBoxId(): Promise<string> {
   try {
-    // GET /api/v1/gift-box/link
-    const res = await api.get<{ shareCode: string }>(`/api/v1/gift-box/link`);
-    return res.data.shareCode;
+    // GET /api/v1/gift-box/id
+    const res = await api.get<{ giftBoxId: string }>(`/api/v1/gift-box/id`);
+    return res.data.giftBoxId;
   } catch (err) {
-    console.error("Error retrieving share code from /api/v1/gift-box/link:", err);
+    console.error("Error retrieving share code from /api/v1/gift-box/id:", err);
     throw err;
   }
 }

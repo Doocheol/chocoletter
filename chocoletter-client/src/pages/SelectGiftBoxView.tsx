@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { shareCodeAtom, giftBoxNumAtom } from "../atoms/auth/userAtoms";
+import { giftBoxNumAtom, giftBoxIdAtom } from "../atoms/auth/userAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
 
 // 선물상자 에셋 임포트
@@ -15,7 +15,7 @@ import { Button } from "../components/common/Button";
 
 const SelectGiftBoxView: React.FC = () => {
   const navigate = useNavigate();
-  const shareCode = useRecoilValue(shareCodeAtom);
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
   const setGiftBoxNum = useSetRecoilState(giftBoxNumAtom);
 
   const [selectedBox, setSelectedBox] = useState<number>(1);
@@ -34,7 +34,7 @@ const SelectGiftBoxView: React.FC = () => {
 
   const handleConfirmSelection = () => {
     setGiftBoxNum(selectedBox);
-    navigate(`/${shareCode}`);
+    navigate(`/${giftBoxId}`);
   };
 
   // 현재 선택된 선물상자 정보 가져오기
