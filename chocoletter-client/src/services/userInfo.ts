@@ -7,7 +7,7 @@ import { MyUserInfo } from "../types/user";
 export const savingUserInfo = (userInfo: MyUserInfo): void => {
   window.localStorage.setItem("userName", userInfo.userName);
   window.localStorage.setItem("accessToken", userInfo.accessToken);
-  window.localStorage.setItem("shareCode", userInfo.shareCode);
+  window.localStorage.setItem("giftBoxId", userInfo.giftBoxId);
 };
 
 /**
@@ -17,10 +17,10 @@ export const savingUserInfo = (userInfo: MyUserInfo): void => {
 export const getUserInfo = (): MyUserInfo | null => {
   const userName = window.localStorage.getItem("userName");
   const accessToken = window.localStorage.getItem("accessToken");
-  const shareCode = window.localStorage.getItem("shareCode");
+  const giftBoxId = window.localStorage.getItem("giftBoxId");
 
-  if (userName && accessToken && shareCode) {
-    return { userName, accessToken, shareCode };
+  if (userName && accessToken && giftBoxId) {
+    return { userName, accessToken, giftBoxId };
   }
 
   return null;
@@ -32,6 +32,6 @@ export const getUserInfo = (): MyUserInfo | null => {
 export const deleteUserInfo = (): void => {
   window.localStorage.removeItem("userName");
   window.localStorage.removeItem("accessToken");
-  window.localStorage.removeItem("shareCode");
+  window.localStorage.removeItem("giftBoxId");
   window.localStorage.removeItem("recoil-persist"); // Recoil 상태 관리 관련 키 삭제
 };

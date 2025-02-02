@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { shareCodeAtom, giftBoxNumAtom } from "../atoms/auth/userAtoms";
+import { giftBoxNumAtom, giftBoxIdAtom } from "../atoms/auth/userAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
 
 // 선물상자 에셋 임포트
@@ -12,10 +12,11 @@ import box3 from "../assets/images/giftbox/giftbox_before_3.svg";
 import box4 from "../assets/images/giftbox/giftbox_before_4.svg";
 import box5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import { Button } from "../components/common/Button";
+import { logout, removeUserInfo } from "../services/userApi";
 
 const SelectGiftBoxView: React.FC = () => {
   const navigate = useNavigate();
-  const shareCode = useRecoilValue(shareCodeAtom);
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
   const setGiftBoxNum = useSetRecoilState(giftBoxNumAtom);
 
   const [selectedBox, setSelectedBox] = useState<number>(1);
@@ -34,11 +35,19 @@ const SelectGiftBoxView: React.FC = () => {
 
   const handleConfirmSelection = () => {
     setGiftBoxNum(selectedBox);
-    navigate(`/${shareCode}`);
+    navigate(`/main/${giftBoxId}`);
   };
 
   // 현재 선택된 선물상자 정보 가져오기
   const selectedBoxInfo = giftBoxOptions.find((box) => box.id === selectedBox);
+
+  useEffect(() => {
+    if (!giftBoxId) {
+      toast.error("다시 로그인 해주세요!");
+      removeUserInfo();
+      navigate("/");
+    }
+  }, [giftBoxId, navigate]);
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">

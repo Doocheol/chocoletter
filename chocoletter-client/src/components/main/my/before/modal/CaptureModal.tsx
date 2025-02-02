@@ -188,9 +188,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
           drawHeight // 캔버스에 그릴 높이
         );
 
-        // 캔버스에 선택된 giftbox_before 이미지 그리기 (160x160 픽셀, 중앙 위치)
-        const giftboxWidth = 220; // 원하는 너비 (w-40)
-        const giftboxHeight = 220; // 원하는 높이 (h-40)
+        // 캔버스에 선택된 giftbox_before 이미지 그리기 (280x280 픽셀, 중앙 위치)
+        const giftboxWidth = 280;
+        const giftboxHeight = 280;
         const giftboxX = (canvas.width - giftboxWidth + 30) / 2;
         const giftboxY = (canvas.height - giftboxHeight) / 2;
 
@@ -201,10 +201,10 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, imageSrc, onClos
 
         // 사용자 이름 텍스트 그리기
         const nameFontSize = Math.floor(canvas.width / 15); // 폰트 크기 조정
-        ctx.font = `bold ${nameFontSize}px "Dovemayo_gothic"`;
+        ctx.font = `${nameFontSize}px "Dovemayo_gothic"`;
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
-        ctx.textBaseline = "top";
+        ctx.textBaseline = "middle";
         ctx.shadowColor = "white";
         ctx.shadowBlur = 5;
 

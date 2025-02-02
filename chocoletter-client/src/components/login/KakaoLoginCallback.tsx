@@ -8,7 +8,7 @@ import { removeUserInfo, saveUserInfo } from "../../services/userApi";
 import {
   isFirstLoginAtom,
   isLoginAtom,
-  shareCodeAtom,
+  giftBoxIdAtom,
   userNameAtom,
   userProfileUrlAtom,
 } from "../../atoms/auth/userAtoms";
@@ -20,7 +20,7 @@ const KakaoLoginCallback: React.FC = () => {
   const setUserName = useSetRecoilState(userNameAtom);
   const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
   const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
-  const setShareCode = useSetRecoilState(shareCodeAtom);
+  const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -29,9 +29,9 @@ const KakaoLoginCallback: React.FC = () => {
       const userName = urlParams.get("userName");
       const userProfileUrl = urlParams.get("userProfileUrl");
       const isFirstLoginParam = urlParams.get("isFirstLogin");
-      const shareCode = urlParams.get("shareCode");
+      const giftBoxId = urlParams.get("giftBoxId");
 
-      if (!accessToken || !userName || !shareCode) {
+      if (!accessToken || !userName || !giftBoxId) {
         removeUserInfo();
         setIsLogin(false);
 
@@ -46,7 +46,7 @@ const KakaoLoginCallback: React.FC = () => {
       const userInfo: MyUserInfo = {
         userName,
         accessToken,
-        shareCode,
+        giftBoxId,
       };
 
       saveUserInfo(userInfo);
@@ -54,7 +54,7 @@ const KakaoLoginCallback: React.FC = () => {
       setIsLogin(true);
       setUserName(userName);
       setUserProfileUrl(userProfileUrl || "");
-      setShareCode(shareCode);
+      setGiftBoxId(giftBoxId);
 
       // 최상위에서 선언한 location을 사용합니다.
       const redirectPath = (location.state as { redirect?: string } | null)?.redirect;
@@ -68,7 +68,7 @@ const KakaoLoginCallback: React.FC = () => {
         return;
       }
 
-      navigate(`/${shareCode}`);
+      navigate(`/main/${giftBoxId}`);
     };
 
     handleLogin();
@@ -79,7 +79,7 @@ const KakaoLoginCallback: React.FC = () => {
     setUserName,
     setUserProfileUrl,
     setIsFirstLogin,
-    setShareCode,
+    setGiftBoxId,
   ]);
 
   return <Loading />;

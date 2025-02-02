@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { shareCodeAtom } from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom } from "../atoms/auth/userAtoms";
 import MainMyBeforeView from "./MainMyBeforeView";
 import MainMyEventView from "./MainMyEventView";
 import MainMyAfterView from "./MainMyAfterView";
@@ -18,11 +18,11 @@ const getEventDate = (): Date => {
   return new Date(currentYear, month - 1, day);
 };
 
-const ShareCodeRouter: React.FC = () => {
+const GiftBoxIdRouter: React.FC = () => {
   const navigate = useNavigate();
 
-  const { shareCode: urlShareCode } = useParams<{ shareCode?: string }>();
-  const savedShareCode = useRecoilValue(shareCodeAtom);
+  const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
+  const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 
   const today = new Date();
   const eventDate = getEventDate();
@@ -30,12 +30,12 @@ const ShareCodeRouter: React.FC = () => {
   const whiteDay = new Date(eventDate);
   whiteDay.setMonth(eventDate.getMonth() + 1);
 
-  if ((urlShareCode && savedShareCode === "") || urlShareCode !== savedShareCode) {
+  if ((urlGiftBoxId && savedGiftBoxId === "") || urlGiftBoxId !== savedGiftBoxId) {
     return <MainYourBeforeView />;
   }
 
   // 발신자: URL과 Recoil의 shareCode가 모두 존재하고 동일한 경우
-  if (urlShareCode && savedShareCode !== "" && urlShareCode === savedShareCode) {
+  if (urlGiftBoxId && savedGiftBoxId !== "" && urlGiftBoxId === savedGiftBoxId) {
     if (today < eventDate) {
       return <MainMyBeforeView />;
     } else if (today.toDateString() === eventDate.toDateString()) {
@@ -48,4 +48,4 @@ const ShareCodeRouter: React.FC = () => {
   }
 };
 
-export default ShareCodeRouter;
+export default GiftBoxIdRouter;

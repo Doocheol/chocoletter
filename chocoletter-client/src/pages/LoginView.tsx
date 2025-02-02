@@ -4,22 +4,22 @@ import login_view_service_title from "../assets/images/logo/login_view_service_t
 import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
 import { Button } from "../components/common/Button";
-import { isLoginAtom, shareCodeAtom } from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom, isLoginAtom } from "../atoms/auth/userAtoms";
 import { useRecoilValue } from "recoil";
 import { useEffect } from "react";
 
 function LoginView() {
   const isLogin = useRecoilValue(isLoginAtom);
-  const shareCode = useRecoilValue(shareCodeAtom);
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isLogin) {
       // 이미 로그인됨 → 메인 페이지로 이동
-      navigate(`/${shareCode}`);
+      navigate(`/main/${giftBoxId}`);
     }
-  }, [isLogin, shareCode, navigate]);
+  }, [isLogin, giftBoxId, navigate]);
 
   return (
     <div className="h-[calc((var(--vh, 1vh) * 100)-8rem)] flex flex-col items-center justify-center px-4">

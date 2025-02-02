@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
-import { shareCodeAtom, isFirstLoginAtom, giftBoxNumAtom } from "../atoms/auth/userAtoms";
+import { isFirstLoginAtom, giftBoxNumAtom, giftBoxIdAtom } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
@@ -44,9 +44,9 @@ const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
 
   // URL 파라미터에서 shareCode 읽기 (예: /main/my/before/abc123)
-  const { shareCode: urlShareCode } = useParams<{ shareCode?: string }>();
+  const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
   // Recoil에 저장된 shareCode
-  const savedShareCode = useRecoilValue(shareCodeAtom);
+  const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
   // Recoil에 저장된 giftBoxNum (선물상자 번호)
   const giftBoxNum = useRecoilValue(giftBoxNumAtom);
 
@@ -87,21 +87,21 @@ const MainMyBeforeView: React.FC = () => {
 
   // URL 파라미터와 Recoil에 저장된 shareCode를 비교하는 로직
   useEffect(() => {
-    if (urlShareCode && savedShareCode) {
-      if (urlShareCode !== savedShareCode) {
+    if (urlGiftBoxId && savedGiftBoxId) {
+      if (urlGiftBoxId !== savedGiftBoxId) {
         console.warn("URL의 shareCode와 저장된 shareCode가 일치하지 않습니다.");
         navigate("/error");
       }
-    } else if (!urlShareCode && savedShareCode) {
-      navigate(`/${savedShareCode}`);
-    } else if (urlShareCode && !savedShareCode) {
+    } else if (!urlGiftBoxId && savedGiftBoxId) {
+      navigate(`/main/${savedGiftBoxId}`);
+    } else if (urlGiftBoxId && !savedGiftBoxId) {
       console.warn("URL에 shareCode는 있으나 저장된 shareCode가 없습니다.");
       navigate("/error");
     } else {
       console.warn("shareCode 정보가 없습니다.");
       navigate("/");
     }
-  }, [urlShareCode, savedShareCode, navigate]);
+  }, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
   // giftBoxNum에 따른 선물상자 이미지 매핑 (선택한 선물상자 번호에 따라 이미지 변경)
   const giftBoxImages: { [key: number]: string } = {

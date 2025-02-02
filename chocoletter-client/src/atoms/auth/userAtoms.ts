@@ -34,8 +34,8 @@ export const isFirstLoginAtom = atom<boolean>({
 });
 
 // giftBoxId 대신 shareCode (string)를 저장합니다.
-export const shareCodeAtom = atom<string>({
-  key: "shareCode",
+export const giftBoxIdAtom = atom<string>({
+  key: "giftBoxId",
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
