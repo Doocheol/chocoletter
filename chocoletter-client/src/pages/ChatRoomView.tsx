@@ -24,8 +24,8 @@ interface MessageType {
 }
 
 const ChatRoonView = () => {
-    useViewportHeight();
-    
+    // useViewportHeight();
+
     const location = useLocation();
     const sender = location.state?.nickName  ?? "예슬";
     // const roomId = location.state?.roomId;
@@ -185,7 +185,7 @@ const ChatRoonView = () => {
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
-        <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
+        <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
             <LetterInChatModal
                 isOpen={isOpenLetter}
                 onClose={() => setIsOpenLetter(false)}
