@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
 import general from "../assets/images/chocolate/general/gen_choco_1.png"
@@ -16,7 +16,7 @@ function SelectGiftTypeView() {
     const letter = questionLetter.question ? questionLetter : freeLetter;
     const [isFirstIcon, setIsFirstIcon] = useState(true);
     const navigate = useNavigate();
-    const giftBoxId = 1; // TODO: 주소에서 받아오기
+    const { giftBoxId } = useParams<{ giftBoxId: string }>();
 
     const handleAccept = () => {
         navigate("/set-time"); 
@@ -27,7 +27,7 @@ function SelectGiftTypeView() {
             if (questionLetter.question) {
                 // 질문이 있는 경우 QuestionGift API 호출
                 await sendGeneralQuestionGift(
-                    giftBoxId,
+                    giftBoxId as string,
                     questionLetter.nickname,
                     questionLetter.question,
                     questionLetter.answer
@@ -35,7 +35,7 @@ function SelectGiftTypeView() {
             } else {
                 // 질문이 없는 경우 FreeGift API 호출
                 await sendGeneralFreeGift(
-                    giftBoxId,
+                    giftBoxId as string,
                     freeLetter.nickname,
                     freeLetter.content
                 );
