@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -15,10 +15,9 @@ import { FaUserCircle, FaHome } from "react-icons/fa"; // 사용자 아이콘 �
 import { FiLogOut } from "react-icons/fi"; // 로그아웃 아이콘
 import home_icon from "../../assets/images/main/home_icon.svg"; // 홈 아이콘
 import { logout, removeUserInfo } from "../../services/userApi";
+// MyPage 통계 API 함수
+import { getMyPageStats } from "../../services/giftApi";
 
-/**
- * 프로필 드롭다운 내용
- */
 interface MyPageProps {
   onClose: () => void;
 }
@@ -27,11 +26,15 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
   const userName = useRecoilValue(userNameAtom);
   const userProfileUrl = useRecoilValue(userProfileUrlAtom);
-  const giftBoxId = useRecoilValue(giftBoxIdAtom); // Recoil에서 giftBoxId 확인
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
-  // 보낸/받은 초콜릿
+  // Recoil 상태 읽어오기 (보낸/받은 초콜릿 수)
   const sentGifts = useRecoilValue(sentGiftsAtom);
   const receivedGifts = useRecoilValue(receivedGiftsAtom);
+
+  // Recoil 상태 업데이트를 위한 setter (초콜릿 수 통계 업데이트)
+  const setSentGifts = useSetRecoilState(sentGiftsAtom);
+  const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
 
   const navigate = useNavigate();
 
@@ -72,6 +75,21 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
     };
   }, [onClose]);
 
+  // MyPage 통계 데이터를 API로부터 가져와 Recoil 상태를 업데이트
+  useEffect(() => {
+    async function fetchMyPageStats() {
+      try {
+        const data = await getMyPageStats();
+        // API 응답에 receivedGiftCount와 sendGiftCount가 포함되어 있다고 가정합니다.
+        setReceivedGifts(data.receivedGiftCount);
+        setSentGifts(data.sendGiftCount);
+      } catch (error) {
+        console.error("MyPage 통계 데이터를 가져오는 중 에러 발생:", error);
+      }
+    }
+    fetchMyPageStats();
+  }, [setReceivedGifts, setSentGifts]);
+
   return (
     <div
       ref={dropdownRef}
@@ -103,7 +121,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* 통계: 보낸 왼쪽, 받은 오른쪽 */}
+        {/* 통계: 보낸 개수와 받은 개수 */}
         <div className="bg-gray-100 text-center text-md text-black font-light rounded-full pt-1 mb-2">
           <div className="flex justify-center items-center text-md gap-14 mb-2">
             <div className="flex items-center gap-2">
