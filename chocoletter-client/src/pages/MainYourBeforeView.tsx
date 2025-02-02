@@ -14,13 +14,18 @@ import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
+import { getGiftBoxName } from "../services/giftBoxApi";
+
+// 새로 추가한 getGiftBoxName 함수를 import 합니다.
 
 const MainYourBeforeView: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
-  const recipientNickname = "초코레터팀";
+  // 초기값은 빈 문자열로 처리하여, API 호출 후 업데이트 하도록 함.
+  const [recipientNickname, setRecipientNickname] = useState<string>("");
+
   const isLoggedIn = useRecoilValue(isLoginAtom);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -42,9 +47,14 @@ const MainYourBeforeView: React.FC = () => {
     navigate(`/select-letter/${giftBoxId}`);
   };
 
-  // 로그인 페이지로 이동할 때, 현재 경로를 state로 전달하여 로그인 후 복귀할 수 있도록 함
+  // 기존 코드
+  // const handleGoToLogin = () => {
+  //   navigate("/", { state: { redirect: location.pathname } });
+  // };
+
+  // 수정된 코드: redirect 정보를 쿼리 파라미터로 전달
   const handleGoToLogin = () => {
-    navigate("/", { state: { redirect: location.pathname } });
+    navigate(`/?redirect=${encodeURIComponent(location.pathname)}`);
   };
 
   const today = new Date();
@@ -54,6 +64,20 @@ const MainYourBeforeView: React.FC = () => {
 
   const shouldShowCountdown = today >= eventDate && today < whiteDay;
   const [isCountdownOpen, setIsCountdownOpen] = useState(shouldShowCountdown);
+
+  // giftBoxId가 있을 경우, 상대방 이름을 조회하여 설정합니다.
+  useEffect(() => {
+    if (giftBoxId) {
+      getGiftBoxName(giftBoxId).then((name) => {
+        if (name) {
+          setRecipientNickname(name);
+        } else {
+          // 조회 실패 시 기본값 처리
+          setRecipientNickname("초코레터");
+        }
+      });
+    }
+  }, [giftBoxId]);
 
   return (
     <div className="flex justify-center w-full">
@@ -74,7 +98,7 @@ const MainYourBeforeView: React.FC = () => {
           />
           <div className="flex flex-col items-center px-10 py-8 relative text-2xl">
             <div className="flex flex-row max-w-sm">
-              <div className="mb-1">{recipientNickname}</div>의 선물상자
+              <div className="mb-1">{recipientNickname}</div>님의 선물상자
             </div>
           </div>
         </div>

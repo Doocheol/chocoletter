@@ -17,7 +17,6 @@ import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
-// 선물상자 이미지 자산 임포트 (giftBoxNum에 따라 표시할 이미지)
 import giftbox_before_1 from "../assets/images/giftbox/giftbox_before_1.svg";
 import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
 import giftbox_before_3 from "../assets/images/giftbox/giftbox_before_3.svg";
@@ -38,52 +37,57 @@ import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 import { countMyGiftBox } from "../services/giftBoxApi";
+import { getAlarmCount } from "../services/alarmApi";
+
+// Loading 컴포넌트 import (로딩 중임을 보여줄 오버레이)
+import Loading from "../components/common/Loading";
+import NotificationModal from "../components/main/my/before/modal/NotificationModal";
 
 const MainMyBeforeView: React.FC = () => {
   const navigate = useNavigate();
 
-  // URL 파라미터에서 shareCode 읽기 (예: /main/my/before/abc123)
   const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
-  // Recoil에 저장된 shareCode
   const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
-  // Recoil에 저장된 giftBoxNum (선물상자 번호)
   const giftBoxNum = useRecoilValue(giftBoxNumAtom);
 
-  // (1) 주소창 높이 보정 훅
+  // 주소창 높이 보정
   useViewportHeight();
 
-  // Recoil 상태
   const availableGifts = useRecoilValue(availableGiftsAtom);
   const receivedGifts = useRecoilValue(receivedGiftsAtom);
   const [isFirstLogin, setIsFirstLogin] = useRecoilState(isFirstLoginAtom);
 
-  // Recoil 상태 업데이트를 위한 setter
   const setAvailableGifts = useSetRecoilState(availableGiftsAtom);
   const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
 
-  // 공유 모달
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-
-  // 캡처 모달
   const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
 
   const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
   const tutorialIconRef = useRef<HTMLButtonElement>(null);
 
-  // 프로필 드롭다운 열림 여부
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
-  // giftBoxNum이 없으면 선물상자 선택 페이지로 리다이렉트
+  // 알림 개수 상태
+  const [alarmCount, setAlarmCount] = useState<number>(0);
+
+  // 로딩 상태들 (API 호출 또는 모달 전환 중)
+  const [isGiftCountLoading, setIsGiftCountLoading] = useState<boolean>(false);
+  const [isAlarmCountLoading, setIsAlarmCountLoading] = useState<boolean>(false);
+
+  // API 진행 시 로딩 상태가 하나라도 true면 전역 로딩 표시
+  const isLoading = isGiftCountLoading || isAlarmCountLoading;
+
+  // URL 파라미터와 Recoil에 저장된 shareCode 검증
   useEffect(() => {
     if (!giftBoxNum) {
       navigate("/select-giftbox");
     }
   }, [giftBoxNum, navigate]);
 
-  // URL 파라미터와 Recoil에 저장된 shareCode를 비교하는 로직
   useEffect(() => {
     if (urlGiftBoxId && savedGiftBoxId) {
       if (urlGiftBoxId !== savedGiftBoxId) {
@@ -101,7 +105,6 @@ const MainMyBeforeView: React.FC = () => {
     }
   }, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
-  // giftBoxNum에 따른 선물상자 이미지 매핑 (선택한 선물상자 번호에 따라 이미지 변경)
   const giftBoxImages: { [key: number]: string } = {
     1: giftbox_before_1,
     2: giftbox_before_2,
@@ -115,7 +118,6 @@ const MainMyBeforeView: React.FC = () => {
     setIsShareModalOpen(true);
   };
 
-  // 캡처 버튼 핸들러 (모달을 단순히 열어줌)
   const handleCapture = () => {
     setIsCaptureModalVisible(true);
   };
@@ -128,8 +130,10 @@ const MainMyBeforeView: React.FC = () => {
     setIsCalendarModalOpen(true);
   };
 
+  // 알림 아이콘 클릭 시 알림 모달을 여는 핸들러 (여기서는 모달 오픈 동작만 처리)
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const handleNotification = () => {
-    navigate("/my-box");
+    setIsNotificationModalOpen(true);
   };
 
   const handleChat = () => {
@@ -144,147 +148,182 @@ const MainMyBeforeView: React.FC = () => {
     navigate("/gift-list/before");
   };
 
+  // 선물 개수 API 호출 (로딩 포함)
   useEffect(() => {
     async function fetchGiftCount() {
+      setIsGiftCountLoading(true);
       try {
         const { giftCount, canOpenGiftCount } = await countMyGiftBox();
         setAvailableGifts(canOpenGiftCount);
         setReceivedGifts(giftCount);
       } catch (err) {
         console.error("Gift Box count API 실패:", err);
+      } finally {
+        setIsGiftCountLoading(false);
       }
     }
     fetchGiftCount();
   }, [setAvailableGifts, setReceivedGifts]);
 
-  return (
-    <div className="flex justify-center w-full bg-white">
-      <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
-        {/* 상단 아이콘 바 */}
-        <div className="mt-6 ml-6 flex items-center justify-between ">
-          <div className="flex items-center gap-6">
-            <button onClick={handleTutorial} ref={tutorialIconRef}>
-              <img src={tutorial_icon} className="w-6 h-6" alt="tutorial icon" />
-            </button>
-            <button onClick={handleCalendar}>
-              <img src={calendar_icon} className="w-7 h-7" alt="calendar icon" />
-            </button>
-          </div>
+  // 알림 개수 API 호출 (로딩 포함)
+  useEffect(() => {
+    async function fetchAlarmCount() {
+      setIsAlarmCountLoading(true);
+      try {
+        const count = await getAlarmCount();
+        setAlarmCount(count);
+      } catch (err) {
+        console.error("알림 개수 불러오기 실패:", err);
+      } finally {
+        setIsAlarmCountLoading(false);
+      }
+    }
+    fetchAlarmCount();
+  }, []);
 
-          <div className="flex items-center gap-6 mr-6">
-            <div className="flex flex-col items-center">
-              <button onClick={handleNotification}>
-                <img src={bell_icon} className="w-7 h-7" alt="notification icon" />
+  return (
+    <div className="relative">
+      {isLoading && (
+        // 전역 로딩 오버레이 (API 호출 중)
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+          <Loading />
+        </div>
+      )}
+      <div className="flex justify-center w-full bg-white">
+        <div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
+          {/* 상단 아이콘 바 */}
+          <div className="mt-6 ml-6 flex items-center justify-between ">
+            <div className="flex items-center gap-6">
+              <button onClick={handleTutorial} ref={tutorialIconRef}>
+                <img src={tutorial_icon} className="w-6 h-6" alt="tutorial icon" />
+              </button>
+              <button onClick={handleCalendar}>
+                <img src={calendar_icon} className="w-7 h-7" alt="calendar icon" />
               </button>
             </div>
 
-            <button onClick={handleChat}>
-              <img src={chat_icon} className="w-6 h-6" alt="chat icon" />
-            </button>
-            <button onClick={handleProfile}>
-              <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
-            </button>
-          </div>
-        </div>
-
-        {/* 초콜릿 개봉/받은 정보 카드 */}
-        <div className="mt-6 mx-auto relative">
-          <img
-            src={my_count_background}
-            alt="Background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="flex flex-col items-center gap-2.5 px-9 py-4 relative">
-            <div className="flex flex-row">
-              <div className="text-2xl font-normal text-center">개봉 가능한&nbsp;</div>
-              <img src={choco_asset} className="w-7 h-7" alt="choco asset" />
-              <div className="text-2xl font-normal text-center">&nbsp;:&nbsp;</div>
-              <div className="text-2xl font-normal text-center text-chocoletterPurpleBold">
-                {availableGifts}
+            <div className="flex items-center gap-6 mr-6 relative">
+              <div className="relative">
+                <button onClick={handleNotification}>
+                  <img src={bell_icon} className="w-7 h-7" alt="notification icon" />
+                </button>
+                {alarmCount > 0 && (
+                  <div className="absolute -top-1 -right-1 bg-red-500 rounded-full h-4 w-4 flex items-center justify-center text-white text-[10px]">
+                    {alarmCount}
+                  </div>
+                )}
               </div>
-              <div className="text-2xl font-normal text-center">개</div>
-            </div>
-            <div className="flex flex-row">
-              <div className="text-sm text-gray-500 text-center">지금까지 받은&nbsp;</div>
-              <img src={choco_asset} className="h-4 w-4" alt="choco asset" />
-              <div className="text-sm text-gray-500 text-center">&nbsp;:&nbsp;</div>
-              <div className="text-sm text-center text-chocoletterPurple">{receivedGifts}</div>
-              <div className="text-sm text-gray-500 text-center">개</div>
+              <button onClick={handleChat}>
+                <img src={chat_icon} className="w-6 h-6" alt="chat icon" />
+              </button>
+              <button onClick={handleProfile}>
+                <FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
+              </button>
             </div>
           </div>
-        </div>
-
-        {/* 초콜릿 박스 & 안내 문구 */}
-        <div className="mt-8 flex flex-col items-center px-4">
-          {/* 캡처 영역에 고유 id 부여 */}
-          <div ref={captureRef} id="capture-target" className="heartbeat">
-            <button
-              onClick={handleMyChocolateBox}
-              className="w-[255px] pl-8 flex items-center justify-center"
-            >
-              <img
-                src={giftBoxImages[giftBoxNum]}
-                alt={`giftbox_before_${giftBoxNum}`}
-                className="p-2 max-h-60"
+          {/* 초콜릿 개봉/받은 정보 카드 */}
+          <div className="mt-6 mx-auto relative">
+            <img
+              src={my_count_background}
+              alt="Background"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="flex flex-col items-center gap-2.5 px-9 py-4 relative">
+              <div className="flex flex-row">
+                <div className="text-2xl font-normal text-center">개봉 가능한&nbsp;</div>
+                <img src={choco_asset} className="w-7 h-7" alt="choco asset" />
+                <div className="text-2xl font-normal text-center">&nbsp;:&nbsp;</div>
+                <div className="text-2xl font-normal text-center text-chocoletterPurpleBold">
+                  {availableGifts}
+                </div>
+                <div className="text-2xl font-normal text-center">개</div>
+              </div>
+              <div className="flex flex-row">
+                <div className="text-sm text-gray-500 text-center">지금까지 받은&nbsp;</div>
+                <img src={choco_asset} className="h-4 w-4" alt="choco asset" />
+                <div className="text-sm text-gray-500 text-center">&nbsp;:&nbsp;</div>
+                <div className="text-sm text-center text-chocoletterPurple">{receivedGifts}</div>
+                <div className="text-sm text-gray-500 text-center">개</div>
+              </div>
+            </div>
+          </div>
+          {/* 초콜릿 박스 & 안내 문구 */}
+          <div className="mt-8 flex flex-col items-center px-4">
+            <div ref={captureRef} id="capture-target" className="heartbeat">
+              <button
+                onClick={handleMyChocolateBox}
+                className="w-[255px] pl-8 flex items-center justify-center"
+              >
+                <img
+                  src={giftBoxImages[giftBoxNum]}
+                  alt={`giftbox_before_${giftBoxNum}`}
+                  className="p-2 max-h-60"
+                />
+              </button>
+            </div>
+            <div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
+              <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
+              <p className="text-xs text-gray-500 leading-snug">
+                개봉 가능한 일반 초콜릿이 있다면
+                <br />
+                박스를 클릭하여 편지를 읽어볼 수 있어요.
+              </p>
+            </div>
+          </div>
+          {/* 공유 및 캡처 버튼 영역 */}
+          <div className="mt-14 px-4 flex flex-row items-center gap-2.5">
+            <div className="relative group">
+              <div className="absolute bottom-full mb-1 left-4 w-max">
+                <img src={tool_tip} alt="tooltip" />
+              </div>
+              <ImageButton
+                onClick={handleShare}
+                src={share_button}
+                className="flex h-14 w-[270px] items-center justify-center hover:bg-chocoletterPurple rounded-[15px] border border-black group"
               />
-            </button>
-          </div>
-
-          {/* 안내 문구 */}
-          <div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
-            <AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
-            <p className="text-xs text-gray-500 leading-snug">
-              개봉 가능한 일반 초콜릿이 있다면
-              <br />
-              박스를 클릭하여 편지를 읽어볼 수 있어요.
-            </p>
-          </div>
-        </div>
-
-        {/* 공유 및 캡처 버튼 영역 */}
-        <div className="mt-14 px-4 flex flex-row items-center gap-2.5">
-          <div className="relative group">
-            <div className="absolute bottom-full mb-1 left-4 w-max">
-              <img src={tool_tip} alt="tooltip" />
             </div>
             <ImageButton
-              onClick={handleShare}
-              src={share_button}
-              className="flex h-14 w-[270px] items-center justify-center hover:bg-chocoletterPurple rounded-[15px] border border-black group"
+              onClick={handleCapture}
+              src={capture_button}
+              className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
             />
           </div>
-          <ImageButton
-            onClick={handleCapture}
-            src={capture_button}
-            className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+          {/* 모달 및 오버레이 */}
+          <CaptureModal
+            isVisible={isCaptureModalVisible}
+            onClose={() => setIsCaptureModalVisible(false)}
+            captureTargetId="capture-target"
+          />
+          <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
+          {isFirstLogin && (
+            <FirstLoginTutorialOverlay
+              targetRef={tutorialIconRef}
+              onClose={() => setIsFirstLogin(false)}
+            />
+          )}
+          {isProfileOpen && (
+            <>
+              <Backdrop onClick={() => setIsProfileOpen(false)} />
+              <MyPage onClose={() => setIsProfileOpen(false)} />
+            </>
+          )}
+          <ChatModal isOpen={isChatModalOpen} onClose={() => setIsChatModalOpen(false)} />
+          <TutorialModal
+            isOpen={isTutorialModalOpen}
+            onClose={() => setIsTutorialModalOpen(false)}
+          />
+          <CalendarModal
+            isOpen={isCalendarModalOpen}
+            onClose={() => setIsCalendarModalOpen(false)}
+          />
+          {/* NotificationModal 등 추가 모달은 필요 시 아래에 배치 */}
+          예시:
+          <NotificationModal
+            isOpen={isNotificationModalOpen}
+            onClose={() => setIsNotificationModalOpen(false)}
+            alarms={[]}
           />
         </div>
-
-        {/* 모달 & 튜토리얼 오버레이 */}
-        {/* 캡처 모달 호출 시, 캡처 대상의 id를 전달 */}
-        <CaptureModal
-          isVisible={isCaptureModalVisible}
-          onClose={() => setIsCaptureModalVisible(false)}
-          captureTargetId="capture-target"
-        />
-        <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
-        {isFirstLogin && (
-          <FirstLoginTutorialOverlay
-            targetRef={tutorialIconRef}
-            onClose={() => setIsFirstLogin(false)}
-          />
-        )}
-
-        {isProfileOpen && (
-          <>
-            <Backdrop onClick={() => setIsProfileOpen(false)} />
-            <MyPage onClose={() => setIsProfileOpen(false)} />
-          </>
-        )}
-
-        <ChatModal isOpen={isChatModalOpen} onClose={() => setIsChatModalOpen(false)} />
-        <TutorialModal isOpen={isTutorialModalOpen} onClose={() => setIsTutorialModalOpen(false)} />
-        <CalendarModal isOpen={isCalendarModalOpen} onClose={() => setIsCalendarModalOpen(false)} />
       </div>
     </div>
   );

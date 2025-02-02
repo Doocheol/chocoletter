@@ -12,7 +12,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
       objectType: "feed",
       content: {
         title: "초코레터",
-        description: "#초콜릿 #편지 #익명 #롤링페이퍼 #타임캡슐",
+        description: "초콜릿으로 마음을 전해보세요!",
         imageUrl: "https://www.chocolate-letter.com/chocoletter_kakao_logo.png",
         link: {
           mobileWebUrl: shareLink, // (2) shareLink 사용
@@ -20,9 +20,9 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
         },
       },
       social: {
-        likeCount: 777,
-        commentCount: 777,
-        sharedCount: 777,
+        likeCount: 3148,
+        commentCount: 213,
+        sharedCount: 22894,
       },
       buttons: [
         {
