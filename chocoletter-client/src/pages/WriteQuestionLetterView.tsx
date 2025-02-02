@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
@@ -12,6 +12,7 @@ import { questionLetterState } from "../atoms/letter/letterAtoms" ;
 // 편지지 선택 뷰 이후, 랜덤 질문 형식 편지지 작성 화면
 const WriteQuestionLetterView = () => {
     const [letter, setLetter] = useRecoilState(questionLetterState);
+    const { giftBoxId } = useParams();
     const navigate = useNavigate();
 
     const resetLetterState = () => {
@@ -43,7 +44,7 @@ const WriteQuestionLetterView = () => {
             return;
         }
 
-        navigate("/select-gift");
+        navigate(`/select-gift/${giftBoxId}`);
     };
 
     return (

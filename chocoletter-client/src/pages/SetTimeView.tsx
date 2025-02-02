@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from "recoil";
 import { toast } from "react-toastify"; 
 import { Button } from "../components/common/Button";
@@ -8,7 +8,7 @@ import MessageSentSuccessfullyModal from "../components/set-time/modal/MessageSe
 import AmPmDial from "../components/set-time/button/AmPmDial"
 import HourDial from "../components/set-time/button/HourDial"
 import MinuteDial from "../components/set-time/button/MinuteDial"
-import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
+// import UnboxingSchedule from "../components/set-time/UnboxingSchedule";
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
 import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
@@ -26,7 +26,7 @@ const SetTimeView = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [hasToastShown, setHasToastShown] = useState(false); // 토스트 상태
-    const giftBoxId = 2; // TODO: 주소에서 받아오기
+    const { giftBoxId } = useParams<{ giftBoxId: string }>();
     const freeLetter = useRecoilValue(freeLetterState);
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
@@ -36,7 +36,7 @@ const SetTimeView = () => {
     useEffect(() => {
         const fetchDisableTimes = async () => {
             try {
-                const data = await getUnboxingSchedule(giftBoxId);
+                const data = await getUnboxingSchedule(giftBoxId as string);
                 if (data && data.unboxingTimes) {
                     setDisableTimes(data.unboxingTimes);
                     console.log("Fetched disableTimes:", data.unboxingTimes);
@@ -116,7 +116,7 @@ const SetTimeView = () => {
             // 질문이 있는 경우 SpecialQuestionGift API 호출
             if (questionLetter.question) {
                 await sendSpecialQuestionGift(
-                    giftBoxId,
+                    giftBoxId as string,
                     questionLetter.nickname,
                     questionLetter.question,
                     questionLetter.answer,
@@ -126,7 +126,7 @@ const SetTimeView = () => {
                 // 질문이 없는 경우 SpecialFreeGift API 호출
                 console.log(giftBoxId, freeLetter.nickname, freeLetter.content, unBoxingTime)
                 await sendSpecialFreeGift(
-                    giftBoxId,
+                    giftBoxId as string,
                     freeLetter.nickname,
                     freeLetter.content,
                     unBoxingTime
