@@ -105,7 +105,7 @@ export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, vi
         <div className="flex w-full justify-center items-center min-h-screen">
             <LetterInVideoModal
                 isOpen={isOpenLetter}
-                onPush={hideRTCLetter}
+                onClose={hideRTCLetter}
                 sender="송신자"
                 receiver="수신자"
                 content={content}

@@ -107,7 +107,7 @@ const VideoRoomView = () => {
                 )}
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
-                    onPush={hideRTCLetter}
+                    onClose={hideRTCLetter}
                     sender="송신자"
                     receiver="수신자"
                     content="loving"
