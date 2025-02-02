@@ -15,21 +15,21 @@ export const CheckLetterUseButton = ({ onClick }: CheckLetterUseButtonProps) => 
     const [remainOpenCount, setRemainOpenCount] = useRecoilState(availableGiftsAtom)
     const navigate = useNavigate();
     const checkLetterClickHandler = async () => {
-        const response = await disPreviewCoin();
-        console.log("checkletter", response)
-        // 전역 힌트 개수 줄임
-        setRemainOpenCount((prev) => Math.max(prev - 1, 0))
-        // 기존 모달 지우고
-        onClick();
-        // 편지함으로 이동
-        // 이전에서 atom에 giftId는 기록해 두었음.
-        navigate('/letter')
-        // isOpened를 true로 변경(이부분 없네..?)
-        // } else {
-        //     // 새로운 모달 띄움(문제 발생)
-        //     console.log(response?.status);
-        //     setIsProblemOpen(true);
-        // }
+        try {
+            const response = await disPreviewCoin();
+            console.log("checkletter", response);
+
+            // 전역 힌트 개수 줄임
+            setRemainOpenCount((prev) => Math.max(prev - 1, 0))
+            // 기존 모달 지우고
+            onClick();
+            // 편지함으로 이동
+            // 이전에서 atom에 giftId는 기록해 두었음.
+            navigate('/letter')
+        } catch (err) {
+            setIsProblemOpen(true);
+            console.log("초콜릿 열기 오류 : ", err)
+        };
     }
 
     const allModalCloseHandler = () => {

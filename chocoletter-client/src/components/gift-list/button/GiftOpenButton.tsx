@@ -40,6 +40,24 @@ interface GiftOpenButtonProps {
     unboxingTime: string | null;
 }
 
+const getEventDate = (): Date => {
+    const raw = import.meta.env.VITE_EVENT_DAY || "0214";
+    // raw가 "0214" 형식이면 앞의 두 자리는 월, 뒤의 두 자리는 일
+    const month = Number(raw.slice(0, 2));
+    const day = Number(raw.slice(2, 4));
+    const currentYear = new Date().getFullYear();
+    // JavaScript Date는 month가 0부터 시작하므로 month - 1
+    return new Date(currentYear, month - 1, day);
+};
+
+const compareDates = (current: Date, eventday: Date) => {
+    if (current.getFullYear() === eventday.getFullYear() && current.getMonth() === eventday.getMonth() && current.getDate() === eventday.getDate()) {
+        return true;
+    }
+
+    return false;
+}
+
 export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
@@ -47,6 +65,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom)
 
     const [buttonImage, setButtonImage] = useState("");
+    const currentDate = new Date();
 
     // 초콜릿 정보 가져오기
     const getGiftDetailCall = async () => {
@@ -97,20 +116,12 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
 
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
-        // const giftData = await getGiftDetailCall();
-        // 나중에 giftData.chocoType으로 변경
-        const giftDatum = giftData[Math.floor(Math.random() * 10)]
         if (giftType === 'SPECIAL') {
             setIsRTC(true);
         } else {
             setAtomGiftId(giftId);
-            if (isOpened) {
-                navigate('/letter', { state: {
-                    nickName: giftDatum.nickName,
-                    content: giftDatum.content,
-                    question: giftDatum.question,
-                    answer: giftDatum.answer,
-                }})
+            if (isOpened || compareDates(currentDate ,getEventDate())) {
+                navigate('/letter')
             } else {
                 setIsNonOpen(true);
             }

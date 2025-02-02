@@ -84,20 +84,20 @@ const TestVideoRoomView = () => {
     // 위의 checkAuth에 존재
 
     // 세션 및 토큰 발급
-        const initSession = async () => {
-            try {
-                console.log("세션 생성 중")
+    const initSession = async () => {
+        try {
+            console.log("세션 생성 중")
 
-                await joinSession(
-                    { sessionId: sessionIdInit, username },
-                    setVideoState,
-                    setIsTerminate,
-                    setIsItThere,
-                )
-            } catch (err) {
-                console.log("세션 생성 실패 : ", err)
-            }
-        };
+            await joinSession(
+                { sessionId: sessionIdInit, username },
+                setVideoState,
+                setIsTerminate,
+                setIsItThere,
+            )
+        } catch (err) {
+            console.log("세션 생성 실패 : ", err)
+        }
+    };
 
     //////////////////////////////////////////////////////////////////
     // 내 영상 publishAudio 활성화
@@ -105,7 +105,7 @@ const TestVideoRoomView = () => {
         if (!isItThere) return;
         setCountFive(true);
         const timer = setTimeout(() => {
-            pushPublish(videoState);
+            videoState.publisher?.publishAudio(true);
             console.log("publish do");
             setCountFive(false);
         }, 5000);
@@ -152,10 +152,9 @@ const TestVideoRoomView = () => {
 
     const transRemoteMuted = async () => {
         await initSession();
-        const newMute = !isRemoteMuted;
-        setIsRemoteMuted(newMute);
+        setIsRemoteMuted(false);
         setIsReady(true);
-        if (remoteVideoRef.current) remoteVideoRef.current.muted = newMute;
+        if (remoteVideoRef.current) {remoteVideoRef.current.muted = false};
     }
 
     return (
@@ -169,7 +168,7 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-02T21:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
+                        <WaitingTest unboxing="2025-02-02T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
                     </div>
                 )}
                 <LetterInVideoModal
