@@ -17,18 +17,18 @@ const waitingWords = ["대기중.", "대기중..", "대기중..."]
 interface WaitingRoomProps {
     unboxing: string,
     onEnd: () => void,
-    onSemiEnd: () => void,
+    isReady: boolean,
     isItThere: boolean,
     content: string,
     videoState: VideoState,
+    trans: () => void,
 }
 
-export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, videoState }: WaitingRoomProps) => {
+export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, videoState, trans }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
-    const [isBothJoin, setIsBothJoin] = useRecoilState(memberCntAtom);
 
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [wcomment, setWcomment] = useState(waitingWords[2]);
@@ -96,19 +96,18 @@ export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, vi
         return () => clearInterval(interval);
     }, [wcnt]);
 
-    const handleBackClick = () => {
-        onSemiEnd();
-        window.history.back(); // 브라우저 이전 페이지로 이동
-    };
+    // const handleBackClick = () => {
+    //     onSemiEnd();
+    //     window.history.back(); // 브라우저 이전 페이지로 이동
+    // };
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
             <LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
-                sender="송신자"
-                receiver="수신자"
-                content={content}
+                nickName="도리도리"
+                content="Is it LOVE? all not,"
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />
@@ -127,10 +126,13 @@ export const WaitingTest = ({ unboxing, onEnd, onSemiEnd, isItThere, content, vi
                         </div>
                     </div>
                 </div>
-                <div className="w-[11dvh] h-[11dvh] bottom-[10dvh] absolute bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
-                    <button onClick={handleBackClick} className="w-full h-full aspect-square flex justify-center items-center" >
-                        <img src={callTerminate} alt="뒤로가기 버튼" className="w-[50%] h-[50%]" />
-                    </button>
+                <div className={`w-[11dvh] h-[11dvh] bottom-[10dvh] absolute ${isReady? "bg-chocoletterGiftBg" : "bg-chocoletterGreen"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                    {isReady ? 
+                        (<div className="font-bold font-sans text-lg">기다리는 중</div>) : 
+                        (<button onClick={trans} className="w-full h-full aspect-square flex justify-center items-center" >
+                            <p className="text-white text-center font-bold font-sans w-[50%] h-[50%] flex items-center justify-center text-2xl" >Ready</p>
+                        </button>)
+                    }
                 </div>
             </div>
         </div>

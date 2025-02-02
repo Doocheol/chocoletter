@@ -6,15 +6,16 @@ import GeneralLetterModal from "../../common/GeneralLetterModal"
 interface LetterInVideoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  sender: string;
-  receiver: string;
-  content: string;
+  nickName?: string;
+  content?: string;
+  question?: string;
+  answer?: string;
 }
 
-const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, sender, receiver }) => {
+const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, nickName, content, question, answer }) => {
   return (
     <>
-      <GeneralLetterModal isOpen={isOpen} onClose={onClose} sender={sender} receiver={receiver} />
+      <GeneralLetterModal isOpen={isOpen} onClose={onClose} nickName={nickName} content={content} question={question} answer={answer} />
     </>
   );
 };
