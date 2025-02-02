@@ -174,7 +174,13 @@ const ChatRoonView = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-
+    // 엔터 키 이벤트 핸들러
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // 기본 엔터 키 동작 방지 (줄바꿈 방지)
+            sendMessage(); // 메시지 전송 함수 호출
+        }
+    };
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
@@ -259,6 +265,7 @@ const ChatRoonView = () => {
                         className="flex-1 outline-none placeholder-[#CBCCD1] text-[15px]"
                         value={message} // 현재 message 상태를 input 필드에 반영
                         onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
+                        onKeyDown={(e) => handleKeyDown(e)}
                     />
                 </div>
                 {/* 전송 버튼 */}
