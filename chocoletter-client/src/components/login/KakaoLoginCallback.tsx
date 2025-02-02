@@ -57,7 +57,17 @@ const KakaoLoginCallback: React.FC = () => {
       setGiftBoxId(giftBoxId);
 
       // 최상위에서 선언한 location을 사용합니다.
-      const redirectPath = (location.state as { redirect?: string } | null)?.redirect;
+      // location.state에서 redirect를 읽어오려 시도합니다.
+      // state가 없으면 URL 쿼리파라미터에서 redirect 정보를 가져옵니다.
+      const stateRedirect = (location.state as { redirect?: string } | null)?.redirect;
+      const queryRedirect = urlParams.get("redirect");
+      const redirectPath = stateRedirect || queryRedirect;
+
+      if (redirectPath) {
+        navigate(redirectPath);
+        return;
+      }
+
       if (redirectPath) {
         navigate(redirectPath);
         return;
