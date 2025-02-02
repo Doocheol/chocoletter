@@ -43,14 +43,14 @@ export async function countMyGiftBox() {
  * 응답 데이터에서 name만 추출하여 반환합니다.
  */
 export async function getGiftBoxName(giftBoxId: string) {
-  try {
-    const res = await api.get(`/api/v1/gift-box/${giftBoxId}`);
-    // 응답 데이터에서 name 프로퍼티만 추출 (응답 형식에 따라 수정 가능)
-    const { name } = res.data;
-    console.log("선물상자 이름 조회 성공:", name);
-    return name;
-  } catch (err) {
-    console.error("getGiftBoxName API 호출 중 에러 발생:", err);
-    return null;
-  }
+    try {
+        const res = await api.get(`/api/v1/gift-box/${giftBoxId}`);
+        // 응답 데이터에서 name 프로퍼티만 추출 (응답 형식에 따라 수정 가능)
+        const { name } = res.data;
+        console.log("선물상자 이름 조회 성공:", name);
+        return name;
+    } catch (err) {
+        console.error("getGiftBoxName API 호출 중 에러 발생:", err);
+        return null;
+    }
 }

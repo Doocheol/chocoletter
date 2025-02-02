@@ -28,7 +28,7 @@ export async function getGiftList(giftType: string) {
 }
 
 // 일반 자유 선물 보내기
-export async function sendGeneralFreeGift(giftBoxId: number, nickName: string, content: string) {
+export async function sendGeneralFreeGift(giftBoxId: string, nickName: string, content: string) {
   try {
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
       nickName: nickName,

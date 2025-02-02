@@ -33,6 +33,8 @@ const giftData = [
     { nickName: "chicky", content: "null", question: "I do", answer: "Do I?" },
 ];
 
+const roomId = "13579"
+
 interface GiftOpenButtonProps {
     giftId: string;
     giftType: string;
@@ -117,7 +119,17 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
         if (giftType === 'SPECIAL') {
-            setIsRTC(true);
+            if (unboxingTime === null) return;
+
+            const unboxingDate = new Date(unboxingTime);
+            const unboxingMinusFive = new Date(unboxingDate.getTime() - 5 * 60 * 1000);
+            const currentDate = new Date();
+
+            if (currentDate < unboxingMinusFive) {
+                setIsRTC(true);
+            } else {
+                navigate(`/video/${roomId}`);
+            }
         } else {
             setAtomGiftId(giftId);
             if (isOpened || compareDates(currentDate ,getEventDate())) {
