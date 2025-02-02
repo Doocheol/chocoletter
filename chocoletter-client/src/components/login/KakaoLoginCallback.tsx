@@ -68,7 +68,7 @@ const KakaoLoginCallback: React.FC = () => {
         return;
       }
 
-      navigate(`/${giftBoxId}`);
+      navigate(`/main/${giftBoxId}`);
     };
 
     handleLogin();

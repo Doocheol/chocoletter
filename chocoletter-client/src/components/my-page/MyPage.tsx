@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import {
+  giftBoxIdAtom,
   isLoginAtom,
-  shareCodeAtom,
   userNameAtom,
   userProfileUrlAtom,
 } from "../../atoms/auth/userAtoms";
@@ -27,7 +27,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
   const userName = useRecoilValue(userNameAtom);
   const userProfileUrl = useRecoilValue(userProfileUrlAtom);
-  const shareCode = useRecoilValue(shareCodeAtom); // Recoil에서 shareCode 확인
+  const giftBoxId = useRecoilValue(giftBoxIdAtom); // Recoil에서 giftBoxId 확인
 
   // 보낸/받은 초콜릿
   const sentGifts = useRecoilValue(sentGiftsAtom);
@@ -46,8 +46,8 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
   const handleHome = () => {
     toast.info("내 선물상자로 이동!");
     onClose(); // 홈으로 이동 후 MyPage 닫기
-    if (shareCode) {
-      navigate(`/${shareCode}`);
+    if (giftBoxId) {
+      navigate(`/main/${giftBoxId}`);
     } else {
       toast.error("다시 로그인해주세요!");
       removeUserInfo();

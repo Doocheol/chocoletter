@@ -23,10 +23,8 @@ const KakaoLoginButton: React.FC = () => {
   const handleClick = async () => {
     // 이미 로그인 정보가 있다면 (한 번이라도 로그인됨)
     if (userInfo?.accessToken) {
-      // giftBoxId가 있다면 /main/my/before/:giftBoxId 로 이동
-      // 없다면 기본 /main/my/before 로 이동
       if (giftBoxId) {
-        navigate(`/${giftBoxId}`);
+        navigate(`/main/${giftBoxId}`);
       } else {
         removeUserInfo();
         await logout();

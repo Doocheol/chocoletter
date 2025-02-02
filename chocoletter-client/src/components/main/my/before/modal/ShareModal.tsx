@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../../../../common/Modal";
 import { copyToClipboard } from "../../../../../utils/copyToClipboard";
-import { getGiftBoxShareCode } from "../../../../../services/userApi";
+import { getGiftBoxId } from "../../../../../services/userApi";
 import useScript from "../../../../../hooks/useScript";
 import { initializeKakao } from "../../../../../utils/sendKakaoTalk";
 import { QRCodeCanvas } from "qrcode.react";
@@ -42,12 +42,12 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
       try {
         setIsLinkLoading(true);
         setSharedLink(""); // 이전 링크 초기화
-        const shareCode = await getGiftBoxShareCode();
-        console.log("getGiftBoxShareCode 응답:", shareCode);
-        if (!shareCode || shareCode.trim() === "") {
+        const giftBoxId = await getGiftBoxId();
+        console.log("getGiftBoxId 응답:", giftBoxId);
+        if (!giftBoxId || giftBoxId.trim() === "") {
           setSharedLink(window.location.href);
         } else {
-          setSharedLink(`https://www.chocolate-letter.com/${shareCode}`);
+          setSharedLink(`https://www.chocolate-letter.com/main/${giftBoxId}`);
         }
       } catch (e) {
         console.error("Error fetching shareCode:", e);

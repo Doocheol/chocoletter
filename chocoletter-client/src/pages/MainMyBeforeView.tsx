@@ -93,7 +93,7 @@ const MainMyBeforeView: React.FC = () => {
         navigate("/error");
       }
     } else if (!urlGiftBoxId && savedGiftBoxId) {
-      navigate(`/${savedGiftBoxId}`);
+      navigate(`/main/${savedGiftBoxId}`);
     } else if (urlGiftBoxId && !savedGiftBoxId) {
       console.warn("URL에 shareCode는 있으나 저장된 shareCode가 없습니다.");
       navigate("/error");
