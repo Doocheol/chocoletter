@@ -11,10 +11,10 @@ import LetterInVideoModal from '../components/video-waiting-room/modal/LetterInV
 import LetterInVideoOpenButton from '../components/video-waiting-room/button/LetterInVideoOpenButton';
 import timerIcon from "../assets/images/unboxing/timer.svg";
 import classes from "../styles/videoRoom.module.css"
-import { AiOutlineAudio } from "react-icons/ai";
-import { AiOutlineAudioMuted } from "react-icons/ai";
+import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
+import { MdHeadsetOff, MdHeadset } from "react-icons/md";
 
 import { joinSession, leaveSession, pushPublish, deleteSession } from '../utils/openviduTest';
 
@@ -25,6 +25,8 @@ import { checkAuthVideoRoom, terminateVideoRoom } from '../services/openviduApi'
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
     const localPreviewRef = useRef<HTMLDivElement>(null);
+    const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+    const [isRemoteMuted, setIsRemoteMuted] = useState(true);
     const { sessionIdInit } = useParams();
     const [ isItThere, setIsItThere ] = useState(false);
 
@@ -148,6 +150,12 @@ const TestVideoRoomView = () => {
         setIsOpenLetter(false);
     }
 
+    const transRemoteMuted = () => {
+        const newMute = !isRemoteMuted;
+        setIsRemoteMuted(newMute);
+        if (remoteVideoRef.current) remoteVideoRef.current.muted = newMute;
+    }
+
     return (
         <>
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
@@ -158,7 +166,7 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-02T05:30:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
+                        <WaitingTest unboxing="2025-02-02T15:30:00" onEnd={onEnd} onSemiEnd={onSemiEnd} isItThere={isItThere} content="love" videoState={videoState} />
                     </div>
                 )}
                 <LetterInVideoModal
@@ -206,14 +214,31 @@ const TestVideoRoomView = () => {
                     {videoState.subscribers && (
                         <video 
                             autoPlay
+                            playsInline
+                            muted={isRemoteMuted}
                             className="w-full h-full object-cover absolute"
-                            ref={(el) => el && videoState.subscribers?.addVideoElement(el)} 
+                            ref={(el) => {
+                                if (el && videoState.subscribers) {
+                                    videoState.subscribers.addVideoElement(el);
+                                    remoteVideoRef.current = el;
+                                    el.muted = isRemoteMuted;
+                                }
+                            }} 
                         />
 
                     )}
                 </div>
-                <div className="flex w-full bottom-[8dvh] justify-center gap-x-7 items-center absolute">
-                    <div className={`w-[9dvh] h-[9dvh] ${isAudio ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                <div className="flex w-full bottom-[5dvh] justify-center gap-x-5 items-center absolute pt-3">
+                    <div className={`w-[8dvh] h-[8dvh] ${isRemoteMuted ? "bg-black" : "bg-white"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                        <button onClick={transRemoteMuted} className="w-full h-full aspect-square flex justify-center items-center" >
+                            {isRemoteMuted ? (
+                                <MdHeadsetOff color="white" className="w-[50%] h-[50%]" />
+                            ) : (
+                                <MdHeadset className="w-[50%] h-[50%]" />
+                            )}
+                        </button>
+                    </div>
+                    <div className={`w-[8dvh] h-[8dvh] ${isAudio ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                         <button onClick={muteOrNotHandler} className="w-full h-full aspect-square flex justify-center items-center" >
                             {isAudio ? (
                                 <AiOutlineAudio className="w-[50%] h-[50%]" />
@@ -222,10 +247,7 @@ const TestVideoRoomView = () => {
                             )}
                         </button>
                     </div>
-                    <div className="w-[9dvh] h-[9dvh] bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
-                        <CloseVideoRoomButton onEnd={onEnd} />
-                    </div>
-                    <div className={`w-[9dvh] h-[9dvh] ${isVideo ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
+                    <div className={`w-[8dvh] h-[8dvh] ${isVideo ? "bg-white" : "bg-black"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                         <button onClick={videoOffOrNotHandler} className="w-full h-full aspect-square flex justify-center items-center" >
                             {isVideo ? (
                                 <FaVideo className="w-[50%] h-[50%]" />
@@ -233,6 +255,11 @@ const TestVideoRoomView = () => {
                                 <FaVideoSlash color="white" className="w-[50%] h-[50%]" />
                             )}
                         </button>
+                    </div>
+                    <div className="pl-5">
+                        <div className="w-[8dvh] h-[8dvh] bg-chocoletterWarning rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20">
+                            <CloseVideoRoomButton onEnd={onEnd} />
+                        </div>
                     </div>
                 </div>
             </div>
