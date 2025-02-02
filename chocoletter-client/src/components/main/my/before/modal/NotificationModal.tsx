@@ -45,10 +45,10 @@ const getAlarmMessage = (alarm: Alarm): string => {
 
 const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose, alarms }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="animate-fadeIn">
+    <Modal isOpen={isOpen} onClose={onClose} className="animate-fadeIn px-4">
       {/* 헤더 (Modal 내부에 기본 닫기 버튼이 있으므로 별도 닫기 버튼은 생략) */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">알림</h2>
+        <h2 className="text-lg font-bold text-gray-800">알림</h2>
       </div>
 
       {/* 알림 리스트 영역 */}

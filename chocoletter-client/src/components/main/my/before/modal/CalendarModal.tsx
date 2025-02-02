@@ -39,7 +39,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-sm sm:max-w-xl md:max-w-2xl max-h-[80vh] overflow-y-auto"
+      className="max-w-sm sm:max-w-xl md:max-w-2xl max-h-[80vh] overflow-y-auto px-2"
     >
       <div className="flex flex-col w-full">
         {/* ChatRoomListView 스타일 헤더 */}
@@ -47,7 +47,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
           {/* 좌측: 뒤로가기 버튼 자리 (필요 시 추가) */}
           <div className="w-6 h-6"></div>
           {/* 중앙: 제목 */}
-          <div className="text-center text-white text-2xl font-normal">발렌타인데이 일정</div>
+          <div className="text-center text-white text-xl font-normal">발렌타인데이 일정</div>
           {/* 우측: 빈 공간 */}
           <div className="w-6 h-6"></div>
         </div>
@@ -60,10 +60,12 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                 key={`${item.senderName}-${index}`}
                 className="flex h-[71px] px-[20px] py-[10px] justify-between items-center self-stretch rounded-[15px] border border-black bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)]"
               >
-                <div className="flex flex-col">
-                  <p className="text-[18px] leading-[22px]">{item.senderName}</p>
-                  <p className="text-[15px] leading-[22px] text-[#696A73]">
-                    언박싱 시간: {item.unboxingTime}
+                <div className="flex flex-row">
+                  <p className="text-[18px] leading-[22px]">
+                    {item.senderName} 님과 만남이 예정되어 있어요!
+                  </p>
+                  <p className="text-[15px] leading-[22px] text-white bg-chocoletterPurpleBold">
+                    {item.unboxingTime}
                   </p>
                 </div>
               </div>
