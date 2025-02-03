@@ -1,14 +1,16 @@
 package chocolate.chocoletter.api.chatroom.controller;
 
+import chocolate.chocoletter.api.chatroom.dto.response.ChatLetterResponseDto;
 import chocolate.chocoletter.api.chatroom.dto.response.ChatRoomsResponseDto;
+import chocolate.chocoletter.common.annotation.DecryptedId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
-
 import java.security.Principal;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface ChatRoomSwagger {
 
@@ -24,7 +26,24 @@ public interface ChatRoomSwagger {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ChatRoomsResponseDto.class)
                     )),
-            @ApiResponse(responseCode = "401", description = "인증되지 않았습니다.")
+            @ApiResponse(responseCode = "401", description = "인증되지 않았습니다."),
+            @ApiResponse(responseCode = "500", description = "Id를 암호화하다 실패했습니다.")
     })
     ResponseEntity<?> findMyChatRooms(Principal principal);
+
+    @Operation(
+            summary = "채팅방에서 조회",
+            description = "내가 속한 채팅방리스트에서 받은 편지를 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ChatLetterResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증되지 않았습니다.")
+    })
+    ResponseEntity<?> findReceiveLetter(@PathVariable @DecryptedId Long roomId, Principal principal);
 }
