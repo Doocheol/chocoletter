@@ -46,3 +46,9 @@ export const giftBoxNumAtom = atom<number>({
   default: 1,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const memberIdAtom = atom<string>({
+  key: "memberId",
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});
