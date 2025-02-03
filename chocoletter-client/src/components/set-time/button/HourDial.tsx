@@ -18,7 +18,7 @@ const HourDial: React.FC<HourDialProps> = ({ onHourChange }) => {
     const element = e.currentTarget;
     const index = Math.round(e.currentTarget.scrollTop / 40);
     const newHour = hours[index % 12]; // "01" ~ "12" 순환
-    console.log(e.currentTarget.scrollTop)
+    // console.log(e.currentTarget.scrollTop)
 
     // 사용자가 계속 스크롤할 때는 `scrollTo` 실행하지 않도록 딜레이 적용
     if (scrollTimeout.current) {
