@@ -42,6 +42,7 @@ const ChatRoonView = () => {
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     const messagesEndRef = useRef<HTMLDivElement | null>(null);//채팅창 스크롤을 맨 아래로 이동
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     // 키보드 사용시 입력창 높이 조정
     useEffect(() => {
@@ -159,6 +160,11 @@ const ChatRoonView = () => {
             });
             // setMessages((prevMessages) => [...prevMessages, msgObject]); // ✅추후삭제!! 바로 화면에 추가
             setMessage(""); // 입력 필드 초기화
+
+            // 메시지 전송 후 입력 필드에 포커스 유지
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
         }
     };
     
@@ -261,6 +267,7 @@ const ChatRoonView = () => {
                 {/* 입력창 컨테이너 */}
                 <div className="flex items-center w-full max-w-md p-[5px_15px] bg-white rounded-[16px] gap-[10px]">
                     <input
+                        ref={inputRef} // 입력 필드 참조 설정
                         type="text"
                         placeholder="내용을 입력하세요"
                         className="flex-1 outline-none placeholder-[#CBCCD1] text-[15px]"
