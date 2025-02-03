@@ -114,12 +114,16 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* 일정 목록 영역 */}
-        <div className="w-full max-h-[60dvh] flex flex-col space-y-[15px] mt-4 ml-1 pb-4 overflow-y-auto overflow-x-hidden">
+        <div className="w-full max-h-[60dvh] flex flex-col space-y-[15px] mt-4 ml-1 pb-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
           {sortedSchedules.length > 0 ? (
             sortedSchedules.map((item, index) => { 
               const RTCchocolate = specialChocos[Math.floor(Math.random() * specialChocos.length)];
               return(
-                <div key={`${item.nickName}-${index}`}>
+                <button 
+                  key={`${item.nickName}-${index}`}
+                  className="active:opacity-80 transition"
+                  onClick={() => console.log(`${item.nickName}님의 일정 클릭!`)} 
+                >
                   <div className="relative w-[300px] shadow-[-155px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
                     {/* 왼쪽 초대장 스타일 배경 */}
                     <div className="w-2/3 h-full bg-white text-[#f82e91] p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
@@ -135,7 +139,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                       <img src={RTCchocolate} className="w-[60%] h-[60%]" />
                     </div>
                   </div>
-                </div>
+                </button>
             )})
           ) : (
             <div className="text-gray-300 text-sm text-center">일정이 없어요!</div>
