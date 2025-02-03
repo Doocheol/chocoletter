@@ -147,13 +147,8 @@ export async function changeSpecialToGeneral(giftId: string) {
 
 // 내 마이페이지 관련 통계 가져오기 (받은 초콜릿 수, 보낸 초콜릿 수)
 export async function getMyPageStats() {
-  try {
     const res = await api.get(`/api/v1/member/mypage`);
     const data = res.data;
     console.log("MyPage stats:", data);
     return data; // data 안에 receivedGiftCount, sendGiftCount가 담겨 있다고 가정
-  } catch (err) {
-    console.error("getMyPageStats API 호출 중 에러 발생:", err);
-    throw err;
-  }
 }
