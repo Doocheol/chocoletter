@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "../../../../common/Modal";
 import { fetchMyUnboxingSchedule } from "../../../../../services/unboxingApi";
 import timerIcon from "../../../../../assets/images/unboxing/timer.svg";
@@ -69,6 +69,26 @@ const ChangeAmPm = (strTime: string) => {
 // 
 
 const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+
+  // 일정 가져오기
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchSchedule = async () => {
+      const unboxingSchedule = await GetMyUnboxingSchedule();
+      if (isMounted && unboxingSchedule) {
+        setSchedules(unboxingSchedule);
+      }
+    };
+
+    fetchSchedule();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
     return [...dummySchedules].sort(
