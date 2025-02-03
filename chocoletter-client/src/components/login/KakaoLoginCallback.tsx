@@ -30,9 +30,8 @@ const KakaoLoginCallback: React.FC = () => {
 			const userProfileUrl = urlParams.get("userProfileUrl");
 			const isFirstLoginParam = urlParams.get("isFirstLogin");
 			const giftBoxId = urlParams.get("giftBoxId");
-			const redirectPath = localStorage.getItem("redirect");
 
-			if (!accessToken || !userName || !giftBoxId || !redirectPath) {
+			if (!accessToken || !userName || !giftBoxId) {
 				removeUserInfo();
 				setIsLogin(false);
 
@@ -56,6 +55,8 @@ const KakaoLoginCallback: React.FC = () => {
 			setUserName(userName);
 			setUserProfileUrl(userProfileUrl || "");
 			setGiftBoxId(giftBoxId);
+
+			const redirectPath = localStorage.getItem("redirect");
 
 			if (redirectPath) {
 				navigate(redirectPath);
