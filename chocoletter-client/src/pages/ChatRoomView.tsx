@@ -144,6 +144,10 @@ const ChatRoonView = () => {
         stompClient.current.activate(); //STOMP 클라이언트 활성화
     };
 
+    useEffect(() => {
+        console.log("Updated messages:", messages);
+    }, [messages]); // 상태가 변경될 때마다 확인
+
     // 메시지 전송 함수
     const [testSenderId, setTestSenderId] = useState(""); // senderId를 입력받기 위한 상태 추가
     const sendMessage = () => {
@@ -212,7 +216,7 @@ const ChatRoonView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[343px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto">
+            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto">
                 {messages.map((msg, index) => (
                     <div key={index} className={clsx(
                         "flex items-end mx-2",
@@ -226,14 +230,23 @@ const ChatRoonView = () => {
                                 >
                                     <div className="text-sans text-[15px]">{msg.content}</div>
                                 </div>
-                                <div className="font-[Pretendard] text-[12px] text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                <div className="flex flex-col justify-end">
+                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                </div>
                             </div>
                         )}
 
                         {/* 내 말풍선 */}
                         {msg.senderId === Number(testSenderId) && (
-                            <div className="flex items-center space-x-2">
-                                <div className="font-[Pretendard] text-xs text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                            <div className="flex w-full gap-[5px] justify-end">
+                                <div className="flex flex-col justify-end items-end">
+                                    {!msg.read && (
+                                        <div className="font-[Pretendard] text-[10px] text-red-500">
+                                            1 {/* 읽지 않은 경우 표시 */}
+                                        </div>
+                                    )}
+                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                </div>
                                 <div 
                                     className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white"
                                 >
