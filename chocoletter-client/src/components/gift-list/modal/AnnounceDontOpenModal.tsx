@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../../common/Modal";
-import { changeKSTDate } from "../../../utils/changeKSTDate";
+import { OtherModal } from "../../common/OtherModal";
+import { PurpleButton } from "../../common/PurpleButton";
 
 interface AnnounceDontOpenModalProps {
     isOpen: boolean,
@@ -13,10 +13,11 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
     useEffect(() => {
         const openAnnounce = async () => {
                 setComment(
-                    <>
-                        <p>특별 초콜릿은 2월 14일</p>
-                        <p>⭐약속한 시간⭐에만 열 수 있어요!</p>
-                    </>
+                    <div>
+                        <p>특별 초콜릿은</p>
+                        <p>⭐2월 14일 약속한 시간⭐에만</p>
+                        <p>열 수 있어요!</p>
+                    </div>
                 );
         }
 
@@ -25,9 +26,10 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
 
     return(
         <div>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <OtherModal isOpen={isOpen} onClose={onClose}>
                 {comment}
-            </Modal>
+                <PurpleButton onClick={onClose} className="!bg-chocoletterPurpleBold !py-2 border-solid" >확인</PurpleButton>
+            </OtherModal>
         </div>
     )
 }

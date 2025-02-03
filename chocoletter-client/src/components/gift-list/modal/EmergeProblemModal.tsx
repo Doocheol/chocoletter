@@ -1,5 +1,5 @@
-import Modal from "../../common/Modal";
-import { Button } from "../../common/Button";
+import { OtherModal } from "../../common/OtherModal";
+import { PurpleButton } from "../../common/PurpleButton";
 
 interface EmergeProblemProps {
     isOpen: boolean,
@@ -9,10 +9,10 @@ interface EmergeProblemProps {
 export const EmergeProblemModal = ({ isOpen, onClose }: EmergeProblemProps) => {  
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <OtherModal isOpen={isOpen} onClose={onClose}>
                 <p>문제가 발생했습니다!</p>
-                <Button onClick={onClose} className="bg-white">확인</Button>
-            </Modal>
+                <PurpleButton onClick={onClose} className="!bg-chocoletterPurpleBold !py-2 border-solid">확인</PurpleButton>
+            </OtherModal>
         </>
     )
 }
