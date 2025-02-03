@@ -144,7 +144,7 @@ public class GiftService {
     }
 
     public List<String> findReceiverUnboxingTimes(Long memberId) {
-        List<Gift> receiverSpecialGifts = giftRepository.findReceiverSpecialGifts(memberId, GiftType.SPECIAL);
+        List<Gift> receiverSpecialGifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
         return receiverSpecialGifts.stream()
                 .map(Gift::getUnBoxingTime)
                 .distinct()
@@ -233,14 +233,6 @@ public class GiftService {
         return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL);
     }
 
-    public String findUnBoxingTime(Long giftId) {
-        return dateTimeUtil.formatDateTime(giftRepository.findGiftByIdOrThrow(giftId).getUnBoxingTime());
-    }
-
-    public List<Object[]> findUnBoxingTimes(List<Long> giftIds) {
-        return giftRepository.findUnBoxingTimesByGiftIds(giftIds);
-    }
-
     // try catch 반복되서 메서드로 뺌
     private String encryptGiftId(Long giftId) {
         try {
@@ -250,5 +242,16 @@ public class GiftService {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
         return null;
+    }
+
+    public void findMyUnBoxingTimes(Long memberId) {
+        List<Gift> specialGifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
+        for (Gift gift : specialGifts) {
+            if (memberId.equals(gift.getReceiverId())) {
+                letterService.findNickNameByGiftId(gift.getId());
+            } else if (memberId.equals(gift.getSenderId())) {
+        
+            }
+        }
     }
 }
