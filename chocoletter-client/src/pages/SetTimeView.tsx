@@ -12,6 +12,8 @@ import MinuteDial from "../components/set-time/button/MinuteDial"
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
 import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
+import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
+import { ToastContainer } from "react-toastify";
 
 // 1. 이미 있는 일정 못선택하게 하기
 // 2. 질문 있냐 없냐에 따라 api post ⭕
@@ -31,6 +33,32 @@ const SetTimeView = () => {
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
+    const [alreadySent, setAlreadySent] = useState(false);
+    // const [error, setError] = useState<string | null>(null);
+
+
+    // ✅ 추후 삭제 : 에러 메시지 Toast 알림
+    const showErrorToast = (message: string) => {
+        toast.error(message, {
+            position: "bottom-center",
+            autoClose: 10000, // 10초 동안 표시
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: {
+                backgroundColor: "#2C2F33",
+                color: "#FFFFFF",
+                borderRadius: "8px",
+                padding: "16px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: "100px",
+            },
+        });
+    };
 
     // 이미 설정된 Unboxing Schedule 불러오기
     useEffect(() => {
@@ -43,8 +71,9 @@ const SetTimeView = () => {
                 } else {
                     console.error("No unboxing times received from API");
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error fetching unboxing times:", error);
+                showErrorToast(error.message || "Error fetching unboxing times");
             }
         };
 
@@ -72,7 +101,7 @@ const SetTimeView = () => {
         if (disabled && !toast.isActive(toastId)) {
             toast.error("해당 시간은 이미 예약되었습니다.", {
                 toastId, // 고유 ID를 설정해 중복 방지
-                position: "bottom-center",
+                position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: true,
                 pauseOnHover: false,
@@ -133,8 +162,15 @@ const SetTimeView = () => {
                 );
             }
             setIsModalOpen(true); // 카카오톡 전송 완료 모달 띄우기
-        } catch (error) {
+        } catch (error : any) {
             console.error("Gift sending failed:", error);
+            const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+            console.log("Received error message:", errorMessage);
+            if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
+                setAlreadySent(true); // 모달 띄우기
+            }
+
+            showErrorToast(error.response?.data?.message || "An unknown error occurred");
         }
     };
 
@@ -155,7 +191,11 @@ const SetTimeView = () => {
                 isOpen={isModalOpen}
                 onClose={closeModalAndNavigate}
             />
-            
+
+            {/* 모달 컴포넌트 : 이미 보낸 사용자 */}
+            <CantSendMessageModal isOpen={alreadySent} onClose={() => setAlreadySent(false)} />
+            {/* 추후 삭제 */}
+            <ToastContainer />
             {/* 상단 bar */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">

@@ -91,8 +91,11 @@ const QuestionLetterForm: React.FC = () => {
                     <img src={question_icon} alt="login_view_service_title" className="" />
                     <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{letter.question}</h1>
                 </div>
-                <div>
-                    <ShuffleButton altText="질문 섞기 버튼" onShuffleClick={onShuffleQuestion} />
+                <div className="relative z-50">
+                    <ShuffleButton
+                        altText="질문 섞기 버튼"
+                        onShuffleClick={onShuffleQuestion}
+                     />
                 </div>
             </div>
             {/* 답변 */}
