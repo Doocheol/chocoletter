@@ -20,6 +20,7 @@ import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
+import chocolate.chocoletter.common.exception.InternalServerException;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
@@ -164,12 +165,11 @@ public class GiftBoxService {
 
     private String encryptGiftBoxId(Long giftBoxId) {
         try {
-            String encryptGiftBoxId = idEncryptionUtil.encrypt(giftBoxId);
-            return encryptGiftBoxId;
+            return idEncryptionUtil.encrypt(giftBoxId);
         } catch (Exception e) {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
+            throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
         }
-        return null;
     }
 
     public MyUnBoxingTimesResponseDto findMyUnbBoxingTimes(Long memberId) {
