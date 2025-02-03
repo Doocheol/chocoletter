@@ -45,10 +45,12 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             Collection<GrantedAuthority> authorities = Collections.singletonList(
                     new SimpleGrantedAuthority("ROLE_USER"));
 
+            // 기프트 박스 조회
             Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(member.getId());
             GiftBox targetGiftBox = giftBox.orElse(null);
             Long giftBoxId = targetGiftBox.getId();
-            String encryptedGiftBoxId = encryptId(giftBoxId);
+            String encryptedGiftBoxId = encrypt(giftBoxId);
+            String encryptedMemberId = encrypt(member.getId());
 
             // 사용자 속성 설정
             Map<String, Object> attributes = new HashMap<>();
@@ -58,6 +60,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("profileImgUrl", member.getProfileImgUrl());
             attributes.put("isFirstLogin", "false");
             attributes.put("giftBoxId", encryptedGiftBoxId);
+            attributes.put("memberId", encryptedMemberId);
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -76,6 +79,8 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             Collection<GrantedAuthority> authorities = Collections.singletonList(
                     new SimpleGrantedAuthority("ROLE_USER"));
 
+            String encryptedMemberId = encrypt(Long.parseLong(result.get("memberId")));
+
             // 사용자 속성 설정
             Map<String, Object> attributes = new HashMap<>();
 
@@ -85,6 +90,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("profileImgUrl", profileImgUrl);
             attributes.put("isFirstLogin", "true");
             attributes.put("giftBoxId", result.get("giftBoxId"));
+            attributes.put("memberId", encryptedMemberId);
 
             // OAuth2User 객체 생성 및 반환
             return new DefaultOAuth2User(authorities, attributes, "id");
@@ -109,7 +115,7 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         giftBoxRepository.save(newGiftBox);
 
         // 공유 코드 생성 및 저장
-        String encryptedGiftBoxId = encryptId(newGiftBox.getId());
+        String encryptedGiftBoxId = encrypt(newGiftBox.getId());
 
         Map<String, String> result = new HashMap<>();
         result.put("memberId", savedMember.getId().toString());
@@ -118,9 +124,9 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         return result;
     }
 
-    private String encryptId(Long giftBoxId) {
+    private String encrypt(Long rawValue) {
         try {
-            return idEncryptionUtil.encrypt(giftBoxId);
+            return idEncryptionUtil.encrypt(rawValue);
         } catch (Exception e) {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
