@@ -10,8 +10,7 @@ import send_icon from "../assets/images/main/send_icon.svg";
 // import { useSelector } from "react-redux"
 import { Client, Stomp } from "@stomp/stompjs";
 import { changeKSTDate } from "../utils/changeKSTDate";
-// npm install react-redux
-// npm install @stomp/stompjs
+import useViewportHeight from "../hooks/useViewportHeight";
 
 
 // ✅Todo : 수정하기
@@ -25,6 +24,8 @@ interface MessageType {
 }
 
 const ChatRoonView = () => {
+    // useViewportHeight();
+
     const location = useLocation();
     const sender = location.state?.nickName  ?? "예슬";
     // const roomId = location.state?.roomId;
@@ -41,6 +42,7 @@ const ChatRoonView = () => {
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     const messagesEndRef = useRef<HTMLDivElement | null>(null);//채팅창 스크롤을 맨 아래로 이동
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     // 키보드 사용시 입력창 높이 조정
     useEffect(() => {
@@ -142,6 +144,10 @@ const ChatRoonView = () => {
         stompClient.current.activate(); //STOMP 클라이언트 활성화
     };
 
+    useEffect(() => {
+        console.log("Updated messages:", messages);
+    }, [messages]); // 상태가 변경될 때마다 확인
+
     // 메시지 전송 함수
     const [testSenderId, setTestSenderId] = useState(""); // senderId를 입력받기 위한 상태 추가
     const sendMessage = () => {
@@ -158,12 +164,17 @@ const ChatRoonView = () => {
             });
             // setMessages((prevMessages) => [...prevMessages, msgObject]); // ✅추후삭제!! 바로 화면에 추가
             setMessage(""); // 입력 필드 초기화
+
+            // 메시지 전송 후 입력 필드에 포커스 유지
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
         }
     };
     
     useEffect(() => {
         connect(); // 웹소켓 연결
-        // fetchMessages(); // ✅ TODO : 주석 풀기 //이전 메세지 불러오기
+        fetchMessages(); // ✅ TODO : 주석 풀기 //이전 메세지 불러오기
         return () => {
             stompClient.current?.deactivate(); // 컴포넌트 언마운트 시 연결 해제
         };
@@ -174,11 +185,17 @@ const ChatRoonView = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-
+    // 엔터 키 이벤트 핸들러
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // 기본 엔터 키 동작 방지 (줄바꿈 방지)
+            sendMessage(); // 메시지 전송 함수 호출
+        }
+    };
 
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
-        <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
+        <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
             <LetterInChatModal
                 isOpen={isOpenLetter}
                 onClose={() => setIsOpenLetter(false)}
@@ -199,7 +216,7 @@ const ChatRoonView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[343px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto">
+            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto">
                 {messages.map((msg, index) => (
                     <div key={index} className={clsx(
                         "flex items-end mx-2",
@@ -213,14 +230,23 @@ const ChatRoonView = () => {
                                 >
                                     <div className="text-sans text-[15px]">{msg.content}</div>
                                 </div>
-                                <div className="font-[Pretendard] text-[12px] text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                <div className="flex flex-col justify-end">
+                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                </div>
                             </div>
                         )}
 
                         {/* 내 말풍선 */}
                         {msg.senderId === Number(testSenderId) && (
-                            <div className="flex items-center space-x-2">
-                                <div className="font-[Pretendard] text-xs text-[#7F8087] self-end">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                            <div className="flex w-full gap-[5px] justify-end">
+                                <div className="flex flex-col justify-end items-end">
+                                    {!msg.read && (
+                                        <div className="font-[Pretendard] text-[10px] text-red-500">
+                                            1 {/* 읽지 않은 경우 표시 */}
+                                        </div>
+                                    )}
+                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt, format: "HH:mm" })}</div>
+                                </div>
                                 <div 
                                     className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white"
                                 >
@@ -254,11 +280,13 @@ const ChatRoonView = () => {
                 {/* 입력창 컨테이너 */}
                 <div className="flex items-center w-full max-w-md p-[5px_15px] bg-white rounded-[16px] gap-[10px]">
                     <input
+                        ref={inputRef} // 입력 필드 참조 설정
                         type="text"
                         placeholder="내용을 입력하세요"
                         className="flex-1 outline-none placeholder-[#CBCCD1] text-[15px]"
                         value={message} // 현재 message 상태를 input 필드에 반영
                         onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
+                        onKeyDown={(e) => handleKeyDown(e)}
                     />
                 </div>
                 {/* 전송 버튼 */}
