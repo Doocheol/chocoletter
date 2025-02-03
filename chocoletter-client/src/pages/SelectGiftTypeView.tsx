@@ -9,6 +9,8 @@ import { useRecoilValue } from "recoil";
 import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftApi"
 import readLetterIcon from "../assets/images/letter/letter_icon.svg"
 import { BsEnvelopeHeart, BsEnvelopeOpenHeart } from "react-icons/bs";
+import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
+
 
 function SelectGiftTypeView() {
     const freeLetter = useRecoilValue(freeLetterState);
@@ -17,6 +19,7 @@ function SelectGiftTypeView() {
     const [isFirstIcon, setIsFirstIcon] = useState(true);
     const navigate = useNavigate();
     const { giftBoxId } = useParams<{ giftBoxId: string }>();
+    const [alreadySent, setAlreadySent] = useState(false);
 
     const handleAccept = () => {
         navigate(`/set-time/${giftBoxId}`); 
@@ -41,8 +44,13 @@ function SelectGiftTypeView() {
                 );
             }
             navigate(`/sent-gift`);
-        } catch (error) {
+        } catch (error : any) {
             console.error("Gift sending failed:", error);
+            const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+            console.log("Received error message:", errorMessage);
+            if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
+                setAlreadySent(true); // 모달 띄우기
+            }
         }
     };
 
@@ -57,6 +65,7 @@ function SelectGiftTypeView() {
 
     return (
         <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
+            <CantSendMessageModal isOpen={alreadySent} onClose={() => setAlreadySent(false)} />
             {/* 상단 bar */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">
@@ -69,6 +78,8 @@ function SelectGiftTypeView() {
             </div>
 
             <div className="absolute mt-24">
+
+                
 
                 {/* 일반/특별 버튼 */}
                 <div className="flex flex-col items-center justify-center m-4 gap-[30px]">

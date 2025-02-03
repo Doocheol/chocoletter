@@ -12,6 +12,7 @@ import MinuteDial from "../components/set-time/button/MinuteDial"
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftApi"
 import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
+import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
 
 // 1. 이미 있는 일정 못선택하게 하기
 // 2. 질문 있냐 없냐에 따라 api post ⭕
@@ -31,6 +32,7 @@ const SetTimeView = () => {
     const questionLetter = useRecoilValue(questionLetterState);
     const letter = questionLetter.question ? questionLetter : freeLetter;
     const navigate = useNavigate();
+    const [alreadySent, setAlreadySent] = useState(false);
 
     // 이미 설정된 Unboxing Schedule 불러오기
     useEffect(() => {
@@ -133,8 +135,13 @@ const SetTimeView = () => {
                 );
             }
             setIsModalOpen(true); // 카카오톡 전송 완료 모달 띄우기
-        } catch (error) {
+        } catch (error : any) {
             console.error("Gift sending failed:", error);
+            const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+            console.log("Received error message:", errorMessage);
+            if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
+                setAlreadySent(true); // 모달 띄우기
+            }
         }
     };
 
@@ -155,7 +162,8 @@ const SetTimeView = () => {
                 isOpen={isModalOpen}
                 onClose={closeModalAndNavigate}
             />
-            
+            <CantSendMessageModal isOpen={alreadySent} onClose={() => setAlreadySent(false)} />
+                        
             {/* 상단 bar */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
                 <div className="self-stretch justify-between items-center inline-flex">
