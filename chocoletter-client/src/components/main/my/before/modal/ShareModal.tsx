@@ -81,7 +81,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 		// try {
 		// 1) 복사
 		await copyToClipboard(sharedLink);
-		alert("링크가 복사되었습니다! 친구들에게 공유해보세요!");
+		alert("링크 복사 완료! 친구들에게 공유해보세요!");
 
 		// // 2) 모바일 Web Share API 지원 여부 확인
 		// if (navigator.share) {

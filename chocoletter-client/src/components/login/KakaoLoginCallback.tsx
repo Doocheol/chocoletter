@@ -32,11 +32,11 @@ const KakaoLoginCallback: React.FC = () => {
 			const giftBoxId = urlParams.get("giftBoxId");
 
 			if (!accessToken || !userName || !giftBoxId) {
-				removeUserInfo();
-				setIsLogin(false);
+				// removeUserInfo();
+				// setIsLogin(false);
 
-				toast.error("다시 로그인해주세요!");
-				navigate("/");
+				// toast.error("다시 로그인해주세요!");
+				// navigate("/");
 				return;
 			}
 
