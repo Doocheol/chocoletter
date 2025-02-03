@@ -5,7 +5,11 @@ const GoToMainMyEventButton = () => {
     const giftBoxId = localStorage.getItem("giftBoxId");
 
     const goBackMainMyEvent = () => {
-        navigate(`/main/${giftBoxId}`)
+        if (giftBoxId) {
+            navigate(`/main/${giftBoxId}`);
+        } else {
+            navigate("/");
+        }
     }
 
     return (

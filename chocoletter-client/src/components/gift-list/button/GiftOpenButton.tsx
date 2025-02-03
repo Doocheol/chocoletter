@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
-import { getGiftDetail } from "../../../services/giftApi";
 import { useRecoilState } from "recoil";
 import { selectedGiftIdAtom } from "../../../atoms/gift/giftAtoms";
 import outline_choco_button from '../../../assets/images/giftbox/outline_choco_button.svg';
@@ -69,15 +68,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     const [buttonImage, setButtonImage] = useState("");
     const currentDate = new Date();
 
-    // 초콜릿 정보 가져오기
-    const getGiftDetailCall = async () => {
-        try {
-            const res = await getGiftDetail(giftId);
-            return res.data;
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
   // 1. 안 열린 일반 초콜릿
   // 횟수를 사용하는 모달로 안내
@@ -141,7 +131,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
     }
 
     return (
-        <div className="relative aspect-square rounded-lg flex items-center justify-center">
+        <div className="relative w-[100px] h-full aspect-square rounded-lg flex items-center justify-center">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
             <div className="[&>button>img]:w-[55%] [&>button>img]:h-[55%] [&>button>img]:hover:scale-110">
