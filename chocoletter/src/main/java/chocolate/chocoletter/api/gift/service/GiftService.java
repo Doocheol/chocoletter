@@ -12,6 +12,8 @@ import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimeResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
@@ -244,14 +246,27 @@ public class GiftService {
         return null;
     }
 
-    public void findMyUnBoxingTimes(Long memberId) {
-        List<Gift> specialGifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
-        for (Gift gift : specialGifts) {
-            if (memberId.equals(gift.getReceiverId())) {
-                letterService.findNickNameByGiftId(gift.getId());
-            } else if (memberId.equals(gift.getSenderId())) {
-        
-            }
+    public MyUnBoxingTimesResponseDto findMyUnBoxingTimes(Long memberId) {
+        List<Gift> gifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
+
+        List<MyUnBoxingTimeResponseDto> myUnBoxingTimes = gifts.stream()
+                .map(gift -> {
+                    String nickname = findUnBoxingName(memberId, gift);
+                    String formattedTime = dateTimeUtil.formatDateTime(gift.getUnBoxingTime());
+                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname);
+                })
+                .collect(Collectors.toList());
+
+        return MyUnBoxingTimesResponseDto.of(myUnBoxingTimes);
+    }
+
+    private String findUnBoxingName(Long memberId, Gift gift) {
+        if (memberId.equals(gift.getReceiverId())) {
+            return letterService.findNickNameByGiftId(gift.getId());
         }
+        if (memberId.equals(gift.getSenderId())) {
+            return memberService.findMember(gift.getReceiverId()).getName();
+        }
+        return "";
     }
 }

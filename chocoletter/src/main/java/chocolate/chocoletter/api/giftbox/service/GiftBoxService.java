@@ -173,6 +173,6 @@ public class GiftBoxService {
     }
 
     public MyUnBoxingTimesResponseDto findMyUnbBoxingTimes(Long memberId) {
-        giftService.findMyUnBoxingTimes(memberId);
+        return giftService.findMyUnBoxingTimes(memberId);
     }
 }
