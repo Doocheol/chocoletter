@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
     @Query("select cr from ChatRoom cr where cr.hostId = :memberId or cr.guestId = :memberId")
     List<ChatRoom> findMyChatRooms(@Param("memberId") Long memberId);
+
+    @Query("select cr from ChatRoom cr where cr.id = :roomId")
+    ChatRoom findChatRoom(@Param("roomId") Long roomId);
 }
