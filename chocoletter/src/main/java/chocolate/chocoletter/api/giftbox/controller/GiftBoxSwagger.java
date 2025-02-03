@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,11 +14,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.security.Principal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.security.Principal;
 
 public interface GiftBoxSwagger {
 
@@ -207,6 +207,23 @@ public interface GiftBoxSwagger {
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     public ResponseEntity<?> usePreviewCount(Principal principal);
+
+    @Operation(
+            summary = "내 언박싱 일정 조회",
+            description = "로그인 한 사람의 언박싱 일정을 조회합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MyUnBoxingTimesResponseDto.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    ResponseEntity<?> findMyUnboxingTimes(Principal principal);
 
     public ResponseEntity<?> getGiftBoxId(Principal principal);
 }
