@@ -5,6 +5,7 @@ interface UnboxingTimeStickerProps {
     unboxingTime: string | null;
     giftType: string;
     isOpened: boolean;
+    isAccepted?: boolean;
 }
 
 const formatTimeKST = (date: Date): string => {
@@ -16,7 +17,7 @@ const formatTimeKST = (date: Date): string => {
     }).format(date)
 };
 
-export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened}: UnboxingTimeStickerProps) => {
+export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepted}: UnboxingTimeStickerProps) => {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     useEffect(() => {
@@ -56,17 +57,23 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened}: Unboxing
         const unboxingMinusFive = new Date(unboxingDate.getTime() - 5 * 60 * 1000);
 
         if (currentDate < unboxingMinusFive) {
-            const formattedTime = formatTimeKST(unboxingDate);
-            content = (
-                <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                    <svg width="24" height="24" fill="currentColor" className="text-white">
-                        {/* 예시 SVG: 시계 아이콘 */}
-                        <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
-                        <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none" />
-                    </svg>
-                    <p className="font-sans text-white text-sm text-center mt-2">{formattedTime}</p>
+            if (isAccepted) {
+                const formattedTime = formatTimeKST(unboxingDate);
+                content = (
+                    <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
+                        <svg width="24" height="24" fill="currentColor" className="text-white">
+                            {/* 예시 SVG: 시계 아이콘 */}
+                            <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
+                            <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none" />
+                        </svg>
+                        <p className="font-sans text-white text-sm text-center mt-2">{formattedTime}</p>
+                    </div>
+                )
+            } else {
+                <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
+                    <p className="font-sans text-white text-sm text-center whitespace-pre-line">약속시간<br/>정하는 중...</p>
                 </div>
-            )
+            }
         } else {
             content = (
                 <div className="absolute inset-0 flex justify-center items-center bg-chocoletterYellow bg-opacity-80 rounded-lg pointer-events-none">

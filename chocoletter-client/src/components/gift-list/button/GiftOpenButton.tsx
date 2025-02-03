@@ -32,13 +32,13 @@ const giftData = [
     { nickName: "chicky", content: "null", question: "I do", answer: "Do I?" },
 ];
 
-const roomId = "13579"
-
 interface GiftOpenButtonProps {
     giftId: string;
     giftType: string;
     isOpened: boolean;
     unboxingTime: string | null;
+    isAccepted?: boolean;
+    roomId?: string;
 }
 
 const getEventDate = (): Date => {
@@ -59,7 +59,7 @@ const compareDates = (current: Date, eventday: Date) => {
     return false;
 }
 
-export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime }) => {
+export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime, isAccepted, roomId }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
     const navigate = useNavigate();
@@ -118,7 +118,12 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             if (currentDate < unboxingMinusFive) {
                 setIsRTC(true);
             } else {
-                navigate(`/video/${roomId}`);
+                if (roomId === "") {
+                    navigate("/")
+                    // 입장 불가 모달
+                } else {
+                    navigate(`/video/${roomId}`);
+                }
             }
         } else {
             setAtomGiftId(giftId);
@@ -139,7 +144,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             </div>
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
             <img src={outline_choco_button} alt="테두리" className="absolute inset-0 w-full h-full pointer-events-none z-30" />
-            <UnboxingTimeSticker giftType={giftType} unboxingTime={unboxingTime} isOpened={isOpened} />
+            <UnboxingTimeSticker giftType={giftType} unboxingTime={unboxingTime} isOpened={isOpened} isAccepted={isAccepted} />
         </div>
     )
 }
