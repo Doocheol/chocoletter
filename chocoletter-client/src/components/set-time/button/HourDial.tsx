@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 type HourDialProps = {
   onHourChange: (hour: string) => void;
@@ -13,15 +13,31 @@ const HourDial: React.FC<HourDialProps> = ({ onHourChange }) => {
   );
 
   // 스크롤 변경 처리
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    const element = e.currentTarget;
     const index = Math.round(e.currentTarget.scrollTop / 40);
     const newHour = hours[index % 12]; // "01" ~ "12" 순환
+    console.log(e.currentTarget.scrollTop)
+
+    // 사용자가 계속 스크롤할 때는 `scrollTo` 실행하지 않도록 딜레이 적용
+    if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+    }
+
+    scrollTimeout.current = setTimeout(() => {
+        element.scrollTo({
+          top: 40 * index,
+          behavior: "smooth",
+        });
+    }, 150); // 사용자가 멈춘 후 150ms 뒤에 실행
+    
     setHour(newHour);
     onHourChange(newHour); // 부모 컴포넌트에 새로운 시간 전달
   };
 
   return (      
-      <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center">
         <div
           className="h-[250px] overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
           onScroll={handleScroll}
