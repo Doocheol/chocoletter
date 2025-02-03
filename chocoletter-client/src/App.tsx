@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import "./styles/App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import LoginView from "./pages/LoginView";
@@ -41,10 +40,6 @@ declare global {
 }
 
 function App() {
-  const setIsLogin = useSetRecoilState(isLoginAtom);
-  const setUserName = useSetRecoilState(userNameAtom);
-  const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
-
   useViewportHeight(); // 커스텀 훅 호출
 
   return (
