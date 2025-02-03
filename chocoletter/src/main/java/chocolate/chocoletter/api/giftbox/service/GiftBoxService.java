@@ -136,8 +136,9 @@ public class GiftBoxService {
     }
 
     public GiftBoxIdResponseDto findGiftBoxIdByMemberId(Long memberId) {
-        GiftBox giftBox = giftBoxRepository.findByMemberId(memberId);
-        return GiftBoxIdResponseDto.of(encryptGiftBoxId(giftBox.getId()));
+        Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
+        GiftBox targetGiftBox = giftBox.orElse(null);
+        return GiftBoxIdResponseDto.of(encryptGiftBoxId(targetGiftBox.getId()));
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {

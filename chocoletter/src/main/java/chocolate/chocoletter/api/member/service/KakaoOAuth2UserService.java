@@ -45,8 +45,9 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
             Collection<GrantedAuthority> authorities = Collections.singletonList(
                     new SimpleGrantedAuthority("ROLE_USER"));
 
-            GiftBox giftBox = giftBoxRepository.findByMemberId(member.getId());
-            Long giftBoxId = giftBox.getId();
+            Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(member.getId());
+            GiftBox targetGiftBox = giftBox.orElse(null);
+            Long giftBoxId = targetGiftBox.getId();
             String encryptedGiftBoxId = encryptId(giftBoxId);
 
             // 사용자 속성 설정

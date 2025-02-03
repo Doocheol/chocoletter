@@ -25,7 +25,7 @@ public class MemberService {
     }
 
     public MyPageResponseDto findMypage(Long memberId) {
-        Optional<GiftBox> giftBox = giftBoxRepository.findById(memberId);
+        Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
         Optional<Member> member = memberRepository.findById(memberId);
         return MyPageResponseDto.of(giftBox.get(), member.get());
     }

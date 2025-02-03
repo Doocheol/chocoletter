@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface GiftBoxRepository extends JpaRepository<GiftBox, Long> {
     @Query("select gb from GiftBox gb join fetch gb.member where gb.id = :giftBoxId")
@@ -14,5 +16,5 @@ public interface GiftBoxRepository extends JpaRepository<GiftBox, Long> {
     @Query("select gb from GiftBox gb where gb.member.id = :memberId")
     GiftBox findGiftBoxByMemberId(@Param("memberId") Long memberId);
 
-    GiftBox findByMemberId(Long memberId);
+    Optional<GiftBox> findByMemberId(Long memberId);
 }
