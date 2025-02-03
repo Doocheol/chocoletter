@@ -105,15 +105,15 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 
 				{/* 프로필 영역 */}
 				<div className="flex items-center mt-2 mb-2 ml-1">
-					{/* {userProfileUrl ? (
+					{userProfileUrl ? (
 						<img
 							src={userProfileUrl}
 							alt="프로필 사진"
 							className="w-10 h-10 rounded-full object-cover mr-3"
 						/>
-					) : ( */}
-					<FaUserCircle className="w-6 h-6 text-gray-400 mr-3" />
-					{/* )} */}
+					) : (
+						<FaUserCircle className="w-6 h-6 text-gray-400 mr-3" />
+					)}
 					<div>
 						<div className="text-xl font-bold text-gray-800">
 							{userName || "초코레터"}
