@@ -8,9 +8,10 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxIdResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
@@ -23,11 +24,10 @@ import chocolate.chocoletter.common.exception.NotFoundException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -170,5 +170,9 @@ public class GiftBoxService {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
         return null;
+    }
+
+    public MyUnBoxingTimesResponseDto findMyUnbBoxingTimes(Long memberId) {
+        return giftService.findMyUnBoxingTimes(memberId);
     }
 }

@@ -12,6 +12,8 @@ import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimeResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
@@ -144,7 +146,7 @@ public class GiftService {
     }
 
     public List<String> findReceiverUnboxingTimes(Long memberId) {
-        List<Gift> receiverSpecialGifts = giftRepository.findReceiverSpecialGifts(memberId, GiftType.SPECIAL);
+        List<Gift> receiverSpecialGifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
         return receiverSpecialGifts.stream()
                 .map(Gift::getUnBoxingTime)
                 .distinct()
@@ -233,14 +235,6 @@ public class GiftService {
         return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL);
     }
 
-    public String findUnBoxingTime(Long giftId) {
-        return dateTimeUtil.formatDateTime(giftRepository.findGiftByIdOrThrow(giftId).getUnBoxingTime());
-    }
-
-    public List<Object[]> findUnBoxingTimes(List<Long> giftIds) {
-        return giftRepository.findUnBoxingTimesByGiftIds(giftIds);
-    }
-
     // try catch 반복되서 메서드로 뺌
     private String encryptGiftId(Long giftId) {
         try {
@@ -250,5 +244,29 @@ public class GiftService {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
         }
         return null;
+    }
+
+    public MyUnBoxingTimesResponseDto findMyUnBoxingTimes(Long memberId) {
+        List<Gift> gifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
+
+        List<MyUnBoxingTimeResponseDto> myUnBoxingTimes = gifts.stream()
+                .map(gift -> {
+                    String nickname = findUnBoxingName(memberId, gift);
+                    String formattedTime = dateTimeUtil.formatDateTime(gift.getUnBoxingTime());
+                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname);
+                })
+                .collect(Collectors.toList());
+
+        return MyUnBoxingTimesResponseDto.of(myUnBoxingTimes);
+    }
+
+    private String findUnBoxingName(Long memberId, Gift gift) {
+        if (memberId.equals(gift.getReceiverId())) {
+            return letterService.findNickNameByGiftId(gift.getId());
+        }
+        if (memberId.equals(gift.getSenderId())) {
+            return memberService.findMember(gift.getReceiverId()).getName();
+        }
+        return "";
     }
 }
