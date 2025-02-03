@@ -1,14 +1,16 @@
 package chocolate.chocoletter.api.chatroom.controller;
 
+import chocolate.chocoletter.api.chatroom.dto.response.ChatLetterResponseDto;
 import chocolate.chocoletter.api.chatroom.dto.response.ChatRoomsResponseDto;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
+import chocolate.chocoletter.common.annotation.DecryptedId;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/chat-room")
@@ -22,6 +24,13 @@ public class ChatRoomController implements ChatRoomSwagger {
         Long memberId = Long.parseLong(principal.getName());
         ChatRoomsResponseDto myChatRooms = chatRoomService.findMyChatRooms(memberId);
         return ResponseEntity.ok(myChatRooms);
+    }
+
+    @GetMapping("/{roomId}/letter")
+    public ResponseEntity<?> findReceiveLetter(@PathVariable @DecryptedId Long roomId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        ChatLetterResponseDto receiveLetter = chatRoomService.findReceiveLetter(roomId, memberId);
+        return ResponseEntity.ok(receiveLetter);
     }
 
 }
