@@ -6,93 +6,82 @@ import Loading from "../common/Loading";
 import { MyUserInfo } from "../../types/user";
 import { removeUserInfo, saveUserInfo } from "../../services/userApi";
 import {
-  isFirstLoginAtom,
-  isLoginAtom,
-  giftBoxIdAtom,
-  userNameAtom,
-  userProfileUrlAtom,
+	isFirstLoginAtom,
+	isLoginAtom,
+	giftBoxIdAtom,
+	userNameAtom,
+	userProfileUrlAtom,
 } from "../../atoms/auth/userAtoms";
 
 const KakaoLoginCallback: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation(); // useLocation는 최상위에서 호출합니다.
-  const setIsLogin = useSetRecoilState(isLoginAtom);
-  const setUserName = useSetRecoilState(userNameAtom);
-  const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
-  const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
-  const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
+	const navigate = useNavigate();
+	const location = useLocation(); // useLocation는 최상위에서 호출합니다.
+	const setIsLogin = useSetRecoilState(isLoginAtom);
+	const setUserName = useSetRecoilState(userNameAtom);
+	const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
+	const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
+	const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
 
-  useEffect(() => {
-    const handleLogin = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get("accessToken");
-      const userName = urlParams.get("userName");
-      const userProfileUrl = urlParams.get("userProfileUrl");
-      const isFirstLoginParam = urlParams.get("isFirstLogin");
-      const giftBoxId = urlParams.get("giftBoxId");
+	useEffect(() => {
+		const handleLogin = async () => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const accessToken = urlParams.get("accessToken");
+			const userName = urlParams.get("userName");
+			const userProfileUrl = urlParams.get("userProfileUrl");
+			const isFirstLoginParam = urlParams.get("isFirstLogin");
+			const giftBoxId = urlParams.get("giftBoxId");
+			const redirectPath = localStorage.getItem("redirect");
 
-      if (!accessToken || !userName || !giftBoxId) {
-        removeUserInfo();
-        setIsLogin(false);
+			if (!accessToken || !userName || !giftBoxId || !redirectPath) {
+				removeUserInfo();
+				setIsLogin(false);
 
-        toast.error("다시 로그인해주세요!");
-        navigate("/");
-        return;
-      }
+				toast.error("다시 로그인해주세요!");
+				navigate("/");
+				return;
+			}
 
-      const isFirstLogin = isFirstLoginParam === "true";
-      setIsFirstLogin(isFirstLogin);
+			const isFirstLogin = isFirstLoginParam === "true";
+			setIsFirstLogin(isFirstLogin);
 
-      const userInfo: MyUserInfo = {
-        userName,
-        accessToken,
-        giftBoxId,
-      };
+			const userInfo: MyUserInfo = {
+				userName,
+				accessToken,
+				giftBoxId,
+			};
 
-      saveUserInfo(userInfo);
+			saveUserInfo(userInfo);
 
-      setIsLogin(true);
-      setUserName(userName);
-      setUserProfileUrl(userProfileUrl || "");
-      setGiftBoxId(giftBoxId);
+			setIsLogin(true);
+			setUserName(userName);
+			setUserProfileUrl(userProfileUrl || "");
+			setGiftBoxId(giftBoxId);
 
-      // 최상위에서 선언한 location을 사용합니다.
-      // location.state에서 redirect를 읽어오려 시도합니다.
-      // state가 없으면 URL 쿼리파라미터에서 redirect 정보를 가져옵니다.
-      const stateRedirect = (location.state as { redirect?: string } | null)?.redirect;
-      const queryRedirect = urlParams.get("redirect");
-      const redirectPath = stateRedirect || queryRedirect;
+			if (redirectPath) {
+				navigate(redirectPath);
+				localStorage.removeItem("redirect");
+			}
 
-      if (redirectPath) {
-        navigate(redirectPath);
-        return;
-      }
+			if (isFirstLogin) {
+				navigate("/select-giftbox");
+				return;
+			}
 
-      if (redirectPath) {
-        navigate(redirectPath);
-        return;
-      }
+			navigate(`/main/${giftBoxId}`);
+		};
 
-      if (isFirstLogin) {
-        navigate("/select-giftbox");
-        return;
-      }
+		handleLogin();
+	}, [
+		navigate,
+		location, // location을 의존성 배열에 추가합니다.
+		setIsLogin,
+		setUserName,
+		setUserProfileUrl,
+		setIsFirstLogin,
+		setGiftBoxId,
+	]);
 
-      navigate(`/main/${giftBoxId}`);
-    };
-
-    handleLogin();
-  }, [
-    navigate,
-    location, // location을 의존성 배열에 추가합니다.
-    setIsLogin,
-    setUserName,
-    setUserProfileUrl,
-    setIsFirstLogin,
-    setGiftBoxId,
-  ]);
-
-  return <Loading />;
+	return <Loading />;
 };
 
 export default KakaoLoginCallback;
