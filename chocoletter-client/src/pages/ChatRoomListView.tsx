@@ -10,7 +10,7 @@ import useViewportHeight from "../hooks/useViewportHeight";
 import { getUserInfo } from "../services/userInfo";
 
 interface ChatRoom {
-    roomId: number;
+    roomId: string;
     nickName: string;
     unreadCount?: number;
     lastMessage?: string;
@@ -21,11 +21,11 @@ const ChatRoomListView = () => {
     
     // 더미 데이터
     const dummyChatRooms = [
-        { roomId: 9997, nickName: "예슬" },
-        { roomId: 9998, nickName: "준희"},
-        { roomId: 9999, nickName: "두철" },
-        { roomId: 10000, nickName: "훈서"},
-        { roomId: 10001, nickName: "한송"},
+        { roomId: '9997', nickName: "예슬" },
+        { roomId: '9998', nickName: "준희"},
+        { roomId: '9999', nickName: "두철" },
+        { roomId: '10000', nickName: "훈서"},
+        { roomId: '10001', nickName: "한송"},
     ];    
 
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
@@ -46,7 +46,7 @@ const ChatRoomListView = () => {
             setIsLoading(true);
             try {
                 const data = await getChatRooms();
-                console.log(data)
+                console.log("채팅방 목록 : ",data)
                 setChatRooms(data);
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패! 더미 데이터 사용.", error);
@@ -139,7 +139,13 @@ const ChatRoomListView = () => {
                                         <p className="text-[18px] leading-[22px]">{room.nickName}</p>
                                         <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
                                     </div>
-                                    <p className="font-[Pretendard] text-[12px] text-[#696A73]">{room.lastMessage}</p> 
+                                    <p className="font-[Pretendard] text-[12px] text-[#696A73]">
+                                        {room.lastMessage ? (
+                                            room.lastMessage
+                                        ) : (
+                                            <span className="text-[#A0A0A0]">채팅을 시작해보세요!</span>
+                                        )}
+                                    </p>
                                 </div>
 
                                 {/* 오른쪽 채팅 숫자 */}
