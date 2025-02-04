@@ -185,7 +185,7 @@ public class GiftService {
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.ACCEPT_SPECIAL)
                 .giftId(giftId)
-                .member(memberService.findMember(gift.getReceiverId()))
+                .member(memberService.findMember(gift.getSenderId()))
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
@@ -211,7 +211,7 @@ public class GiftService {
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.REJECT_SPECIAL)
                 .giftId(giftId)
-                .member(memberService.findMember(gift.getReceiverId()))
+                .member(memberService.findMember(gift.getSenderId()))
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
