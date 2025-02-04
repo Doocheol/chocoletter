@@ -235,17 +235,6 @@ public class GiftService {
         return giftRepository.findGeneralGiftBySenderIdAndReceiverId(senderId, receiverId, GiftType.GENERAL);
     }
 
-    // try catch 반복되서 메서드로 뺌
-    private String encryptGiftId(Long giftId) {
-        try {
-            String encryptedId = idEncryptionUtil.encrypt(giftId);
-            return encryptedId;
-        } catch (Exception e) {
-            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
-        }
-        return null;
-    }
-
     public MyUnBoxingTimesResponseDto findMyUnBoxingTimes(Long memberId) {
         List<Gift> gifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
 
@@ -258,6 +247,17 @@ public class GiftService {
                 .collect(Collectors.toList());
 
         return MyUnBoxingTimesResponseDto.of(myUnBoxingTimes);
+    }
+
+    // try catch 반복되서 메서드로 뺌
+    private String encryptGiftId(Long giftId) {
+        try {
+            String encryptedId = idEncryptionUtil.encrypt(giftId);
+            return encryptedId;
+        } catch (Exception e) {
+            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
+        }
+        return null;
     }
 
     private String findUnBoxingName(Long memberId, Gift gift) {
