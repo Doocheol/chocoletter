@@ -17,37 +17,39 @@ import useViewportHeight from "../hooks/useViewportHeight";
 import { MdRecommend } from "react-icons/md";
 
 
-// ✅Todo : 수정하기
 interface MessageType {
-    // roomId: number;
     messageType: string;
-    senderId: number | null; // null도 설정 가능
+    senderId: string | null; // null도 설정 가능
     senderName: string | null; // 메시지 데이터에 없는 경우, 기본값이나 null로 설정 가능
     content: string;
-    createdAt: string; // 메시지 생성 시간
-    isRead: boolean; // 읽음 여부
+    createdAt: string; 
+    isRead: boolean;
 }
 
-const ChatRoonView = () => {
+const ChatRoomView = () => {
     useViewportHeight();
-
+    
     const location = useLocation();
-    const sender = location.state?.nickName  ?? "예슬";
+    const sender = location.state?.nickName ?? "예슬"; // ✅ 추후 수정
     // const roomId = location.state?.roomId;
     const { roomId } = useParams()
     const parsedRoomId = parseInt(roomId ?? "0", 10)
-
+    
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 키보드 사용 여부
-
+    
     const [messages, setMessages] = useState<MessageType[]>([]); // 현재 채팅방의 메시지 리스트를 관리
     const [message, setMessage] = useState(""); // 사용자가 입력한 메시지를 저장
+    
     const stompClient = useRef<Client | null>(null); // STOMP(WebSocket) 연결을 관리하는 객체
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     const messagesEndRef = useRef<HTMLDivElement | null>(null);//채팅창 스크롤을 맨 아래로 이동
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
     const inputRef = useRef<HTMLInputElement | null>(null);
+    
+    const memberId = useRecoilValue(memberIdAtom);
+    const userInfo = getUserInfo();
 
     // 키보드 사용시 입력창 높이 조정
     useEffect(() => {
@@ -106,6 +108,9 @@ const ChatRoonView = () => {
             console.log("기존 메시지 불러오는 중...");
             const baseUrl = import.meta.env.VITE_CHAT_API_URL;
             const response = await axios.get(`${baseUrl}/api/v1/chat/${parsedRoomId}/all`, {
+                headers: {
+                    Authorization: `Bearer ${userInfo?.accessToken}`, // userInfo?.
+                },
                 withCredentials: true,
             })
             
@@ -120,90 +125,97 @@ const ChatRoonView = () => {
         }
     };
     
-    // ✅추후 삭제 : 변경된 메세지(누적) 확인
-    useEffect(() => {
-        console.log("Updated messages:", messages);
-    }, [messages]); 
+    // // ✅추후 삭제 : 변경된 메세지(누적) 확인
+    // useEffect(() => {
+    //     console.log("Updated messages:", messages);
+    // }, [messages]); 
     
     // WebSocket을 통해 STOMP 연결 설정
     const connect = () => {
         
-        // if (!userInfo || !userInfo.accessToken) {
-            //     console.error("🚨 Access token is missing!");
-            //     return;
-            // }
-            
-            if (!accessToken) {
-                console.error("🚨 Access token is missing!");
+        if (!userInfo || !userInfo.accessToken) {
+                console.error("🚨 connect : Access token is missing!");
                 return;
             }
             
-            stompClient.current = new Client({
-                brokerURL: import.meta.env.VITE_CHAT_WEBSOCKET_ENDPOINT, // WebSocket 서버 주소
-                reconnectDelay: 5000, // WebSocket 연결이 끊겼을 때 5초마다 자동으로 다시 연결
-                heartbeatIncoming: 4000, // 서버가 4초 동안 데이터를 보내지 않으면 연결이 끊겼다고 판단
-                heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
-                connectHeaders: {
-                    Authorization: `Bearer ${accessToken}`, // 인증 토큰 포함
-                },
-                
-                onConnect: () => {
-                    console.log("WebSocket 연결 성공! (채팅방 ID:", parsedRoomId, ")");
-                    
-                    
-                    // 채팅방 메시지 구독
-                    if (!stompClient.current || !stompClient.current.connected) {
-                        console.error("STOMP 연결되지 않음. 구독 불가능.");
-                        return;
-                    }
-                    
-                    const headers = {
-                        Authorization: `Bearer ${accessToken}`, // 헤더 추가
-                    };
-                    
-                    stompClient.current?.subscribe(`/topic/${parsedRoomId}`, (message) => {
-                        
-                        try {
-                            const newMessage = JSON.parse(message.body);
-                            console.log("💖새로운 메세지 내용:", newMessage.messageType);
-                            // if (newMessage.senderSeq !== currentUser.userSeq) {
-                                // setCustomerSeq(newMessage.senderSeq); // 상대방 ID 저장
-                                // }
-                                
-                            if (newMessage.messageType) {
-                                if (newMessage.messageType === "CHAT") {
-                                    setMessages((prevMessages) => [...prevMessages, newMessage]);
-                                } else if (newMessage.messageType === "READ_STATUS") {
-                                    // fetchChatHistory();
-                                }
-                            }
-                        } catch (error) {
-                            console.error("메시지 JSON 파싱 오류:", error);
-                        }
-                    }, 
-                    headers
-                );
-                    console.log(`✅ 채팅방 구독 완료`);
-                },
-                
-                onDisconnect: () => {
-                    console.log("❌ WebSocket 연결 해제됨!");
-                },
-                
-                onStompError: (error) => {
-                    console.error("🚨 STOMP 오류 발생:", error);
-                },
-            });
+        // if (!accessToken) {
+        //     console.error("🚨connect : Access token is missing!");
+        //     return;
+        // }
+    
+        stompClient.current = new Client({
+            brokerURL: import.meta.env.VITE_CHAT_WEBSOCKET_ENDPOINT, // WebSocket 서버 주소
+            reconnectDelay: 5000, // WebSocket 연결이 끊겼을 때 5초마다 자동으로 다시 연결
+            heartbeatIncoming: 4000, // 서버가 4초 동안 데이터를 보내지 않으면 연결이 끊겼다고 판단
+            heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
+            connectHeaders: {
+                Authorization: `Bearer ${userInfo?.accessToken}`, // 인증 토큰 포함 userInfo?.
+            },
             
-            stompClient.current.activate(); //STOMP 클라이언트 활성화
-        };
+            onConnect: () => {
+                console.log("WebSocket 연결 성공! (채팅방 ID:", parsedRoomId, ")");
+                
+                // if (!stompClient.current || !stompClient.current.connected) {
+                //     console.error("여기서 멈춤");
+                //     return;
+                // }
+    
+                const headers = {
+                    Authorization: `Bearer ${userInfo?.accessToken}`, // 헤더 추가
+                };
+                
+                stompClient.current?.subscribe(`/topic/${parsedRoomId}`, (message) => {
+                    
+                    try {
+                        const newMessage = JSON.parse(message.body);
+                        // console.log("💖새로운 메세지 내용:", newMessage);
+                        // if (newMessage.senderSeq !== currentUser.userSeq) {
+                            // setCustomerSeq(newMessage.senderSeq); // 상대방 ID 저장
+                            // }
+                            
+                        if (newMessage.messageType) {
+                            if (newMessage.messageType === "CHAT") {
+                                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                            } else if (newMessage.messageType === "READ_STATUS") {
+                                fetchChatHistory();
+                            }
+                        }
+                    } catch (error) {
+                        console.error("메시지 JSON 파싱 오류:", error);
+                    }
+                }, 
+                headers
+            );
+                console.log(`✅ 채팅방 구독 완료`);
+            },
+            
+            onDisconnect: () => {
+                console.log("❌ WebSocket 연결 해제됨!");
+            },
+            
+            onStompError: (error) => {
+                console.error("🚨 STOMP 오류 발생:", error);
+            },
+        });
+        
+        stompClient.current.activate(); //STOMP 클라이언트 활성화
+    };
         
     // WebSocket을 통해 메시지 전송
-    // const [testSenderId, setTestSenderId] = useState(""); // senderId를 입력받기 위한 상태 추가
-    const memberId = Number(useRecoilValue(memberIdAtom));
     const sendMessage = () => {
-        if (!accessToken) {
-            console.error("sendMessage : 🚨 Access token is missing!");
+
+        if (!userInfo || !userInfo.accessToken) {
+                console.error("sendMessage : 🚨 Access token is missing!");
+                return;
+        }
+        
+        // if (!accessToken) {
+        //     console.error("🚨 sendMessage : Access token is missing!");
+        //     return;
+        // }
+
+        if (!stompClient.current || !stompClient.current.connected) {
+            console.error("STOMP 연결이 없습니다. 메시지를 보낼 수 없습니다.");
             return;
         }
         
@@ -211,7 +223,7 @@ const ChatRoonView = () => {
             const msgObject = {
                 messageType: "CHAT",
                 roomId: parsedRoomId,       
-                senderId: 99999, // ✅수정하기 memberId // 현재 로그인한 사용자 ID
+                senderId: memberId, // 현재 로그인한 사용자 ID
                 senderName: "none",
                 content: message,   
             };
@@ -221,7 +233,7 @@ const ChatRoonView = () => {
                 destination: `/app/send`,
                 body: JSON.stringify(msgObject),
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${userInfo?.accessToken}`,
                 }
             });
 
@@ -239,7 +251,12 @@ const ChatRoonView = () => {
     const disconnect = async () => {
         try {
             const baseUrl = import.meta.env.VITE_CHAT_API_URL;
-            const response = await axios.get(`${baseUrl}/api/v1/chat/${parsedRoomId}/${memberId}`);
+            const response = await axios.post(`${baseUrl}/api/v1/chat/${parsedRoomId}/${memberId}/disconnect`, {
+                headers: {
+                    Authorization: `Bearer ${userInfo?.accessToken}`,
+                },
+                withCredentials: true,
+            })
             
             stompClient.current?.deactivate()
             console.log("✅ 채팅방 연결이 정상적으로 종료되었습니다.");
@@ -249,24 +266,18 @@ const ChatRoonView = () => {
     };
         
     // 웹소켓 연결 및 이전메세지 불러오기 ✅수정하기 : 엑세스 토큰 삭제
-    const userInfo = getUserInfo();
     // const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImlhdCI6MTczODI3OTk3MSwiZXhwIjoxNzM4ODg0NzcxfQ.i7E3fDn9tkwcJBQQCIy0y8Ev6dyfCICx79QBxJol4I0"
-    const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
+    // const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
     useEffect(() => {
-        connect(); 
-        // fetchChatHistory(); 
+        if (!stompClient.current || !stompClient.current.connected) {
+            connect();
+        }
+        fetchChatHistory(); 
         return () => {
             disconnect(); // 컴포넌트 언마운트 시 연결 해제
         };
     }, [parsedRoomId]);
     
-
-
-
-
-
-
-
     // 최하단 자동 스크롤
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -377,4 +388,4 @@ const ChatRoonView = () => {
     )
 };
 
-export default ChatRoonView;
+export default ChatRoomView;
