@@ -31,7 +31,7 @@ const ChatRoomListView = () => {
 
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>(dummyChatRooms);
     const [isLoading, setIsLoading] = useState(true);
-    const memberId = '1' // useRecoilValue(memberIdAtom);
+    const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
     const navigate = useNavigate();
     // const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
