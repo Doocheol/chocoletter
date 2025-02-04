@@ -54,10 +54,6 @@ public class UnboxingRoomService {
         unboxingRoom.endRoom();
     }
 
-    public UnboxingRoom findUnboxingRoomByGiftId(Long giftId) {
-        return unboxingRoomRepository.findByGiftIdOrThrow(giftId);
-    }
-
     private boolean isMemberNotAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
         return !unboxingRoom.getReceiverId().equals(memberId) && !unboxingRoom.getSenderId().equals(memberId);
     }
