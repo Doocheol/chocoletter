@@ -91,7 +91,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
             <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[110px]`}>
                 {/* api 연동 후 추가 수정 */}
                 {filteredChocolates.map((chocolate) => (
-                    <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} isAccepted={chocolate.isAccepted ?? false} roomId={chocolate.roomId ?? ""} />
+                    <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} isAccepted={chocolate.isAccept} roomId={chocolate.unBoxingRoomId} />
                 ))}
             </div>
         </div>

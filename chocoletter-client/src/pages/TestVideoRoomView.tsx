@@ -142,6 +142,7 @@ const TestVideoRoomView = () => {
         setCountFive(true);
         const timer = setTimeout(() => {
             videoState.publisher?.publishAudio(true);
+            console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& videoState.publisher");
             console.log("publish do");
             setCountFive(false);
         }, 5000);

@@ -17,22 +17,23 @@ const EventMMDD = import.meta.env.VITE_EVENT_DAY
 interface Schedule {
   nickName: string;
   unBoxingTime: string; // "HH:mm" 형식
-  roomId: string; // roomId 추가
+  unboxingRoomId: string | null; // roomId 추가
+  isAccept: boolean;
 }
 
 /** 더미 일정 데이터 */
-const dummySchedules: Schedule[] = [
-  { nickName: "Alice", unBoxingTime: "08:50", roomId: "1" },
-  { nickName: "Iso", unBoxingTime: "09:20", roomId: "2" },
-  { nickName: "Bob", unBoxingTime: "10:20", roomId: "3" },
-  { nickName: "Charlie", unBoxingTime: "14:30", roomId: "4" },
-  { nickName: "David", unBoxingTime: "16:50", roomId: "5" },
-  { nickName: "Eve", unBoxingTime: "19:00", roomId: "6" },
-  { nickName: "Andre", unBoxingTime: "19:20", roomId: "7" },
-  { nickName: "Bolt", unBoxingTime: "21:00", roomId: "8" },
-  { nickName: "Emily", unBoxingTime: "22:00", roomId: "9" },
-  { nickName: "Busto", unBoxingTime: "23:40", roomId: "10" },
-];
+// const dummySchedules: Schedule[] = [
+//   { nickName: "Alice", unBoxingTime: "08:50", roomId: "1" },
+//   { nickName: "Iso", unBoxingTime: "09:20", roomId: "2" },
+//   { nickName: "Bob", unBoxingTime: "10:20", roomId: "3" },
+//   { nickName: "Charlie", unBoxingTime: "14:30", roomId: "4" },
+//   { nickName: "David", unBoxingTime: "16:50", roomId: "5" },
+//   { nickName: "Eve", unBoxingTime: "19:00", roomId: "6" },
+//   { nickName: "Andre", unBoxingTime: "19:20", roomId: "7" },
+//   { nickName: "Bolt", unBoxingTime: "21:00", roomId: "8" },
+//   { nickName: "Emily", unBoxingTime: "22:00", roomId: "9" },
+//   { nickName: "Busto", unBoxingTime: "23:40", roomId: "10" },
+// ];
 
 /** "HH:mm" 형식을 분(minute) 단위로 변환 */
 function timeToMinute(time: string): number {
@@ -204,7 +205,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                 isHidden = true;
               } else if (nowKST >= fiveBeforeKST) {
                 // 5분 전 ~ 이벤트 시간까지 -> navigate
-                buttonAction = () => navigate(`/video/${item.roomId ?? "13579"}`);
+                if (item.unboxingRoomId) {
+                  buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
+                } else {
+                  buttonAction = () => toast.error("방 정보가 없습니다");
+                }
               } else {
                 // 이벤트 시간이 아직 안 됨 -> toast 출력
                 buttonAction = () => toast.warning("적혀있는 시간 5분 전부터 입장 가능합니다");
