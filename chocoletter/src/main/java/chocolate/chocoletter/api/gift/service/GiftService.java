@@ -28,6 +28,7 @@ import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,12 +49,23 @@ public class GiftService {
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
+        List<Long> giftIds = gifts.stream()
+                .map(Gift::getId)
+                .collect(Collectors.toList());
+        Map<Long, Long> unBoxingRoomIdsByGiftIds = unboxingRoomService.findUnBoxingRoomIdsByGiftIds(giftIds);
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
+                    // unboxing id를 암호화
+                    String encryptedUnboxingRoomId;
+                    if (unBoxingRoomIdsByGiftIds.containsKey(gift.getId())) {
+                        encryptedUnboxingRoomId = idEncryptionUtil.encrypt(unBoxingRoomIdsByGiftIds.get(gift.getId()));
+                    } else {
+                        encryptedUnboxingRoomId = null;
+                    }
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 
@@ -62,12 +74,19 @@ public class GiftService {
 
     public GiftsResponseDto findSpecialGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findSpecificGift(memberId, GiftType.SPECIAL);
+        List<Long> giftIds = gifts.stream()
+                .map(Gift::getId)
+                .collect(Collectors.toList());
+        Map<Long, Long> unBoxingRoomIdsByGiftIds = unboxingRoomService.findUnBoxingRoomIdsByGiftIds(giftIds);
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
+                    // unboxing id를 암호화
+                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(
+                            unBoxingRoomIdsByGiftIds.get(gift.getId()));
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 
@@ -104,9 +123,9 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, null);
                 })
                 .collect(Collectors.toList());
 
@@ -226,12 +245,17 @@ public class GiftService {
 
     public MyUnBoxingTimesResponseDto findMyUnBoxingTimes(Long memberId) {
         List<Gift> gifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
-
+        List<Long> giftIds = gifts.stream()
+                .map(Gift::getId)
+                .collect(Collectors.toList());
+        Map<Long, Long> unBoxingRoomIdsByGiftIds = unboxingRoomService.findUnBoxingRoomIdsByGiftIds(giftIds);
         List<MyUnBoxingTimeResponseDto> myUnBoxingTimes = gifts.stream()
                 .map(gift -> {
                     String nickname = findUnBoxingName(memberId, gift);
                     String formattedTime = dateTimeUtil.formatDateTime(gift.getUnBoxingTime());
-                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname);
+                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(
+                            unBoxingRoomIdsByGiftIds.get(gift.getId()));
+                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 

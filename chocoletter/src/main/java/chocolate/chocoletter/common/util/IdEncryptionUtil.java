@@ -47,6 +47,5 @@ public class IdEncryptionUtil {
             log.error("ID DECRYPTION ERROR", e);
             throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_DECRYPTION_ERROR);
         }
-
     }
 }
