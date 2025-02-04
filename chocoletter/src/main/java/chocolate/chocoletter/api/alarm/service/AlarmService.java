@@ -51,7 +51,7 @@ public class AlarmService {
         return results.stream()
                 .collect(Collectors.toMap(
                         row -> (Long) row[0],  // giftId
-                        row -> row[1].toString() // unboxingTime
+                        row -> (String) row[1] // unboxingTime
                 ));
     }
 }
