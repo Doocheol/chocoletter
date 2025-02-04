@@ -47,7 +47,7 @@ const ChatRoomListView = () => {
             try {
                 const data = await getChatRooms();
                 console.log("채팅방 목록 : ",data)
-                setChatRooms(data);
+                setChatRooms(data.chatRooms);
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패! 더미 데이터 사용.", error);
                 setChatRooms(dummyChatRooms)
