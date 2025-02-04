@@ -49,3 +49,18 @@ export async function getGiftBoxName(giftBoxId: string) {
         console.log("선물상자 이름 조회 성공:", name);
         return name;
 }
+
+/**
+ * 선물상자 타입 업데이트 API
+ * @param type 선택한 선물상자 타입 (숫자)
+ */
+export async function updateGiftBoxType(type: number) {
+  try {
+    const res = await api.patch(`/api/v1/gift-box/type`, { type });
+    console.log("선물상자 타입 업데이트 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("updateGiftBoxType API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
