@@ -11,6 +11,9 @@ import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +60,15 @@ public class UnboxingRoomService {
 
     private boolean isMemberNotAuthorized(Long memberId, UnboxingRoom unboxingRoom) {
         return !unboxingRoom.getReceiverId().equals(memberId) && !unboxingRoom.getSenderId().equals(memberId);
+    }
+
+    public Map<Long, Long> findUnBoxingRoomIdsByGiftIds(List<Long> giftIds) {
+        List<Object[]> results = unboxingRoomRepository.findUnBoxingRoomIdsByGiftIds(giftIds);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // giftId
+                        row -> (Long) row[1]  // unboxingRoomId
+                ));
     }
 }
 
