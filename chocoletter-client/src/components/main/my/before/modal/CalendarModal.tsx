@@ -145,10 +145,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
 
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
+    if (schedules.length === 0) return [];
     return [...schedules].sort(
       (a, b) => timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime)
     );
-  }, []);
+  }, [schedules]);
 
   return (
     <Modal
