@@ -19,38 +19,38 @@ interface ChatRoom {
 const ChatRoomListView = () => { 
     useViewportHeight();
     
-        // 더미 데이터
-        const dummyChatRooms = [
-            { roomId: 9997, nickName: "예슬" },
-            { roomId: 9998, nickName: "준희"},
-            { roomId: 9999, nickName: "두철" },
-            { roomId: 10000, nickName: "훈서"},
-            { roomId: 10001, nickName: "한송"},
-        ];
-        
+    // 더미 데이터
+    const dummyChatRooms = [
+        { roomId: 9997, nickName: "예슬" },
+        { roomId: 9998, nickName: "준희"},
+        { roomId: 9999, nickName: "두철" },
+        { roomId: 10000, nickName: "훈서"},
+        { roomId: 10001, nickName: "한송"},
+    ];    
 
-    const [chatRooms, setChatRooms] = useState<ChatRoom[]>(dummyChatRooms);
+    const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
     const navigate = useNavigate();
-    // const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
-
+    
     // 채팅방 목록 불러오기
     useEffect(() => {
+
+        // if (!memberId) {
+        //     console.warn("memberId가 설정되지 않았습니다.");
+        //     return;
+        // }
+
         const loadChatRooms = async () => {
             setIsLoading(true);
             try {
                 const data = await getChatRooms();
-                
-                if (!data || data.length === 0) {
-                    console.warn("API 데이터가 없어서 더미 데이터를 유지합니다.");
-                    return;  //✅ 나중에 삭제
-                }
-
+                console.log(data)
                 setChatRooms(data);
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패! 더미 데이터 사용.", error);
+                setChatRooms(dummyChatRooms)
             } finally {
                 setIsLoading(false);
             }
