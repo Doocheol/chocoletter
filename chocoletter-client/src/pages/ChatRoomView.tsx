@@ -33,7 +33,7 @@ const ChatRoomView = () => {
     const sender = location.state?.nickName ?? "예슬"; // ✅ 추후 수정
     // const roomId = location.state?.roomId;
     const { roomId } = useParams()
-    const parsedRoomId = parseInt(roomId ?? "0", 10)
+    // const parsedRoomId = parseInt(roomId ?? "0", 10)
     
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
@@ -102,12 +102,12 @@ const ChatRoomView = () => {
     // 기존 채팅 메시지를 가져오기
     // ✅ TODO : 위로 더 올리면 페이지 바뀌게 하는 로직 추가
     const fetchChatHistory = async () => {
-        if (!parsedRoomId) return;
+        if (!roomId) return;
         
         try {
             console.log("기존 메시지 불러오는 중...");
             const baseUrl = import.meta.env.VITE_CHAT_API_URL;
-            const response = await axios.get(`${baseUrl}/api/v1/chat/${parsedRoomId}/all`, {
+            const response = await axios.get(`${baseUrl}/api/v1/chat/${roomId}/all`, {
                 headers: {
                     Authorization: `Bearer ${userInfo?.accessToken}`, // userInfo?.
                 },
@@ -153,7 +153,7 @@ const ChatRoomView = () => {
             },
             
             onConnect: () => {
-                console.log("WebSocket 연결 성공! (채팅방 ID:", parsedRoomId, ")");
+                console.log("WebSocket 연결 성공! (채팅방 ID:", roomId, ")");
                 
                 // if (!stompClient.current || !stompClient.current.connected) {
                 //     console.error("여기서 멈춤");
@@ -164,7 +164,7 @@ const ChatRoomView = () => {
                     Authorization: `Bearer ${userInfo?.accessToken}`, // 헤더 추가
                 };
                 
-                stompClient.current?.subscribe(`/topic/${parsedRoomId}`, (message) => {
+                stompClient.current?.subscribe(`/topic/${roomId}`, (message) => {
                     
                     try {
                         const newMessage = JSON.parse(message.body);
@@ -222,7 +222,7 @@ const ChatRoomView = () => {
         if (stompClient.current && message.trim()) {
             const msgObject = {
                 messageType: "CHAT",
-                roomId: parsedRoomId,       
+                roomId: roomId,       
                 senderId: memberId, // 현재 로그인한 사용자 ID
                 senderName: "none",
                 content: message,   
@@ -251,7 +251,7 @@ const ChatRoomView = () => {
     const disconnect = async () => {
         try {
             const baseUrl = import.meta.env.VITE_CHAT_API_URL;
-            const response = await axios.post(`${baseUrl}/api/v1/chat/${parsedRoomId}/${memberId}/disconnect`, {
+            const response = await axios.post(`${baseUrl}/api/v1/chat/${roomId}/${memberId}/disconnect`, {
                 headers: {
                     Authorization: `Bearer ${userInfo?.accessToken}`,
                 },
@@ -276,7 +276,7 @@ const ChatRoomView = () => {
         return () => {
             disconnect(); // 컴포넌트 언마운트 시 연결 해제
         };
-    }, [parsedRoomId]);
+    }, [roomId]);
     
     // 최하단 자동 스크롤
     useEffect(() => {
