@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Builder
 public record GiftResponseDto(String giftId, GiftType giftType, Boolean isOpened, LocalDateTime unBoxingTime,
-                              String unBoxingRoomId) {
+                              String unBoxingRoomId, Boolean isAccept) {
     public static GiftResponseDto of(Gift gift, String encryptedGiftId, String encryptedUnboxingRoomId) {
         return GiftResponseDto.builder()
                 .giftId(encryptedGiftId)
@@ -15,6 +15,7 @@ public record GiftResponseDto(String giftId, GiftType giftType, Boolean isOpened
                 .isOpened(gift.getIsOpened())
                 .unBoxingTime(gift.getUnBoxingTime())
                 .unBoxingRoomId(encryptedUnboxingRoomId)
+                .isAccept(gift.getIsAccept())
                 .build();
     }
 }
