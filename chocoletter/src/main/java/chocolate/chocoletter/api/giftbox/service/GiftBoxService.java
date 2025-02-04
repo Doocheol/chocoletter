@@ -122,7 +122,7 @@ public class GiftBoxService {
 
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
         GiftBox friendGiftBox = findGiftBox(giftBoxId);
-        String encryptedGiftBoxId = encryptGiftBoxId(friendGiftBox.getId());
+        String encryptedGiftBoxId = idEncryptionUtil.encrypt(friendGiftBox.getId());
         return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId);
     }
 
@@ -166,7 +166,7 @@ public class GiftBoxService {
     public GiftBoxIdResponseDto findGiftBoxIdByMemberId(Long memberId) {
         Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
         GiftBox targetGiftBox = giftBox.orElse(null);
-        return GiftBoxIdResponseDto.of(encryptGiftBoxId(targetGiftBox.getId()));
+        return GiftBoxIdResponseDto.of(idEncryptionUtil.encrypt(targetGiftBox.getId()));
     }
 
     public GiftBoxTypeResponseDto findGiftBoxTypeByMemberId(Long memberId) {
@@ -210,19 +210,6 @@ public class GiftBoxService {
     @Transactional
     public void chooseGiftBoxType(Long memberId, GiftBoxTypeRequestDto giftBoxTypeRequestDto) {
         GiftBox giftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
-        if (giftBox == null) {
-            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_GIFT_BOX);
-        }
-
         giftBox.updateGiftType(giftBoxTypeRequestDto.type());
-    }
-
-    private String encryptGiftBoxId(Long giftBoxId) {
-        try {
-            return idEncryptionUtil.encrypt(giftBoxId);
-        } catch (Exception e) {
-            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
-            throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
-        }
     }
 }
