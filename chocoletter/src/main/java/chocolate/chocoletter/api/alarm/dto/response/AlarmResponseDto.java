@@ -5,15 +5,16 @@ import chocolate.chocoletter.api.alarm.domain.AlarmType;
 import lombok.Builder;
 
 @Builder
-public record AlarmResponseDto(Long alarmId, AlarmType alarmType, String partnerName, String unBoxingTime, Long giftId,
+public record AlarmResponseDto(Long alarmId, AlarmType alarmType, String partnerName, String unBoxingTime,
+                               String giftId,
                                Boolean read) {
-    public static AlarmResponseDto of(Alarm alarm, String unBoxingTime) {
+    public static AlarmResponseDto of(Alarm alarm, String unBoxingTime, String giftId) {
         return AlarmResponseDto.builder()
                 .alarmId(alarm.getId())
                 .alarmType(alarm.getType())
                 .partnerName(alarm.getPartnerName())
                 .unBoxingTime(unBoxingTime)
-                .giftId(alarm.getGiftId())
+                .giftId(giftId)
                 .read(alarm.getIsRead())
                 .build();
     }
