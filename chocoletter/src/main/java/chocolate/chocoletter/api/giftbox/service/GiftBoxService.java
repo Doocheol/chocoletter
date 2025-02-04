@@ -8,6 +8,8 @@ import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
+import chocolate.chocoletter.api.giftbox.dto.request.*;
+import chocolate.chocoletter.api.giftbox.dto.response.*;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
@@ -24,6 +26,7 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.api.member.service.MemberService;
+import chocolate.chocoletter.common.exception.*;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
@@ -166,6 +169,12 @@ public class GiftBoxService {
         return GiftBoxIdResponseDto.of(idEncryptionUtil.encrypt(targetGiftBox.getId()));
     }
 
+    public GiftBoxTypeResponseDto findGiftBoxTypeByMemberId(Long memberId) {
+        Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
+        GiftBox targetGiftBox = giftBox.orElse(null);
+        return GiftBoxTypeResponseDto.of(targetGiftBox.getType());
+    }
+
     private GiftBox findGiftBox(Long giftBoxId) {
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId);
         if (receiverGiftBox == null) {
@@ -196,5 +205,11 @@ public class GiftBoxService {
     public VerifyIsSendResponseDto findVerifyIsSend(Long giftBoxId, Long memberId) {
         boolean isSend = giftRepository.findGiftBySenderIdAndGiftBoxId(memberId, giftBoxId) != null;
         return VerifyIsSendResponseDto.of(isSend);
+    }
+
+    @Transactional
+    public void chooseGiftBoxType(Long memberId, GiftBoxTypeRequestDto giftBoxTypeRequestDto) {
+        GiftBox giftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
+        giftBox.updateGiftType(giftBoxTypeRequestDto.type());
     }
 }

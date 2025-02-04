@@ -1,9 +1,6 @@
 package chocolate.chocoletter.api.giftbox.controller;
 
-import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.*;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
@@ -270,4 +267,42 @@ public interface GiftBoxSwagger {
             Long giftBoxId,
             Principal principal
     );
+
+    @Operation(
+            summary = "선물함 타입 선택",
+            description = "로그인한 사용자가 선물함의 타입을 선택합니다. 요청 본문에 선택할 타입 정보를 포함해야 합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "타입 선택 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 선물함")
+    })
+    ResponseEntity<?> chooseGiftBoxType(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "선택할 선물함 타입 정보를 포함한 요청 본문",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GiftBoxTypeRequestDto.class)
+                    )
+            )
+            @RequestBody GiftBoxTypeRequestDto requestDto,
+            Principal principal
+    );
+
+    @Operation(
+            summary = "선물함 타입 조회",
+            description = "로그인한 사용자의 선물함 타입을 조회합니다. (경로 변수로 전달된 giftBoxId는 복호화되어 처리됩니다.)",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "선물함 타입 조회 성공",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 선물함")
+    })
+    ResponseEntity<?> findGiftBoxType(Principal principal);
 }
