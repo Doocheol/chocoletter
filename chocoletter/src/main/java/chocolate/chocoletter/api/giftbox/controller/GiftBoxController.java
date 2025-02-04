@@ -48,7 +48,7 @@ public class GiftBoxController implements GiftBoxSwagger {
     }
 
     @PostMapping("/{giftBoxId}/gift/special/free")
-    public ResponseEntity<?> sendSpecialFreeGift(@DecryptedId @PathVariable("giftBoxId") Long giftBoxId,
+    public ResponseEntity<?> sendSpecialFreeGift(@PathVariable("giftBoxId") Long giftBoxId,
                                                  @Valid @RequestBody
                                                  SpecialFreeGiftRequestDto requestDto, Principal principal) {
         // 로그인 한 유저 찾아오기

@@ -1,5 +1,8 @@
 package chocolate.chocoletter.api.giftbox.service;
 
+import chocolate.chocoletter.api.alarm.domain.Alarm;
+import chocolate.chocoletter.api.alarm.domain.AlarmType;
+import chocolate.chocoletter.api.alarm.service.AlarmService;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
@@ -15,6 +18,7 @@ import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
+import chocolate.chocoletter.api.member.service.MemberService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.InternalServerException;
@@ -39,6 +43,8 @@ public class GiftBoxService {
     private final DateTimeUtil dateTimeUtil;
     private final IdEncryptionUtil idEncryptionUtil;
     private final GiftRepository giftRepository;
+    private final MemberService memberService;
+    private final AlarmService alarmService;
 
     @Transactional
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
@@ -72,6 +78,14 @@ public class GiftBoxService {
         Optional<Member> member = memberRepository.findById(senderId);
         Member sendMember = member.get();
         sendMember.increaseSendGiftCount();
+
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.RECEIVE_SPECIAL)
+                .giftId(gift.getId())
+                .member(memberService.findMember(gift.getReceiverId()))
+                .partnerName(letter.getNickname())
+                .build();
+        alarmService.save(alarm);
     }
 
     @Transactional
@@ -84,6 +98,14 @@ public class GiftBoxService {
         Optional<Member> member = memberRepository.findById(senderId);
         Member sendMember = member.get();
         sendMember.increaseSendGiftCount();
+
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.RECEIVE_SPECIAL)
+                .giftId(gift.getId())
+                .member(memberService.findMember(gift.getReceiverId()))
+                .partnerName(letter.getNickname())
+                .build();
+        alarmService.save(alarm);
     }
 
     public GiftCountResponseDto findGiftCount(Long memberId) {
