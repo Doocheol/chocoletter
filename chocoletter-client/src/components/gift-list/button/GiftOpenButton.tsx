@@ -8,6 +8,7 @@ import { selectedGiftIdAtom } from "../../../atoms/gift/giftAtoms";
 import outline_choco_button from '../../../assets/images/giftbox/outline_choco_button.svg';
 import bg_choco_button from '../../../assets/images/giftbox/bg_choco_button.svg'
 import {UnboxingTimeSticker} from "../UnboxingTimeSticker"
+import { toast } from "react-toastify";
 
 const generalImages = import.meta.glob("../../../assets/images/chocolate/general/*.png", {
   eager: true,
@@ -38,7 +39,7 @@ interface GiftOpenButtonProps {
     isOpened: boolean;
     unboxingTime: string | null;
     isAccepted?: boolean;
-    roomId?: string;
+    roomId?: string | null;
 }
 
 const getEventDate = (): Date => {
@@ -118,9 +119,9 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             if (currentDate < unboxingMinusFive) {
                 setIsRTC(true);
             } else {
-                if (roomId === "") {
+                if (roomId === null) {
                     navigate("/gift-list/before")
-                    // 입장 불가 모달
+                    toast.error("방 정보가 없습니다.");
                 } else {
                     navigate(`/video/${roomId}`);
                 }
