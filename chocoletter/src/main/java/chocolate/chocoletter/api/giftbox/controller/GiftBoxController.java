@@ -1,9 +1,6 @@
 package chocolate.chocoletter.api.giftbox.controller;
 
-import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.*;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.service.GiftBoxService;
@@ -115,4 +112,17 @@ public class GiftBoxController implements GiftBoxSwagger {
         return ResponseEntity.ok(giftBoxService.findVerifyIsSend(giftBoxId, memberId));
     }
 
+    @PatchMapping("/type") // select로 네이밍하면 조회랑 헷갈릴거같아서 choose로 함
+    public ResponseEntity<?> chooseGiftBoxType(@RequestBody GiftBoxTypeRequestDto requestDto,
+                                               Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        giftBoxService.chooseGiftBoxType(memberId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/type")
+    public ResponseEntity<?> findGiftBoxType(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return ResponseEntity.ok().body(giftBoxService.findGiftBoxTypeByMemberId(memberId));
+    }
 }

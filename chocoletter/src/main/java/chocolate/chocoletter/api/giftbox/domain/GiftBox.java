@@ -27,12 +27,16 @@ public class GiftBox extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer generalGiftCount;
+    
+    @Column(nullable = false)
+    private Integer type;
 
     @Builder
     public GiftBox(Member member) {
         this.member = member;
         this.giftCount = 0;
         this.generalGiftCount = 0;
+        this.type = 1; // 디폴트 1로 하기로 정함
     }
 
     public void addGiftCount() {
@@ -47,4 +51,5 @@ public class GiftBox extends BaseTimeEntity {
         this.generalGiftCount -= 2;
     }
 
+    public void updateGiftType(int type) {this.type = type; }
 }

@@ -8,6 +8,8 @@ import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
+import chocolate.chocoletter.api.giftbox.dto.request.*;
+import chocolate.chocoletter.api.giftbox.dto.response.*;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
@@ -24,6 +26,7 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.api.member.service.MemberService;
+import chocolate.chocoletter.common.exception.*;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
@@ -119,7 +122,7 @@ public class GiftBoxService {
 
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
         GiftBox friendGiftBox = findGiftBox(giftBoxId);
-        String encryptedGiftBoxId = idEncryptionUtil.encrypt(friendGiftBox.getId());
+        String encryptedGiftBoxId = encryptGiftBoxId(friendGiftBox.getId());
         return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId);
     }
 
@@ -163,7 +166,13 @@ public class GiftBoxService {
     public GiftBoxIdResponseDto findGiftBoxIdByMemberId(Long memberId) {
         Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
         GiftBox targetGiftBox = giftBox.orElse(null);
-        return GiftBoxIdResponseDto.of(idEncryptionUtil.encrypt(targetGiftBox.getId()));
+        return GiftBoxIdResponseDto.of(encryptGiftBoxId(targetGiftBox.getId()));
+    }
+
+    public GiftBoxTypeResponseDto findGiftBoxTypeByMemberId(Long memberId) {
+        Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
+        GiftBox targetGiftBox = giftBox.orElse(null);
+        return GiftBoxTypeResponseDto.of(targetGiftBox.getType());
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {
@@ -196,5 +205,24 @@ public class GiftBoxService {
     public VerifyIsSendResponseDto findVerifyIsSend(Long giftBoxId, Long memberId) {
         boolean isSend = giftRepository.findGiftBySenderIdAndGiftBoxId(memberId, giftBoxId) != null;
         return VerifyIsSendResponseDto.of(isSend);
+    }
+
+    @Transactional
+    public void chooseGiftBoxType(Long memberId, GiftBoxTypeRequestDto giftBoxTypeRequestDto) {
+        GiftBox giftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
+        if (giftBox == null) {
+            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_GIFT_BOX);
+        }
+
+        giftBox.updateGiftType(giftBoxTypeRequestDto.type());
+    }
+
+    private String encryptGiftBoxId(Long giftBoxId) {
+        try {
+            return idEncryptionUtil.encrypt(giftBoxId);
+        } catch (Exception e) {
+            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
+            throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
+        }
     }
 }
