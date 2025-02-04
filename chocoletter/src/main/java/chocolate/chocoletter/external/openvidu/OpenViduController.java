@@ -9,6 +9,7 @@ import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/openvidu")
+@Slf4j
 public class OpenViduController {
 
     @Value("${openvidu-url}")
@@ -44,6 +46,7 @@ public class OpenViduController {
             throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
+        log.warn("Session created : {}", session.getSessionId());
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
@@ -63,6 +66,8 @@ public class OpenViduController {
         }
         ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
         Connection connection = session.createConnection(properties);
+        log.warn("Connection created : {}", connection.getConnectionId());
+        log.warn("Client Data : {}", connection.getClientData());
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
 }
