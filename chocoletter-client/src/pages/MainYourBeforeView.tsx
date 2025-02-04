@@ -27,12 +27,27 @@ const MainYourBeforeView: React.FC = () => {
 	const location = useLocation();
 	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
+	// 로그인 여부 확인
+	const isLoggedIn = useRecoilValue(isLoginAtom);
+
+	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
+	if (!isLoggedIn) {
+		return (
+			<NotLoginModal
+				isOpen={true}
+				onClose={() => {}}
+				onLogin={() => {
+					localStorage.setItem("redirect", location.pathname);
+					navigate("/");
+				}}
+			/>
+		);
+	}
+
 	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
 	const [isGiftBoxNameLoaded, setIsGiftBoxNameLoaded] =
 		useState<boolean>(false);
-
-	const isLoggedIn = useRecoilValue(isLoginAtom);
 
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);

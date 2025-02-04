@@ -279,10 +279,10 @@ const MainMyBeforeView: React.FC = () => {
 									className="w-7 h-7 my-1"
 									alt="choco asset"
 								/>
-								<div className="text-md mt-2 font-normal text-center text-gray-300">
-									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+								<div className="text-2xl font-normal text-center text-gray-200">
+									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 								</div>
-								<div className="text-3xl font-normal text-center text-chocoletterPurpleBold">
+								<div className="text-2xl font-normal text-center text-chocoletterPurple">
 									{availableGifts}
 								</div>
 								<div className="text-2xl font-normal text-center text-gray-500">
@@ -298,14 +298,14 @@ const MainMyBeforeView: React.FC = () => {
 									className="h-4 w-4"
 									alt="choco asset"
 								/>
-								<div className="text-xxs mt-1 text-gray-300 text-center">
+								<div className="text-sm text-gray-200 text-center">
 									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
 								</div>
-								<div className="text-sm text-center text-gray-300">
+								<div className="text-sm text-center text-gray-400">
 									{receivedGifts}
 								</div>
 								<div className="text-sm text-gray-300 text-center">
-									개
+									&nbsp;개
 								</div>
 							</div>
 						</div>
