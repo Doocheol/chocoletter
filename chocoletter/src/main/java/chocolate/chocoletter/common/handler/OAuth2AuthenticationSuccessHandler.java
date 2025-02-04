@@ -46,6 +46,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String accessToken = jwtTokenUtil.createAccessToken(id);
 
+        System.out.println(accessToken);
+
         // 리다이렉트 URL 생성
         String redirectUrl = frontendUrl + "/auth/kakao/callback"
                 + "?accessToken=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8)

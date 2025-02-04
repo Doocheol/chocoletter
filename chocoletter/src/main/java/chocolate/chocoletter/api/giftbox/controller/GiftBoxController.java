@@ -11,6 +11,7 @@ import chocolate.chocoletter.common.annotation.DecryptedId;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,6 +108,12 @@ public class GiftBoxController implements GiftBoxSwagger {
     public ResponseEntity<?> getGiftBoxId(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         return ResponseEntity.ok(giftBoxService.findGiftBoxIdByMemberId(memberId));
+    }
+
+    @GetMapping("/{giftBoxId}/verify")
+    public ResponseEntity<?> verifyIsSend(@DecryptedId @PathVariable("giftBoxId") Long giftBoxId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return ResponseEntity.ok(giftBoxService.findVerifyIsSend(giftBoxId, memberId));
     }
 
 }

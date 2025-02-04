@@ -2,17 +2,14 @@ package chocolate.chocoletter.api.giftbox.service;
 
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
+import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxIdResponseDto;
-import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
-import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
-import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
-import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.*;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
@@ -41,6 +38,7 @@ public class GiftBoxService {
     private final ChatRoomService chatRoomService;
     private final DateTimeUtil dateTimeUtil;
     private final IdEncryptionUtil idEncryptionUtil;
+    private final GiftRepository giftRepository;
 
     @Transactional
     public void sendGeneralFreeGift(Long senderId, Long giftBoxId, GeneralFreeGiftRequestDto requestDto) {
@@ -164,6 +162,16 @@ public class GiftBoxService {
         }
     }
 
+    public MyUnBoxingTimesResponseDto findMyUnbBoxingTimes(Long memberId) {
+        return giftService.findMyUnBoxingTimes(memberId);
+    }
+
+    @Transactional
+    public VerifyIsSendResponseDto findVerifyIsSend(Long giftBoxId, Long memberId) {
+        boolean isSend = giftRepository.findGiftBySenderIdAndGiftBoxId(memberId, giftBoxId) != null;
+        return VerifyIsSendResponseDto.of(isSend);
+    }
+
     private String encryptGiftBoxId(Long giftBoxId) {
         try {
             return idEncryptionUtil.encrypt(giftBoxId);
@@ -171,9 +179,5 @@ public class GiftBoxService {
             log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
             throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
         }
-    }
-
-    public MyUnBoxingTimesResponseDto findMyUnbBoxingTimes(Long memberId) {
-        return giftService.findMyUnBoxingTimes(memberId);
     }
 }
