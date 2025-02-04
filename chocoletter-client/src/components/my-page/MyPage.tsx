@@ -17,6 +17,7 @@ import home_icon from "../../assets/images/main/home_icon.svg"; // 홈 아이콘
 import { logout, removeUserInfo } from "../../services/userApi";
 // MyPage 통계 API 함수
 import { getMyPageStats } from "../../services/giftApi";
+import KakaoLoginButton from "../login/button/KakaoLoginButton";
 
 interface MyPageProps {
 	onClose: () => void;
@@ -144,6 +145,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 				</div>
 
 				{/* 로그아웃 버튼 */}
+				<KakaoLoginButton />
 				<button
 					onClick={handleLogout}
 					className="w-full flex items-center justify-center py-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple text-white rounded-xl border border-black"
