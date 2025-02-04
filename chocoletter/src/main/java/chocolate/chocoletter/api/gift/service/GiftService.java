@@ -253,9 +253,15 @@ public class GiftService {
                 .map(gift -> {
                     String nickname = findUnBoxingName(memberId, gift);
                     String formattedTime = dateTimeUtil.formatDateTime(gift.getUnBoxingTime());
-                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(
-                            unBoxingRoomIdsByGiftIds.get(gift.getId()));
-                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname, encryptedUnboxingRoomId);
+                    String encryptedUnboxingRoomId;
+                    if (unBoxingRoomIdsByGiftIds.containsKey(gift.getId())) {
+                        encryptedUnboxingRoomId = idEncryptionUtil.encrypt(
+                                unBoxingRoomIdsByGiftIds.get(gift.getId()));
+                    } else {
+                        encryptedUnboxingRoomId = null;
+                    }
+                    return MyUnBoxingTimeResponseDto.of(formattedTime, nickname, encryptedUnboxingRoomId,
+                            gift.getIsAccept());
                 })
                 .collect(Collectors.toList());
 
