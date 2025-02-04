@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { memberCntAtom } from "../../atoms/video/videoAtoms"
-
+import { GiftDetail } from "../../types/openvidutest";
 
 import { MyFaceInVideoWaitingRoom } from "../../components/video-waiting-room/TestMyFaceInVideoWaitingRoom"
 import timerIcon from "../../assets/images/unboxing/timer.svg";
@@ -19,9 +19,10 @@ interface WaitingRoomProps {
     onEnd: () => void,
     isReady: boolean,
     isItThere: boolean,
-    content: string,
     videoState: VideoState,
     trans: () => void,
+    content?: string,
+    letterInfo?: GiftDetail,
 }
 
 export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, videoState, trans }: WaitingRoomProps) => {

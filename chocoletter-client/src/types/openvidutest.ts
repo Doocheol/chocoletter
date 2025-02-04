@@ -11,3 +11,12 @@ export interface VideoState {
     publisher?: Publisher;
     subscribers?: Subscriber;
 }
+
+export interface GiftDetail {
+    giftId: string;
+    type: "FREE" | "QUESTION";
+    nickName: string;
+    content: string | null;
+    question: string | null;
+    answer: string | null;
+}

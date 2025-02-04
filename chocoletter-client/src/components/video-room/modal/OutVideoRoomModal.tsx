@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import GoToMainMyEventButton from '../button/GoToMainMyEventButton';
 import timerIcon from "../../../assets/images/unboxing/timer.svg";
 
+interface OutVideoRoomModalProps {
+    giftBoxId: string;
+}
 
-const OutVideoRoomModal = () => {
+const OutVideoRoomModal = ({giftBoxId}: OutVideoRoomModalProps) => {
     const [remainTime, setRemainTime] = useState(10);
     const navigate = useNavigate();
 
@@ -13,7 +16,7 @@ const OutVideoRoomModal = () => {
         const interval = setInterval(() => {
             setRemainTime((prev) => {
                 if (prev === 1) {
-                    navigate('/main/my/event');
+                    navigate(`/main/${giftBoxId}`);
                     clearInterval(interval);
                     return 1;
                 } else {
