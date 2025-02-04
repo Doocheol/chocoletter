@@ -2,78 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import Backdrop from "../../../../common/Backdrop";
 import { RiResetRightFill } from "react-icons/ri";
 import Loading from "../../../../common/Loading";
-import { getAllAlarms } from "../../../../../services/alarmApi";
+import { Alarm, getAllAlarms } from "../../../../../services/alarmApi";
 import {
 	patchUnboxingAccept,
 	patchUnboxingReject,
 } from "../../../../../services/unboxingApi";
 import AcceptRejectModal from "./AcceptRejectModal";
-
-// 더미 알림 데이터 타입 정의
-export interface Alarm {
-	alarmId: number;
-	alarmType:
-		| "ACCEPT_SPECIAL"
-		| "REJECT_SPECIAL"
-		| "RECEIVE_SPECIAL"
-		| "UNBOXING_NOTICE";
-	partnerName: string;
-	unBoxingTime?: string; // API 응답에 맞게 대문자 B 사용
-	giftId: string | null;
-	read: boolean;
-}
-
-// 테스트용 더미 데이터 (실제 API 사용 시 getAllAlarms 참고)
-export const dummyAlarms: Alarm[] = [
-	{
-		alarmId: 1,
-		alarmType: "ACCEPT_SPECIAL",
-		partnerName: "Alice",
-		unBoxingTime: "09:30",
-		giftId: "GIFT_001",
-		read: false,
-	},
-	{
-		alarmId: 2,
-		alarmType: "REJECT_SPECIAL",
-		partnerName: "Bob",
-		unBoxingTime: "10:15",
-		giftId: "GIFT_002",
-		read: true,
-	},
-	{
-		alarmId: 3,
-		alarmType: "RECEIVE_SPECIAL",
-		partnerName: "Charlie",
-		unBoxingTime: "11:45",
-		giftId: "GIFT_003",
-		read: false,
-	},
-	{
-		alarmId: 4,
-		alarmType: "UNBOXING_NOTICE",
-		partnerName: "Diana",
-		unBoxingTime: "13:00",
-		giftId: null,
-		read: false,
-	},
-	{
-		alarmId: 5,
-		alarmType: "ACCEPT_SPECIAL",
-		partnerName: "Eve",
-		unBoxingTime: "14:30",
-		giftId: "GIFT_004",
-		read: true,
-	},
-	{
-		alarmId: 6,
-		alarmType: "RECEIVE_SPECIAL",
-		partnerName: "Frank",
-		unBoxingTime: "15:00",
-		giftId: "GIFT_005",
-		read: false,
-	},
-];
 
 const getAlarmMessage = (alarm: Alarm): string => {
 	switch (alarm.alarmType) {
@@ -123,9 +57,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 	const fetchAlarms = async () => {
 		setIsLoading(true);
 		try {
-			// 실제 API 사용 시: const data = await getAllAlarms();
-			// 테스트용 더미 데이터 사용:
-			const data = dummyAlarms;
+			const data = await getAllAlarms();
 			setAlarms(data);
 		} catch (err) {
 			console.error("알림 데이터를 불러오는 도중 에러 발생:", err);
@@ -262,7 +194,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 										</p>
 										{formattedTime && (
 											<p className="font-[Pretendard] text-[12px] text-[#696A73]">
-												2월 14일 {formattedTime}
+												일정 : 2월 14일 {formattedTime}
 											</p>
 										)}
 									</div>
