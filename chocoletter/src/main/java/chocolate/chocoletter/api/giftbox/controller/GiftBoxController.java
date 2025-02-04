@@ -113,7 +113,7 @@ public class GiftBoxController implements GiftBoxSwagger {
     }
 
     @PatchMapping("/type") // select로 네이밍하면 조회랑 헷갈릴거같아서 choose로 함
-    public ResponseEntity<?> chooseGiftBoxType(@RequestBody GiftBoxTypeRequestDto requestDto,
+    public ResponseEntity<?> chooseGiftBoxType(@RequestBody @Valid GiftBoxTypeRequestDto requestDto,
                                                Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         giftBoxService.chooseGiftBoxType(memberId, requestDto);
