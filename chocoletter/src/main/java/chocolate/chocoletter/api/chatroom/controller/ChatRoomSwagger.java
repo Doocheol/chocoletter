@@ -2,15 +2,14 @@ package chocolate.chocoletter.api.chatroom.controller;
 
 import chocolate.chocoletter.api.chatroom.dto.response.ChatLetterResponseDto;
 import chocolate.chocoletter.api.chatroom.dto.response.ChatRoomsResponseDto;
-import chocolate.chocoletter.common.annotation.DecryptedId;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.security.Principal;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 public interface ChatRoomSwagger {
 
@@ -45,5 +44,9 @@ public interface ChatRoomSwagger {
                     )),
             @ApiResponse(responseCode = "401", description = "인증되지 않았습니다.")
     })
-    ResponseEntity<?> findReceiveLetter(@PathVariable @DecryptedId Long roomId, Principal principal);
+    ResponseEntity<?> findReceiveLetter(
+            @Parameter(
+                    description = "암호화된 형태의 채팅방 id (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long roomId, Principal principal);
 }
