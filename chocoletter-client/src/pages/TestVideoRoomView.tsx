@@ -72,32 +72,32 @@ const TestVideoRoomView = () => {
     }
 
     // 로그인 확인 및 입장 확인 API
-    useEffect(() => {
-        if (!isLogin) {
-            navigate("/");
-            return;
-        }
+    // useEffect(() => {
+    //     if (!isLogin) {
+    //         navigate("/");
+    //         return;
+    //     }
 
-        if (!sessionIdInit) {
-            console.error("세션 ID가 없습니다.");
-            navigate(`/main/${user?.giftBoxId || ""}`);
-            return;
-        }
+    //     if (!sessionIdInit) {
+    //         console.error("세션 ID가 없습니다.");
+    //         navigate(`/main/${user?.giftBoxId || ""}`);
+    //         return;
+    //     }
 
-        const checkAuth = async () => {
-            try {
-                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
-                console.log(checkAuthResult);
-                setLetterInfo(checkAuthResult.giftDetail);
-                setUnboxingTime(checkAuthResult.unboxingTime);
-            } catch (err) {
-                console.error("입장 확인 실패:", err);
-                navigate(`/main/${user?.giftBoxId}`);
-            }
-        };
+    //     const checkAuth = async () => {
+    //         try {
+    //             const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
+    //             console.log(checkAuthResult);
+    //             setLetterInfo(checkAuthResult.giftDetail);
+    //             setUnboxingTime(checkAuthResult.unboxingTime);
+    //         } catch (err) {
+    //             console.error("입장 확인 실패:", err);
+    //             navigate(`/main/${user?.giftBoxId}`);
+    //         }
+    //     };
 
-        checkAuth();
-    }, [isLogin, navigate, sessionIdInit, user?.giftBoxId]);
+    //     checkAuth();
+    // }, [isLogin, navigate, sessionIdInit, user?.giftBoxId]);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
