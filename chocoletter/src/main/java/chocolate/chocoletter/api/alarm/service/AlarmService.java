@@ -6,6 +6,9 @@ import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
 import chocolate.chocoletter.api.alarm.repository.AlarmRepository;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
+import chocolate.chocoletter.common.exception.ErrorMessage;
+import chocolate.chocoletter.common.exception.InternalServerException;
+import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final GiftRepository giftRepository;
+    private final IdEncryptionUtil idEncryptionUtil;
 
     @Transactional
     public AlarmsResponseDto findMyAlarms(Long memberId) {
@@ -28,7 +32,8 @@ public class AlarmService {
                 .toList();
         Map<Long, String> unboxingTimeMap = findUnBoxingTimes(giftIds);
         List<AlarmResponseDto> myAlarms = alarms.stream()
-                .map(alarm -> AlarmResponseDto.of(alarm, unboxingTimeMap.get(alarm.getGiftId())))
+                .map(alarm -> AlarmResponseDto.of(alarm, unboxingTimeMap.get(alarm.getGiftId()),
+                        encryptId(alarm.getGiftId())))
                 .toList();
         alarms.forEach(Alarm::readAlarm);
         return AlarmsResponseDto.of(myAlarms);
@@ -50,5 +55,13 @@ public class AlarmService {
                         row -> (Long) row[0],  // giftId
                         row -> row[1].toString() // unboxingTime
                 ));
+    }
+
+    private String encryptId(Long id) {
+        try {
+            return idEncryptionUtil.encrypt(id);
+        } catch (Exception e) {
+            throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
+        }
     }
 }
