@@ -39,7 +39,7 @@ export async function getNotFixedUnboxingTime(giftId: number) {
 }
 
 // 언박싱 일정 수락
-export async function patchUnboxingAccept(giftId: number) {
+export async function patchUnboxingAccept(giftId: string) {
   try {
     const res = await api.patch(`/api/v1/gift/${giftId}/unboxing/invitation/accept`);
     return res.data;
@@ -50,7 +50,7 @@ export async function patchUnboxingAccept(giftId: number) {
 }
 
 // 언박싱 일정 거절
-export async function patchUnboxingReject(giftId: number) {
+export async function patchUnboxingReject(giftId: string) {
   try {
     const res = await api.patch(`/api/v1/gift/${giftId}/unboxing/invitation/reject`);
     return res.data;
