@@ -102,7 +102,7 @@ const VideoRoomView = () => {
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
                 {isTerminate && (
                     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center">
-                        <OutVideoRoomModal />
+                        <OutVideoRoomModal giftBoxId="Ajij" />
                     </div>
                 )}
                 <LetterInVideoModal

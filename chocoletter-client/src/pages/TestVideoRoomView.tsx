@@ -16,12 +16,13 @@ import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
 import { MdHeadsetOff, MdHeadset } from "react-icons/md";
-
+import { getUserInfo } from '../services/userInfo';
 import { joinSession, leaveSession, pushPublish, deleteSession } from '../utils/openviduTest';
 
 import { WaitingTest } from '../components/video-room/VideoWaiting';
 import { VideoState } from "../types/openvidutest";
 import { checkAuthVideoRoom, terminateVideoRoom } from '../services/openviduApi';
+import { GiftDetail } from '../types/openvidutest';
 
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
@@ -48,11 +49,15 @@ const TestVideoRoomView = () => {
         subscribers: undefined,
     }); // 비디오 상태
     ///////////////////////////////////////////////////////////////
+    const [letterInfo, setLetterInfo] = useState<GiftDetail | null>(null);
     const [isWaitingRoom, setIsWaitingRoom] = useState(true);
     const isLogin = useRecoilValue(isLoginAtom);
     const setFreeLetter = useSetRecoilState(freeLetterState);
     const setQuestionLetter = useSetRecoilState(questionLetterState);
-    const username = useRecoilValue(userNameAtom); // 사용자 이이름
+    const username = useRecoilValue(userNameAtom);
+    const [user, setUser] = useState(() => getUserInfo());
+    const [unboxingTime, setUnboxingTime] = useState(undefined);
+    const [startCountdown, setStartCountdown] = useState(false);
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
@@ -66,19 +71,33 @@ const TestVideoRoomView = () => {
         await leaveSession(videoState, setVideoState);
     }
 
-    // 로그인 확인
-    // if (!isLogin) navigate("/");
+    // 로그인 확인 및 입장 확인 API
+    useEffect(() => {
+        if (!isLogin) {
+            navigate("/");
+            return;
+        }
 
-    // 입장 확인 API
-    // if (sessionIdInit) {
-    //     try {
-    //         const checkAuth = checkAuthVideoRoom(sessionIdInit);
-    //         console.log(checkAuth)
-    //     } catch (err) {
-    //         console.log(err)
-    //         navigate("/main/my/event")
-    //     }
-    // }
+        if (!sessionIdInit) {
+            console.error("세션 ID가 없습니다.");
+            navigate(`/main/${user?.giftBoxId || ""}`);
+            return;
+        }
+
+        const checkAuth = async () => {
+            try {
+                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
+                console.log(checkAuthResult);
+                setLetterInfo(checkAuthResult.giftDetail);
+                setUnboxingTime(checkAuthResult.unboxingTime);
+            } catch (err) {
+                console.error("입장 확인 실패:", err);
+                navigate(`/main/${user?.giftBoxId}`);
+            }
+        };
+
+        checkAuth();
+    }, [isLogin, navigate, sessionIdInit, user?.giftBoxId]);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
@@ -100,9 +119,26 @@ const TestVideoRoomView = () => {
     };
 
     //////////////////////////////////////////////////////////////////
+    // session 생성 후 이벤트 리스너 등록
+    useEffect(() => {
+        if (!videoState.session) return;
+
+        const signalHandler = (event: any) => {
+            if (event.data === "startCountdown" && event.type === "startCountdown") {
+                setStartCountdown(true);
+            }
+        };
+
+        videoState.session.on("signal:startCountdown", signalHandler);
+
+        return () => {
+            videoState.session?.off("signal:startCountdown", signalHandler);
+        };
+    }, [videoState.session]);
+    
     // 내 영상 publishAudio 활성화
     useEffect(() => {
-        if (!isItThere) return;
+        if (!isItThere || !startCountdown || !videoState.publisher) return;
         setCountFive(true);
         const timer = setTimeout(() => {
             videoState.publisher?.publishAudio(true);
@@ -111,7 +147,7 @@ const TestVideoRoomView = () => {
         }, 5000);
 
         return () => clearTimeout(timer);       
-    }, [isItThere])
+    }, [isItThere, startCountdown, videoState.publisher]);
 
     // 1분 타이머 지나면 방 폭파
     useEffect(() => {
@@ -163,7 +199,7 @@ const TestVideoRoomView = () => {
                 {isItThere && countFive ? <FiveSecondModal leftTime={leftTime} /> : null}
                 {isTerminate && (
                     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center">
-                        <OutVideoRoomModal />
+                        <OutVideoRoomModal giftBoxId={user?.giftBoxId || ''}/>
                     </div>
                 )}
                 {isItThere ? null : (
@@ -176,6 +212,8 @@ const TestVideoRoomView = () => {
                     onClose={hideRTCLetter}
                     nickName="도리도리"
                     content="Is it LOVE? all not,"
+                    question={null}
+                    answer={null}
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />

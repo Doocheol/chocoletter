@@ -9,9 +9,9 @@ interface ModalProps {
     sender?: string; // 삭제 고려
     receiver?: string; // 삭제 고려
     nickName?: string
-    content?: string;
-    question?: string;
-    answer?: string;
+    content?: string | null;
+    question?: string | null;
+    answer?: string | null;
     children?: React.ReactNode;
     className?: string;
 }

@@ -7,9 +7,9 @@ interface LetterInVideoModalProps {
   isOpen: boolean;
   onClose: () => void;
   nickName?: string;
-  content?: string;
-  question?: string;
-  answer?: string;
+  content?: string | null;
+  question?: string | null;
+  answer?: string | null;
 }
 
 const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, nickName, content, question, answer }) => {
