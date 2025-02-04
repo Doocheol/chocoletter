@@ -1,0 +1,301 @@
+import React, { useEffect, useRef, useState } from "react";
+import Backdrop from "../../../../common/Backdrop";
+import { RiResetRightFill } from "react-icons/ri";
+import Loading from "../../../../common/Loading";
+import { getAllAlarms } from "../../../../../services/alarmApi";
+import {
+	patchUnboxingAccept,
+	patchUnboxingReject,
+} from "../../../../../services/unboxingApi";
+import AcceptRejectModal from "./AcceptRejectModal";
+
+// 더미 알림 데이터 타입 정의
+export interface Alarm {
+	alarmId: number;
+	alarmType:
+		| "ACCEPT_SPECIAL"
+		| "REJECT_SPECIAL"
+		| "RECEIVE_SPECIAL"
+		| "UNBOXING_NOTICE";
+	partnerName: string;
+	unBoxingTime?: string; // API 응답에 맞게 대문자 B 사용
+	giftId: string | null;
+	read: boolean;
+}
+
+// 테스트용 더미 데이터 (실제 API 사용 시 getAllAlarms 참고)
+export const dummyAlarms: Alarm[] = [
+	{
+		alarmId: 1,
+		alarmType: "ACCEPT_SPECIAL",
+		partnerName: "Alice",
+		unBoxingTime: "09:30",
+		giftId: "GIFT_001",
+		read: false,
+	},
+	{
+		alarmId: 2,
+		alarmType: "REJECT_SPECIAL",
+		partnerName: "Bob",
+		unBoxingTime: "10:15",
+		giftId: "GIFT_002",
+		read: true,
+	},
+	{
+		alarmId: 3,
+		alarmType: "RECEIVE_SPECIAL",
+		partnerName: "Charlie",
+		unBoxingTime: "11:45",
+		giftId: "GIFT_003",
+		read: false,
+	},
+	{
+		alarmId: 4,
+		alarmType: "UNBOXING_NOTICE",
+		partnerName: "Diana",
+		unBoxingTime: "13:00",
+		giftId: null,
+		read: false,
+	},
+	{
+		alarmId: 5,
+		alarmType: "ACCEPT_SPECIAL",
+		partnerName: "Eve",
+		unBoxingTime: "14:30",
+		giftId: "GIFT_004",
+		read: true,
+	},
+	{
+		alarmId: 6,
+		alarmType: "RECEIVE_SPECIAL",
+		partnerName: "Frank",
+		unBoxingTime: "15:00",
+		giftId: "GIFT_005",
+		read: false,
+	},
+];
+
+const getAlarmMessage = (alarm: Alarm): string => {
+	switch (alarm.alarmType) {
+		case "ACCEPT_SPECIAL":
+			return `${alarm.partnerName}님께 보낸 특별 초콜릿이 수락되었습니다.`;
+		case "REJECT_SPECIAL":
+			return `${alarm.partnerName}님께 보낸 특별 초콜릿이 거절되었습니다.`;
+		case "RECEIVE_SPECIAL":
+			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다.`;
+		case "UNBOXING_NOTICE":
+			return `입장 30분 전! ${alarm.partnerName}님과의 영상 통화 예정입니다.`;
+		default:
+			return "";
+	}
+};
+
+// 시간 포맷팅 함수 (CalendarModal 코드 참조)
+const ChangeAmPm = (strTime: string): string => {
+	const [hour, minute] = strTime.split(":").map(Number);
+	const date = new Date();
+	date.setHours(hour, minute, 0, 0);
+	return new Intl.DateTimeFormat("en-US", {
+		hour: "numeric",
+		minute: "numeric",
+		hour12: true,
+		timeZone: "Asia/Seoul",
+	}).format(date);
+};
+
+// ChangeAmPm 결과를 분리해서 시간과 meridiem을 반환하는 헬퍼 함수
+const formatTimeParts = (strTime: string) => {
+	const formatted = ChangeAmPm(strTime); // 예: "10:00 AM"
+	const parts = formatted.split(" ");
+	return { time: parts[0], meridiem: parts[1] || "" };
+};
+
+interface NotificationProps {
+	isOpen: boolean;
+	onClose: () => void;
+}
+
+const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
+	const [alarms, setAlarms] = useState<Alarm[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [selectedAlarm, setSelectedAlarm] = useState<Alarm | null>(null);
+
+	const fetchAlarms = async () => {
+		setIsLoading(true);
+		try {
+			// 실제 API 사용 시: const data = await getAllAlarms();
+			// 테스트용 더미 데이터 사용:
+			const data = dummyAlarms;
+			setAlarms(data);
+		} catch (err) {
+			console.error("알림 데이터를 불러오는 도중 에러 발생:", err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	// Backdrop 클릭 시, AcceptRejectModal이 열려 있지 않을 때만 onClose 실행
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(e.target as Node) &&
+				!selectedAlarm
+			) {
+				onClose();
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [onClose, selectedAlarm]);
+
+	useEffect(() => {
+		if (isOpen) {
+			fetchAlarms();
+		}
+	}, [isOpen]);
+
+	// RECEIVE_SPECIAL 알림 클릭 시 처리 모달 표시
+	const handleReceiveSpecialClick = (alarm: Alarm) => {
+		setSelectedAlarm(alarm);
+	};
+
+	// 수락 처리: giftId가 존재할 경우 patchUnboxingAccept API 호출
+	const handleAccept = async () => {
+		if (selectedAlarm?.giftId == null) return;
+		try {
+			const result = await patchUnboxingAccept(selectedAlarm.giftId);
+			console.log("수락 처리 성공:", result);
+			setAlarms((prev) =>
+				prev.filter((a) => a.alarmId !== selectedAlarm?.alarmId)
+			);
+			setSelectedAlarm(null);
+		} catch (error) {
+			console.error("수락 처리 중 에러 발생:", error);
+		}
+	};
+
+	// 거절 처리: giftId가 존재할 경우 patchUnboxingReject API 호출
+	const handleReject = async () => {
+		if (selectedAlarm?.giftId == null) return;
+		try {
+			const result = await patchUnboxingReject(selectedAlarm.giftId);
+			console.log("거절 처리 성공:", result);
+			setAlarms((prev) =>
+				prev.filter((a) => a.alarmId !== selectedAlarm?.alarmId)
+			);
+			setSelectedAlarm(null);
+		} catch (error) {
+			console.error("거절 처리 중 에러 발생:", error);
+		}
+	};
+
+	if (!isOpen) return null;
+
+	return (
+		<>
+			<Backdrop
+				onClick={() => {
+					if (!selectedAlarm) onClose();
+				}}
+			/>
+			{/* Notification 모달: 고정 모달 스타일 */}
+			<div
+				ref={dropdownRef}
+				className="fixed top-16 left-1/2 transform -translate-x-1/2 px-6 py-4 bg-white shadow-lg rounded-xl z-50 w-80 max-w-md"
+			>
+				<div className="flex items-center justify-between mb-4">
+					<div className="text-2xl font-bold text-black">
+						초코레터 알림
+					</div>
+					<button
+						onClick={fetchAlarms}
+						className="text-sm hover:text-gray-300 focus:outline-none"
+						aria-label="새로고침"
+					>
+						<RiResetRightFill />
+					</button>
+				</div>
+				{/* 알림 목록 영역: 화면 높이의 50%만 보이도록 수정 */}
+				<div
+					className="w-full max-w-[95%] flex flex-col space-y-[15px] mt-4 ml-auto mr-auto pb-4 overflow-y-auto overflow-x-hidden"
+					style={{ maxHeight: "50vh" }}
+				>
+					{isLoading ? (
+						<Loading />
+					) : alarms.length === 0 ? (
+						<p className="text-center text-gray-500 py-8">
+							아직 새로운 알림이 없어요.
+						</p>
+					) : (
+						alarms.map((alarm) => {
+							// format unBoxingTime (약속 시각)이 있을 경우
+							let formattedTime = "";
+							if (alarm.unBoxingTime) {
+								const { time, meridiem } = formatTimeParts(
+									alarm.unBoxingTime
+								);
+								formattedTime = `${time} ${meridiem}`;
+							}
+
+							return (
+								<div
+									key={alarm.alarmId}
+									// read 여부에 따라 배경색이 달라지도록 조건부 클래스 적용
+									className={`flex h-[71px] px-[20px] py-[10px] justify-between items-center rounded-[15px] border border-black shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer ${
+										alarm.read
+											? "active:opacity-80 transition opacity-40 pointer-events-none grayscale"
+											: "bg-white"
+									}`}
+									onClick={() => {
+										// 알림 항목 클릭 시 추가 기능(예: 상세보기) 필요하면 여기에 구현
+									}}
+								>
+									{/* 왼쪽: 알림 메시지 및 약속 시각 */}
+									<div className="flex flex-col">
+										<p className="text-[12px] leading-[14px] font-semibold">
+											{getAlarmMessage(alarm)}
+										</p>
+										{formattedTime && (
+											<p className="font-[Pretendard] text-[12px] text-[#696A73]">
+												2월 14일 {formattedTime}
+											</p>
+										)}
+									</div>
+									{/* 오른쪽: RECEIVE_SPECIAL 알림일 경우 'OK' 버튼 표시 - CalendarModal의 오른쪽 아이콘 스타일 참고 */}
+									{alarm.alarmType === "RECEIVE_SPECIAL" && (
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												handleReceiveSpecialClick(
+													alarm
+												);
+											}}
+											className="w-1/5 h-[calc(100%px)] bg-opacity-70 hover:bg-chocoletterPurpleBold py-6 left-5 shadow-[-3px_3px_3px_3px_rgba(0,0,0,0.1)] bg-chocoletterPurple flex items-center justify-center relative -ml-4 rounded-tr-[14px] rounded-br-[14px] text-white text-sm font-bold"
+										>
+											확인
+										</button>
+									)}
+								</div>
+							);
+						})
+					)}
+				</div>
+			</div>
+			{selectedAlarm && (
+				<AcceptRejectModal
+					alarm={selectedAlarm}
+					onClose={() => setSelectedAlarm(null)}
+					onAccept={handleAccept}
+					onReject={handleReject}
+				/>
+			)}
+		</>
+	);
+};
+
+export default Notification;
