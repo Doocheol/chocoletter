@@ -51,9 +51,12 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
+                    // unboxing id를 암호화
+                    UnboxingRoom unboxingRoom = unboxingRoomService.findUnboxingRoomByGiftId(gift.getId());
+                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(unboxingRoom.getId());
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 
@@ -65,9 +68,12 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
+                    // unboxing id를 암호화
+                    UnboxingRoom unboxingRoom = unboxingRoomService.findUnboxingRoomByGiftId(gift.getId());
+                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(unboxingRoom.getId());
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 
@@ -104,9 +110,12 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
+                    String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
+                    // unboxing id를 암호화
+                    UnboxingRoom unboxingRoom = unboxingRoomService.findUnboxingRoomByGiftId(gift.getId());
+                    String encryptedUnboxingRoomId = idEncryptionUtil.encrypt(unboxingRoom.getId());
                     // Gift 객체를 GiftResponseDto로 변환
-                    return GiftResponseDto.of(gift, encryptedId);
+                    return GiftResponseDto.of(gift, encryptedGiftId, encryptedUnboxingRoomId);
                 })
                 .collect(Collectors.toList());
 
