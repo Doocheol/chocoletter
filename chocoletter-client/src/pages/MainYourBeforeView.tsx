@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginAtom } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
@@ -16,15 +16,19 @@ import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
-import { getGiftBoxName } from "../services/giftBoxApi";
+import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
+import { getGiftBoxName, verifyGiftSend } from "../services/giftBoxApi";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
+import { removeUserInfo } from "../services/userApi";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
 const MainYourBeforeView: React.FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const setIsLogin = useSetRecoilState(isLoginAtom);
+
 	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
 	// 로그인 여부 확인
@@ -51,6 +55,7 @@ const MainYourBeforeView: React.FC = () => {
 
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);
+	const [isAlreadySentModalOpen, setIsAlreadySentModalOpen] = useState(false);
 
 	const handleProfile = () => {
 		if (!isLoggedIn) {
@@ -60,12 +65,34 @@ const MainYourBeforeView: React.FC = () => {
 		setIsProfileOpen((prev) => !prev);
 	};
 
-	const handleSendGift = () => {
+	// 선물하기 버튼 클릭 시, 먼저 선물 전송 여부를 확인합니다.
+	const handleSendGift = async () => {
 		if (!isLoggedIn) {
 			setIsNotLoginModalOpen(true);
 			return;
 		}
-		navigate(`/select-letter/${giftBoxId}`);
+		try {
+			if (!giftBoxId) {
+				// giftBoxId가 없으면 에러 처리
+				removeUserInfo();
+				setIsLogin(false);
+				navigate("/");
+				return;
+			}
+			const verifyData = await verifyGiftSend(giftBoxId);
+			if (verifyData.isSend) {
+				// 이미 선물이 전송된 상태라면 모달 표시
+				setIsAlreadySentModalOpen(true);
+			} else {
+				// 선물이 아직 전송되지 않은 경우, 선물 보내기 화면으로 이동
+				navigate(`/select-letter/${giftBoxId}`);
+			}
+		} catch (error) {
+			console.error("선물 전송 여부 확인 중 오류 발생:", error);
+			// removeUserInfo();
+			// setIsLogin(false);
+			// navigate("/");
+		}
 	};
 
 	// redirect 정보를 localStorage에 저장 후 로그인 페이지로 이동
@@ -177,6 +204,14 @@ const MainYourBeforeView: React.FC = () => {
 						isOpen={isNotLoginModalOpen}
 						onClose={() => setIsNotLoginModalOpen(false)}
 						onLogin={handleGoToLogin}
+					/>
+				)}
+
+				{/* 이미 선물을 보냈음을 알리는 모달 */}
+				{isAlreadySentModalOpen && (
+					<AlreadySentModal
+						isOpen={isAlreadySentModalOpen}
+						onClose={() => setIsAlreadySentModalOpen(false)}
 					/>
 				)}
 
