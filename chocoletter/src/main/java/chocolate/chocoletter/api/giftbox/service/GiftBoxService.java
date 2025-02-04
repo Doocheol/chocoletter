@@ -12,7 +12,12 @@ import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
-import chocolate.chocoletter.api.giftbox.dto.response.*;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxIdResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.VerifyIsSendResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.service.LetterService;
@@ -21,7 +26,6 @@ import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.api.member.service.MemberService;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
-import chocolate.chocoletter.common.exception.InternalServerException;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
@@ -115,7 +119,7 @@ public class GiftBoxService {
 
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
         GiftBox friendGiftBox = findGiftBox(giftBoxId);
-        String encryptedGiftBoxId = encryptGiftBoxId(friendGiftBox.getId());
+        String encryptedGiftBoxId = idEncryptionUtil.encrypt(friendGiftBox.getId());
         return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId);
     }
 
@@ -159,7 +163,7 @@ public class GiftBoxService {
     public GiftBoxIdResponseDto findGiftBoxIdByMemberId(Long memberId) {
         Optional<GiftBox> giftBox = giftBoxRepository.findByMemberId(memberId);
         GiftBox targetGiftBox = giftBox.orElse(null);
-        return GiftBoxIdResponseDto.of(encryptGiftBoxId(targetGiftBox.getId()));
+        return GiftBoxIdResponseDto.of(idEncryptionUtil.encrypt(targetGiftBox.getId()));
     }
 
     private GiftBox findGiftBox(Long giftBoxId) {
@@ -192,14 +196,5 @@ public class GiftBoxService {
     public VerifyIsSendResponseDto findVerifyIsSend(Long giftBoxId, Long memberId) {
         boolean isSend = giftRepository.findGiftBySenderIdAndGiftBoxId(memberId, giftBoxId) != null;
         return VerifyIsSendResponseDto.of(isSend);
-    }
-
-    private String encryptGiftBoxId(Long giftBoxId) {
-        try {
-            return idEncryptionUtil.encrypt(giftBoxId);
-        } catch (Exception e) {
-            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
-            throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
-        }
     }
 }

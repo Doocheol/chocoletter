@@ -51,7 +51,7 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = encryptGiftId(gift.getId());
+                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
                     // Gift 객체를 GiftResponseDto로 변환
                     return GiftResponseDto.of(gift, encryptedId);
                 })
@@ -65,7 +65,7 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = encryptGiftId(gift.getId());
+                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
                     // Gift 객체를 GiftResponseDto로 변환
                     return GiftResponseDto.of(gift, encryptedId);
                 })
@@ -104,7 +104,7 @@ public class GiftService {
         List<GiftResponseDto> giftResponseDtos = gifts.stream()
                 .map(gift -> {
                     // gift의 id를 암호화
-                    String encryptedId = encryptGiftId(gift.getId());
+                    String encryptedId = idEncryptionUtil.encrypt(gift.getId());
                     // Gift 객체를 GiftResponseDto로 변환
                     return GiftResponseDto.of(gift, encryptedId);
                 })
@@ -187,17 +187,6 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-// 추후 다시 살릴 수 있는 기능이기 때문에 일단 주석 처리
-//        gift.rejectUnboxing();
-//        if (gift.getRejectCount() == 3) {
-//            gift.changeToGeneralGift();
-//            Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), gift.getSenderId());
-//            if (receiverGift != null) {
-//                chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
-//            }
-//            // TODO : senderId 에게 일반 초콜렛으로 바뀌었다는 알림 전송
-//            return;
-//        }
         gift.changeToGeneralGift();
         Member receiver = memberService.findMember(memberId);
         Alarm alarm = Alarm.builder()
@@ -247,17 +236,6 @@ public class GiftService {
                 .collect(Collectors.toList());
 
         return MyUnBoxingTimesResponseDto.of(myUnBoxingTimes);
-    }
-
-    // try catch 반복되서 메서드로 뺌
-    private String encryptGiftId(Long giftId) {
-        try {
-            String encryptedId = idEncryptionUtil.encrypt(giftId);
-            return encryptedId;
-        } catch (Exception e) {
-            log.warn("공유 코드 생성 실패"); // 이거 에러 처리 찝찝한디..
-        }
-        return null;
     }
 
     private String findUnBoxingName(Long memberId, Gift gift) {
