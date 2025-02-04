@@ -8,8 +8,6 @@ import chocolate.chocoletter.api.chatroom.repository.ChatRoomRepository;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.letter.service.LetterService;
-import chocolate.chocoletter.common.exception.ErrorMessage;
-import chocolate.chocoletter.common.exception.InternalServerException;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,12 +45,7 @@ public class ChatRoomService {
                     } else {
                         nickname = letterService.findNickNameByGiftId(chatRoom.getHostGiftId());
                     }
-                    try {
-                        return ChatRoomResponseDto.of(idEncryptionUtil.encrypt(chatRoom.getId()), nickname);
-                    } catch (Exception e) {
-                        log.warn("공유 코드 생성 실패");
-                        throw new InternalServerException(ErrorMessage.ERR_INTERNAL_SERVER_ENCRYPTION_ERROR);
-                    }
+                    return ChatRoomResponseDto.of(idEncryptionUtil.encrypt(chatRoom.getId()), nickname);
                 })
                 .collect(Collectors.toList());
         return ChatRoomsResponseDto.of(chatRooms);

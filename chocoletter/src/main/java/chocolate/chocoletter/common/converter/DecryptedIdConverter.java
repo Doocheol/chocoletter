@@ -30,12 +30,7 @@ public class DecryptedIdConverter implements ConditionalGenericConverter {
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        try {
-            return idEncryptionUtil.decrypt((String) source);
-        } catch (Exception ex) {
-            log.warn("[IdEncryptionException] {}: {}", ex.getClass().getName(), ex.getMessage());
-            throw new RuntimeException(ex);
-        }
+        return idEncryptionUtil.decrypt((String) source);
     }
 }
 
