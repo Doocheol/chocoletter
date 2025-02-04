@@ -78,7 +78,7 @@ export const joinSession = async (
 		console.warn(exception);
 	});
 
-	// publish 저장장
+	// publish 저장
 	getToken(user.sessionId).then((token) => {
 		console.log('token : ', token)
 		session
