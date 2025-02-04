@@ -119,7 +119,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
                 setIsRTC(true);
             } else {
                 if (roomId === "") {
-                    navigate("/")
+                    navigate("/gift-list/before")
                     // 입장 불가 모달
                 } else {
                     navigate(`/video/${roomId}`);
