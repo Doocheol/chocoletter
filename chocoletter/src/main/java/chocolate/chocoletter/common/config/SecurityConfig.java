@@ -4,6 +4,7 @@ import chocolate.chocoletter.api.member.service.KakaoOAuth2UserService;
 import chocolate.chocoletter.common.filter.JwtAuthenticationFilter;
 import chocolate.chocoletter.common.handler.OAuth2AuthenticationFailureHandler;
 import chocolate.chocoletter.common.handler.OAuth2AuthenticationSuccessHandler;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +43,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**",
                                 "/webjars/**",
+                                "/test/**",
                                 "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
