@@ -64,3 +64,19 @@ export async function updateGiftBoxType(type: number) {
     throw err;
   }
 }
+
+/**
+ * 선물상자 선물 전송 여부 확인 API
+ * @param giftBoxId 선물상자 ID
+ * @returns { isSend: boolean }
+ */
+export async function verifyGiftSend(giftBoxId: string) {
+  try {
+    const res = await api.get(`/api/v1/gift-box/${giftBoxId}/verify`);
+    console.log("선물 전송 여부 확인 성공:", res.data);
+    return res.data; // 예: { isSend: boolean }
+  } catch (err) {
+    console.error("verifyGiftSend API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
