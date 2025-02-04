@@ -50,8 +50,15 @@ public class AlarmService {
         List<Object[]> results = giftRepository.findUnBoxingTimesByGiftIds(giftIds);
         return results.stream()
                 .collect(Collectors.toMap(
-                        row -> (Long) row[0],  // giftId
-                        row -> (String) row[1] // unboxingTime
-                ));
+                                row -> (Long) row[0],  // giftId
+                                row -> {
+                                    if (row[1] == null) {
+                                        return null;
+                                    } else {
+                                        return row[1].toString();
+                                    }
+                                }
+                        )
+                );
     }
 }
