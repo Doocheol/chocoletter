@@ -146,10 +146,26 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
     if (schedules.length === 0) return [];
-    return [...schedules].sort(
-      (a, b) => timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime)
-    );
-  }, [schedules]);
+    return [...schedules].sort((a, b) => {
+      const nowKST = CurrentTime();
+      const eventA = convertToEventDate(a.unBoxingTime, EventMMDD, "Asia/Seoul");
+      const eventB = convertToEventDate(b.unBoxingTime, EventMMDD, "Asia/Seoul");
+  
+      const isHiddenA = nowKST > eventA; // A가 지난 일정인지
+      const isHiddenB = nowKST > eventB; // B가 지난 일정인지
+  
+      // 1️⃣ 지난 시간 (isHidden === true) → 맨 아래로 이동
+      if (isHiddenA !== isHiddenB) return isHiddenA ? 1 : -1;
+  
+      // 2️⃣ 아직 지나지 않은 일정 (isHidden === false) → 오름차순 정렬
+      if (!isHiddenA && !isHiddenB) {
+        return timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime);
+      }
+  
+      // 3️⃣ 지난 일정 (isHidden === true) → 기존 시간 순서 유지 (오름차순 정렬)
+      return timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime);
+    });
+  }, [schedules]); // 여기 수정하고 merge
 
   return (
     <Modal
@@ -181,6 +197,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               // 조건에 따라 버튼을 다르게 처리
               let buttonAction;
               let isHidden = false;
+              let isAfter = false;
 
               if (nowKST > eventKST) {
                 // 이벤트 시간이 지난 경우 -> 버튼 숨기기
@@ -191,17 +208,18 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               } else {
                 // 이벤트 시간이 아직 안 됨 -> toast 출력
                 buttonAction = () => toast.warning("적혀있는 시간 5분 전부터 입장 가능합니다");
+                isAfter = true;
               }
 
               return(
                 <button 
                   key={`${item.nickName}-${index}`}
                   className={`active:opacity-80 transition ${
-                    isHidden ? "opacity-40 pointer-events-none" : ""
-                  }`}
+                    isHidden ? "opacity-40 pointer-events-none grayscale" : ""
+                  } ${isAfter ? "opacity-40" : ""}`}
                   onClick={buttonAction}
                 >
-                  <div className="relative w-[300px] shadow-[-155px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
+                  <div className="relative w-[300px] shadow-[-102px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
                     {/* 왼쪽 초대장 스타일 배경 */}
                     <div className="w-2/3 h-full text-start bg-white text-[#f82e91] p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
                       <div className="w-full h-full">
@@ -212,7 +230,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                     </div>
                     
                     {/* 오른쪽 아이콘 스타일 */}
-                    <div className="w-2/5 h-[calc(100%-15px)] mb-[2px] shadow-[-5px_5px_5px_2px_rgba(0,0,0,0.2)] bg-chocoletterPink flex items-center justify-center relative -ml-12" style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px"}}>
+                    <div className={`w-2/5 h-[calc(100%-15px)] mb-[2px] bg-chocoletterPink flex items-center justify-center relative -ml-12 ${!isHidden ? "animate-slideWiggle" : ""} `} style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px"}}>
                       <img src={RTCchocolate} className="w-[60%] h-[60%]" />
                     </div>
                   </div>

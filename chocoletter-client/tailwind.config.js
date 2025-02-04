@@ -90,6 +90,16 @@ module.exports = {
           gradient: "linear-gradient(180deg, #E6F5FF 0%, #F4D3FF 81.5%)",
         },
       },
+      keyframes: {
+        slideWiggle: {
+          "0%": { transform: "translateX(0%)" },
+          "50%": { transform: "translateX(-30%)" },
+          "100%": { transform: "translateX(0%)" },
+        },
+      },
+      animation: {
+        slideWiggle: "slideWiggle 2s ease-in-out",
+      }
     },
   },
   plugins: [
