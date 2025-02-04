@@ -109,4 +109,10 @@ public class GiftBoxController implements GiftBoxSwagger {
         return ResponseEntity.ok(giftBoxService.findGiftBoxIdByMemberId(memberId));
     }
 
+    @GetMapping("/{giftBoxId}/verify")
+    public ResponseEntity<?> verifyIsSend(@DecryptedId @PathVariable("giftBoxId") Long giftBoxId, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        return ResponseEntity.ok(giftBoxService.findVerifyIsSend(giftBoxId, memberId));
+    }
+
 }

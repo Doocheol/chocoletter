@@ -225,5 +225,49 @@ public interface GiftBoxSwagger {
     })
     ResponseEntity<?> findMyUnboxingTimes(Principal principal);
 
+    @Operation(
+            summary = "내 선물함 ID 조회",
+            description = "로그인한 사용자의 멤버 ID를 기반으로 선물함 ID를 조회합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "선물함 ID가 성공적으로 조회되었습니다.",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content
+            )
+    })
     public ResponseEntity<?> getGiftBoxId(Principal principal);
+
+    @Operation(
+            summary = "선물 전송 여부 검증",
+            description = "특정 GiftBox에 대해 현재 로그인한 사용자의 선물 전송 여부를 검증합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "검증 결과 반환",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 선물함 입니다.",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<?> verifyIsSend(
+            @Parameter(
+                    description = "암호화된 형태의 giftBoxId (Decrypted 후 사용)",
+                    required = true,
+                    schema = @Schema(type = "number")
+            )
+            Long giftBoxId,
+            Principal principal
+    );
 }
