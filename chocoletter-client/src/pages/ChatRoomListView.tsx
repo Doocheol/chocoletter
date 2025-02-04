@@ -1,10 +1,13 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../atoms/auth/userAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { getChatRooms } from "../services/chatApi";
 import Loading from "../components/common/Loading";
 import useViewportHeight from "../hooks/useViewportHeight";
+import { getUserInfo } from "../services/userInfo";
 
 interface ChatRoom {
     roomId: number;
@@ -18,18 +21,21 @@ const ChatRoomListView = () => {
     
         // 더미 데이터
         const dummyChatRooms = [
-            { roomId: 9997, nickName: "예슬", unreadCount: 3, lastMessage: "안녕! 잘 지내?" },
-            { roomId: 9998, nickName: "준희", unreadCount: 1, lastMessage: "오늘 시간 어때?" },
-            { roomId: 9999, nickName: "두철", unreadCount: 0, lastMessage: "카톡 확인해!" },
-            { roomId: 10000, nickName: "훈서", unreadCount: 5, lastMessage: "내일 뭐해?" },
-            { roomId: 10001, nickName: "한송", unreadCount: 2, lastMessage: "집에 언제 가?" },
+            { roomId: 9997, nickName: "예슬" },
+            { roomId: 9998, nickName: "준희"},
+            { roomId: 9999, nickName: "두철" },
+            { roomId: 10000, nickName: "훈서"},
+            { roomId: 10001, nickName: "한송"},
         ];
         
 
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>(dummyChatRooms);
     const [isLoading, setIsLoading] = useState(true);
-    const memberId = 9999 
+    const memberId = useRecoilValue(memberIdAtom);
+    const userInfo = getUserInfo();
     const navigate = useNavigate();
+    // const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
+
     // 채팅방 목록 불러오기
     useEffect(() => {
         const loadChatRooms = async () => {
@@ -65,17 +71,22 @@ const ChatRoomListView = () => {
                     chatRooms.map(async (room) => {
                         try {
                             const response = await axios.get(
-                                `${baseUrl}/api/v1/chat/${room.roomId}/${memberId}/last` // ✅ TODO 수정필요
-                            );
-
+                                `${baseUrl}/api/v1/chat/${room.roomId}/${memberId}/last` , {
+                                headers: {
+                                    Authorization: `Bearer ${userInfo?.accessToken}`,
+                                },
+                                withCredentials: true,
+                            }) 
+                            console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 성공!`);
+                            console.log(`안읽은 메세지 : ${response.data?.unreadCount}`)
                             return {
                                 ...room,
                                 unreadCount: response.data?.unreadCount || 0,
                                 lastMessage: response.data?.lastMessage || "", 
                             };
                         } catch (error) {
-                            console.error(`채팅방(${room.roomId}) 마지막 메시지 불러오기 실패!`, error);
-                            return room // { ...room, unreadCount: 0 }; // 오류 시 기본값 유지
+                            console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 실패!`, error);
+                            return { ...room, unreadCount: 0 }; // 오류 시 기본값 유지
                         }
                     })
                 );
