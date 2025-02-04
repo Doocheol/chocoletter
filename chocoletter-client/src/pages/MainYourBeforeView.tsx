@@ -9,22 +9,28 @@ import Backdrop from "../components/common/Backdrop";
 import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
+// 이미지 및 버튼 파일들
 import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
+// 선물상자 배경 이미지를 background-image로 사용
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 import { getGiftBoxName } from "../services/giftBoxApi";
+// 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
+import Loading from "../components/common/Loading";
 
-// 새로 추가한 getGiftBoxName 함수를 import 합니다.
+const DEFAULT_GIFTBOX_NAME = "초코레터";
 
 const MainYourBeforeView: React.FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
-	// 초기값은 빈 문자열로 처리하여, API 호출 후 업데이트 하도록 함.
+	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
+	const [isGiftBoxNameLoaded, setIsGiftBoxNameLoaded] =
+		useState<boolean>(false);
 
 	const isLoggedIn = useRecoilValue(isLoginAtom);
 
@@ -47,12 +53,7 @@ const MainYourBeforeView: React.FC = () => {
 		navigate(`/select-letter/${giftBoxId}`);
 	};
 
-	// 기존 코드
-	// const handleGoToLogin = () => {
-	//   navigate("/", { state: { redirect: location.pathname } });
-	// };
-
-	// 수정된 코드: redirect 정보를 쿼리 파라미터로 전달
+	// redirect 정보를 localStorage에 저장 후 로그인 페이지로 이동
 	const handleGoToLogin = () => {
 		localStorage.setItem("redirect", location.pathname);
 		navigate("/");
@@ -70,15 +71,44 @@ const MainYourBeforeView: React.FC = () => {
 	useEffect(() => {
 		if (giftBoxId) {
 			getGiftBoxName(giftBoxId).then((name) => {
-				if (name) {
-					setRecipientNickname(name);
+				// API에서 반환한 값이 유효한지 확인 (공백이나 빈 값이면 false)
+				const validName =
+					name && name.trim() !== "" ? name.trim() : null;
+
+				if (validName) {
+					setRecipientNickname(validName);
+					localStorage.setItem("giftBoxName", validName);
 				} else {
-					// 조회 실패 시 기본값 처리
-					setRecipientNickname("초코레터");
+					// 로컬에 저장된 값이 있는지 확인
+					const storedName = localStorage.getItem("giftBoxName");
+					if (storedName && storedName.trim() !== "") {
+						setRecipientNickname(storedName.trim());
+					} else {
+						setRecipientNickname(DEFAULT_GIFTBOX_NAME);
+						localStorage.setItem(
+							"giftBoxName",
+							DEFAULT_GIFTBOX_NAME
+						);
+					}
 				}
+				// API 호출이 끝나면 렌더링 flag를 true로 전환
+				setIsGiftBoxNameLoaded(true);
 			});
+		} else {
+			// giftBoxId가 없으면 기본값 사용
+			setRecipientNickname(DEFAULT_GIFTBOX_NAME);
+			setIsGiftBoxNameLoaded(true);
 		}
 	}, [giftBoxId]);
+
+	// API 호출이 끝나기 전에는 전체 페이지를 Loading 컴포넌트로 대체
+	if (!isGiftBoxNameLoaded) {
+		return (
+			<div className="flex justify-center items-center min-h-screen">
+				<Loading />
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex justify-center w-full">
@@ -90,13 +120,17 @@ const MainYourBeforeView: React.FC = () => {
 					</button>
 				</div>
 
-				{/* 상대방의 선물상자 컨테이너 */}
-				<div className="mt-10 mb-10 mx-auto relative">
-					<img
-						src={my_count_background}
-						alt="Background"
-						className="absolute inset-0 w-full h-full object-cover"
-					/>
+				{/* 선물상자 컨테이너 */}
+				<div
+					className="mt-10 mb-10 mx-auto relative flex items-center justify-center"
+					style={{
+						backgroundImage: `url(${my_count_background})`,
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+						width: "70%",
+						height: "100px", // 적절한 높이 (필요에 따라 조정)
+					}}
+				>
 					<div className="flex flex-col items-center px-10 py-8 relative text-2xl">
 						<div className="flex flex-row max-w-sm">
 							<div className="mb-1">{recipientNickname}</div>님의

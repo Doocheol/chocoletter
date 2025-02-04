@@ -2,10 +2,10 @@ import api from "./api";
 
 export interface Alarm {
   alarmId: number;
-  alarmType: "ACCEPT_SPECIAL" | "REJECT_SPECIAL" | "RECEIVER_SPECIAL" | "UNBOXING_NOTICE";
+  alarmType: "ACCEPT_SPECIAL" | "REJECT_SPECIAL" | "RECEIVE_SPECIAL" | "UNBOXING_NOTICE";
   partnerName: string;
   unBoxingTime?: string; // API 응답과 동일하게 수정
-  giftId: number | null;
+  giftId: string | null;
   read: boolean;
 }
 
