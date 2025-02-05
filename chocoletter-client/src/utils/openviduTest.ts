@@ -29,13 +29,6 @@ export const joinSession = async (
     // 인원 확인
     session.on("connectionCreated", async () => {
         try {
-            if (user.sessionId && await countConnection(user.sessionId) === 2) {
-				setIsItThere(true);
-				session.signal({
-					data: "startCountdown",
-					type: "startCountdown",
-				});
-			};
             console.log("여기 왔나요?")
         } catch (err) {
             console.log("연결 확인 오류 : ", err)
@@ -50,6 +43,10 @@ export const joinSession = async (
 				...prevVideo,
 				subscribers: subscriber,
 			}));
+			console.log("stream이 발생했나요?");
+			if (user.sessionId && await countConnection(user.sessionId) === 2) {
+				setIsItThere(true);
+			};
 		} catch (err) {
 			console.log("stream 생성 중 오류 발생! : ", err);
 		}
