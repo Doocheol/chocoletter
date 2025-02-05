@@ -15,7 +15,7 @@ export const FilterButton = () => {
         {options.map((option) => (
         <label
             key={option.id}
-            className={`cursor-pointer px-2 pb-2 hover:text-chocoletterYellow text-lg
+            className={`cursor-pointer px-2 pb-1 hover:text-chocoletterYellow text-md
             ${
                 selectedValue === option.id
                 ? "text-chocoletterYellow texthi border-b-2 border-chocoletterYellow"

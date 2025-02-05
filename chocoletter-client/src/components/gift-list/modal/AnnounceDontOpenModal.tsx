@@ -15,7 +15,7 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
                 setComment(
                     <div>
                         <p>특별 초콜릿은</p>
-                        <p>⭐2월 14일 약속한 시간⭐에만</p>
+                        <p><span className="text-yellow-500">2월 14일 약속한 시간</span>에만</p>
                         <p>열 수 있어요!</p>
                     </div>
                 );
@@ -26,9 +26,9 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
 
     return(
         <div>
-            <OtherModal isOpen={isOpen} onClose={onClose}>
+            <OtherModal isOpen={isOpen} onClose={onClose} className="!gap-[14px]">
                 {comment}
-                <PurpleButton onClick={onClose} className="!bg-chocoletterPurpleBold !py-2 border-solid" >확인</PurpleButton>
+                <PurpleButton onClick={onClose} className="text-white bg-chocoletterPurpleBold border border-black focus:outline-none" >확인</PurpleButton>
             </OtherModal>
         </div>
     )

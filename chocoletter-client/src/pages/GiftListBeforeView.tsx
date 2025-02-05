@@ -24,7 +24,7 @@ const GiftListBeforeView = () => {
     return (
         <div>
             <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden top-0">
-                <div className="w-full md:max-w-sm h-[110px] px-4 py-[17px] bg-chocoletterPurpleBold flex-col justify-center items-center gap-[15px] inline-flex fixed top-0 z-50">
+                <div className="w-full md:max-w-sm h-[90px] px-4 pt-[14px] pb-[14px] bg-chocoletterPurpleBold flex-col justify-center items-center gap-[6px] inline-flex fixed top-0 z-50">
                     <div className="self-stretch justify-between items-center inline-flex">
                         <div className="w-6 h-6 justify-center items-center flex overflow-hidden">
                             <GoBackMainMyButton />
@@ -33,7 +33,7 @@ const GiftListBeforeView = () => {
                         <div className="w-6 h-6" />
                     </div>
                     <div className="px-[15px] py-[5px] bg-black/40 rounded-[18px] justify-start items-center gap-1 inline-flex">
-                        <div className="text-center text-white text-sm font-normal font-pretendard leading-[18.20px]">현재 개봉 가능한 초콜릿 : {remainOpenCount}개</div>
+                        <div className="text-center text-white text-sm font-normal font-sans leading-[18.20px]">현재 개봉 가능한 초콜릿 : {remainOpenCount}개</div>
                     </div>
                 </div>
                 <GiftList filter={"all"} />

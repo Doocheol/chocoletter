@@ -10,7 +10,7 @@ const GiftListEventView = () => {
     return (
         <div>
             <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden top-0">
-                <div className="w-full md:max-w-sm h-[110px] px-4 pt-[17px] bg-chocoletterPurpleBold flex-col justify-between items-start gap-[15px] inline-flex fixed top-0 z-50">
+                <div className="w-full md:max-w-sm h-[90px] px-4 pt-[17px] bg-chocoletterPurpleBold flex-col justify-between items-start gap-[6px] inline-flex fixed top-0 z-50">
                     <div className="self-stretch justify-between items-center inline-flex">
                         <div className="w-6 h-6 justify-center items-center flex overflow-hidden">
                             <GoBackMainMyButton />

@@ -22,18 +22,18 @@ interface Schedule {
 }
 
 /** 더미 일정 데이터 */
-// const dummySchedules: Schedule[] = [
-//   { nickName: "Alice", unBoxingTime: "08:50", roomId: "1" },
-//   { nickName: "Iso", unBoxingTime: "09:20", roomId: "2" },
-//   { nickName: "Bob", unBoxingTime: "10:20", roomId: "3" },
-//   { nickName: "Charlie", unBoxingTime: "14:30", roomId: "4" },
-//   { nickName: "David", unBoxingTime: "16:50", roomId: "5" },
-//   { nickName: "Eve", unBoxingTime: "19:00", roomId: "6" },
-//   { nickName: "Andre", unBoxingTime: "19:20", roomId: "7" },
-//   { nickName: "Bolt", unBoxingTime: "21:00", roomId: "8" },
-//   { nickName: "Emily", unBoxingTime: "22:00", roomId: "9" },
-//   { nickName: "Busto", unBoxingTime: "23:40", roomId: "10" },
-// ];
+const dummySchedules: Schedule[] = [
+  { nickName: "Alice", unBoxingTime: "08:50", unboxingRoomId: "1", isAccept: true },
+  { nickName: "Iso", unBoxingTime: "09:20", unboxingRoomId: "2", isAccept: false },
+  { nickName: "Bob", unBoxingTime: "10:20", unboxingRoomId: "3", isAccept: false },
+  { nickName: "Charlie", unBoxingTime: "14:30", unboxingRoomId: "4", isAccept: true },
+  { nickName: "David", unBoxingTime: "16:50", unboxingRoomId: "5", isAccept: false },
+  { nickName: "Eve", unBoxingTime: "19:00", unboxingRoomId: "6", isAccept: true },
+  { nickName: "Andre", unBoxingTime: "19:20", unboxingRoomId: "7", isAccept: true },
+  { nickName: "Bolt", unBoxingTime: "21:00", unboxingRoomId: "8", isAccept: false },
+  { nickName: "Emily", unBoxingTime: "22:00", unboxingRoomId: "9", isAccept: true },
+  { nickName: "Busto", unBoxingTime: "23:40", unboxingRoomId: "10", isAccept: false },
+];
 
 /** "HH:mm" 형식을 분(minute) 단위로 변환 */
 function timeToMinute(time: string): number {
@@ -146,8 +146,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
 
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
-    if (schedules.length === 0) return [];
-    return [...schedules].sort((a, b) => {
+    if (dummySchedules.length === 0) return [];
+    return [...dummySchedules].sort((a, b) => {
       const nowKST = CurrentTime();
       const eventA = convertToEventDate(a.unBoxingTime, EventMMDD, "Asia/Seoul");
       const eventB = convertToEventDate(b.unBoxingTime, EventMMDD, "Asia/Seoul");
@@ -166,7 +166,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       // 3️⃣ 지난 일정 (isHidden === true) → 기존 시간 순서 유지 (오름차순 정렬)
       return timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime);
     });
-  }, [schedules]); // 여기 수정하고 merge
+  }, [dummySchedules]); // 여기 수정하고 merge
 
   return (
     <Modal

@@ -44,7 +44,7 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
         } else {
             content = (
                 <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                    <p className="font-sans text-white text-sm text-center whitespace-pre-line">열어주길<br/>기다리는 중...</p>
+                    <p className="font-sans text-white text-sm text-center font-bold">열어주길<br/>기다리는 중...</p>
                 </div>
             )
         }
@@ -62,7 +62,6 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
                 content = (
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
                         <svg width="24" height="24" fill="currentColor" className="text-white">
-                            {/* 예시 SVG: 시계 아이콘 */}
                             <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
                             <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none" />
                         </svg>
@@ -71,8 +70,8 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
                 )
             } else {
                 content = (
-                    <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                        <p className="font-sans text-white text-sm text-center whitespace-pre-line">약속시간<br/>정하는 중...</p>
+                    <div className="absolute inset-0 flex justify-center items-center bg-chocoletterRed/30 bg-opacity-50 rounded-lg pointer-events-none">
+                        <p className="font-sans text-white text-sm text-center font-bold">시간수락<br/>기다리는 중...</p>
                     </div>
                 )
             }

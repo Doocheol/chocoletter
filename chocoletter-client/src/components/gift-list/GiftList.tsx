@@ -49,7 +49,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
         const formattedToday = `${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
 
         // 테스트 동안 임시 주석
-        // if (formattedToday !== eventDay) return;
+        if (formattedToday !== eventDay) return;
         if (!chocolates) return;
 
         chocolates.map(async (choco) => {
@@ -87,8 +87,8 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
 
     return (
         <div>
-            {filteredChocolates.length === 0 ? (<p className="text-sans text-center justify-center mt-[130px]">받은 초콜릿이 없어요...</p>) : null}
-            <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[110px]`}>
+            {filteredChocolates.length === 0 ? (<p className="text-sans text-center justify-center mt-[110px]">받은 초콜릿이 없어요...</p>) : null}
+            <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[90px]`}>
                 {/* api 연동 후 추가 수정 */}
                 {filteredChocolates.map((chocolate) => (
                     <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} isAccepted={chocolate.isAccept} roomId={chocolate.unBoxingRoomId} />
