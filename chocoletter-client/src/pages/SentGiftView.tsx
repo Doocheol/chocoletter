@@ -4,6 +4,8 @@ import { Button } from "../components/common/Button";
 import choco from "../assets/images/chocolate/general/gen_choco_4.png"
 import wing_left from "../assets/images/chocolate/wing_left.svg"
 import wing_right from "../assets/images/chocolate/wing_right.svg"
+import { ImageButton } from "../components/common/ImageButton";
+import go_to_my_main from "../assets/images/button/go_to_my_main.svg";
 
 // 편지 작성 완료 후, 전송 완료 페이지
 const SentGiftView = () => {
@@ -66,9 +68,15 @@ const SentGiftView = () => {
           2월 14일 전에 하나를 먼저 열어볼 수 있답니다!
         </h3>
         <div className="flex flex-col justify-center items-center mb-8 text-center">
-          <Button onClick={goBackMainMyBefore} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
+          <ImageButton
+            onClick={goBackMainMyBefore}
+            src={go_to_my_main}
+            className="mb-4"
+          />
+          
+          {/* <Button onClick={goBackMainMyBefore} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
             내 초콜릿 상자로 이동하기
-          </Button>
+          </Button> */}
           <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#b29ce4] text-sm text-white">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
         </div>
       </div>
