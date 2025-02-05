@@ -17,8 +17,8 @@ import { ToastContainer } from "react-toastify";
 import set_time_box_white from "../assets/images/letter/set_time_box_white.svg";
 import set_time_box_gray from "../assets/images/letter/set_time_box_gray.svg";
 import { ImageButton } from "../components/common/ImageButton";
-import set_time_button from "../assets/images/button/set_time_button.svg";
-
+import set_time_purple_button from "../assets/images/button/set_time_purple_button.svg";
+import set_time_gray_button from "../assets/images/button/set_time_gray_button.svg";
 // 1. 이미 있는 일정 못선택하게 하기
 // 2. 질문 있냐 없냐에 따라 api post ⭕
 // 3. 초대장 요청
@@ -231,7 +231,7 @@ const SetTimeView = () => {
             
             {/* 시간 선택 다이얼 */}
             {/* TODO : mt-[78px] */}
-            <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[78px] gap-[10px] ">
+            <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[58px] gap-[10px] ">
                 {/* 박스 색상 변경 */}
                 <div className="absolute z-10 w-[252px] h-[80px]">
                     <img src={isDisabled ? set_time_box_gray : set_time_box_white} alt="" />
@@ -251,8 +251,9 @@ const SetTimeView = () => {
             {/* 초콜릿 보내기 */}
             <div className="mt-[50px]">
                 <ImageButton
-                    onClick={saveHandler}
-                    src={set_time_button}
+                    onClick={!isDisabled ? saveHandler : undefined}
+                    src={isDisabled ? set_time_gray_button : set_time_purple_button}
+                    className={`${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`} 
                     // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
                 />
                 {/* <Button 
