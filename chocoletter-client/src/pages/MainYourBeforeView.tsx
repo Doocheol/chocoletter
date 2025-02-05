@@ -189,20 +189,20 @@ const MainYourBeforeView: React.FC = () => {
 
 				{/* 선물상자 컨테이너 */}
 				<div
-					className="mt-10 mb-10 mx-auto relative flex items-center justify-center"
+					className="relative overflow-hidden"
 					style={{
 						backgroundImage: `url(${my_count_background})`,
 						backgroundSize: "cover",
 						backgroundPosition: "center",
 						width: "70%",
-						height: "100px", // 적절한 높이 (필요에 따라 조정)
+						height: "100px", // 필요에 따라 조정
 					}}
 				>
-					<div className="flex flex-col items-center px-10 py-8 relative text-2xl">
-						<div className="flex flex-row max-w-sm">
-							<div className="mb-1">{recipientNickname}</div>님의
-							선물상자
-						</div>
+					{/* 배경 위에 텍스트를 중앙 정렬 */}
+					<div className="absolute inset-0 flex items-center justify-center">
+						<span className="text-xl text-center max-w-full truncate">
+							{recipientNickname}님의 선물상자
+						</span>
 					</div>
 				</div>
 
