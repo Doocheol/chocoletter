@@ -10,6 +10,10 @@ import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
 // 이미지 및 버튼 파일들
+import giftbox_before_1 from "../assets/images/giftbox/giftbox_before_1.svg";
+import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
+import giftbox_before_3 from "../assets/images/giftbox/giftbox_before_3.svg";
+import giftbox_before_4 from "../assets/images/giftbox/giftbox_before_4.svg";
 import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
 // 선물상자 배경 이미지를 background-image로 사용
@@ -23,6 +27,15 @@ import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
+
+// giftBoxType에 따른 이미지 매핑
+const giftboxImages: { [key: number]: string } = {
+	1: giftbox_before_1,
+	2: giftbox_before_2,
+	3: giftbox_before_3,
+	4: giftbox_before_4,
+	5: giftbox_before_5,
+};
 
 const MainYourBeforeView: React.FC = () => {
 	const navigate = useNavigate();
@@ -50,6 +63,8 @@ const MainYourBeforeView: React.FC = () => {
 
 	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
+	// 새로 추가된 선물상자 타입 state (기본값 5)
+	const [giftBoxType, setGiftBoxType] = useState<number>(5);
 	const [isGiftBoxNameLoaded, setIsGiftBoxNameLoaded] =
 		useState<boolean>(false);
 
@@ -109,33 +124,43 @@ const MainYourBeforeView: React.FC = () => {
 	const shouldShowCountdown = today >= eventDate && today < whiteDay;
 	const [isCountdownOpen, setIsCountdownOpen] = useState(shouldShowCountdown);
 
-	// giftBoxId가 있을 경우, 상대방 이름을 조회하여 설정합니다.
+	// giftBoxId가 있을 경우, 상대방 선물상자 정보 조회 (이제 name과 type을 받아옴)
 	useEffect(() => {
 		if (giftBoxId) {
-			getGiftBoxName(giftBoxId).then((name) => {
-				// API에서 반환한 값이 유효한지 확인 (공백이나 빈 값이면 false)
-				const validName =
-					name && name.trim() !== "" ? name.trim() : null;
+			getGiftBoxName(giftBoxId)
+				.then((data) => {
+					// data의 타입은 { name: string, type: number }라고 가정
+					const { name, type } = data;
+					const validName =
+						name && name.trim() !== "" ? name.trim() : null;
 
-				if (validName) {
-					setRecipientNickname(validName);
-					localStorage.setItem("giftBoxName", validName);
-				} else {
-					// 로컬에 저장된 값이 있는지 확인
-					const storedName = localStorage.getItem("giftBoxName");
-					if (storedName && storedName.trim() !== "") {
-						setRecipientNickname(storedName.trim());
+					if (validName) {
+						setRecipientNickname(validName);
+						localStorage.setItem("giftBoxName", validName);
 					} else {
-						setRecipientNickname(DEFAULT_GIFTBOX_NAME);
-						localStorage.setItem(
-							"giftBoxName",
-							DEFAULT_GIFTBOX_NAME
-						);
+						const storedName = localStorage.getItem("giftBoxName");
+						if (storedName && storedName.trim() !== "") {
+							setRecipientNickname(storedName.trim());
+						} else {
+							setRecipientNickname(DEFAULT_GIFTBOX_NAME);
+							localStorage.setItem(
+								"giftBoxName",
+								DEFAULT_GIFTBOX_NAME
+							);
+						}
 					}
-				}
-				// API 호출이 끝나면 렌더링 flag를 true로 전환
-				setIsGiftBoxNameLoaded(true);
-			});
+					// type 값에 따라 선물상자 타입 state 업데이트 (유효한 값인지 확인)
+					if (type >= 1 && type <= 5) {
+						setGiftBoxType(type);
+					} else {
+						setGiftBoxType(5);
+					}
+					setIsGiftBoxNameLoaded(true);
+				})
+				.catch((error) => {
+					console.error("선물상자 정보 조회 에러:", error);
+					setIsGiftBoxNameLoaded(true);
+				});
 		} else {
 			// giftBoxId가 없으면 기본값 사용
 			setRecipientNickname(DEFAULT_GIFTBOX_NAME);
@@ -182,9 +207,10 @@ const MainYourBeforeView: React.FC = () => {
 				</div>
 
 				<div className="flex flex-col items-center pl-10 mb-6">
+					{/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
 					<img
-						src={giftbox_before_5}
-						alt="giftbox_before_5"
+						src={giftboxImages[giftBoxType]}
+						alt={`giftbox_before_${giftBoxType}`}
 						className="p-2 max-h-60"
 					/>
 				</div>

@@ -64,6 +64,7 @@ const KakaoLoginCallback: React.FC = () => {
 			if (redirectPath) {
 				navigate(redirectPath);
 				localStorage.removeItem("redirect");
+				return;
 			}
 
 			if (isFirstLogin) {
