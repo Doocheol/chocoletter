@@ -10,10 +10,10 @@ import bg_choco_button from '../../../assets/images/giftbox/bg_choco_button.svg'
 import {UnboxingTimeSticker} from "../UnboxingTimeSticker"
 import { toast } from "react-toastify";
 
-const generalImages = import.meta.glob("../../../assets/images/chocolate/general/*.png", {
+const generalImages = import.meta.glob("../../../assets/images/chocolate/general/*.svg", {
   eager: true,
 });
-const specialImages = import.meta.glob("../../../assets/images/chocolate/special/*.png", {
+const specialImages = import.meta.glob("../../../assets/images/chocolate/special/*.svg", {
   eager: true,
 });
 const generalChocos = Object.values(generalImages).map(
@@ -22,16 +22,6 @@ const generalChocos = Object.values(generalImages).map(
 const specialChocos = Object.values(specialImages).map(
   (module) => (module as { default: string }).default
 );
-
-// 더미 데이터
-const giftData = [
-    { nickName: "Amy", content: "Why", question: "wow", answer: "sad" },
-    { nickName: "Temmy", content: "하이", question: "null", answer: "null" },
-    { nickName: "Poty", content: "null", question: "when", answer: "where" },
-    { nickName: "Yumi", content: "thankyou", question: "wow", answer: "sad" },
-    { nickName: "Posty", content: "qwer", question: "asdf", answer: "zxcv" },
-    { nickName: "chicky", content: "null", question: "I do", answer: "Do I?" },
-];
 
 interface GiftOpenButtonProps {
     giftId: string;
@@ -140,7 +130,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         <div className="relative w-[100px] h-full aspect-square rounded-lg flex items-center justify-center">
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
-            <div className="[&>button>img]:w-[55%] [&>button>img]:h-[55%] [&>button>img]:hover:scale-110">
+            <div className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${isRTC || isNonOpen ? "[&>button>img]:scale-125" : "[&>button>img]:hover:scale-125"}`}>
                 <ImageButton src={buttonImage} onClick={giftOpenButtonClickHandler} className="absolute inset-0 w-full h-full aspect-square rounded-xl flex items-center justify-center z-10 bg-no-repeat" />
             </div>
             <img src={bg_choco_button} alt="버튼 배경" className="absolute inset-0 w-full h-full pointer-events-none" />
