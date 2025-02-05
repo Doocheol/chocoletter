@@ -39,8 +39,8 @@ const ChatRoomView = () => {
     
     const location = useLocation();
     const sender = location.state?.nickName // ✅ 추후 수정
-    const roomId = "qP-G0hxQdZYaob4pk-lHvA"
-    // const { roomId } = useParams()
+    // const roomId = "qP-G0hxQdZYaob4pk-lHvA"
+    const { roomId } = useParams()
     // const parsedRoomId = parseInt(roomId ?? "0", 10)
     const [letter, setLetter] = useState<LetterData | null>(null);
     
@@ -103,25 +103,7 @@ const ChatRoomView = () => {
         };
         fetchLetter();
     }, [roomId]);
-    
-    // // 더미데이터
-    // const Letters = [
-    //     {
-    //         nickName: "예슬", 
-    //         content: "내가 누구게 ?????",
-    //         question: null,
-    //         answer: null
-    //     },
-        
-    //     {
-    //         nickName: "준희",
-    //         content: null,
-    //         question: "우리 둘이 함께했던 장소 중에서 가장 기억에 남는 곳은 어디야?",
-    //         answer: "롯데타워"
-    //     }
-    // ]
 
-    // const ReceivedData = Letters.find(letter => letter.nickName === sender);
 
     ///////////////////////////////////////////// 채팅방 관련 코드
     ///////////////////////////////////////////// 나중에 파일 따로 빼기
@@ -292,9 +274,7 @@ const ChatRoomView = () => {
         }
     };
         
-    // 웹소켓 연결 및 이전메세지 불러오기 ✅수정하기 : 엑세스 토큰 삭제
-    // const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImlhdCI6MTczODI3OTk3MSwiZXhwIjoxNzM4ODg0NzcxfQ.i7E3fDn9tkwcJBQQCIy0y8Ev6dyfCICx79QBxJol4I0"
-    // const accessToken="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNiIsImlhdCI6MTczODU2MjAwMCwiZXhwIjoxNzM5MTY2ODAwfQ.wQEuDAkxizGW-_W2QdTp4Ypy8OERnMQPRUQGZAhcGzI"
+    // 웹소켓 연결 및 이전메세지 불러오기
     useEffect(() => {
         if (!stompClient.current || !stompClient.current.connected) {
             connect();
