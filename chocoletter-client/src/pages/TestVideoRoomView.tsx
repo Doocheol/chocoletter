@@ -57,7 +57,6 @@ const TestVideoRoomView = () => {
     const username = useRecoilValue(userNameAtom);
     const [user, setUser] = useState(() => getUserInfo());
     const [unboxingTime, setUnboxingTime] = useState(undefined);
-    const [startCountdown, setStartCountdown] = useState(false);
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
@@ -97,7 +96,7 @@ const TestVideoRoomView = () => {
     //     };
 
     //     checkAuth();
-    // }, [isLogin, navigate, sessionIdInit, user?.giftBoxId]);
+    // }, []);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
@@ -119,36 +118,20 @@ const TestVideoRoomView = () => {
     };
 
     //////////////////////////////////////////////////////////////////
-    // session 생성 후 이벤트 리스너 등록
-    useEffect(() => {
-        if (!videoState.session) return;
-
-        const signalHandler = (event: any) => {
-            if (event.data === "startCountdown" && event.type === "startCountdown") {
-                setStartCountdown(true);
-            }
-        };
-
-        videoState.session.on("signal:startCountdown", signalHandler);
-
-        return () => {
-            videoState.session?.off("signal:startCountdown", signalHandler);
-        };
-    }, [videoState.session]);
-    
     // 내 영상 publishAudio 활성화
     useEffect(() => {
-        if (!isItThere || !startCountdown || !videoState.publisher) return;
+        if (!isItThere) return;
         setCountFive(true);
         const timer = setTimeout(() => {
-            videoState.publisher?.publishAudio(true);
             console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& videoState.publisher");
+            videoState.publisher?.publishAudio(true);
+            console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& after.publisher");
             console.log("publish do");
             setCountFive(false);
         }, 5000);
 
         return () => clearTimeout(timer);       
-    }, [isItThere, startCountdown, videoState.publisher]);
+    }, [isItThere])
 
     // 1분 타이머 지나면 방 폭파
     useEffect(() => {
@@ -205,7 +188,7 @@ const TestVideoRoomView = () => {
                 )}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-06T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
+                        <WaitingTest unboxing="2025-02-04T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
                     </div>
                 )}
                 <LetterInVideoModal
