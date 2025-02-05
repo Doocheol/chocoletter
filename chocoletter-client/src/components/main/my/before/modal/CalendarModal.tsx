@@ -176,11 +176,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     >
       <div className="flex flex-col w-full">
         {/* ChatRoomListView 스타일 헤더 */}
-        <div className="w-full h-[58px] px-4 py-[17px] bg-chocoletterLetterBgPink rounded-xl border- flex items-center justify-between">
+        <div className="w-full h-[58px] px-4 py-[17px] bg-chocoletterLetterBgBlue rounded-xl flex items-center justify-between">
           {/* 좌측: 뒤로가기 버튼 자리 (필요 시 추가) */}
           <div className="w-6 h-6"></div>
           {/* 중앙: 제목 */}
-          <div className="text-center text-nowrap text-black text-2xl font-bold">발렌타인데이 일정</div>
+          <div className="text-center text-nowrap text-black text-xl font-bold">발렌타인데이 일정</div>
           {/* 우측: 빈 공간 */}
           <div className="w-6 h-6"></div>
         </div>
@@ -235,7 +235,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                     </div>
                     
                     {/* 오른쪽 아이콘 스타일 */}
-                    <div className={`w-2/5 h-[calc(100%-15px)] mb-[2px] bg-chocoletterPink flex items-center justify-center relative -ml-12 ${!isHidden ? "animate-slideWiggle" : ""} `} style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px"}}>
+                    <div className={`w-2/5 h-[calc(100%-15px)] mb-[2px] bg-chocoletterPurple flex items-center justify-center relative -ml-12 ${!isHidden ? "animate-slideWiggle" : ""} `} style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px"}}>
                       <img src={RTCchocolate} className="w-[60%] h-[60%]" />
                     </div>
                   </div>
