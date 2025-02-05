@@ -265,54 +265,58 @@ const MainMyBeforeView: React.FC = () => {
 							backgroundImage: `url(${my_count_background})`,
 							backgroundSize: "cover",
 							backgroundPosition: "center",
-							width: "75%",
-							height: "107px", // 적절한 높이 지정 (필요에 따라 조정)
+							width: "70%",
+							height: "100px", // 적절한 높이 지정 (필요에 따라 조정)
 						}}
 					>
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
-							<div className="flex flex-row">
-								<div className="text-2xl font-normal text-center text-gray-500">
+							<div className="flex flex-row w-full truncate">
+								<span className="text-xl font-normal text-center text-black truncate">
 									개봉 가능한&nbsp;
-								</div>
+								</span>
 								<object
 									data={choco_asset}
 									type="image/svg+xml"
-									className="w-7 h-7 my-1"
+									className="w-7 h-7"
 								>
 									<img
 										src={choco_asset}
 										alt="choco asset fallback"
 									/>
 								</object>
-
-								<div className="text-2xl font-normal text-center text-gray-200">
+								<span className="text-xl font-normal text-center text-gray-200 truncate">
 									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-								</div>
-								<div className="text-2xl font-normal text-center text-chocoletterPurple">
+								</span>
+								<span className="text-xl font-normal text-center text-chocoletterPurpleBold truncate">
 									{availableGifts}
-								</div>
-								<div className="text-2xl font-normal text-center text-gray-500">
+								</span>
+								<span className="text-xl font-normal text-center text-gray-500 truncate">
 									&nbsp;개
-								</div>
+								</span>
 							</div>
-							<div className="flex flex-row">
-								<div className="text-sm text-gray-300 text-center">
+							<div className="flex flex-row w-full truncate justify-center items-center">
+								<span className="text-sm text-gray-300 text-center truncate">
 									지금까지 받은&nbsp;
-								</div>
-								<img
-									src={choco_asset}
-									className="h-4 w-4"
-									alt="choco asset"
-								/>
-								<div className="text-sm text-gray-200 text-center">
+								</span>
+								<object
+									data={choco_asset}
+									type="image/svg+xml"
+									className="w-4 h-4 flex-shrink-0"
+								>
+									<img
+										src={choco_asset}
+										alt="choco asset fallback"
+									/>
+								</object>
+								<span className="text-sm text-gray-200 text-center truncate">
 									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-								</div>
-								<div className="text-sm text-center text-gray-400">
+								</span>
+								<span className="text-sm text-center text-gray-400 truncate">
 									{receivedGifts}
-								</div>
-								<div className="text-sm text-gray-300 text-center">
+								</span>
+								<span className="text-sm text-gray-300 text-center truncate">
 									&nbsp;개
-								</div>
+								</span>
 							</div>
 						</div>
 					</div>
