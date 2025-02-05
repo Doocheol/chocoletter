@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
+import { SingleLetterLimitModal } from "../components/common/SingleLetterLimitModal";
 import QuestionLetterForm from "../components/write-letter/QuestionLetterForm";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,6 +15,7 @@ const WriteQuestionLetterView = () => {
     const [letter, setLetter] = useRecoilState(questionLetterState);
     const { giftBoxId } = useParams();
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const resetLetterState = () => {
         setLetter({
@@ -27,7 +29,7 @@ const WriteQuestionLetterView = () => {
         resetLetterState(); // 상태 초기화
     };
 
-    const goSelectGiftView = () => {
+    const handleNextClick  = () => {
         if (letter.nickname.length < 1) {
             toast.error("닉네임은 최소 1글자 이상 입력해야 합니다!", {
             position: "top-center",
@@ -44,36 +46,47 @@ const WriteQuestionLetterView = () => {
             return;
         }
 
+        setIsModalOpen(true);
+    };
+
+    const handleSendLetter = () => {
+        setIsModalOpen(false);
         navigate(`/select-gift/${giftBoxId}`);
     };
 
     return (
         <div className="relative flex flex-col items-center h-screen bg-letter-blue-background">
-        <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" onClick={handleGoBack} />
+            <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" onClick={handleGoBack} />
 
-        <div className="absolute mt-[41px] m-4">
-            {/* 로고 이미지  */}
-            <div className="flex flex-col items-center mb-[30px]">
-            <img src={login_view_service_title} alt="login_view_service_title" className="" />
-            </div>
+            <div className="absolute mt-[41px] m-4">
+                {/* 로고 이미지  */}
+                <div className="flex flex-col items-center mb-[30px]">
+                    <img src={login_view_service_title} alt="login_view_service_title" className="" />
+                </div>
 
-            <div>
-            {/* QuestionLetterForm */}
-            <QuestionLetterForm />
+                <div>
+                    {/* QuestionLetterForm */}
+                    <QuestionLetterForm />
 
-            {/* 편지 작성 완료 버튼 - 초콜릿 선택 화면으로 이동 */}
-            <div className="relatvie text-center">
-                <Button
-                onClick={goSelectGiftView}
-                className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold"
-                >
-                <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">
-                    다음으로
-                </p>
-                </Button>
+                    {/* 편지 작성 완료 버튼 - 모달 열기 */}
+                    <div className="relatvie text-center">
+                        <Button
+                            onClick={handleNextClick}
+                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold"
+                        >
+                            <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">
+                                다음으로
+                            </p>
+                        </Button>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
+            {/* 편지 제한 모달 */}
+            <SingleLetterLimitModal
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onSend={handleSendLetter} // 보내기 버튼 클릭 시 동작
+            />
         </div>
     );
 };

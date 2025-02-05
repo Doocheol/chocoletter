@@ -88,7 +88,7 @@ const QuestionLetterForm: React.FC = () => {
                 />
             </div>
             {/* 질문 */}
-            <div className="flex flex-raw justify-center items-center gap-[10px]">
+            <div className="flex flex-raw justify-center items-center gap-[5px]">
                 <div className="flex w-[260px] h-[70px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white">
                     <img src={question_icon} alt="login_view_service_title" className="" />
                     <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{letter.question ? letter.question : "질문을 불러오는 중입니다..."}</h1>

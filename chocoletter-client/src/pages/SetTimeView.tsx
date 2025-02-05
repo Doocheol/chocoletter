@@ -218,8 +218,8 @@ const SetTimeView = () => {
                     화상통화로 연결될 시간을 선택해 주세요! 😊<br/>
                 </p>
                 <p className="text-center text-[12px] leading-[22px] text-gray-500 tracking-[-0.408px]">
-                    혹시 상대방이 시간을 거절하더라도 걱정하지 마세요. <br/>
-                    편지는 안전하게 상대방에게 전달됩니다.. <br/>
+                    혹시 상대방이 시간을 거절하더라도 걱정하지 마세요! <br/>
+                    편지는 안전하게 상대방에게 전달됩니다.<br/>
                 </p>
             </div>
 
