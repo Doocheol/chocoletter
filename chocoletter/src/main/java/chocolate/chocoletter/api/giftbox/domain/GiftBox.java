@@ -35,7 +35,7 @@ public class GiftBox extends BaseTimeEntity {
     public GiftBox(Member member) {
         this.member = member;
         this.giftCount = 0;
-        this.generalGiftCount = 0;
+        this.generalGiftCount = 2;
         this.type = 1; // 디폴트 1로 하기로 정함
     }
 
