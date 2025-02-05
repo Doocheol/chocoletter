@@ -10,6 +10,9 @@ import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftAp
 import readLetterIcon from "../assets/images/letter/letter_icon.svg"
 import { BsEnvelopeHeart, BsEnvelopeOpenHeart } from "react-icons/bs";
 import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
+import { ImageButton } from "../components/common/ImageButton";
+import special_gift_button from "../assets/images/button/special_gift_button.svg";
+import general_gift_button from "../assets/images/button/general_gift_button.svg";
 
 
 function SelectGiftTypeView() {
@@ -98,10 +101,10 @@ function SelectGiftTypeView() {
                                 같이 개봉하실래요?
                             </p>
                         </div>                        
-                        <p className="self-stretch font-[Pretendard] text-[13px] leading-[140%]">
+                        <p className="self-stretch text-[13px] leading-[140%]">
                             같이 개봉하는 경우 지정된 시간에 
-                            편지를 전해드리고, 
-                            화면 너머로 
+                            편지를 전해드리고, <br/>
+                            화면 너머로
                             따스한 마음을 나눌 수 있습니다.
                         </p>
                         {/* JSON 형태로 전체 상태 보기 */}
@@ -110,7 +113,19 @@ function SelectGiftTypeView() {
                             <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
                             </div> */}
                     </div>
-                    <Button
+                    <div className="flex flex-col items-center gap-[15px]">
+                        <ImageButton
+                                onClick={handleAccept}
+                                src={special_gift_button}
+                                // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+                        />
+                        <ImageButton
+                            onClick={handleReject}
+                            src={general_gift_button}
+                            // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+                        />
+                    </div>
+                    {/* <Button
                         onClick={handleAccept}
                         className="w-[305px] h-p-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 
                     >
@@ -120,8 +135,8 @@ function SelectGiftTypeView() {
                                 와, 정말 기대돼요! <br/> 2월 14일에 함께 열어봐요.
                             </p>
                         </div>
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                         onClick={handleReject}
                         className="w-[305px] h-p-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 
                     >
@@ -131,7 +146,7 @@ function SelectGiftTypeView() {
                                 아니요 괜찮아요. <br/> 마음만 전할래요.
                             </p>
                         </div>
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
         </div>

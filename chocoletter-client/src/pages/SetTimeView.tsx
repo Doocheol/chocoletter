@@ -14,7 +14,11 @@ import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftAp
 import { getUnboxingSchedule, sendUnboxingTime } from "../services/unboxingApi";
 import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
 import { ToastContainer } from "react-toastify";
-
+import set_time_box_white from "../assets/images/letter/set_time_box_white.svg";
+import set_time_box_gray from "../assets/images/letter/set_time_box_gray.svg";
+import { ImageButton } from "../components/common/ImageButton";
+import set_time_purple_button from "../assets/images/button/set_time_purple_button.svg";
+import set_time_gray_button from "../assets/images/button/set_time_gray_button.svg";
 // 1. 이미 있는 일정 못선택하게 하기
 // 2. 질문 있냐 없냐에 따라 api post ⭕
 // 3. 초대장 요청
@@ -208,11 +212,14 @@ const SetTimeView = () => {
             </div>
 
             {/* 화면 문구 */}
-            <div className="mt-24 flex w-[284px] px-[16px] py-[10px] justify-center items-center gap-[10px] rounded-[11px] bg-white">
-                <p className="text-center font-sans text-[15px] leading-[22px] tracking-[-0.408px]">
-                    함께 설렘을 나눌 수 있는 시간이에요. <br />
-                    2월 14일, 당신만을 위한 특별한 날에<br />
-                    원하시는 시각을 설정해 주세요!😊
+            <div className="mt-24 flex flex-col w-[284px] px-[16px] py-[10px] justify-center items-center gap-[10px] rounded-[11px] bg-white">
+                <p className="text-center text-[15px] leading-[22px] tracking-[-0.408px]">
+                    2월 14일, 설렘 가득한 순간을 함께하세요. <br/>
+                    화상통화로 연결될 시간을 선택해 주세요! 😊<br/>
+                </p>
+                <p className="text-center text-[12px] leading-[22px] text-gray-500 tracking-[-0.408px]">
+                    혹시 상대방이 시간을 거절하더라도 걱정하지 마세요! <br/>
+                    편지는 안전하게 상대방에게 전달됩니다.<br/>
                 </p>
             </div>
 
@@ -224,13 +231,12 @@ const SetTimeView = () => {
             
             {/* 시간 선택 다이얼 */}
             {/* TODO : mt-[78px] */}
-            <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[78px] gap-[10px] ">
+            <div className="relative w-[252px] h-[252px] flex flex-row items-center mt-[58px] gap-[10px] ">
                 {/* 박스 색상 변경 */}
-                <div
-                    className={`absolute z-10 w-[252px] h-[80px] rounded-[10px] border border-black ${
-                        isDisabled ? "bg-gray-300" : "bg-white"
-                    }`}
-                ></div>
+                <div className="absolute z-10 w-[252px] h-[80px]">
+                    <img src={isDisabled ? set_time_box_gray : set_time_box_white} alt="" />
+                </div>
+
 
                 {/* 시간 선택 다이얼 */}
                 <div className="relative z-20 flex flex-row items-center justify-center gap-[10px]">
@@ -244,12 +250,18 @@ const SetTimeView = () => {
 
             {/* 초콜릿 보내기 */}
             <div className="mt-[50px]">
-                <Button 
+                <ImageButton
+                    onClick={!isDisabled ? saveHandler : undefined}
+                    src={isDisabled ? set_time_gray_button : set_time_purple_button}
+                    className={`${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`} 
+                    // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+                />
+                {/* <Button 
                     onClick={saveHandler}
                     className="flex w-[186px] h-[56px] justify-center items-center gap-[8px] shrink-0 rounded-[15px] border border-black bg-chocoletterPurpleBold text-white"
                 >
                     <span className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">초콜릿 보내기 📮</span>
-                </Button>
+                </Button> */}
             </div>
         </div>
 	);
