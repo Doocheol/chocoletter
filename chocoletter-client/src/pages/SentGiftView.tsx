@@ -77,7 +77,7 @@ const SentGiftView = () => {
           {/* <Button onClick={goBackMainMyBefore} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
             내 초콜릿 상자로 이동하기
           </Button> */}
-          <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#b29ce4] text-sm text-white">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
+          <div className="w-[250px] p-[5px_15px] rounded-[18px] bg-[#b29ce4] text-sm text-cholo">{remainTime}초 후, 내 초콜릿 상자로 이동합니다.</div>
         </div>
       </div>
     </div>
