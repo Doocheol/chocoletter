@@ -15,7 +15,7 @@ import { Client, Stomp } from "@stomp/stompjs";
 import { changeKSTDate } from "../utils/changeKSTDate";
 import useViewportHeight from "../hooks/useViewportHeight";
 import { MdRecommend } from "react-icons/md";
-
+import { getLetterInchat } from "../services/chatApi";
 
 interface MessageType {
     messageType: string;
@@ -26,14 +26,23 @@ interface MessageType {
     isRead: boolean;
 }
 
+interface LetterData {
+    type: "FREE" | "QUESTION";
+    nickName: string;
+    content: string;
+    question: string;
+    answer: string;
+}
+
 const ChatRoomView = () => {
     useViewportHeight();
     
     const location = useLocation();
-    const sender = location.state?.nickName ?? "예슬"; // ✅ 추후 수정
-    // const roomId = location.state?.roomId;
-    const { roomId } = useParams()
+    const sender = location.state?.nickName // ✅ 추후 수정
+    const roomId = "qP-G0hxQdZYaob4pk-lHvA"
+    // const { roomId } = useParams()
     // const parsedRoomId = parseInt(roomId ?? "0", 10)
+    const [letter, setLetter] = useState<LetterData | null>(null);
     
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
@@ -51,14 +60,15 @@ const ChatRoomView = () => {
     const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
 
+    
     // 키보드 사용시 입력창 높이 조정
     useEffect(() => {
         const handleResize = () => {
             const fullHeight = window.innerHeight; //Android에서 사용할 기본 화면 높이
             const viewportHeight = window.visualViewport?.height || fullHeight; //iOS에서는 visualViewport 사용
-
+            
             const keyboardSize = fullHeight - viewportHeight;
-
+            
             if (keyboardSize > 100) {
                 setKeyboardHeight(keyboardSize); //키보드가 차지하는 높이 설정
                 setIsKeyboardOpen(true);
@@ -67,34 +77,51 @@ const ChatRoomView = () => {
                 setIsKeyboardOpen(false);
             }
         };
-
+        
         window.addEventListener("resize", handleResize);
         handleResize();
-
+        
         return () => {
             window.removeEventListener("resize", handleResize);
         };
     }, []);
+    
 
-    // ✅TODO : 편지 데이터 get
-    // 더미데이터
-    const Letters = [
-        {
-            nickName: "예슬", 
-            content: "내가 누구게 ?????",
-            question: null,
-            answer: null
-        },
+    // 편지 불러오기 
+    useEffect(() => {
+        const fetchLetter = async () => {
+            try {
+                if (!roomId) {
+                return;
+                }
+                const data = await getLetterInchat(roomId);
+                console.log("편지 내용 : ", data)
+                setLetter(data);
+            } catch (error) {
+                console.error("편지지 불러오기 실패!", error);
+            } 
+        };
+        fetchLetter();
+    }, [roomId]);
+    
+    // // 더미데이터
+    // const Letters = [
+    //     {
+    //         nickName: "예슬", 
+    //         content: "내가 누구게 ?????",
+    //         question: null,
+    //         answer: null
+    //     },
         
-        {
-            nickName: "준희",
-            content: null,
-            question: "우리 둘이 함께했던 장소 중에서 가장 기억에 남는 곳은 어디야?",
-            answer: "롯데타워"
-        }
-    ]
+    //     {
+    //         nickName: "준희",
+    //         content: null,
+    //         question: "우리 둘이 함께했던 장소 중에서 가장 기억에 남는 곳은 어디야?",
+    //         answer: "롯데타워"
+    //     }
+    // ]
 
-    const ReceivedData = Letters.find(letter => letter.nickName === sender);
+    // const ReceivedData = Letters.find(letter => letter.nickName === sender);
 
     ///////////////////////////////////////////// 채팅방 관련 코드
     ///////////////////////////////////////////// 나중에 파일 따로 빼기
@@ -294,13 +321,14 @@ const ChatRoomView = () => {
     return (
         // TODO : 스타일 추후에 파일 따로 빼기
         <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
+            {/* 편지 모달 */}
             <LetterInChatModal
                 isOpen={isOpenLetter}
                 onClose={() => setIsOpenLetter(false)}
-                nickName={sender}
-                content={ReceivedData?.content ?? ""} 
-                question={ReceivedData?.question ?? ""}
-                answer={ReceivedData?.answer ?? ""}
+                nickName={letter?.nickName}
+                content={letter?.content ?? ""} 
+                question={letter?.question ?? ""}
+                answer={letter?.answer ?? ""}
             />
             {/* 상단바 */}
             <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
