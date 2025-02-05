@@ -1,6 +1,5 @@
 import api from "./api";
 
-// const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzM4MjMwMjY2LCJleHAiOjE3Mzg4MzUwNjZ9.BCOFNjcRsaIBTDr_4ksQ1UHu2kprGvgTb-SNZ7Hjjd4' // 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImlhdCI6MTczODI3OTk3MSwiZXhwIjoxNzM4ODg0NzcxfQ.i7E3fDn9tkwcJBQQCIy0y8Ev6dyfCICx79QBxJol4I0'
 // 선물 정보 가져오기
 export async function getGiftDetail(giftId: string) {
   try {
