@@ -18,7 +18,7 @@ const getAlarmMessage = (alarm: Alarm): string => {
 		case "RECEIVE_SPECIAL":
 			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다.`;
 		case "UNBOXING_NOTICE":
-			return `입장 30분 전! ${alarm.partnerName}님과의 영상 통화 예정입니다.`;
+			return `입장 30분 전! ${alarm.partnerName}님과의 영상통화 예정입니다.`;
 		default:
 			return "";
 	}

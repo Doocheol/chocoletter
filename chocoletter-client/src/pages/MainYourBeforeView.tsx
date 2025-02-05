@@ -201,7 +201,7 @@ const MainYourBeforeView: React.FC = () => {
 					{/* 배경 위에 텍스트를 중앙 정렬 */}
 					<div className="absolute inset-0 flex items-center justify-center">
 						<span className="text-2xl text-center max-w-full truncate">
-							{recipientNickname}님의 선물상자
+							{recipientNickname} 님의 선물상자
 						</span>
 					</div>
 				</div>
