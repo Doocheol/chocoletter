@@ -16,7 +16,7 @@ const getAlarmMessage = (alarm: Alarm): string => {
 		case "REJECT_SPECIAL":
 			return `${alarm.partnerName}님께 보낸 특별 초콜릿이 거절되었습니다.`;
 		case "RECEIVE_SPECIAL":
-			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다.`;
+			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다. 일정 수락하시겠어요?`;
 		case "UNBOXING_NOTICE":
 			return `입장 30분 전! ${alarm.partnerName}님과의 영상통화 예정입니다.`;
 		default:
@@ -162,9 +162,12 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 						</p>
 					) : (
 						alarms.map((alarm) => {
-							// unBoxingTime이 있을 경우 ISO 문자열을 파싱하여 시간 표시
+							// unBoxingTime이 있을 경우 ISO 문자열이 비어있지 않은지 확인 후 파싱
 							let formattedTime = "";
-							if (alarm.unBoxingTime) {
+							if (
+								alarm.unBoxingTime &&
+								alarm.unBoxingTime.trim() !== ""
+							) {
 								const { time, meridiem } = formatTimeParts(
 									alarm.unBoxingTime
 								);
@@ -174,8 +177,10 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 							return (
 								<div
 									key={alarm.alarmId}
+									// alarm.read가 true이고, 단 RECEIVE_SPECIAL이 아닌 경우에만 비활성화 스타일 적용
 									className={`flex h-[71px] px-[20px] py-[10px] justify-between items-center rounded-[15px] border border-black shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer ${
-										alarm.read
+										alarm.read &&
+										alarm.alarmType !== "RECEIVE_SPECIAL"
 											? "active:opacity-80 transition opacity-40 pointer-events-none grayscale"
 											: "bg-white"
 									}`}
@@ -194,7 +199,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 											</p>
 										)}
 									</div>
-									{/* 오른쪽: RECEIVE_SPECIAL 알림일 경우 'OK' 버튼 표시 */}
+									{/* 오른쪽: RECEIVE_SPECIAL 알림일 경우 '확인' 버튼 표시 */}
 									{alarm.alarmType === "RECEIVE_SPECIAL" && (
 										<button
 											onClick={(e) => {

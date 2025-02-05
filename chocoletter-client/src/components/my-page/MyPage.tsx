@@ -145,7 +145,6 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 				</div>
 
 				{/* 로그아웃 버튼 */}
-				<KakaoLoginButton />
 				<button
 					onClick={handleLogout}
 					className="w-full flex items-center justify-center py-2 bg-chocoletterPurpleBold hover:bg-chocoletterPurple text-white rounded-xl border border-black"

@@ -195,7 +195,7 @@ const MainYourBeforeView: React.FC = () => {
 						backgroundSize: "cover",
 						backgroundPosition: "center",
 						width: "70%",
-						height: "100px", // 필요에 따라 조정
+						height: "98px", // 필요에 따라 조정
 					}}
 				>
 					{/* 배경 위에 텍스트를 중앙 정렬 */}

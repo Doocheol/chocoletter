@@ -266,7 +266,7 @@ const MainMyBeforeView: React.FC = () => {
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							width: "70%",
-							height: "100px", // 적절한 높이 지정 (필요에 따라 조정)
+							height: "98px", // 적절한 높이 지정 (필요에 따라 조정)
 						}}
 					>
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
