@@ -19,15 +19,6 @@ interface ChatRoom {
 const ChatRoomListView = () => { 
     useViewportHeight();
     
-    // 더미 데이터
-    const dummyChatRooms = [
-        { roomId: '9997', nickName: "예슬" },
-        { roomId: '9998', nickName: "준희"},
-        { roomId: '9999', nickName: "두철" },
-        { roomId: '10000', nickName: "훈서"},
-        { roomId: '10001', nickName: "한송"},
-    ];    
-
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const memberId = useRecoilValue(memberIdAtom);
@@ -49,8 +40,7 @@ const ChatRoomListView = () => {
                 console.log("채팅방 목록 : ",data)
                 setChatRooms(data.chatRooms);
             } catch (error) {
-                console.error("채팅방 목록 불러오기 실패! 더미 데이터 사용.", error);
-                setChatRooms(dummyChatRooms)
+                console.error("채팅방 목록 불러오기 실패!", error);
             } finally {
                 setIsLoading(false);
             }
@@ -78,6 +68,7 @@ const ChatRoomListView = () => {
                                 withCredentials: true,
                             }) 
                             console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 성공!`);
+                            console.log('받아온 데이터 : ', response.data)
                             console.log(`안읽은 메세지 : ${response.data?.unreadCount}`)
                             return {
                                 ...room,
