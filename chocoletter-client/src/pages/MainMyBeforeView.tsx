@@ -274,11 +274,17 @@ const MainMyBeforeView: React.FC = () => {
 								<div className="text-2xl font-normal text-center text-gray-500">
 									개봉 가능한&nbsp;
 								</div>
-								<img
-									src={choco_asset}
+								<object
+									data={choco_asset}
+									type="image/svg+xml"
 									className="w-7 h-7 my-1"
-									alt="choco asset"
-								/>
+								>
+									<img
+										src={choco_asset}
+										alt="choco asset fallback"
+									/>
+								</object>
+
 								<div className="text-2xl font-normal text-center text-gray-200">
 									&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 								</div>
