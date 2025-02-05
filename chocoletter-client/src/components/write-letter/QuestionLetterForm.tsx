@@ -34,9 +34,9 @@ const QuestionLetterForm: React.FC = () => {
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
-        if (value.length > 200) {
+        if (value.length > 150) {
             if (!toast.isActive(answerToastId)) {
-                    toast.warn("200글자 이하로 작성해주세요!", {
+                    toast.warn("150글자 이하로 작성해주세요!", {
                     toastId: answerToastId,
                     position: "top-center",
                     autoClose: 2000,
@@ -44,8 +44,8 @@ const QuestionLetterForm: React.FC = () => {
             }
             setLetter((prev) => ({
                 ...prev,
-                answer: value.substring(0, 200),
-                answerLength: 200,
+                answer: value.substring(0, 150),
+                answerLength: 150,
             }));
         } else {
             setLetter((prev) => ({
@@ -75,26 +75,29 @@ const QuestionLetterForm: React.FC = () => {
     return (
         <div className="flex flex-col justify-center items-center mb-[20px] gap-[20px]">
             {/* 닉네임 */}
-            <div className="relative flex flex-raw justify-center items-center gap-[11px] w-[316px]">
+            <div className="relative flex flex-raw justify-center items-center gap-[11px]">
                 <p>닉네임</p>
                 <input
                     type="text"
                     value={letter.nickname}
-                    className="flex min-w-[230px] max-w-[329px] p-2 items-center gap-2 rounded-[15px] border border-black bg-white flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]"
+                    className="flex w-[270px] p-2 items-center gap-2 rounded-[15px] border border-black bg-white flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px] outline-none focus:ring-0"
                     onChange={handleNicknameChange}
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "닉네임을 필수로 입력해주세요")}
                     placeholder="닉네임을 필수로 입력해주세요"
                 />
             </div>
             {/* 질문 */}
             <div className="flex flex-raw justify-center items-center gap-[10px]">
-                <div className="flex min-w-[230px] max-w-[329px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white">
+                <div className="flex w-[260px] h-[70px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white">
                     <img src={question_icon} alt="login_view_service_title" className="" />
-                    <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{letter.question}</h1>
+                    <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{letter.question ? letter.question : "질문을 불러오는 중입니다..."}</h1>
                 </div>
                 <div className="relative z-50">
                     <ShuffleButton
                         altText="질문 섞기 버튼"
                         onShuffleClick={onShuffleQuestion}
+                        className="border border-black h-[70px] rounded-[12px]"
                      />
                 </div>
             </div>
@@ -102,11 +105,13 @@ const QuestionLetterForm: React.FC = () => {
             <div className="relative">
                 <textarea
                     value={letter.answer}
-                    className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-solid border-black bg-white flex-1 text-[#151517] text-center font-sans text-[18px] leading-[27px] tracking-[-0.408px]"
+                    className="flex w-[330px] min-h-[250px] p-[10px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-solid border-black bg-white flex-1 text-[#151517] text-center font-sans text-[18px] leading-[27px] tracking-[-0.408px] outline-none focus:ring-0"
                     onChange={handleAnswerChange}
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "메세지를 작성해보세요(최소 10자)")}
                     placeholder="메세지를 작성해보세요(최소 10자)"
                 />
-                <span className="absolute right-[10px] bottom-[10px] text-gray-400">{letter.answerLength}/200</span>
+                <span className="absolute right-[10px] bottom-[10px] text-gray-400">{letter.answerLength}/150</span>
             </div>
         </div>       
     );
