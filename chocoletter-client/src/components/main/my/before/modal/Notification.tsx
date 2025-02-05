@@ -86,9 +86,9 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 	}, [onClose, selectedAlarm]);
 
 	useEffect(() => {
-		if (isOpen) {
-			fetchAlarms();
-		}
+		if (!isOpen) return;
+
+		fetchAlarms();
 	}, [isOpen]);
 
 	// RECEIVE_SPECIAL 알림 클릭 시 처리 모달 표시
