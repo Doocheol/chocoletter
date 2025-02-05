@@ -14,9 +14,8 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
         const openAnnounce = async () => {
                 setComment(
                     <div>
-                        <p>특별 초콜릿은</p>
-                        <p><span className="text-yellow-500">2월 14일 약속한 시간</span>에만</p>
-                        <p>열 수 있어요!</p>
+                        <p><span className="text-yellow-500">2월 14일, 약속한 시간</span>에</p>
+                        <p>특별 초콜릿을 열 수 있어요!</p>
                     </div>
                 );
         }
