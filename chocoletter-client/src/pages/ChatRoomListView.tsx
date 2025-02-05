@@ -19,15 +19,6 @@ interface ChatRoom {
 const ChatRoomListView = () => { 
     useViewportHeight();
     
-    // 더미 데이터
-    const dummyChatRooms = [
-        { roomId: '9997', nickName: "예슬" },
-        { roomId: '9998', nickName: "준희"},
-        { roomId: '9999', nickName: "두철" },
-        { roomId: '10000', nickName: "훈서"},
-        { roomId: '10001', nickName: "한송"},
-    ];    
-
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const memberId = useRecoilValue(memberIdAtom);
@@ -42,17 +33,18 @@ const ChatRoomListView = () => {
         //     return;
         // }
 
+        console.log('memberId : ', memberId)
+
         const loadChatRooms = async () => {
             setIsLoading(true);
             try {
                 const data = await getChatRooms();
                 console.log("채팅방 목록 : ",data)
-                setChatRooms(data.chatRooms);
+                setChatRooms(data.chatRooms); ///
             } catch (error) {
-                console.error("채팅방 목록 불러오기 실패! 더미 데이터 사용.", error);
-                setChatRooms(dummyChatRooms)
+                console.error("채팅방 목록 불러오기 실패!", error);
             } finally {
-                setIsLoading(false);
+                setIsLoading(false); ///
             }
         };
         loadChatRooms();
@@ -78,6 +70,7 @@ const ChatRoomListView = () => {
                                 withCredentials: true,
                             }) 
                             console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 성공!`);
+                            console.log('받아온 데이터 : ', response.data)
                             console.log(`안읽은 메세지 : ${response.data?.unreadCount}`)
                             return {
                                 ...room,
@@ -101,6 +94,87 @@ const ChatRoomListView = () => {
 
         loadLastMessages();
     }, [JSON.stringify(chatRooms)]); 
+
+
+
+
+    // 채팅방 목록 불러오기(최근 바뀐 방 위로 오게게)
+    // const loadChatRooms = async () => {
+    //     try {
+    //         setIsLoading(true);
+    //         const data = await getChatRooms();
+    //         const newChatRooms = data.chatRooms;
+    //         
+    //         // 안 읽은 메시지와 마지막 메시지 업데이트
+    //         const baseUrl = import.meta.env.VITE_CHAT_API_URL; 
+    //         const updatedRooms = await Promise.all(
+    //             newChatRooms.map(async (room: ChatRoom) => {
+    //                 try {
+    //                     const lastMessageResponse = await axios.get(
+    //                         `${baseUrl}/api/v1/chat/${room.roomId}/${memberId}/last`,
+    //                         {
+    //                             headers: {
+    //                                 Authorization: `Bearer ${userInfo?.accessToken}`,
+    //                             },
+    //                             withCredentials: true,
+    //                         }
+    //                     );
+    //                     console.log('받아온 데이터 : ', response.data)
+    //                     return {
+    //                         ...room,
+    //                         unreadCount: lastMessageResponse.data?.unreadCount || 0,
+    //                         lastMessage: lastMessageResponse.data?.lastMessage || "",
+    //                     };
+    //                 } catch (error) {
+    //                     console.error(`Error updating room ${room.roomId}`, error);
+    //                     return room; // 유지
+    //                 }
+    //             })
+    //         );
+
+    //         // 기존 목록과 비교하여 변경된 방을 상단으로
+    //         setChatRooms((prevRooms) => {
+        //     const updatedSet = new Set(updatedRooms.map((r) => r.roomId));
+            
+        //     // 이전 채팅방을 돌면서 변경된 것과 변경되지 않은 것 분리
+        //     const unchangedRooms = [];
+        //     const changedRooms = prevRooms.map((prevRoom) => {
+        //         const updatedRoom = updatedRooms.find((room) => room.roomId === prevRoom.roomId);
+                
+        //         if (updatedRoom) {
+        //             const isUnchanged = prevRoom.unreadCount === updatedRoom.unreadCount &&
+        //                                 prevRoom.lastMessage === updatedRoom.lastMessage;
+        //             if (isUnchanged) {
+        //                 unchangedRooms.push(prevRoom);
+        //                 return null;
+        //             }
+        //             return { ...prevRoom, unreadCount: updatedRoom.unreadCount, lastMessage: updatedRoom.lastMessage };
+        //         }
+        //         return prevRoom;
+        //     }).filter(Boolean);
+            
+        //     // 변경된 방과 새 방을 상단으로 배치, 변경되지 않은 방을 하단으로 배치
+        //     return [...updatedRooms.filter(room => !prevRooms.some(prev => prev.roomId === room.roomId)), ...changedRooms, ...unchangedRooms];
+        // });
+    //     } catch (error) {
+    //         console.error("채팅방 목록 불러오기 실패!", error);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
+    // 초기 로드 및 폴링
+    // useEffect(() => {
+    //     loadChatRooms(); // 초기 로드
+    //     const interval = setInterval(loadChatRooms, 60000); // 60초마다 호출
+
+    //     return () => clearInterval(interval); // 언마운트 시 폴링 중단
+    // }, [userInfo, memberId]);
+
+    // 새로고침
+    // const handleRefresh = () => {
+    //     loadChatRooms();
+    // };
     
     // 채팅방 입장
     const handleRoomClick = (room: ChatRoom) => {
