@@ -146,8 +146,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
 
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
-    if (dummySchedules.length === 0) return [];
-    return [...dummySchedules].sort((a, b) => {
+    if (schedules.length === 0) return [];
+    return [...schedules].sort((a, b) => {
       const nowKST = CurrentTime();
       const eventA = convertToEventDate(a.unBoxingTime, EventMMDD, "Asia/Seoul");
       const eventB = convertToEventDate(b.unBoxingTime, EventMMDD, "Asia/Seoul");
@@ -166,7 +166,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       // 3️⃣ 지난 일정 (isHidden === true) → 기존 시간 순서 유지 (오름차순 정렬)
       return timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime);
     });
-  }, [dummySchedules]); // 여기 수정하고 merge
+  }, [schedules]); // 여기 수정하고 merge
 
   return (
     <Modal
