@@ -51,7 +51,7 @@ const KakaoLoginButton: React.FC = () => {
 			>
 				<ImageButton
 					src={kakao_login_button_2}
-					className="opacity-80"
+					className="opacity-90"
 				/>
 			</a>
 

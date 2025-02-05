@@ -38,7 +38,7 @@ const KakaoLoginCallback: React.FC = () => {
 				removeUserInfo();
 				setIsLogin(false);
 				toast.error("다시 로그인해주세요!");
-				navigate("/");
+				// navigate("/");
 				return;
 			}
 
