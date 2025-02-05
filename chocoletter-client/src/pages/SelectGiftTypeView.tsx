@@ -113,16 +113,18 @@ function SelectGiftTypeView() {
                             <pre className="text-sm">{JSON.stringify(letter, null, 2)}</pre>
                             </div> */}
                     </div>
-                    <ImageButton
-                            onClick={handleAccept}
-                            src={special_gift_button}
+                    <div className="flex flex-col items-center gap-[15px]">
+                        <ImageButton
+                                onClick={handleAccept}
+                                src={special_gift_button}
+                                // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
+                        />
+                        <ImageButton
+                            onClick={handleReject}
+                            src={general_gift_button}
                             // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
                         />
-                    <ImageButton
-                        onClick={handleReject}
-                        src={general_gift_button}
-                        // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
-                    />
+                    </div>
                     {/* <Button
                         onClick={handleAccept}
                         className="w-[305px] h-p-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 

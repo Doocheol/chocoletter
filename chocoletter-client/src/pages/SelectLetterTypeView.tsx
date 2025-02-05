@@ -41,7 +41,7 @@ function SelectLetterTypeView() {
                         발렌타인데이, <br/>
                         마음을 전할 편지지를 선택하세요!💌
                     </h1>
-                    <div className="gap-[20px]">
+                    <div className="flex flex-col items-center gap-[20px]">
                         <ImageButton
                             onClick={handleAccept}
                             src={free_letter_button}
