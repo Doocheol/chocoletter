@@ -18,17 +18,15 @@ const getAlarmMessage = (alarm: Alarm): string => {
 		case "RECEIVE_SPECIAL":
 			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다.`;
 		case "UNBOXING_NOTICE":
-			return `입장 30분 전! ${alarm.partnerName}님과의 영상 통화 예정입니다.`;
+			return `입장 30분 전! ${alarm.partnerName}님과의 영상통화 예정입니다.`;
 		default:
 			return "";
 	}
 };
 
-// 시간 포맷팅 함수 (CalendarModal 코드 참조)
-const ChangeAmPm = (strTime: string): string => {
-	const [hour, minute] = strTime.split(":").map(Number);
-	const date = new Date();
-	date.setHours(hour, minute, 0, 0);
+// unBoxingTime이 ISO 형식(예: "2025-02-14T10:50")이므로, Date 객체로 파싱하여 시간 포맷팅
+const ChangeAmPm = (isoString: string): string => {
+	const date = new Date(isoString);
 	return new Intl.DateTimeFormat("en-US", {
 		hour: "numeric",
 		minute: "numeric",
@@ -38,8 +36,8 @@ const ChangeAmPm = (strTime: string): string => {
 };
 
 // ChangeAmPm 결과를 분리해서 시간과 meridiem을 반환하는 헬퍼 함수
-const formatTimeParts = (strTime: string) => {
-	const formatted = ChangeAmPm(strTime); // 예: "10:00 AM"
+const formatTimeParts = (isoString: string) => {
+	const formatted = ChangeAmPm(isoString); // 예: "10:00 AM"
 	const parts = formatted.split(" ");
 	return { time: parts[0], meridiem: parts[1] || "" };
 };
@@ -87,7 +85,6 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 
 	useEffect(() => {
 		if (!isOpen) return;
-
 		fetchAlarms();
 	}, [isOpen]);
 
@@ -165,7 +162,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 						</p>
 					) : (
 						alarms.map((alarm) => {
-							// format unBoxingTime (약속 시각)이 있을 경우
+							// unBoxingTime이 있을 경우 ISO 문자열을 파싱하여 시간 표시
 							let formattedTime = "";
 							if (alarm.unBoxingTime) {
 								const { time, meridiem } = formatTimeParts(
@@ -177,14 +174,13 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 							return (
 								<div
 									key={alarm.alarmId}
-									// read 여부에 따라 배경색이 달라지도록 조건부 클래스 적용
 									className={`flex h-[71px] px-[20px] py-[10px] justify-between items-center rounded-[15px] border border-black shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] cursor-pointer ${
 										alarm.read
 											? "active:opacity-80 transition opacity-40 pointer-events-none grayscale"
 											: "bg-white"
 									}`}
 									onClick={() => {
-										// 알림 항목 클릭 시 추가 기능(예: 상세보기) 필요하면 여기에 구현
+										// 알림 항목 클릭 시 추가 기능(예: 상세보기) 구현 가능
 									}}
 								>
 									{/* 왼쪽: 알림 메시지 및 약속 시각 */}
@@ -198,7 +194,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 											</p>
 										)}
 									</div>
-									{/* 오른쪽: RECEIVE_SPECIAL 알림일 경우 'OK' 버튼 표시 - CalendarModal의 오른쪽 아이콘 스타일 참고 */}
+									{/* 오른쪽: RECEIVE_SPECIAL 알림일 경우 'OK' 버튼 표시 */}
 									{alarm.alarmType === "RECEIVE_SPECIAL" && (
 										<button
 											onClick={(e) => {
