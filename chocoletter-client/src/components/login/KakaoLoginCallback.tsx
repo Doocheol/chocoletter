@@ -21,17 +21,16 @@ import {
   getMemberPrivateKey,
   getMemberPublicKey,
 } from "../../utils/keyManager";
-import { arrayBufferToBase64 } from "../../utils/encryption";
-import { postMemberPublicKey } from "../../services/keyApi";
+import { arrayBufferToBase64, registerFixedSymmetricKey } from "../../utils/encryption";
 import { getGiftBoxName } from "../../services/giftBoxApi";
 
 const getGiftBoxNumFill = async (giftBoxId: string) => {
-	try {
-		const res = await getGiftBoxName(giftBoxId);
-		return res;
-	} catch (err) {
-		console.error(err, "선물상자 정보 로그인에서 불러오기 실패");
-	}
+  try {
+    const res = await getGiftBoxName(giftBoxId);
+    return res;
+  } catch (err) {
+    console.error(err, "선물상자 정보 로그인에서 불러오기 실패");
+  }
 };
 
 const KakaoLoginCallback: React.FC = () => {
@@ -56,15 +55,13 @@ const KakaoLoginCallback: React.FC = () => {
       const giftBoxId = urlParams.get("giftBoxId");
       const memberId = urlParams.get("memberId");
 
-	  
-
-		if (!accessToken || !userName || !giftBoxId || !memberId) {
-			removeUserInfo();
-			setIsLogin(false);
-			toast.error("다시 로그인해주세요!");
-			navigate("/");
-			return;
-		}
+      if (!accessToken || !userName || !giftBoxId || !memberId) {
+        removeUserInfo();
+        setIsLogin(false);
+        toast.error("다시 로그인해주세요!");
+        navigate("/");
+        return;
+      }
 
       const isFirstLogin = isFirstLoginParam === "true";
       setIsFirstLogin(isFirstLogin);
@@ -92,7 +89,7 @@ const KakaoLoginCallback: React.FC = () => {
       // const publicKey = await getMemberPublicKey(memberId);
       // const privateKey = await getMemberPrivateKey(memberId);
       // console.log("불러온 publicKey:", publicKey, "불러온 privateKey:", privateKey);
-      
+
       // if (publicKey && privateKey) {
       //   try {
       //     // 공개키 export (spki 형식)
@@ -121,12 +118,12 @@ const KakaoLoginCallback: React.FC = () => {
       const publicKeyB64 = arrayBufferToBase64(exportedPublicKey);
 
       // 서버에 공개키 등록
-      await postMemberPublicKey(publicKeyB64);
+      await registerFixedSymmetricKey(publicKeyB64);
 
-	  const giftBoxInfo = await getGiftBoxNumFill(giftBoxId);
+      const giftBoxInfo = await getGiftBoxNumFill(giftBoxId);
       if (!giftBoxInfo) {
         throw new Error("Failed to load gift box information");
-		navigate("/");
+        navigate("/");
       }
       const { type } = giftBoxInfo;
 
@@ -140,9 +137,9 @@ const KakaoLoginCallback: React.FC = () => {
         navigate("/select-giftbox");
         return;
       }
-	  
-	  setGiftBoxNum(type);
-	  setIsGiftBoxSelected(true);
+
+      setGiftBoxNum(type);
+      setIsGiftBoxSelected(true);
       navigate(`/main/${giftBoxId}`);
     };
 
