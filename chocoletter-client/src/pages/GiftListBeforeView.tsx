@@ -33,7 +33,7 @@ const GiftListBeforeView = () => {
                         <div className="w-6 h-6" />
                     </div>
                     <div className="px-[15px] py-[5px] bg-black/40 rounded-[18px] justify-start items-center gap-1 inline-flex">
-                        <div className="text-center text-white text-sm font-normal font-sans leading-[18.20px]">현재 개봉 가능한 초콜릿 : {remainOpenCount}개</div>
+                        <div className="text-center text-white text-sm font-normal font-sans leading-[18.20px]">현재 열어볼 수 있는 초콜릿 : {remainOpenCount}개</div>
                     </div>
                 </div>
                 <GiftList filter={"all"} />
