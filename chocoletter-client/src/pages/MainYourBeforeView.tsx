@@ -188,10 +188,7 @@ const MainYourBeforeView: React.FC = () => {
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
 				{/* 상단 아이콘 바 */}
-				<div className="mt-5 ml-6 flex items-center justify-between">
-					<button onClick={handleProfile} className="mr-6">
-						<FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
-					</button>
+				<div className="mt-7 ml-6 flex items-center justify-between">
 					<button onClick={handleTutorial}>
 						<img
 							src={tutorial_icon}
@@ -199,23 +196,32 @@ const MainYourBeforeView: React.FC = () => {
 							alt="tutorial icon"
 						/>
 					</button>
+					<button onClick={handleProfile} className="mr-5">
+						<FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
+					</button>
 				</div>
 
 				{/* 선물상자 컨테이너 */}
 				<div
-					className="mt-11 mb-10 mx-auto relative flex items-center justify-center"
+					className="mt-8 mb-10 mx-auto relative flex items-center justify-center"
 					style={{
 						backgroundImage: `url(${my_count_background})`,
 						backgroundSize: "cover",
 						backgroundPosition: "center",
-						width: "70%",
-						height: "98px", // 필요에 따라 조정
+						width: "74%",
+						aspectRatio: "258/96",
 					}}
 				>
 					{/* 배경 위에 텍스트를 중앙 정렬 */}
-					<div className="absolute inset-0 flex items-center justify-center">
-						<span className="text-2xl text-center max-w-full truncate">
-							{recipientNickname} 님의 초콜릿 보관함
+					<div className="absolute inset-0 flex flex-col items-center justify-center">
+						<div>
+							<span className="text-2xl text-center max-w-full truncate">
+								{recipientNickname}
+							</span>
+							<span className="text-lg text-center max-w-full truncate"> 님의 </span>
+						</div>
+						<span className="text-lg text-center max-w-full truncate">
+							초콜릿 보관함
 						</span>
 					</div>
 				</div>
