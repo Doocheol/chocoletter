@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import login_view_service_title from "../assets/images/logo/login_view_service_title.svg";
 import { questionLetterState } from "../atoms/letter/letterAtoms" ;
+import { ImageButton } from "../components/common/ImageButton";
+import next_button from "../assets/images/button/next_button.svg";
 
 // 편지지 선택 뷰 이후, 랜덤 질문 형식 편지지 작성 화면
 const WriteQuestionLetterView = () => {
@@ -70,14 +72,19 @@ const WriteQuestionLetterView = () => {
 
                     {/* 편지 작성 완료 버튼 - 모달 열기 */}
                     <div className="relatvie text-center">
-                        <Button
+                        <ImageButton
+                            onClick={handleNextClick}
+                            src={next_button}
+                            className="absolute right-0 gap-2"
+                        />
+                        {/* <Button
                             onClick={handleNextClick}
                             className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold"
                         >
                             <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">
                                 다음으로
                             </p>
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
             </div>
