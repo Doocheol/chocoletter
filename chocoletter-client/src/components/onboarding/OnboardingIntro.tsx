@@ -29,7 +29,7 @@ function OnboardingIntro() {
 	}, []);
 
 	return (
-		<div className="onboarding-intro-container flex flex-col w-full">
+		<div className="onboarding-intro-container flex flex-col w-full min-h-screen pb-20 overflow-hidden">
 
 			{/* 초코레터 이용 안내서 */}
 			<span className="flex justify-center items-center my-8">
