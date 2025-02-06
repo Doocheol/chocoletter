@@ -36,16 +36,13 @@ public class AlarmService {
                 .distinct()
                 .toList();
 
-        Map<Long, String> giftStatusMap = findGifts(giftIds);
-
         Map<Long, String> unboxingTimeMap = findUnBoxingTimes(giftIds);
 
         List<AlarmResponseDto> myAlarms = alarms.stream()
                 .map(alarm -> AlarmResponseDto.of(
                         alarm,
                         unboxingTimeMap.getOrDefault(alarm.getGiftId(), null),
-                        idEncryptionUtil.encrypt(alarm.getGiftId()),
-                        giftStatusMap.getOrDefault(alarm.getGiftId(), null)
+                        idEncryptionUtil.encrypt(alarm.getGiftId())
                 ))
                 .toList();
 
@@ -85,22 +82,6 @@ public class AlarmService {
                 .collect(Collectors.toMap(
                         row -> (Long) row[0],  // giftId (null 방지)
                         row -> row[1] != null ? row[1].toString() : "" // null이면 빈 문자열 반환
-                ));
-    }
-
-    private Map<Long, String> findGifts(List<Long> giftIds) {
-        if (giftIds == null || giftIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        List<Object[]> results = Optional.ofNullable(giftRepository.findGiftStatusesByGiftIds(giftIds))
-                .orElse(Collections.emptyList());
-
-        return results.stream()
-                .filter(row -> row != null && row.length >= 2 && row[0] != null)
-                .collect(Collectors.toMap(
-                        row -> (Long) row[0],
-                        row -> row[1] != null ? row[1].toString() : ""
                 ));
     }
 }

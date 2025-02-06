@@ -6,8 +6,8 @@ import lombok.Builder;
 
 @Builder
 public record AlarmResponseDto(Long alarmId, AlarmType alarmType, String partnerName, String unBoxingTime,
-                               String giftId, Boolean read, String giftStatus) {
-    public static AlarmResponseDto of(Alarm alarm, String unBoxingTime, String giftId, String giftStatus) {
+                               String giftId, Boolean read) {
+    public static AlarmResponseDto of(Alarm alarm, String unBoxingTime, String giftId) {
         return AlarmResponseDto.builder()
                 .alarmId(alarm.getId())
                 .alarmType(alarm.getType())
@@ -15,7 +15,6 @@ public record AlarmResponseDto(Long alarmId, AlarmType alarmType, String partner
                 .unBoxingTime(unBoxingTime)
                 .giftId(giftId)
                 .read(alarm.getIsRead())
-                .giftStatus(giftStatus)
                 .build();
     }
 }
