@@ -1,6 +1,7 @@
 package chocolate.chocoletter.api.alarm.service;
 
 import chocolate.chocoletter.api.alarm.domain.Alarm;
+import chocolate.chocoletter.api.alarm.domain.AlarmType;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
@@ -35,16 +36,13 @@ public class AlarmService {
                 .distinct()
                 .toList();
 
-        Map<Long, String> giftStatusMap = findGifts(giftIds);
-
         Map<Long, String> unboxingTimeMap = findUnBoxingTimes(giftIds);
 
         List<AlarmResponseDto> myAlarms = alarms.stream()
                 .map(alarm -> AlarmResponseDto.of(
                         alarm,
                         unboxingTimeMap.getOrDefault(alarm.getGiftId(), null),
-                        idEncryptionUtil.encrypt(alarm.getGiftId()),
-                        giftStatusMap.getOrDefault(alarm.getGiftId(), null)
+                        idEncryptionUtil.encrypt(alarm.getGiftId())
                 ))
                 .toList();
 
@@ -56,6 +54,15 @@ public class AlarmService {
     @Transactional
     public void save(Alarm alarm) {
         alarmRepository.save(alarm);
+    }
+
+    @Transactional
+    public void delete(Long alarmId) {
+        alarmRepository.deleteById(alarmId);
+    }
+
+    public List<Alarm> findMyAlarmsByAlarmType(Long memberId, Long giftId, AlarmType alarmType) {
+        return alarmRepository.findAlarmsByType(memberId, giftId, alarmType);
     }
 
     public NewAlarmResponseDto findNewAlarms(Long memberId) {
@@ -75,22 +82,6 @@ public class AlarmService {
                 .collect(Collectors.toMap(
                         row -> (Long) row[0],  // giftId (null 방지)
                         row -> row[1] != null ? row[1].toString() : "" // null이면 빈 문자열 반환
-                ));
-    }
-
-    private Map<Long, String> findGifts(List<Long> giftIds) {
-        if (giftIds == null || giftIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        List<Object[]> results = Optional.ofNullable(giftRepository.findGiftStatusesByGiftIds(giftIds))
-                .orElse(Collections.emptyList());
-
-        return results.stream()
-                .filter(row -> row != null && row.length >= 2 && row[0] != null)
-                .collect(Collectors.toMap(
-                        row -> (Long) row[0],
-                        row -> row[1] != null ? row[1].toString() : ""
                 ));
     }
 }
