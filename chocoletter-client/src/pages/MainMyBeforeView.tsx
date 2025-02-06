@@ -30,7 +30,7 @@ import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import Backdrop from "../components/common/Backdrop";
 import share_button from "../assets/images/button/share_button.svg";
 import { ImageButton } from "../components/common/ImageButton";
-import capture_button from "../assets/images/button/capture_button.svg";
+import capture_button_kor from "../assets/images/button/capture_button_kor.svg";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 import chat_icon from "../assets/images/main/chat_icon.svg";
 import choco_asset from "../assets/images/main/choco_asset.svg";
@@ -38,6 +38,7 @@ import tool_tip from "../assets/images/main/tool_tip.svg";
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
+import click_text from "../assets/images/main/click_text.svg";
 
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 import { countMyGiftBox } from "../services/giftBoxApi";
@@ -265,8 +266,8 @@ const MainMyBeforeView: React.FC = () => {
 							backgroundImage: `url(${my_count_background})`,
 							backgroundSize: "cover",
 							backgroundPosition: "center",
-							width: "70%",
-							height: "98px", // 적절한 높이 지정 (필요에 따라 조정)
+							width: "74%",
+							aspectRatio: "258/96",
 						}}
 					>
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
@@ -321,7 +322,10 @@ const MainMyBeforeView: React.FC = () => {
 						</div>
 					</div>
 					{/* 초콜릿 박스 & 안내 문구 */}
-					<div className="mt-8 flex flex-col items-center px-4">
+					<div className="mt-6 flex flex-col items-center px-4">
+						<div className="flex justify-center gap-1.5 mb-3 w-[225px]">
+							<img src={click_text} alt="click_text" style={{ width: "35%" }} className="heartbeat" />
+						</div>
 						<div
 							ref={captureRef}
 							id="capture-target"
@@ -338,14 +342,14 @@ const MainMyBeforeView: React.FC = () => {
 								/>
 							</button>
 						</div>
-						<div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
+						{/* <div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
 							<AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
 							<p className="text-xs text-gray-500 leading-snug">
 								개봉 가능한 일반 초콜릿이 있다면
 								<br />
 								박스를 클릭하여 편지를 읽어볼 수 있어요.
 							</p>
-						</div>
+						</div> */}
 					</div>
 					{/* 공유 및 캡처 버튼 영역 */}
 					<div className="mt-14 px-4 flex flex-row items-center gap-2.5">
@@ -361,7 +365,7 @@ const MainMyBeforeView: React.FC = () => {
 						</div>
 						<ImageButton
 							onClick={handleCapture}
-							src={capture_button}
+							src={capture_button_kor}
 							className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
 						/>
 					</div>

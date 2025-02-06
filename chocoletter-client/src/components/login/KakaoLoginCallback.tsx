@@ -42,12 +42,13 @@ const KakaoLoginCallback: React.FC = () => {
       const giftBoxId = urlParams.get("giftBoxId");
       const memberId = urlParams.get("memberId");
 
-      if (!accessToken || !userName || !giftBoxId || !memberId) {
-        removeUserInfo();
-        setIsLogin(false);
-        toast.error("다시 로그인해주세요!");
-        return;
-      }
+			if (!accessToken || !userName || !giftBoxId || !memberId) {
+				removeUserInfo();
+				setIsLogin(false);
+				toast.error("다시 로그인해주세요!");
+				navigate("/");
+				return;
+			}
 
       const isFirstLogin = isFirstLoginParam === "true";
       setIsFirstLogin(isFirstLogin);
@@ -75,7 +76,7 @@ const KakaoLoginCallback: React.FC = () => {
       // const publicKey = await getMemberPublicKey(memberId);
       // const privateKey = await getMemberPrivateKey(memberId);
       // console.log("불러온 publicKey:", publicKey, "불러온 privateKey:", privateKey);
-
+      
       // if (publicKey && privateKey) {
       //   try {
       //     // 공개키 export (spki 형식)
