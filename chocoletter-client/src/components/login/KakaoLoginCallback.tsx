@@ -1,4 +1,3 @@
-// KakaoLoginCallback.tsx (일부)
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -18,12 +17,11 @@ import {
 } from "../../atoms/auth/userAtoms";
 import {
   generateAndStoreKeyPairForMember,
-  getMemberPrivateKey,
   getMemberPublicKey,
 } from "../../utils/keyManager";
-import { arrayBufferToBase64 } from "../../utils/encryption";
-import { postMemberPublicKey } from "../../services/keyApi";
+
 import { getGiftBoxName } from "../../services/giftBoxApi";
+import { arrayBufferToBase64, registerFixedSymmetricKey } from "../../utils/encryption";
 
 const KakaoLoginCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -56,15 +54,14 @@ const KakaoLoginCallback: React.FC = () => {
       const giftBoxId = urlParams.get("giftBoxId");
       const memberId = urlParams.get("memberId");
 
-	  
+      if (!accessToken || !userName || !giftBoxId || !memberId) {
+        removeUserInfo();
+        setIsLogin(false);
+        toast.error("다시 로그인해주세요!");
+        navigate("/");
+        return;
+      }
 
-		if (!accessToken || !userName || !giftBoxId || !memberId) {
-			removeUserInfo();
-			setIsLogin(false);
-			toast.error("다시 로그인해주세요!");
-			navigate("/");
-			return;
-		}
 	  
       const giftBoxInfo = await getGiftBoxNumFill(giftBoxId);
       if (!giftBoxInfo) {
@@ -88,17 +85,18 @@ const KakaoLoginCallback: React.FC = () => {
       setUserProfileUrl(userProfileUrl || "");
       setGiftBoxId(giftBoxId);
       setMemberId(memberId);
-      console.log(memberId);
+      // console.log(memberId);
 
       // memberId 기반 키 페어 생성 및 저장
       await generateAndStoreKeyPairForMember(memberId);
-      console.log("키 페어 생성 완료");
+      // console.log("키 페어 생성 완료");
 
+      // 주석 시작
       // // 생성된 공개키와 개인키를 불러와서 Base64로 export 후 콘솔에 출력 (테스트 용도)
       // const publicKey = await getMemberPublicKey(memberId);
       // const privateKey = await getMemberPrivateKey(memberId);
       // console.log("불러온 publicKey:", publicKey, "불러온 privateKey:", privateKey);
-      
+
       // if (publicKey && privateKey) {
       //   try {
       //     // 공개키 export (spki 형식)
@@ -116,6 +114,77 @@ const KakaoLoginCallback: React.FC = () => {
       // } else {
       //   console.error("키 페어가 정상적으로 로드되지 않았습니다.");
       // }
+      // 테스트 코드 예시
+      // try {
+      //   const testMessage = "test";
+      //   const encoder = new TextEncoder();
+      //   const testData = encoder.encode(testMessage);
+      //   if (publicKey) {
+      //     const encryptedTest = await window.crypto.subtle.encrypt(
+      //       { name: "RSA-OAEP" },
+      //       publicKey,
+      //       testData
+      //     );
+      //     if (privateKey) {
+      //       const decryptedTestBuffer = await window.crypto.subtle.decrypt(
+      //         { name: "RSA-OAEP" },
+      //         privateKey,
+      //         encryptedTest
+      //       );
+      //       const decryptedTest = new TextDecoder().decode(decryptedTestBuffer);
+      //       console.log(
+      //         "키 매칭 테스트 결과:",
+      //         decryptedTest === testMessage ? "매칭됨" : "매칭 안 됨"
+      //       );
+      //     } else {
+      //       console.error("키 매칭 테스트 실패: privateKey is null");
+      //     }
+      //   } else {
+      //     console.error("키 매칭 테스트 실패: publicKey is null");
+      //   }
+      // } catch (e) {
+      //   console.error("키 매칭 테스트 실패:", e);
+      // }
+      //주석끝
+
+      // 주석시작
+      // console.log("암호화/복호화 테스트 시작");
+
+      // (async () => {
+      //   // 키 페어 생성
+      //   const keyPair = await window.crypto.subtle.generateKey(
+      //     {
+      //       name: "RSA-OAEP",
+      //       modulusLength: 2048,
+      //       publicExponent: new Uint8Array([1, 0, 1]),
+      //       hash: "SHA-256",
+      //     },
+      //     true,
+      //     ["encrypt", "decrypt"]
+      //   );
+
+      //   const plainText = "테스트 메시지";
+      //   const encoder = new TextEncoder();
+      //   const data = encoder.encode(plainText);
+
+      //   // 암호화
+      //   const encryptedBuffer = await window.crypto.subtle.encrypt(
+      //     { name: "RSA-OAEP" },
+      //     keyPair.publicKey,
+      //     data
+      //   );
+      //   console.log("암호화된 데이터:", new Uint8Array(encryptedBuffer));
+
+      //   // 복호화
+      //   const decryptedBuffer = await window.crypto.subtle.decrypt(
+      //     { name: "RSA-OAEP" },
+      //     keyPair.privateKey,
+      //     encryptedBuffer
+      //   );
+      //   const decryptedText = new TextDecoder().decode(decryptedBuffer);
+      //   console.log("복호화된 메시지:", decryptedText);
+      // })();
+      //주석끝
 
       // 로컬에 저장된 공개키 불러오기
       const publicKeyCryptoKey = await getMemberPublicKey(memberId);
@@ -127,7 +196,7 @@ const KakaoLoginCallback: React.FC = () => {
       const publicKeyB64 = arrayBufferToBase64(exportedPublicKey);
 
       // 서버에 공개키 등록
-      await postMemberPublicKey(publicKeyB64);
+      await registerFixedSymmetricKey(publicKeyB64);
 
       const redirectPath = localStorage.getItem("redirect");
       if (redirectPath) {

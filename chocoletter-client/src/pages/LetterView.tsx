@@ -5,9 +5,10 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { getGiftDetail } from "../services/giftApi";
 import Gift from "../components/letter/Letter";
 import Loading from "../components/common/Loading";
-import { memberIdAtom } from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom, memberIdAtom } from "../atoms/auth/userAtoms";
 import { decryptLetter } from "../services/giftEncryptedApi";
 import { getMemberPrivateKey } from "../utils/keyManager";
+import { getGiftBoxPublicKey } from "../services/keyApi";
 
 // 편지 보는 뷰
 // gift list page 에서 초콜릿 선택 시 보이게 됨.
@@ -21,6 +22,7 @@ interface GiftData {
 const LetterView = () => {
   const selectedGiftId = useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
   const memberId = useRecoilValue(memberIdAtom);
+  const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
   const [giftData, setGiftData] = useState<GiftData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,9 +42,11 @@ const LetterView = () => {
             return;
           }
 
+          const publicKey = await getGiftBoxPublicKey(giftBoxId);
+
           if (data.question && data.answer) {
             try {
-              const plainAnswer = await decryptLetter(data.answer, privateKey);
+              const plainAnswer = await decryptLetter(data.answer, publicKey, privateKey);
               updatedData.answer = plainAnswer; // 복호화된 답변을 giftData.answer에 반영
             } catch (e) {
               console.error("답변 복호화 실패:", e);
@@ -50,7 +54,7 @@ const LetterView = () => {
             }
           } else if (data.content) {
             try {
-              const plainContent = await decryptLetter(data.content, privateKey);
+              const plainContent = await decryptLetter(data.content, publicKey, privateKey);
               updatedData.content = plainContent; // 복호화된 편지 내용을 giftData.content에 반영
             } catch (e) {
               console.error("편지 내용 복호화 실패:", e);

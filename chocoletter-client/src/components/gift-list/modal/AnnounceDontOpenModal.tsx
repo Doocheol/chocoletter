@@ -15,7 +15,7 @@ export const AnnounceDontOpenModal: React.FC<AnnounceDontOpenModalProps> = ({ is
                 setComment(
                     <div>
                         <p className="font-sans"><span className="text-yellow-500">2월 14일, 약속한 시간</span>에</p>
-                        <p className="font-sans">특별 초콜릿을 열 수 있어요!</p>
+                        <p className="font-sans">편지를 읽어볼 수 있어요!</p>
                     </div>
                 );
         }

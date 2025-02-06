@@ -39,7 +39,7 @@ const AcceptRejectModal: React.FC<AcceptRejectModalProps> = ({
 				</div>
 				{/* 메시지 영역 */}
 				<div className="flex flex-col gap-4">
-					<p className="w-[300px] text-base font-semibold">
+					<p className="w-[260px] text-base font-semibold">
 						발렌타인데이에 만나시겠어요?
 						{/* {alarm.partnerName}님과 발렌타인데이에 만나시겠어요? */}
 					</p>
