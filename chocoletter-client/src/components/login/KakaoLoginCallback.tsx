@@ -200,3 +200,5 @@ const KakaoLoginCallback: React.FC = () => {
 
   return <Loading />;
 };
+
+export default KakaoLoginCallback;
