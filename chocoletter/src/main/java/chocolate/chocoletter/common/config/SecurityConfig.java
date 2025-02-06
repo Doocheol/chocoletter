@@ -63,6 +63,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://www.chocolate-letter.com",
                 "https://chocolate-letter.com",
+                "https://api.chocolate-letter.com",
                 "http://localhost:5173"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
