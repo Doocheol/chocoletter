@@ -44,22 +44,23 @@ public class Gift extends BaseTimeEntity {
 
     private LocalDateTime unBoxingTime;
 
-    private Integer rejectCount;
-
     private Boolean isAccept;
 
     private Boolean isOpened;
 
+    @Enumerated(EnumType.STRING)
+    private GiftStatus status;
+
     private Gift(GiftBox giftBox, Long senderId, Long receiverId, GiftType type, LocalDateTime unBoxingTime,
-                 Integer rejectCount, Boolean isAccept) {
+                 Boolean isAccept, GiftStatus status) {
         this.giftBox = giftBox;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.type = type;
         this.unBoxingTime = unBoxingTime;
-        this.rejectCount = rejectCount;
         this.isAccept = isAccept;
         this.isOpened = false;
+        this.status = status;
     }
 
     @Builder(builderClassName = "createGeneralGiftBuilder", builderMethodName = "createGeneralGift")
@@ -69,23 +70,19 @@ public class Gift extends BaseTimeEntity {
 
     @Builder(builderClassName = "createSpecialGiftBuilder", builderMethodName = "createSpecialGift")
     public static Gift createSpecialGift(GiftBox giftBox, Long senderId, Long receiverId, LocalDateTime unBoxingTime) {
-        return new Gift(giftBox, senderId, receiverId, GiftType.SPECIAL, unBoxingTime, 0, false);
+        return new Gift(giftBox, senderId, receiverId, GiftType.SPECIAL, unBoxingTime, false, GiftStatus.PENDING);
     }
 
     public void acceptUnboxing() {
         this.isAccept = true;
+        this.status = GiftStatus.FIXED;
     }
 
     public void rejectUnboxing() {
-        this.isAccept = false;
-        this.rejectCount++;
-    }
-
-    public void changeToGeneralGift() {
         this.type = GiftType.GENERAL;
         this.isAccept = null;
-        this.rejectCount = null;
         this.unBoxingTime = null;
+        this.status = GiftStatus.FIXED;
     }
 
     public void updateUnBoxingTime(LocalDateTime unBoxingTime) {

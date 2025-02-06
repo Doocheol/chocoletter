@@ -34,6 +34,9 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
     @Query("select g.id, g.unBoxingTime from Gift g where g.id in :giftIds")
     List<Object[]> findUnBoxingTimesByGiftIds(@Param("giftIds") List<Long> giftIds);
 
+    @Query("select g.id, g.status from Gift g where g.id in :giftIds")
+    List<Object[]> findGiftStatusesByGiftIds(Iterable<Long> giftIds);
+
     default Gift findGiftByIdOrThrow(Long giftId) {
         return findById(giftId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.ERR_NOT_FOUND_GIFT));

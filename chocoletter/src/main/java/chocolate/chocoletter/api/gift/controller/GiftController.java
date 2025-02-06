@@ -6,20 +6,23 @@ import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationRespons
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.common.annotation.DecryptedId;
-import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/gift")
 @RequiredArgsConstructor
 public class GiftController implements GiftSwagger {
     private final GiftService giftService;
-    private final IdEncryptionUtil idEncryptionUtil;
 
     @GetMapping("/all")
     public ResponseEntity<?> findAllGifts(Principal principal) {
@@ -46,7 +49,8 @@ public class GiftController implements GiftSwagger {
     }
 
     @GetMapping("/{giftId}/receive")
-    public ResponseEntity<?> findReceiveGiftDetail(@DecryptedId @PathVariable("giftId") Long giftId, Principal principal) {
+    public ResponseEntity<?> findReceiveGiftDetail(@DecryptedId @PathVariable("giftId") Long giftId,
+                                                   Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         GiftDetailResponseDto gift = giftService.findReceiveGiftDetail(memberId, giftId);
         return ResponseEntity.ok(gift);

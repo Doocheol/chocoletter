@@ -8,14 +8,14 @@ import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
-import chocolate.chocoletter.api.giftbox.dto.request.*;
-import chocolate.chocoletter.api.giftbox.dto.response.*;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.GiftBoxTypeRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxIdResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxTypeResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
@@ -26,7 +26,6 @@ import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.api.member.service.MemberService;
-import chocolate.chocoletter.common.exception.*;
 import chocolate.chocoletter.common.exception.BadRequestException;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
@@ -62,6 +61,7 @@ public class GiftBoxService {
         Optional<Member> member = memberRepository.findById(senderId);
         Member sendMember = member.get();
         sendMember.increaseSendGiftCount();
+
     }
 
     @Transactional
