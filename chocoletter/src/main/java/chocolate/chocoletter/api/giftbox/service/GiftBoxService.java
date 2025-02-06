@@ -18,6 +18,7 @@ import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxTypeResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
+import chocolate.chocoletter.api.giftbox.dto.response.PublicKeyResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.UnboxingTimesResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.VerifyIsSendResponseDto;
 import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
@@ -211,5 +212,10 @@ public class GiftBoxService {
     public void chooseGiftBoxType(Long memberId, GiftBoxTypeRequestDto giftBoxTypeRequestDto) {
         GiftBox giftBox = giftBoxRepository.findGiftBoxByMemberId(memberId);
         giftBox.updateGiftType(giftBoxTypeRequestDto.type());
+    }
+
+    public PublicKeyResponseDto findPublicKey(Long giftBoxId) {
+        return PublicKeyResponseDto.of(
+                giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId).getMember().getPublicKey());
     }
 }
