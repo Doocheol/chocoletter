@@ -202,6 +202,8 @@ public class GiftService {
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
+
+        removeGiftAlarmOnAcceptOrReject(gift, memberId);
     }
 
     @Transactional
@@ -220,30 +222,6 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
         rejectSpecialGift(gift, memberId);
-    }
-
-    private void rejectSpecialGift(Gift gift, Long memberId) {
-        gift.changeToGeneralGift();
-
-        // 받은 일반 초콜릿 개수 +1
-        Member receiver = memberService.findMember(memberId);
-        GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByMemberId(receiver.getId());
-        receiverGiftBox.addGeneralGiftCount();
-
-        // 서로 보냈다면 채팅방 생성
-        Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
-        if (receiverGift != null) {
-            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), gift.getId(), receiverGift.getId());
-        }
-
-        // 거절 알림 전송
-        Alarm alarm = Alarm.builder()
-                .type(AlarmType.REJECT_SPECIAL)
-                .giftId(gift.getId())
-                .member(memberService.findMember(gift.getSenderId()))
-                .partnerName(receiver.getName())
-                .build();
-        alarmService.save(alarm);
     }
 
     @Transactional
@@ -292,5 +270,42 @@ public class GiftService {
             return memberService.findMember(gift.getReceiverId()).getName();
         }
         return "";
+    }
+
+    private void rejectSpecialGift(Gift gift, Long memberId) {
+        gift.changeToGeneralGift();
+
+        // 받은 일반 초콜릿 개수 +1
+        Member receiver = memberService.findMember(memberId);
+        GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByMemberId(receiver.getId());
+        receiverGiftBox.addGeneralGiftCount();
+
+        // 서로 보냈다면 채팅방 생성
+        Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
+        if (receiverGift != null) {
+            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), gift.getId(), receiverGift.getId());
+        }
+
+        // 거절 알림 전송
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.REJECT_SPECIAL)
+                .giftId(gift.getId())
+                .member(memberService.findMember(gift.getSenderId()))
+                .partnerName(receiver.getName())
+                .build();
+        alarmService.save(alarm);
+
+        removeGiftAlarmOnAcceptOrReject(gift, memberId);
+    }
+
+    private void removeGiftAlarmOnAcceptOrReject(Gift gift, Long receiverId) {
+        // 받은 사람에게 RECEIVE_SPECIAL 타입 알림 삭제
+        List<Alarm> alarms = alarmService.findMyAlarmsByAlarmType(receiverId, gift.getId(), AlarmType.RECEIVE_SPECIAL);
+
+        alarms.forEach(
+                alarm -> {
+                    alarmService.delete(alarm.getId());
+                }
+        );
     }
 }

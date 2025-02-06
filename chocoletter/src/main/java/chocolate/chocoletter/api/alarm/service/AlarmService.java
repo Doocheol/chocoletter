@@ -1,6 +1,7 @@
 package chocolate.chocoletter.api.alarm.service;
 
 import chocolate.chocoletter.api.alarm.domain.Alarm;
+import chocolate.chocoletter.api.alarm.domain.AlarmType;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.AlarmsResponseDto;
 import chocolate.chocoletter.api.alarm.dto.response.NewAlarmResponseDto;
@@ -56,6 +57,15 @@ public class AlarmService {
     @Transactional
     public void save(Alarm alarm) {
         alarmRepository.save(alarm);
+    }
+
+    @Transactional
+    public void delete(Long alarmId) {
+        alarmRepository.deleteById(alarmId);
+    }
+
+    public List<Alarm> findMyAlarmsByAlarmType(Long memberId, Long giftId, AlarmType alarmType) {
+        return alarmRepository.findAlarmsByType(memberId, giftId, alarmType);
     }
 
     public NewAlarmResponseDto findNewAlarms(Long memberId) {
