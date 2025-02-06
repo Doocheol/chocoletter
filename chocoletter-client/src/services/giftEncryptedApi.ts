@@ -51,15 +51,15 @@ export async function sendGeneralFreeGift(
     const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
     const encryptedContent = arrayBufferToBase64(encryptedBuffer);
     // 3. 수신자의 공개키(Base64 문자열) 조회 및 변환
-    const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
-    const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
-    // 4. 고정 대칭키를 수신자의 공개키로 암호화하여 encryptedKey 생성
-    const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
+    // const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
+    // const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
+    // // 4. 고정 대칭키를 수신자의 공개키로 암호화하여 encryptedKey 생성
+    // const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
     // 5. API 전송
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/free`, {
       nickName,
       content: encryptedContent,
-      encryptedKey,
+      // encryptedKey,
     });
     return res.data;
   } catch (err) {
@@ -88,14 +88,14 @@ export async function sendGeneralQuestionGift(
     const symmetricKey = await getFixedSymmetricKey();
     const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
     const encryptedContent = arrayBufferToBase64(encryptedBuffer);
-    const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
-    const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
-    const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
+    // const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
+    // const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
+    // const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/general/question`, {
       nickName,
       question,
       answer: encryptedContent,
-      encryptedKey,
+      // encryptedKey,
     });
     return res.data;
   } catch (err) {
@@ -125,13 +125,13 @@ export async function sendSpecialFreeGift(
     const symmetricKey = await getFixedSymmetricKey();
     const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
     const encryptedContent = arrayBufferToBase64(encryptedBuffer);
-    const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
-    const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
-    const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
+    // const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
+    // const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
+    // const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/free`, {
       nickName,
       content: encryptedContent,
-      encryptedKey,
+      // encryptedKey,
       unBoxingTime,
     });
     return res.data;
@@ -164,14 +164,14 @@ export async function sendSpecialQuestionGift(
     const symmetricKey = await getFixedSymmetricKey();
     const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
     const encryptedContent = arrayBufferToBase64(encryptedBuffer);
-    const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
-    const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
-    const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
+    // const recipientPublicKeyB64 = await getGiftBoxPublicKey(giftBoxId);
+    // const recipientPublicKey = await importRecipientPublicKey(recipientPublicKeyB64);
+    // const encryptedKey = await encryptFixedSymmetricKey(recipientPublicKey);
     const res = await api.post(`/api/v1/gift-box/${giftBoxId}/gift/special/question`, {
       nickName,
       question,
       answer: encryptedContent,
-      encryptedKey,
+      // encryptedKey,
       unBoxingTime,
     });
     return res.data;
