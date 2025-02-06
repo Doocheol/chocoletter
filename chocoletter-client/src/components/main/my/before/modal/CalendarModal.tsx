@@ -192,7 +192,14 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               const fiveBeforeKST = getFiveMinutesBefore(eventKST);
               const nowKST = CurrentTime();
               
-              const nowUTC = new Date();
+              const nowUTC = new Date(Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth(),
+                new Date().getUTCDate(),
+                new Date().getUTCHours(),
+                new Date().getUTCMinutes(),
+                new Date().getUTCSeconds()
+              ));
               const beforeEventTimeUTC = new Date(Date.UTC(2025, 1, 13, 15, 0, 0));
 
 
