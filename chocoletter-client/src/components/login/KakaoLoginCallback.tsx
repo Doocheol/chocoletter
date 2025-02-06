@@ -65,13 +65,16 @@ const KakaoLoginCallback: React.FC = () => {
       setUserProfileUrl(userProfileUrl || "");
       setGiftBoxId(giftBoxId);
       setMemberId(memberId);
+      console.log(memberId);
 
       // memberId 기반 키 페어 생성 및 저장
       await generateAndStoreKeyPairForMember(memberId);
+      console.log("키 페어 생성 완료");
 
       // 생성된 공개키와 개인키를 불러와서 Base64로 export 후 콘솔에 출력 (테스트 용도)
       const publicKey = await getMemberPublicKey(memberId);
       const privateKey = await getMemberPrivateKey(memberId);
+      console.log("불러온 publicKey:", publicKey, "불러온 privateKey:", privateKey);
 
       if (publicKey && privateKey) {
         try {
