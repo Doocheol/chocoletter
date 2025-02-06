@@ -343,7 +343,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 	};
 
 	return (
-		<Modal isOpen={isVisible} onClose={onClose} className="ml-2">
+		<Modal isOpen={isVisible} onClose={onClose}>
 			<div
 				className={`p-2 flex flex-col items-center rounded-lg ${
 					isAnimating ? "jello-vertical" : ""

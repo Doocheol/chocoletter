@@ -48,7 +48,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
       <img
         src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
         alt="카카오톡 공유 보내기 버튼"
-        className="w-20 h-14 opacity-80"
+        className="w-[64px] h-[66px] opacity-80"
       />
     </button>
   );
