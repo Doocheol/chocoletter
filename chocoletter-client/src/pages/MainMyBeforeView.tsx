@@ -111,26 +111,26 @@ const MainMyBeforeView: React.FC = () => {
 		}
 	}, [giftBoxNum, navigate]);
 
-	// useEffect(() => {
-	// 	if (urlGiftBoxId && savedGiftBoxId) {
-	// 		if (urlGiftBoxId !== savedGiftBoxId) {
-	// 			console.warn(
-	// 				"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
-	// 			);
-	// 			navigate("/error");
-	// 		}
-	// 	} else if (!urlGiftBoxId && savedGiftBoxId) {
-	// 		navigate(`/main/${savedGiftBoxId}`);
-	// 	} else if (urlGiftBoxId && !savedGiftBoxId) {
-	// 		console.warn(
-	// 			"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
-	// 		);
-	// 		navigate("/error");
-	// 	} else {
-	// 		console.warn("shareCode 정보가 없습니다.");
-	// 		navigate("/");
-	// 	}
-	// }, [urlGiftBoxId, savedGiftBoxId, navigate]);
+	useEffect(() => {
+		if (urlGiftBoxId && savedGiftBoxId) {
+			if (urlGiftBoxId !== savedGiftBoxId) {
+				console.warn(
+					"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
+				);
+				navigate("/error");
+			}
+		} else if (!urlGiftBoxId && savedGiftBoxId) {
+			navigate(`/main/${savedGiftBoxId}`);
+		} else if (urlGiftBoxId && !savedGiftBoxId) {
+			console.warn(
+				"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
+			);
+			navigate("/error");
+		} else {
+			console.warn("shareCode 정보가 없습니다.");
+			navigate("/");
+		}
+	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	const giftBoxImages: { [key: number]: string } = {
 		10: giftbox_before_10,
