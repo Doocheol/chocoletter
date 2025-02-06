@@ -2,7 +2,14 @@ package chocolate.chocoletter.api.giftbox.domain;
 
 import chocolate.chocoletter.api.member.domain.Member;
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +34,7 @@ public class GiftBox extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer generalGiftCount;
-    
+
     @Column(nullable = false)
     private Integer type;
 
@@ -36,7 +43,7 @@ public class GiftBox extends BaseTimeEntity {
         this.member = member;
         this.giftCount = 0;
         this.generalGiftCount = 2;
-        this.type = 1; // 디폴트 1로 하기로 정함
+        this.type = 0;
     }
 
     public void addGiftCount() {
@@ -51,5 +58,7 @@ public class GiftBox extends BaseTimeEntity {
         this.generalGiftCount -= 2;
     }
 
-    public void updateGiftType(int type) {this.type = type; }
+    public void updateGiftType(int type) {
+        this.type = type;
+    }
 }
