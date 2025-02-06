@@ -74,28 +74,17 @@ const ChangeAmPm = (strTime: string) => {
 // 시간 변환 함수
 const convertToEventDate = (unBoxingTime: string, eventDay: string, timeZone: string = "Asia/Seoul"): Date => {
   const currentYear = new Date().getFullYear();
-  const eventMonth = eventDay.substring(0, 2); // "02" (월)
-  const eventDate = eventDay.substring(2, 4);  // "14" (일)
+  const eventMonth = parseInt(eventDay.substring(0, 2), 10) - 1; // Convert "MM" to number (0-based)
+  const eventDate = parseInt(eventDay.substring(2, 4), 10); // Convert "DD" to number
   const [hour, minute] = unBoxingTime.split(":").map(Number);
 
-  // UTC 기준으로 Date 객체 생성 후, timeZone 적용
-  const eventDateTime = new Date(currentYear, Number(eventMonth) - 1, Number(eventDate), hour, minute);
+  // Create the date object directly in the target timezone
+  const eventDateTime = new Date(Date.UTC(currentYear, eventMonth, eventDate, hour, minute));
 
-  // Intl.DateTimeFormat을 이용해 KST 변환
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false, // 24시간제
-  });
-
-  // 변환된 날짜를 다시 Date 객체로 변환 (KST 적용)
-  const formattedDate = formatter.format(eventDateTime);
-  console.log("formattedDate: ", formattedDate);
-  return new Date(formattedDate);
+  // Convert to the target timezone using `toLocaleString` instead of parsing a formatted string
+  const localizedDate = new Date(eventDateTime.toLocaleString("en-US", { timeZone }));
+  console.log(localizedDate);
+  return localizedDate;
 };
 
 // 5분 전 시간 계산 함수
