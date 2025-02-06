@@ -10,6 +10,11 @@ import outline_choco_button from '../../../assets/images/giftbox/outline_choco_b
 import bg_choco_button from '../../../assets/images/giftbox/bg_choco_button.svg'
 import {UnboxingTimeSticker} from "../UnboxingTimeSticker"
 import { toast } from "react-toastify";
+import AcceptRejectModal from "../../main/my/before/modal/AcceptRejectModal";
+import {
+	patchUnboxingAccept,
+	patchUnboxingReject,
+} from "../../../services/unboxingApi";
 
 const generalImages = import.meta.glob("../../../assets/images/chocolate/general/*.svg", {
   eager: true,
@@ -54,7 +59,8 @@ const compareDates = (current: Date, eventday: Date) => {
 export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime, isAccepted, roomId }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
-    const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
+    // const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
+    const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
     const navigate = useNavigate();
     const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom)
 
@@ -99,9 +105,14 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         setIsNonOpen(false);
     };
 
-    const closeGoNotificationModal = () => {
-        setIsAnnounceNoti(false);
+    // const closeGoNotificationModal = () => {
+    //     setIsAnnounceNoti(false);
+    // }
+
+    const closeAcceptRejectModal = () => {
+        setIsAcceptRejectOpen(false)
     }
+
 
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
@@ -118,7 +129,8 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
                 if (isAccepted) {
                     setIsRTC(true);
                 } else {
-                    setIsAnnounceNoti(true);
+                    // setIsAnnounceNoti(true);
+                    setIsAcceptRejectOpen(true)
                 }
                 
             } else {
@@ -139,9 +151,40 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         }
     }
 
+    // 수락 처리: giftId가 존재할 경우 patchUnboxingAccept API 호출
+        const handleAccept = async () => {
+            try {
+                const result = await patchUnboxingAccept(giftId);
+                console.log("수락 처리 성공:", result);
+                setIsAcceptRejectOpen(false);
+            } catch (error) {
+                console.error("수락 처리 중 에러 발생:", error);
+            }
+        };
+    
+        // 거절 처리: giftId가 존재할 경우 patchUnboxingReject API 호출
+        const handleReject = async () => {
+            try {
+                const result = await patchUnboxingReject(giftId);
+                console.log("거절 처리 성공:", result);
+                setIsAcceptRejectOpen(false);
+            } catch (error) {
+                console.error("거절 처리 중 에러 발생:", error);
+            }
+        };
+    
+
     return (
         <div className="relative w-[100px] h-full aspect-square rounded-lg flex items-center justify-center">
-            <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} />
+            {isAcceptRejectOpen && (
+                <AcceptRejectModal
+                    onClose={closeAcceptRejectModal}
+                    onAccept={handleAccept}
+                    onReject={handleReject}
+                />
+            )}
+            {/* <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} /> */}
+            
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
             <div className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${isRTC || isNonOpen ? "[&>button>img]:scale-125" : "[&>button>img]:hover:scale-125"}`}>

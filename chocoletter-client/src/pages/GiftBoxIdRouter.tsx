@@ -2,10 +2,12 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { giftBoxIdAtom } from "../atoms/auth/userAtoms";
+import { isGiftBoxSelectedAtom } from "../atoms/auth/userAtoms";
 import MainMyBeforeView from "./MainMyBeforeView";
 import MainMyEventView from "./MainMyEventView";
 import MainMyAfterView from "./MainMyAfterView";
 import MainYourBeforeView from "./MainYourBeforeView";
+import SelectGiftBoxView from "./SelectGiftBoxView";
 
 // 이벤트 날짜를 env 변수(VITE_EVENT_DAY="0214")에서 가져와 현재 연도의 Date 객체 반환 함수
 const getEventDate = (): Date => {
@@ -23,6 +25,7 @@ const GiftBoxIdRouter: React.FC = () => {
 
   const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
   const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
+  const isGiftBoxSelected = useRecoilValue(isGiftBoxSelectedAtom);
 
   const today = new Date();
   const eventDate = getEventDate();
@@ -36,6 +39,10 @@ const GiftBoxIdRouter: React.FC = () => {
 
   // 발신자: URL과 Recoil의 shareCode가 모두 존재하고 동일한 경우
   if (urlGiftBoxId && savedGiftBoxId !== "" && urlGiftBoxId === savedGiftBoxId) {
+    if (!isGiftBoxSelected) {
+      return <SelectGiftBoxView />;
+    }
+
     if (today < eventDate) {
       return <MainMyBeforeView />;
     } else if (today.toDateString() === eventDate.toDateString()) {

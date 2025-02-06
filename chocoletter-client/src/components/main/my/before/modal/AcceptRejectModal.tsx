@@ -3,7 +3,7 @@ import { OtherModal } from "../../../../common/OtherModal";
 import readLetterIcon from "../../../../../assets/images/letter/letter_icon.svg";
 
 export interface AcceptRejectModalProps {
-	alarm: {
+	alarm?: {
 		alarmId: number;
 		alarmType:
 			| "ACCEPT_SPECIAL"
@@ -39,8 +39,9 @@ const AcceptRejectModal: React.FC<AcceptRejectModalProps> = ({
 				</div>
 				{/* 메시지 영역 */}
 				<div className="flex flex-col gap-4">
-					<p className="text-base font-semibold">
-						{alarm.partnerName}님과 발렌타인데이에 만나시겠어요?
+					<p className="w-[300px] text-base font-semibold">
+						발렌타인데이에 만나시겠어요?
+						{/* {alarm.partnerName}님과 발렌타인데이에 만나시겠어요? */}
 					</p>
 				</div>
 				{/* 버튼 영역 */}
@@ -53,7 +54,7 @@ const AcceptRejectModal: React.FC<AcceptRejectModalProps> = ({
 					</button>
 					<button
 						onClick={onAccept}
-						className="bg-chocoletterPurple border border-black text-white px-[30px] py-[5px] rounded-[18px] hover:bg-chocoletterPurpleBold"
+						className="bg-chocoletterPurpleBold border border-black text-white px-[30px] py-[5px] rounded-[18px] hover:bg-chocoletterPurpleBold"
 					>
 						좋아요!!
 					</button>

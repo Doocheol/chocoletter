@@ -245,10 +245,10 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                 >
                   <div className="relative w-[300px] shadow-[-102px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
                     {/* 왼쪽 초대장 스타일 배경 */}
-                    <div className="w-2/3 h-full text-start bg-white text-[#f82e91] p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
+                    <div className="w-2/3 h-full text-start bg-white text-chocoletterPurpleBold p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
                       <div className="w-full h-full">
                         <h3 className="text-md font-bold font-sans">언박싱 초대장💌</h3>
-                        <p className="text-gray-500 mt-2 font-sans">{item.nickName}님과 함께<br/>편지를 열어보세요!</p>
+                        <p className="text-gray-500 mt-2 font-sans">{item.nickName}님과 함께<br/>영상통화를 시작해보세요!</p>
                         <p className="text-sm mt-2 font-sans">{ChangeAmPm(item.unBoxingTime)}</p>
                       </div>
                     </div>

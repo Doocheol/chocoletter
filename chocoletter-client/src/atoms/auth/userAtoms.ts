@@ -52,3 +52,9 @@ export const memberIdAtom = atom<string>({
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
+
+export const isGiftBoxSelectedAtom = atom<boolean>({
+  key: "isGiftBoxSelected",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
