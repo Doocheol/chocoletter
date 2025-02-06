@@ -30,43 +30,52 @@ function OnboardingIntro() {
 
 	return (
 		<div className="onboarding-intro-container flex flex-col w-full">
-			{/* 첫 번째 소개 이미지 */}
+
+			{/* 초코레터 이용 안내서 */}
+			<span className="flex justify-center items-center my-8">
+				<p className="border-b border-chocoletterPurpleBold w-[50px] my-4"></p>
+					<p className="mx-4 text-[24px] text-chocoletterPurpleBold text-bold textShadow-none">
+					초코레터 이용 안내서
+					</p>
+				<p className="border-b border-chocoletterPurpleBold w-[50px] my-4"></p>
+			</span>
 
 			<div
-				className={`flex justify-center items-center ${
+				className={`flex flex-col justify-center items-center ${
 					scrollPosition < 90
 						? "shake-vertical"
 						: "scale-out-center hidden"
 				}`}
-				onClick={onMoreClick}
+				// onClick={onMoreClick}
 				ref={introRef}
 			>
+				<p className="text-chocoletterPurpleBold"> Scroll!</p>
 				<img
 					src={login_view_down_arrow}
 					alt="login_view_down_arrow"
-					className="p-2 max-h-24 opacity-50"
+					className="p-2 max-h-24 opacity-80"
 				/>
 			</div>
 
 			{/* 서비스 소개 제목 */}
-			<div
+			{/* <div
 				className={`mb-20 ${
 					scrollPosition > 90 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
 				<span className="flex justify-center items-center my-2">
-					<p className="border-b border-chocoletterPurple w-1/4 my-4"></p>
-					<p className="mx-4 text-sm text-chocoletterPurple textShadow-none">
-						초코레터! 알아보기!
+					<p className="border-b border-chocoletterPurpleBold w-1/4 my-4"></p>
+					<p className="mx-4 text-sm text-chocoletterPurpleBold textShadow-none">
+						초코레터 이용 안내서
 					</p>
-					<p className="border-b border-chocoletterPurple w-1/4 my-4"></p>
+					<p className="border-b border-chocoletterPurpleBold w-1/4 my-4"></p>
 				</span>
-			</div>
+			</div> */}
 
 			{/* 서비스 설명 */}
 			<div
-				className={`mb-16 ${
-					scrollPosition > 110 ? "slide-in-bottom" : "collapse"
+				className={`mb-14 ${
+					scrollPosition > 70 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
 				{/* <span className="text-xl flex justify-center text-white items-center textShadow ">
@@ -79,8 +88,8 @@ function OnboardingIntro() {
           <p className="mr-1 purple">모든 편지를 확인 가능해요!</p>
         </span> */}
 
-				{/* 두 번째 소개 이미지 */}
-				<div className="flex flex-col items-center mx-8 mb-14">
+				{/* 첫 번째 소개 이미지 */}
+				<div className="flex flex-col items-center mx-8 mb-4">
 					<img
 						src={onboarding_intro_choco_1}
 						alt="onboarding_intro_choco_1"
@@ -97,11 +106,11 @@ function OnboardingIntro() {
 			{/* 추가 서비스 기능 설명 */}
 			<div
 				className={`mb-14 ${
-					scrollPosition > 220 ? "slide-in-bottom" : "collapse"
+					scrollPosition > 240 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
-				<div className="flex flex-col items-center mx-8 mb-14">
-					{/* 세 번째 소개 이미지 */}
+				<div className="flex flex-col items-center mx-8 mb-4">
+					{/* 두 번째 소개 이미지 */}
 					<img
 						src={onboarding_intro_choco_2}
 						alt="onboarding_intro_choco_2"
@@ -117,10 +126,10 @@ function OnboardingIntro() {
 
 			<div
 				className={`${
-					scrollPosition > 400 ? "slide-in-bottom" : "collapse"
+					scrollPosition > 300 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
-				<div className="flex flex-col items-center mx-8 mb-14">
+				<div className="flex flex-col items-center mx-8 mb-4">
 					{/* 세 번째 소개 이미지 */}
 					<img
 						src={onboarding_intro_choco_3}
@@ -136,7 +145,7 @@ function OnboardingIntro() {
 			</div>
 
 			{/* 페이지 상단으로 가기 버튼 */}
-			<div
+			{/* <div
 				className={`px-8 pb-4 mb-10 flex justify-end ${
 					scrollPosition > 410 ? "slide-in-bottom" : "collapse"
 				}`}
@@ -147,10 +156,10 @@ function OnboardingIntro() {
 					// scrollThreshold={600} // 필요에 따라 조정
 					/>
 				</div>
-			</div>
+			</div> */}
 
 			{/* 초콜릿 상자 보러가기 링크 */}
-			<a
+			{/* <a
 				className={`mx-4 ml-10 mb-14 heartbeat
           ${scrollPosition > 420 ? "slide-in-bottom" : "collapse"} `}
 				href="https://www.chocolate-letter.com/main/your/before"
@@ -160,8 +169,7 @@ function OnboardingIntro() {
 					alt="login_view_move_to_teambox"
 					// className="p-2 max-h-64"
 				/>
-				{/* <p className="py-2 text-hrtColorPink">"초코레터"팀의 초콜릿 박스 보러가기</p> */}
-			</a>
+			</a> */}
 		</div>
 	);
 }

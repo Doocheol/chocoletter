@@ -48,14 +48,14 @@ function LoginView() {
 				{/* <h1 className="text-gray-600 font-extrabold">chocoletter</h1> */}
 			</div>
 
-			{/* 로그인 버튼들 */}
-			<div className="flex flex-col items-center mb-6">
-				<KakaoLoginButton />
+			{/* 온보딩 컴포넌트 */}
+			<div className="w-full max-w-sm mb-6" >
+				<Onboarding />
 			</div>
 
-			{/* 온보딩 컴포넌트 */}
-			<div className="w-full max-w-sm">
-				<Onboarding />
+			{/* 로그인 버튼들 */}
+			<div className="flex flex-col items-center mb-4">
+				<KakaoLoginButton />
 			</div>
 		</div>
 	);
