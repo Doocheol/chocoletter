@@ -252,6 +252,22 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		}
 	}, [isVisible, captureTargetId]);
 
+
+	// overlayText가 변경될 때 캔버스를 다시 그리도록 설정
+	useEffect(() => {
+		if (isVisible && canvasRef.current) {
+			const targetElement = document.getElementById(captureTargetId);
+			if (!targetElement) return;
+			html2canvas(targetElement)
+				.then((capturedCanvas) => {
+					drawCanvas(capturedCanvas);
+				})
+				.catch((error) => {
+					console.error("텍스트 업데이트 중 캔버스 캡처 실패:", error);
+				});
+		}
+	}, [overlayText]);
+
 	const handleDownload = async () => {
 		if (!canvasRef.current) {
 			toast.dismiss(); 
