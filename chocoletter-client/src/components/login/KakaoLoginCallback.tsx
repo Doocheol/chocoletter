@@ -12,7 +12,6 @@ import {
 	userNameAtom,
 	userProfileUrlAtom,
 	memberIdAtom,
-	isGiftBoxSelectedAtom,
 } from "../../atoms/auth/userAtoms";
 
 const KakaoLoginCallback: React.FC = () => {
@@ -24,7 +23,6 @@ const KakaoLoginCallback: React.FC = () => {
 	const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
 	const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
 	const setMemberId = useSetRecoilState(memberIdAtom);
-	const setIsGiftBoxSelected = useSetRecoilState(isGiftBoxSelectedAtom);
 
 	useEffect(() => {
 		const handleLogin = async () => {
@@ -73,8 +71,7 @@ const KakaoLoginCallback: React.FC = () => {
 				navigate("/select-giftbox");
 				return;
 			}
-
-			setIsGiftBoxSelected(true);
+			
 			navigate(`/main/${giftBoxId}`);
 		};
 
@@ -88,7 +85,6 @@ const KakaoLoginCallback: React.FC = () => {
 		setIsFirstLogin,
 		setMemberId,
 		setGiftBoxId,
-		setIsGiftBoxSelected,
 	]);
 
 	return <Loading />;
