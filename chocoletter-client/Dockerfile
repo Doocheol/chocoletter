@@ -28,7 +28,7 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 
 RUN echo 'server { \
-    listen 80; \
+    listen 5173; \
     server_name localhost; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -40,5 +40,5 @@ RUN echo 'server { \
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
