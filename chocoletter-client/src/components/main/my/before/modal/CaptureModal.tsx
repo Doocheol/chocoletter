@@ -78,6 +78,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 	// 캔버스에 이미지 및 텍스트를 그리는 함수
 	const drawCanvas = (capturedCanvas: HTMLCanvasElement) => {
 		if (!canvasRef.current) {
+			toast.dismiss(); 
 			toast.error("캔버스가 준비되지 않았습니다.");
 			return;
 		}
@@ -85,6 +86,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext("2d");
 		if (!ctx) {
+			toast.dismiss(); 
 			toast.error("Canvas 컨텍스트를 가져올 수 없습니다.");
 			return;
 		}
@@ -169,7 +171,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				ctx.textBaseline = "middle";
 				ctx.shadowColor = "white";
 				ctx.shadowBlur = 5;
-				const nameText = `From. ${userName}`;
+				const nameText = `To. ${userName}`;
 				const nameX = canvas.width / 2;
 				const nameY = 60;
 				ctx.fillText(nameText, nameX, nameY);
@@ -223,6 +225,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 			})
 			.catch((error) => {
 				console.error("이미지 합성 중 오류 발생:", error);
+				toast.dismiss(); 
 				toast.error("이미지 합성에 실패했습니다.");
 			});
 	};
@@ -230,9 +233,10 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 	// 모달이 열리면 지정된 대상 요소를 html2canvas로 캡처 후 drawCanvas 실행
 	useEffect(() => {
 		if (isVisible) {
-			setIsLoading(true); // 모달 열릴 때마다 로딩 상태 초기화
+			setIsLoading(true); // 모달 열릴 때만만 로딩 상태 초기화
 			const targetElement = document.getElementById(captureTargetId);
 			if (!targetElement) {
+				toast.dismiss(); 
 				toast.error("캡처할 요소를 찾을 수 없습니다.");
 				return;
 			}
@@ -242,13 +246,15 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				})
 				.catch((error) => {
 					console.error("캡처에 실패했습니다:", error);
+					toast.dismiss(); 
 					toast.error("캡처에 실패했습니다.");
 				});
 		}
-	}, [isVisible, captureTargetId, overlayText]);
+	}, [isVisible, captureTargetId]);
 
 	const handleDownload = async () => {
 		if (!canvasRef.current) {
+			toast.dismiss(); 
 			toast.error("다운로드할 캔버스가 없습니다.");
 			return;
 		}
@@ -276,6 +282,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 							text: "내 초콜릿 상자 이미지를 공유하고, 편지를 받아보세요!",
 							files: [file],
 						});
+						toast.dismiss(); 
 						toast.success(
 							"링크도 함께 저장 완료! 인스타 스토리에 공유해보세요!"
 						);
@@ -301,6 +308,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				onClose();
 			} catch (error) {
 				console.error("이미지 다운로드/공유 중 오류 발생:", error);
+				toast.dismiss(); 
 				toast.error("이미지 다운로드/공유에 실패했습니다.");
 				setIsAnimating(false);
 			}
@@ -314,6 +322,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
+		toast.dismiss(); 
 		toast.success("링크도 함께 저장 완료! 인스타 스토리에 공유해보세요!");
 	};
 
@@ -327,7 +336,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				{/* 로딩 오버레이 (isLoading이 true일 때 보여짐) */}
 				{isLoading && <Loading />}
 				{/* 타이틀 추가 */}
-				<h3 className="text-md font-thin">인스타 스토리로 공유하기!</h3>
+				<h3 className="text-md font-thin">이미지를 저장해서 인스타 스토리에 올려보세요!</h3>
 				<div className="h-[10px]"></div>
 				<canvas
 					ref={canvasRef}
