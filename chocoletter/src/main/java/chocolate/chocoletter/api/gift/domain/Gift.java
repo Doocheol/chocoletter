@@ -78,7 +78,7 @@ public class Gift extends BaseTimeEntity {
         this.status = GiftStatus.FIXED;
     }
 
-    public void changeToGeneralGift() {
+    public void rejectUnboxing() {
         this.type = GiftType.GENERAL;
         this.isAccept = null;
         this.unBoxingTime = null;

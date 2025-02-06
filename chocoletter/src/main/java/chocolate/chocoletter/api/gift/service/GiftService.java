@@ -12,8 +12,10 @@ import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftsResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
+import chocolate.chocoletter.api.giftbox.domain.GiftBox;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimeResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
+import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import chocolate.chocoletter.api.letter.service.LetterService;
 import chocolate.chocoletter.api.member.domain.Member;
@@ -46,6 +48,7 @@ public class GiftService {
     private final DateTimeUtil dateTimeUtil;
     private final MemberService memberService;
     private final IdEncryptionUtil idEncryptionUtil;
+    private final GiftBoxRepository giftBoxRepository;
 
     public GiftsResponseDto findAllGifts(Long memberId) {
         List<Gift> gifts = giftRepository.findAllGift(memberId);
@@ -181,6 +184,7 @@ public class GiftService {
         }
         gift.acceptUnboxing();
 
+        // 수락하면 언박싱 룸 파주기
         Member receiver = memberService.findMember(memberId);
         UnboxingRoom unboxingRoom = UnboxingRoom.builder()
                 .gift(gift)
@@ -188,8 +192,9 @@ public class GiftService {
                 .senderId(gift.getSenderId())
                 .startTime(gift.getUnBoxingTime())
                 .build();
-
         unboxingRoomService.saveUnboxingRoom(unboxingRoom);
+
+        // 수락했다는 알림을 보낸 사람에게 전송
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.ACCEPT_SPECIAL)
                 .giftId(giftId)
@@ -205,8 +210,20 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        gift.changeToGeneralGift();
+        gift.rejectUnboxing();
+
+        // 거절해서 일반으로 바뀌면 받은 일반 초콜릿 개수 +1
         Member receiver = memberService.findMember(memberId);
+        GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByMemberId(receiver.getId());
+        receiverGiftBox.addGeneralGiftCount();
+
+        // 거절해서 일반으로 바뀌었는데 서로 보냈다면 채팅방 파주기
+        Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
+        if (receiverGift != null) {
+            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
+        }
+        
+        // 거절했다는 알림을 보낸 사람에게 전송
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.REJECT_SPECIAL)
                 .giftId(giftId)
@@ -214,19 +231,6 @@ public class GiftService {
                 .partnerName(receiver.getName())
                 .build();
         alarmService.save(alarm);
-    }
-
-    @Transactional
-    public void changeToGeneralGift(Long memberId, Long giftId) {
-        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
-        if (!gift.getSenderId().equals(memberId)) {
-            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
-        }
-        gift.changeToGeneralGift();
-        Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
-        if (receiverGift != null) {
-            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
-        }
     }
 
     @Transactional
