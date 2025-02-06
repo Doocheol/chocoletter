@@ -8,7 +8,6 @@ public record GeneralFreeGiftRequestDto(
         @Size(min = 1, max = 25)
         String nickName,
         @NotNull
-        @Size(min = 1, max = 200)
         String content) {
 
 }

@@ -10,6 +10,5 @@ public record GeneralQuestionRequestDto(
         @NotNull
         String question,
         @NotNull
-        @Size(min = 1, max = 200)
         String answer) {
 }

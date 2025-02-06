@@ -11,7 +11,6 @@ public record SpecialQuestionGiftRequestDto(
         @NotNull
         String question,
         @NotNull
-        @Size(min = 1, max = 200)
         String answer,
         @Pattern(
                 regexp = "^([01]\\d|2[0-3]):(00|10|20|30|40|50)$",
