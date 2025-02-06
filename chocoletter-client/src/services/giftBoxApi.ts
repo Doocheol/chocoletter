@@ -45,14 +45,14 @@ export async function countMyGiftBox() {
  * @param giftBoxId 선물상자 ID
  * @returns Promise<{ name: string; type: number }>
  */
-export async function getGiftBoxName(giftBoxId: string): Promise<{ name: string; type: number }> {
+export async function getGiftBoxName(giftBoxId: string): Promise<{ name: string; type: number, fillLevel: number }> {
   try {
     // api.get 호출: /api/v1/gift-box/{giftBoxId}
     const res = await api.get(`/api/v1/gift-box/${giftBoxId}`);
-    // 응답 데이터에서 name과 type 프로퍼티 추출 (API 응답 형식에 맞게 수정)
-    const { name, type } = res.data;
-    console.log("선물상자 정보 조회 성공:", { name, type });
-    return { name, type };
+    // 응답 데이터에서 name과 type, fillLevel 프로퍼티 추출 (API 응답 형식에 맞게 수정)
+    const { name, type, fillLevel } = res.data;
+    console.log("선물상자 정보 조회 성공:", { name, type, fillLevel });
+    return { name, type, fillLevel };
   } catch (err) {
     console.error("getGiftBoxName API 호출 중 에러 발생:", err);
     throw err;

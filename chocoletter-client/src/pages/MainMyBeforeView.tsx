@@ -21,11 +21,21 @@ import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
-import giftbox_before_1 from "../assets/images/giftbox/giftbox_before_1.svg";
-import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
-import giftbox_before_3 from "../assets/images/giftbox/giftbox_before_3.svg";
-import giftbox_before_4 from "../assets/images/giftbox/giftbox_before_4.svg";
-import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
+import giftbox_before_10 from "../assets/images/giftbox/giftbox_before_10.svg";
+import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";	
+import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";	
+import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";	
+import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";	
+import giftbox_before_11 from "../assets/images/giftbox/giftbox_before_11.svg";
+import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";	
+import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";	
+import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";	
+import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";	
+import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
+import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
+import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
+import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
+import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
 
 import Backdrop from "../components/common/Backdrop";
 import share_button from "../assets/images/button/share_button.svg";
@@ -43,6 +53,7 @@ import click_text from "../assets/images/main/click_text.svg";
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 import { countMyGiftBox } from "../services/giftBoxApi";
 import { getAlarmCount } from "../services/alarmApi";
+import { getGiftBoxName } from "../services/giftBoxApi";
 
 import Notification from "../components/main/my/before/modal/Notification";
 
@@ -55,6 +66,7 @@ const MainMyBeforeView: React.FC = () => {
 	const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
 	const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
+	const [shapeNum, setShapeNum] = useState('12');
 
 	// 주소창 높이 보정
 	useViewportHeight();
@@ -86,9 +98,11 @@ const MainMyBeforeView: React.FC = () => {
 		useState<boolean>(false);
 	const [isAlarmCountLoading, setIsAlarmCountLoading] =
 		useState<boolean>(false);
+	const [isGiftShapeLoading, setIsGiftShapeLoading] =
+		useState<boolean>(false);
 
 	// API 진행 시 로딩 상태가 하나라도 true면 전역 로딩 표시
-	const isLoading = isGiftCountLoading || isAlarmCountLoading;
+	const isLoading = isGiftCountLoading || isAlarmCountLoading || isGiftShapeLoading;
 
 	// URL 파라미터와 Recoil에 저장된 shareCode 검증
 	useEffect(() => {
@@ -97,33 +111,43 @@ const MainMyBeforeView: React.FC = () => {
 		}
 	}, [giftBoxNum, navigate]);
 
-	useEffect(() => {
-		if (urlGiftBoxId && savedGiftBoxId) {
-			if (urlGiftBoxId !== savedGiftBoxId) {
-				console.warn(
-					"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
-				);
-				navigate("/error");
-			}
-		} else if (!urlGiftBoxId && savedGiftBoxId) {
-			navigate(`/main/${savedGiftBoxId}`);
-		} else if (urlGiftBoxId && !savedGiftBoxId) {
-			console.warn(
-				"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
-			);
-			navigate("/error");
-		} else {
-			console.warn("shareCode 정보가 없습니다.");
-			navigate("/");
-		}
-	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
+	// useEffect(() => {
+	// 	if (urlGiftBoxId && savedGiftBoxId) {
+	// 		if (urlGiftBoxId !== savedGiftBoxId) {
+	// 			console.warn(
+	// 				"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
+	// 			);
+	// 			navigate("/error");
+	// 		}
+	// 	} else if (!urlGiftBoxId && savedGiftBoxId) {
+	// 		navigate(`/main/${savedGiftBoxId}`);
+	// 	} else if (urlGiftBoxId && !savedGiftBoxId) {
+	// 		console.warn(
+	// 			"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
+	// 		);
+	// 		navigate("/error");
+	// 	} else {
+	// 		console.warn("shareCode 정보가 없습니다.");
+	// 		navigate("/");
+	// 	}
+	// }, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	const giftBoxImages: { [key: number]: string } = {
-		1: giftbox_before_1,
-		2: giftbox_before_2,
-		3: giftbox_before_3,
-		4: giftbox_before_4,
-		5: giftbox_before_5,
+		10: giftbox_before_10,
+		20: giftbox_before_20,
+		30: giftbox_before_30,
+		40: giftbox_before_40,
+		50: giftbox_before_50,
+		11: giftbox_before_11,
+		21: giftbox_before_21,
+		31: giftbox_before_31,
+		41: giftbox_before_41,
+		51: giftbox_before_51,
+		12: giftbox_before_12,
+		22: giftbox_before_22,
+		32: giftbox_before_32,
+		42: giftbox_before_42,
+		52: giftbox_before_52,
 	};
 
 	// 핸들러들
@@ -164,6 +188,25 @@ const MainMyBeforeView: React.FC = () => {
 	const handleMyChocolateBox = () => {
 		navigate("/gift-list/before");
 	};
+	// 선물상자 이미지 API 호출
+	useEffect(() => {
+		async function fetchGiftShape() {
+			setIsGiftShapeLoading(true);
+			try {
+				if (urlGiftBoxId) {
+					const { name, type, fillLevel } = await getGiftBoxName(urlGiftBoxId);
+					setShapeNum(String(type) + String(fillLevel));
+				} else {
+					throw new Error("Gift Box ID is undefined");
+				}
+			} catch (err) {
+				console.error("Gift Box name API 실패:", err);
+			} finally {
+				setIsGiftShapeLoading(false);
+			}
+		}
+		fetchGiftShape();
+	}, [urlGiftBoxId, setIsGiftShapeLoading]);
 
 	// 선물 개수 API 호출 (로딩 포함)
 	useEffect(() => {
@@ -336,8 +379,8 @@ const MainMyBeforeView: React.FC = () => {
 								className="w-[255px] pl-8 flex items-center justify-center"
 							>
 								<img
-									src={giftBoxImages[giftBoxNum]}
-									alt={`giftbox_before_${giftBoxNum}`}
+									src={giftBoxImages[Number(shapeNum)]}
+									alt={`giftbox_before_${shapeNum}`}
 									className="p-2 max-h-60"
 								/>
 							</button>
