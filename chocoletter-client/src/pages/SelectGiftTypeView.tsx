@@ -86,7 +86,7 @@ function SelectGiftTypeView() {
 
                 {/* 일반/특별 버튼 */}
                 <div className="flex flex-col items-center justify-center m-4 gap-[30px]">
-                    <div className="w-[291px] h-[75px] flex flex-col px-[15px] gap-[29px] justify-center items-center mt-[30px] mb-[100px]">
+                    <div className="w-[291px] h-[75px] flex flex-col px-[15px] gap-[20px] justify-center items-center mt-[30px] mb-[100px]">
                         <div className="flex flex-col justify-center items-center gap-[15px] ">
                             <div style={{ textAlign: "center", marginTop: "50px" }}>
                             {/* 아이콘 변경 */}
@@ -97,15 +97,13 @@ function SelectGiftTypeView() {
                             )}
                             </div>
                             {/* <img src={readLetterIcon} alt="편지 보기 아이콘" /> */}
-                            <p className="text-2xl font-bold text-left">
-                                같이 개봉하실래요?
+                            <p className="text-2xl font-bold text-center">
+                                상대방과 함께  <br/> 편지를 열어보실래요?
                             </p>
                         </div>                        
-                        <p className="self-stretch text-[13px] leading-[140%]">
-                            같이 개봉하는 경우 지정된 시간에 
-                            편지를 전해드리고, <br/>
-                            화면 너머로
-                            따스한 마음을 나눌 수 있습니다.
+                        <p className="self-stretch text-[13px] leading-[140%] text-center ">
+                            원하는 시간을 상대방에게 요청하여, <br/>
+                            2월 14일에 영상통화로 만나보세요!
                         </p>
                         {/* JSON 형태로 전체 상태 보기 */}
                             {/* <div className="mt-4 p-4 bg-gray-200 border rounded">
