@@ -25,7 +25,7 @@ const GiftBoxIdRouter: React.FC = () => {
 
   const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
   const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
-  const [ isGiftBoxSelected ] = useRecoilValue(isGiftBoxSelectedAtom);
+  const isGiftBoxSelected = useRecoilValue(isGiftBoxSelectedAtom);
 
   const today = new Date();
   const eventDate = getEventDate();

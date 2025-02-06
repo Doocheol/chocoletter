@@ -16,12 +16,14 @@ import giftbox_before_3 from "../assets/images/giftbox/giftbox_before_3.svg";
 import giftbox_before_4 from "../assets/images/giftbox/giftbox_before_4.svg";
 import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
+import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 // 선물상자 배경 이미지를 background-image로 사용
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
 import { getGiftBoxName, verifyGiftSend } from "../services/giftBoxApi";
+import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
@@ -71,6 +73,7 @@ const MainYourBeforeView: React.FC = () => {
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);
 	const [isAlreadySentModalOpen, setIsAlreadySentModalOpen] = useState(false);
+	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
 
 	const handleProfile = () => {
 		if (!isLoggedIn) {
@@ -78,6 +81,10 @@ const MainYourBeforeView: React.FC = () => {
 			return;
 		}
 		setIsProfileOpen((prev) => !prev);
+	};
+
+	const handleTutorial = () => {
+		setIsTutorialModalOpen(true);
 	};
 
 	// 선물하기 버튼 클릭 시, 먼저 선물 전송 여부를 확인합니다.
@@ -181,9 +188,16 @@ const MainYourBeforeView: React.FC = () => {
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
 				{/* 상단 아이콘 바 */}
-				<div className="mt-6 ml-6 flex items-center justify-end">
+				<div className="mt-5 ml-6 flex items-center justify-between">
 					<button onClick={handleProfile} className="mr-6">
 						<FaUserCircle className="w-6 h-6 text-chocoletterPurpleBold hover:text-chocoletterPurple" />
+					</button>
+					<button onClick={handleTutorial}>
+						<img
+							src={tutorial_icon}
+							className="w-6 h-6"
+							alt="tutorial icon"
+						/>
 					</button>
 				</div>
 
@@ -201,7 +215,7 @@ const MainYourBeforeView: React.FC = () => {
 					{/* 배경 위에 텍스트를 중앙 정렬 */}
 					<div className="absolute inset-0 flex items-center justify-center">
 						<span className="text-2xl text-center max-w-full truncate">
-							{recipientNickname} 님의 선물상자
+							{recipientNickname} 님의 초콜릿 보관함
 						</span>
 					</div>
 				</div>
@@ -254,6 +268,11 @@ const MainYourBeforeView: React.FC = () => {
 					targetDate={whiteDay}
 					isOpen={isCountdownOpen}
 					onClose={() => setIsCountdownOpen(false)}
+				/>
+				{/* 튜토리얼 모달 */}
+				<TutorialModal
+					isOpen={isTutorialModalOpen}
+					onClose={() => setIsTutorialModalOpen(false)}
 				/>
 			</div>
 		</div>
