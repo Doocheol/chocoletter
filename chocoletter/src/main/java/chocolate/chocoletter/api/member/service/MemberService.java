@@ -1,16 +1,16 @@
 package chocolate.chocoletter.api.member.service;
 
+import chocolate.chocoletter.api.giftbox.domain.GiftBox;
+import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
 import chocolate.chocoletter.api.member.domain.Member;
+import chocolate.chocoletter.api.member.dto.response.MyPageResponseDto;
 import chocolate.chocoletter.api.member.repository.MemberRepository;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.NotFoundException;
-import chocolate.chocoletter.api.giftbox.domain.GiftBox;
-import chocolate.chocoletter.api.giftbox.repository.GiftBoxRepository;
-import chocolate.chocoletter.api.member.dto.response.MyPageResponseDto;
+import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,4 +30,9 @@ public class MemberService {
         return MyPageResponseDto.of(giftBox.get(), member.get());
     }
 
+    @Transactional
+    public void initPublicKey(Long memberId, String publicKey) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        member.ifPresent(value -> value.initPublicKey(publicKey));
+    }
 }
