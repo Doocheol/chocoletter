@@ -35,18 +35,20 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
     let content = null;
 
     if (giftType === "GENERAL") {
-        if (isOpened || currentMonthDay === eventDay) {
+        if (isOpened) {
             content = (
                 <div className="absolute top-0 left-0 m-2">
                     <img src={checkPurple} alt="체크 아이콘" />
                 </div>
             )
         } else {
-            content = (
-                <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                    <p className="font-sans text-white text-sm text-center font-bold">열어주길<br/>기다리는 중...</p>
-                </div>
-            )
+            if (currentMonthDay !== eventDay) {
+                content = (
+                    <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
+                        <p className="font-sans text-white text-sm text-center font-bold">열어주길<br/>기다리는 중...</p>
+                    </div>
+                )
+            }
         }
 
     } else {

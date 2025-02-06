@@ -84,7 +84,7 @@ export const joinSession = async (
 				const publisher = await OV.initPublisherAsync(undefined, {
 					audioSource: undefined, // 기본 마이크
 					videoSource: undefined, // 기본 카메라
-					publishAudio: false, // 오디오 송출 여부
+					publishAudio: true, // 오디오 송출 여부
 					publishVideo: true, // 비디오 송출 여부
 					resolution: '640x480', // 해상도
 					frameRate: 30, // 프레임 레이트

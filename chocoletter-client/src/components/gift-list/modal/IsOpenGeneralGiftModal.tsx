@@ -16,7 +16,7 @@ export const IsOpenGeneralGiftModal: React.FC<IsOpenGeneralGiftModalProps> = ({ 
 
     return (
         <OtherModal isOpen={isOpen} onClose={onClose} >
-            <div className="text-center flex flex-col justify-center items-center gap-6">
+            <div className="text-center flex flex-col justify-center items-center gap-6 font-sans">
                 <div className="w-7 h-7">
                     <img src={readLetterIcon} alt="편지 아이콘" className="w-full h-full" />
                 </div>

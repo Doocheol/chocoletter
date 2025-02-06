@@ -4,7 +4,7 @@ import Modal from "../../../../common/Modal";
 import { fetchMyUnboxingSchedule } from "../../../../../services/unboxingApi";
 import { toast } from "react-toastify";
 
-const specialImages = import.meta.glob("../../../../../assets/images/chocolate/special/*.png", {
+const specialImages = import.meta.glob("../../../../../assets/images/chocolate/special/*.svg", {
   eager: true,
 });
 const specialChocos = Object.values(specialImages).map(
@@ -176,11 +176,9 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     >
       <div className="flex flex-col w-full">
         {/* ChatRoomListView 스타일 헤더 */}
-        <div className="w-full h-[58px] px-4 py-[17px] bg-chocoletterLetterBgBlue rounded-xl flex items-center justify-between">
-          {/* 좌측: 뒤로가기 버튼 자리 (필요 시 추가) */}
-          <div className="w-6 h-6"></div>
+        <div className="w-full h-[30px] px-4 bg-chocoletterLetterBgBlue rounded-xl flex items-center justify-start">
           {/* 중앙: 제목 */}
-          <div className="text-center text-nowrap text-black text-xl font-bold">발렌타인데이 일정</div>
+          <div className="text-center text-nowrap text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
           {/* 우측: 빈 공간 */}
           <div className="w-6 h-6"></div>
         </div>
@@ -193,28 +191,49 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
               const fiveBeforeKST = getFiveMinutesBefore(eventKST);
               const nowKST = CurrentTime();
-              console.log(nowKST, eventKST, fiveBeforeKST);
+              
+              const nowUTC = new Date(Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth(),
+                new Date().getUTCDate(),
+                new Date().getUTCHours(),
+                new Date().getUTCMinutes(),
+                new Date().getUTCSeconds()
+              ));
+              const beforeEventTimeUTC = new Date(Date.UTC(2025, 1, 13, 15, 0, 0));
+
 
               // 조건에 따라 버튼을 다르게 처리
               let buttonAction;
               let isHidden = false;
               let isAfter = false;
 
-              if (nowKST > eventKST) {
-                // 이벤트 시간이 지난 경우 -> 버튼 숨기기
-                isHidden = true;
-              } else if (nowKST >= fiveBeforeKST) {
-                // 5분 전 ~ 이벤트 시간까지 -> navigate
-                if (item.unboxingRoomId) {
-                  buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
+
+              if (nowUTC < beforeEventTimeUTC) {
+                if (item.isAccept) {
+                  buttonAction = () => toast("2월 14일 해당되는 시간에 입장 가능합니다.");
                 } else {
-                  buttonAction = () => toast.error("방 정보가 없습니다");
+                  buttonAction = () => toast.error("아직 수락되지 않은 초대장입니다.")
+                  isAfter = true;
                 }
               } else {
-                // 이벤트 시간이 아직 안 됨 -> toast 출력
-                buttonAction = () => toast.warning("적혀있는 시간 5분 전부터 입장 가능합니다");
-                isAfter = true;
+                if (nowKST > eventKST) {
+                  // 이벤트 시간이 지난 경우 -> 버튼 숨기기
+                  isHidden = true;
+                } else if (nowKST >= fiveBeforeKST) {
+                  // 5분 전 ~ 이벤트 시간까지 -> navigate
+                  if (item.unboxingRoomId) {
+                    buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
+                  } else {
+                    buttonAction = () => toast.error("방 정보가 없습니다");
+                  }
+                } else {
+                  // 이벤트 시간이 아직 안 됨 -> toast 출력
+                  buttonAction = () => toast("5분 전부터 입장 가능합니다");
+                  isAfter = true;
+                }
               }
+              
 
               return(
                 <button 
@@ -228,9 +247,9 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                     {/* 왼쪽 초대장 스타일 배경 */}
                     <div className="w-2/3 h-full text-start bg-white text-[#f82e91] p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
                       <div className="w-full h-full">
-                        <h3 className="text-md font-bold">언박싱 초대장💌</h3>
-                        <p className="text-gray-500 mt-2">{item.nickName}님과 함께<br/>편지를 열어보세요!</p>
-                        <p className="text-sm mt-2">{ChangeAmPm(item.unBoxingTime)}</p>
+                        <h3 className="text-md font-bold font-sans">언박싱 초대장💌</h3>
+                        <p className="text-gray-500 mt-2 font-sans">{item.nickName}님과 함께<br/>편지를 열어보세요!</p>
+                        <p className="text-sm mt-2 font-sans">{ChangeAmPm(item.unBoxingTime)}</p>
                       </div>
                     </div>
                     
@@ -242,7 +261,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                 </button>
             )})
           ) : (
-            <div className="text-gray-300 text-sm text-center">일정이 없어요!</div>
+            <div className="text-gray-300 text-sm text-center font-sans">일정이 없어요!</div>
           )}
         </div>
       </div>

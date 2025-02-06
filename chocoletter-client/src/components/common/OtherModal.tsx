@@ -43,7 +43,7 @@ export const OtherModal: React.FC<ModalProps> = ({ isOpen, onClose, children, cl
         >
         <FocusLock>
             <div
-            className={`bg-white rounded-[20px] shadow-lg p-5 w-full max-w-md gap-6 text-center flex flex-col justify-center items-center ${
+            className={`bg-white rounded-[20px] font-sans shadow-lg p-5 w-full max-w-md gap-6 text-center flex flex-col justify-center items-center ${
                 className || ""
             }`}
             onClick={handleContentClick}
