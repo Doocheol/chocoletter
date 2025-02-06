@@ -77,7 +77,7 @@ const LetterView = () => {
       }
     };
     fetchGiftData();
-  }, [selectedGiftId]);
+  }, [selectedGiftId, memberId, giftBoxId]);
 
   const backgroundClass = giftData?.question
     ? "bg-letter-blue-background"
