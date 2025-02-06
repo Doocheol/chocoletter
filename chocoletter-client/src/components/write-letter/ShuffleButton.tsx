@@ -1,5 +1,8 @@
 import React from "react";
 import shuffle_icon from "../../assets/images/letter/shuffle_icon.svg";
+import { BsArrowCounterclockwise } from "react-icons/bs";
+import { RiResetRightFill } from "react-icons/ri";
+import { AiOutlineReload } from "react-icons/ai";
 
 type ShuffleButtonProps = {
     onShuffleClick: () => void; // 부모 컴포넌트로 전달할 이벤트
@@ -21,7 +24,7 @@ export const ShuffleButton = ({
             className={`${baseStyle} ${className}`}
             aria-label={altText}
         >
-            <img src={shuffle_icon} alt="랜덤 질문 섞기" />
+            <RiResetRightFill color="white" size={28}/>
         </button>
     );
 };
