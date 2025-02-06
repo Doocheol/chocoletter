@@ -123,9 +123,9 @@ const TestVideoRoomView = () => {
         if (!isItThere) return;
         setCountFive(true);
         const timer = setTimeout(() => {
-            console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& videoState.publisher");
-            videoState.publisher?.publishAudio(true);
-            console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& after.publisher");
+            // console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& videoState.publisher");
+            // videoState.publisher?.publishAudio(true);
+            // console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& after.publisher");
             console.log("publish do");
             setCountFive(false);
         }, 5000);
