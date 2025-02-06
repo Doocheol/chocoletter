@@ -1,4 +1,3 @@
-// SelectGiftTypeView.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
