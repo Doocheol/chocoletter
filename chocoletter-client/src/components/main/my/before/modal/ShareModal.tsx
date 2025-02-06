@@ -119,7 +119,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 				setSharedLink("");
 			}}
 		>
-			<div className="flex flex-col items-center rounded-2xl pl-3">
+			<div className="flex flex-col items-center rounded-2xl pl-2">
 				<h2 className="text-md font-thin mb-4">나도 초콜릿 받기!</h2>
 
 				{/** (1) 만약 shareLink가 로딩 중이면 <Loading />를 화면에 표시 */}

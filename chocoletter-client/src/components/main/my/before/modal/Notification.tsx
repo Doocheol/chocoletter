@@ -16,7 +16,7 @@ const getAlarmMessage = (alarm: Alarm): string => {
 		case "REJECT_SPECIAL":
 			return `${alarm.partnerName}님께 보낸 영상통화 일정이 거절되었습니다.`;
 		case "RECEIVE_SPECIAL":
-			return `누군가가 영상통화를 요청했어요.\n일정을 확인하시겠어요?`;
+			return "누군가가 영상통화를 요청했어요.\n일정을 확인하시겠어요?";
 		case "UNBOXING_NOTICE":
 			return `${alarm.partnerName}님과 함께하는 영상통화 일정 30분 전이에요.`;
 		default:
@@ -190,7 +190,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 								>
 									{/* 왼쪽: 알림 메시지 및 약속 시각 */}
 									<div className="flex flex-col">
-										<p className="text-[12px] leading-[14px] font-semibold">
+										<p className="text-[12px] leading-[14px] font-semibold" style={{ whiteSpace: "pre-line" }}>
 											{getAlarmMessage(alarm)}
 										</p>
 										{formattedTime && (

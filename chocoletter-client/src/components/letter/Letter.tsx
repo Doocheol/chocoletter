@@ -31,17 +31,17 @@ const Gift: React.FC<GiftProps> = ({ nickName, content, question, answer }) => {
             <div>
                 {content ? (
                     <div className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
-                        <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517]">{content}</p>
+                        <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517] break-words overflow-hidden">{content}</p>
                     </div>
                 ) : (
                     <div>
                         <div className="flex min-w-[230px] max-w-[329px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white mb-[20px]">
                             <img src={question_icon} alt="login_view_service_title" className="" />
-                            <p className="font-[Dovemayo_gothic] text-[18px] font-normal leading-[22px] tracking-[-0.408px]">{question}</p>
+                            <p className="font-[Dovemayo_gothic] text-[18px] font-normal leading-[22px] tracking-[-0.408px] break-words">{question}</p>
                         </div>
     
                         <div className="flex w-[361px] min-h-[340px] p-[20px] justify-center items-start gap-[10px] self-stretch rounded-[15px] border border-dashed border-black bg-white">
-                            <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517]">{answer}</p>
+                            <p className="text-[18px] font-[Dovemayo_gothic] font-normal leading-[27px] tracking-[-0.408px] text-center text-[#151517] break-words overflow-hidden">{answer}</p>
                         </div>
                     </div>        
                 )}

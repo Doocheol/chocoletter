@@ -1,3 +1,4 @@
+// KakaoLoginCallback.tsx (일부)
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -6,33 +7,40 @@ import Loading from "../common/Loading";
 import { MyUserInfo } from "../../types/user";
 import { removeUserInfo, saveUserInfo } from "../../services/userApi";
 import {
-	isFirstLoginAtom,
-	isLoginAtom,
-	giftBoxIdAtom,
-	userNameAtom,
-	userProfileUrlAtom,
-	memberIdAtom,
+  isFirstLoginAtom,
+  isLoginAtom,
+  giftBoxIdAtom,
+  userNameAtom,
+  userProfileUrlAtom,
+  memberIdAtom,
 } from "../../atoms/auth/userAtoms";
+import {
+  generateAndStoreKeyPairForMember,
+  getMemberPrivateKey,
+  getMemberPublicKey,
+} from "../../utils/keyManager";
+import { arrayBufferToBase64 } from "../../utils/encryption";
+import { postMemberPublicKey } from "../../services/keyApi";
 
 const KakaoLoginCallback: React.FC = () => {
-	const navigate = useNavigate();
-	const location = useLocation(); // useLocation는 최상위에서 호출합니다.
-	const setIsLogin = useSetRecoilState(isLoginAtom);
-	const setUserName = useSetRecoilState(userNameAtom);
-	const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
-	const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
-	const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
-	const setMemberId = useSetRecoilState(memberIdAtom);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const setIsLogin = useSetRecoilState(isLoginAtom);
+  const setUserName = useSetRecoilState(userNameAtom);
+  const setUserProfileUrl = useSetRecoilState(userProfileUrlAtom);
+  const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
+  const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
+  const setMemberId = useSetRecoilState(memberIdAtom);
 
-	useEffect(() => {
-		const handleLogin = async () => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const accessToken = urlParams.get("accessToken");
-			const userName = urlParams.get("userName");
-			const userProfileUrl = urlParams.get("userProfileUrl");
-			const isFirstLoginParam = urlParams.get("isFirstLogin");
-			const giftBoxId = urlParams.get("giftBoxId");
-			const memberId = urlParams.get("memberId");
+  useEffect(() => {
+    const handleLogin = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get("accessToken");
+      const userName = urlParams.get("userName");
+      const userProfileUrl = urlParams.get("userProfileUrl");
+      const isFirstLoginParam = urlParams.get("isFirstLogin");
+      const giftBoxId = urlParams.get("giftBoxId");
+      const memberId = urlParams.get("memberId");
 
 			if (!accessToken || !userName || !giftBoxId || !memberId) {
 				removeUserInfo();
@@ -42,52 +50,89 @@ const KakaoLoginCallback: React.FC = () => {
 				return;
 			}
 
-			const isFirstLogin = isFirstLoginParam === "true";
-			setIsFirstLogin(isFirstLogin);
+      const isFirstLogin = isFirstLoginParam === "true";
+      setIsFirstLogin(isFirstLogin);
 
-			const userInfo: MyUserInfo = {
-				userName,
-				accessToken,
-				giftBoxId,
-			};
+      const userInfo: MyUserInfo = {
+        userName,
+        accessToken,
+        giftBoxId,
+      };
 
-			saveUserInfo(userInfo);
+      saveUserInfo(userInfo);
 
-			setIsLogin(true);
-			setUserName(userName);
-			setUserProfileUrl(userProfileUrl || "");
-			setGiftBoxId(giftBoxId);
-			setMemberId(memberId);
+      setIsLogin(true);
+      setUserName(userName);
+      setUserProfileUrl(userProfileUrl || "");
+      setGiftBoxId(giftBoxId);
+      setMemberId(memberId);
+      console.log(memberId);
 
-			const redirectPath = localStorage.getItem("redirect");
+      // memberId 기반 키 페어 생성 및 저장
+      await generateAndStoreKeyPairForMember(memberId);
+      console.log("키 페어 생성 완료");
 
-			if (redirectPath) {
-				navigate(redirectPath);
-				localStorage.removeItem("redirect");
-				return;
-			}
+      // // 생성된 공개키와 개인키를 불러와서 Base64로 export 후 콘솔에 출력 (테스트 용도)
+      // const publicKey = await getMemberPublicKey(memberId);
+      // const privateKey = await getMemberPrivateKey(memberId);
+      // console.log("불러온 publicKey:", publicKey, "불러온 privateKey:", privateKey);
+      
+      // if (publicKey && privateKey) {
+      //   try {
+      //     // 공개키 export (spki 형식)
+      //     const exportedPublicKey = await window.crypto.subtle.exportKey("spki", publicKey);
+      //     const publicKeyB64 = arrayBufferToBase64(exportedPublicKey);
+      //     // 개인키 export (pkcs8 형식)
+      //     const exportedPrivateKey = await window.crypto.subtle.exportKey("pkcs8", privateKey);
+      //     const privateKeyB64 = arrayBufferToBase64(exportedPrivateKey);
 
-			if (isFirstLogin) {
-				navigate("/select-giftbox");
-				return;
-			}
-			
-			navigate(`/main/${giftBoxId}`);
-		};
+      //     console.log("Generated Public Key (Base64):", publicKeyB64);
+      //     console.log("Generated Private Key (Base64):", privateKeyB64);
+      //   } catch (exportError) {
+      //     console.error("키 export 에러:", exportError);
+      //   }
+      // } else {
+      //   console.error("키 페어가 정상적으로 로드되지 않았습니다.");
+      // }
 
-		handleLogin();
-	}, [
-		navigate,
-		location, // location을 의존성 배열에 추가합니다.
-		setIsLogin,
-		setUserName,
-		setUserProfileUrl,
-		setIsFirstLogin,
-		setMemberId,
-		setGiftBoxId,
-	]);
+      // 로컬에 저장된 공개키 불러오기
+      const publicKeyCryptoKey = await getMemberPublicKey(memberId);
+      if (!publicKeyCryptoKey) {
+        throw new Error("공개키 로딩 실패");
+      }
+      // 내보내기하여 Base64 문자열로 변환
+      const exportedPublicKey = await window.crypto.subtle.exportKey("spki", publicKeyCryptoKey);
+      const publicKeyB64 = arrayBufferToBase64(exportedPublicKey);
 
-	return <Loading />;
+      // 서버에 공개키 등록
+      await postMemberPublicKey(publicKeyB64);
+
+      const redirectPath = localStorage.getItem("redirect");
+      if (redirectPath) {
+        navigate(redirectPath);
+        localStorage.removeItem("redirect");
+        return;
+      }
+      if (isFirstLogin) {
+        navigate("/select-giftbox");
+        return;
+      }
+      navigate(`/main/${giftBoxId}`);
+    };
+
+    handleLogin();
+  }, [
+    navigate,
+    location,
+    setIsLogin,
+    setUserName,
+    setUserProfileUrl,
+    setIsFirstLogin,
+    setMemberId,
+    setGiftBoxId,
+  ]);
+
+  return <Loading />;
 };
 
 export default KakaoLoginCallback;
