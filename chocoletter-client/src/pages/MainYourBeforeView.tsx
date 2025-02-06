@@ -10,11 +10,11 @@ import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
 // 이미지 및 버튼 파일들
-import giftbox_before_1 from "../assets/images/giftbox/giftbox_before_1.svg";
-import giftbox_before_2 from "../assets/images/giftbox/giftbox_before_2.svg";
-import giftbox_before_3 from "../assets/images/giftbox/giftbox_before_3.svg";
-import giftbox_before_4 from "../assets/images/giftbox/giftbox_before_4.svg";
-import giftbox_before_5 from "../assets/images/giftbox/giftbox_before_5.svg";
+import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
+import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
+import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
+import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
+import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 // 선물상자 배경 이미지를 background-image로 사용
@@ -32,11 +32,11 @@ const DEFAULT_GIFTBOX_NAME = "초코레터";
 
 // giftBoxType에 따른 이미지 매핑
 const giftboxImages: { [key: number]: string } = {
-	1: giftbox_before_1,
-	2: giftbox_before_2,
-	3: giftbox_before_3,
-	4: giftbox_before_4,
-	5: giftbox_before_5,
+	1: giftbox_before_12,
+	2: giftbox_before_22,
+	3: giftbox_before_32,
+	4: giftbox_before_42,
+	5: giftbox_before_52,
 };
 
 const MainYourBeforeView: React.FC = () => {
@@ -136,8 +136,8 @@ const MainYourBeforeView: React.FC = () => {
 		if (giftBoxId) {
 			getGiftBoxName(giftBoxId)
 				.then((data) => {
-					// data의 타입은 { name: string, type: number }라고 가정
-					const { name, type } = data;
+					// data의 타입은 { name: string, type: number, fillLevel: number }라고 가정
+					const { name, type, fillLevel } = data;
 					const validName =
 						name && name.trim() !== "" ? name.trim() : null;
 

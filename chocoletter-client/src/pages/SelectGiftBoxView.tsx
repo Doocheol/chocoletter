@@ -6,11 +6,11 @@ import { giftBoxNumAtom, giftBoxIdAtom, isGiftBoxSelectedAtom } from "../atoms/a
 import { GoBackButton } from "../components/common/GoBackButton";
 
 // 선물상자 에셋 임포트
-import box1 from "../assets/images/giftbox/giftbox_before_1.svg";
-import box2 from "../assets/images/giftbox/giftbox_before_2.svg";
-import box3 from "../assets/images/giftbox/giftbox_before_3.svg";
-import box4 from "../assets/images/giftbox/giftbox_before_4.svg";
-import box5 from "../assets/images/giftbox/giftbox_before_5.svg";
+import box1 from "../assets/images/giftbox/giftbox_before_12.svg";
+import box2 from "../assets/images/giftbox/giftbox_before_22.svg";
+import box3 from "../assets/images/giftbox/giftbox_before_32.svg";
+import box4 from "../assets/images/giftbox/giftbox_before_42.svg";
+import box5 from "../assets/images/giftbox/giftbox_before_52.svg";
 import { Button } from "../components/common/Button";
 import { removeUserInfo } from "../services/userApi";
 import { updateGiftBoxType } from "../services/giftBoxApi"; // 추가: 선물상자 타입 업데이트 API

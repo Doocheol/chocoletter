@@ -12,8 +12,15 @@ import {
   userNameAtom,
   userProfileUrlAtom,
   memberIdAtom,
+  isGiftBoxSelectedAtom,
+  giftBoxNumAtom,
 } from "../../atoms/auth/userAtoms";
-import { generateAndStoreKeyPairForMember, getMemberPublicKey } from "../../utils/keyManager";
+import {
+  generateAndStoreKeyPairForMember,
+  getMemberPublicKey,
+} from "../../utils/keyManager";
+
+import { getGiftBoxName } from "../../services/giftBoxApi";
 import { arrayBufferToBase64, registerFixedSymmetricKey } from "../../utils/encryption";
 
 const KakaoLoginCallback: React.FC = () => {
@@ -25,6 +32,17 @@ const KakaoLoginCallback: React.FC = () => {
   const setIsFirstLogin = useSetRecoilState(isFirstLoginAtom);
   const setGiftBoxId = useSetRecoilState(giftBoxIdAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
+  const setIsGiftBoxSelected = useSetRecoilState(isGiftBoxSelectedAtom);
+  const setGiftBoxNum = useSetRecoilState(giftBoxNumAtom);
+
+  const getGiftBoxNumFill = async (giftBoxId: string) => {
+	try {
+		const res = await getGiftBoxName(giftBoxId);
+		return res;
+	} catch (err) {
+		console.error(err, "선물상자 정보 로그인에서 불러오기 실패");
+	}
+  }
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -44,6 +62,13 @@ const KakaoLoginCallback: React.FC = () => {
         return;
       }
 
+	  
+      const giftBoxInfo = await getGiftBoxNumFill(giftBoxId);
+      if (!giftBoxInfo) {
+        throw new Error("Failed to load gift box information");
+		navigate("/");
+      }
+      const { name, type, fillLevel } = giftBoxInfo;
       const isFirstLogin = isFirstLoginParam === "true";
       setIsFirstLogin(isFirstLogin);
 
@@ -179,10 +204,13 @@ const KakaoLoginCallback: React.FC = () => {
         localStorage.removeItem("redirect");
         return;
       }
-      if (isFirstLogin) {
+      if (type === 0) {
         navigate("/select-giftbox");
         return;
       }
+	  
+	  setGiftBoxNum(type);
+	  setIsGiftBoxSelected(true);
       navigate(`/main/${giftBoxId}`);
     };
 
@@ -196,6 +224,7 @@ const KakaoLoginCallback: React.FC = () => {
     setIsFirstLogin,
     setMemberId,
     setGiftBoxId,
+    setIsGiftBoxSelected,
   ]);
 
   return <Loading />;

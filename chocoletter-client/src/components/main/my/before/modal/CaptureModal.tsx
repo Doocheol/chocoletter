@@ -4,11 +4,11 @@ import Modal from "../../../../common/Modal";
 import "../../../../../styles/animation.css";
 import frameImage from "../../../../../assets/images/letter/letter_pink.svg";
 
-import giftbox_before_1 from "../../../../../assets/images/giftbox/giftbox_before_1.svg";
-import giftbox_before_2 from "../../../../../assets/images/giftbox/giftbox_before_2.svg";
-import giftbox_before_3 from "../../../../../assets/images/giftbox/giftbox_before_3.svg";
-import giftbox_before_4 from "../../../../../assets/images/giftbox/giftbox_before_4.svg";
-import giftbox_before_5 from "../../../../../assets/images/giftbox/giftbox_before_5.svg";
+import giftbox_before_12 from "../../../../../assets/images/giftbox/giftbox_before_12.svg";
+import giftbox_before_22 from "../../../../../assets/images/giftbox/giftbox_before_22.svg";
+import giftbox_before_32 from "../../../../../assets/images/giftbox/giftbox_before_32.svg";
+import giftbox_before_42 from "../../../../../assets/images/giftbox/giftbox_before_42.svg";
+import giftbox_before_52 from "../../../../../assets/images/giftbox/giftbox_before_52.svg";
 import { useRecoilValue } from "recoil";
 import {
 	giftBoxNumAtom,
@@ -105,11 +105,11 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 
 		// giftbox_before 이미지 배열
 		const giftboxImages = [
-			giftbox_before_1,
-			giftbox_before_2,
-			giftbox_before_3,
-			giftbox_before_4,
-			giftbox_before_5,
+			giftbox_before_12,
+			giftbox_before_22,
+			giftbox_before_32,
+			giftbox_before_42,
+			giftbox_before_52,
 		];
 
 		let selectedGiftboxImage: string;

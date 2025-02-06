@@ -142,7 +142,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [setSchedules]);
 
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
