@@ -97,7 +97,7 @@ function SelectGiftTypeView() {
                             )}
                             </div>
                             {/* <img src={readLetterIcon} alt="편지 보기 아이콘" /> */}
-                            <p className="text-xl font-bold text-center">
+                            <p className="text-2xl font-bold text-center">
                                 상대방과 함께  <br/> 편지를 열어보실래요?
                             </p>
                         </div>                        
