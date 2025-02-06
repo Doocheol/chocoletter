@@ -12,13 +12,13 @@ import AcceptRejectModal from "./AcceptRejectModal";
 const getAlarmMessage = (alarm: Alarm): string => {
 	switch (alarm.alarmType) {
 		case "ACCEPT_SPECIAL":
-			return `${alarm.partnerName}님께 보낸 특별 초콜릿이 수락되었습니다.`;
+			return `${alarm.partnerName}님께 보낸 영상통화 일정이 수락되었습니다.`;
 		case "REJECT_SPECIAL":
-			return `${alarm.partnerName}님께 보낸 특별 초콜릿이 거절되었습니다.`;
+			return `${alarm.partnerName}님께 보낸 영상통화 일정이 거절되었습니다.`;
 		case "RECEIVE_SPECIAL":
-			return `${alarm.partnerName}님에게서 받은 특별 초콜릿입니다. 일정 수락하시겠어요?`;
+			return `누군가가 영상통화를 요청했어요.\n일정을 확인인하시겠어요?`;
 		case "UNBOXING_NOTICE":
-			return `입장 30분 전! ${alarm.partnerName}님과의 영상통화 예정입니다.`;
+			return `${alarm.partnerName}님과 함께하는 영상통화 일정 30분 전이에요.`;
 		default:
 			return "";
 	}
@@ -208,7 +208,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 													alarm
 												);
 											}}
-											className="w-1/5 h-[calc(100%px)] bg-opacity-70 hover:bg-chocoletterPurpleBold py-6 left-5 shadow-[-3px_3px_3px_3px_rgba(0,0,0,0.1)] bg-chocoletterPurple flex items-center justify-center relative -ml-4 rounded-tr-[14px] rounded-br-[14px] text-white text-sm font-bold"
+											className="w-1/5 h-[calc(100%px)] bg-opacity-70 hover:bg-chocoletterPurple py-6 left-5 shadow-[-3px_3px_3px_3px_rgba(0,0,0,0.1)] bg-chocoletterPurpleBold flex items-center justify-center relative -ml-4 rounded-tr-[14px] rounded-br-[14px] text-white text-sm font-bold"
 										>
 											확인
 										</button>
