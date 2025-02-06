@@ -133,7 +133,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 								{/* (a) 복사 + 모바일 공유 */}
 								<button
 									onClick={handleCopyAndShare}
-									className="flex justify-center items-center bg-sky-200 p-4 rounded-lg border border-black"
+									className="w-16 h-16 flex justify-center items-center bg-sky-200 p-4 rounded-lg border border-black"
 								>
 									<GoLink className="text-3xl text-gray-700" />
 								</button>
@@ -141,7 +141,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 								{/* (b) QR 코드 버튼 */}
 								<button
 									onClick={handleShowQRCode}
-									className="flex justify-center items-center bg-gray-500 p-4 rounded-lg border border-black"
+									className="w-16 h-16 flex justify-center items-center bg-gray-500 p-4 rounded-lg border border-black"
 								>
 									<BsQrCode className="text-3xl text-white" />
 								</button>
