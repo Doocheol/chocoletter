@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
-import general from "../assets/images/chocolate/general/gen_choco_1.png";
-import special from "../assets/images/chocolate/special/rtc_choco_1.png";
 import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtoms";
 import { useRecoilValue } from "recoil";
 import { BsEnvelopeHeart, BsEnvelopeOpenHeart } from "react-icons/bs";
@@ -17,53 +15,50 @@ import general_gift_button from "../assets/images/button/general_gift_button.svg
 import { sendGeneralFreeGift, sendGeneralQuestionGift } from "../services/giftEncryptedApi";
 
 function SelectGiftTypeView() {
-  const freeLetter = useRecoilValue(freeLetterState);
-  const questionLetter = useRecoilValue(questionLetterState);
-  const letter = questionLetter.question ? questionLetter : freeLetter;
-  const [isFirstIcon, setIsFirstIcon] = useState(true);
-  const navigate = useNavigate();
-  const { giftBoxId } = useParams<{ giftBoxId: string }>();
-  const [alreadySent, setAlreadySent] = useState(false);
+    const freeLetter = useRecoilValue(freeLetterState);
+    const questionLetter = useRecoilValue(questionLetterState);
+    const letter = questionLetter.question ? questionLetter : freeLetter;
+    const [isFirstIcon, setIsFirstIcon] = useState(true);
+    const navigate = useNavigate();
+    const { giftBoxId } = useParams<{ giftBoxId: string }>();
+    const [alreadySent, setAlreadySent] = useState(false);
 
-  const handleAccept = () => {
-    navigate(`/set-time/${giftBoxId}`);
-  };
+    const handleAccept = () => {
+        navigate(`/set-time/${giftBoxId}`);
+    };
 
-  const handleReject = async () => {
-    try {
-      if (questionLetter.question) {
-        // 질문 편지인 경우:
-        // sendGeneralQuestionGift( giftBoxId, nickName, question, plainContent )
-        await sendGeneralQuestionGift(
-          giftBoxId as string,
-          questionLetter.nickname,
-          questionLetter.question,
-          questionLetter.answer
-        );
-      } else {
-        // 질문이 없는 경우:
-        await sendGeneralFreeGift(giftBoxId as string, freeLetter.nickname, freeLetter.content);
-      }
-      navigate(`/sent-gift`);
-    } catch (error: any) {
-      console.error("Gift sending failed:", error);
-      const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
-      console.log("Received error message:", errorMessage);
-      if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
-        setAlreadySent(true);
-      }
-    }
-  };
+    const handleReject = async () => {
+        try {
+            if (questionLetter.question) {
+                // 질문 편지인 경우:
+                // sendGeneralQuestionGift( giftBoxId, nickName, question, plainContent )
+                await sendGeneralQuestionGift(
+                    giftBoxId as string,
+                    questionLetter.nickname,
+                    questionLetter.question,
+                    questionLetter.answer
+            );
+            } else {
+                // 질문이 없는 경우:
+                await sendGeneralFreeGift(giftBoxId as string, freeLetter.nickname, freeLetter.content);
+            }
+                navigate(`/sent-gift`);
+        } catch (error: any) {
+                console.error("Gift sending failed:", error);
+                const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+                console.log("Received error message:", errorMessage);
+                if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
+                    setAlreadySent(true);
+                }
+        }
+    };
 
-  // 아이콘 애니메이션: 0.5초마다 아이콘 변경
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsFirstIcon((prev) => !prev);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
-
-        return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 제거
+    // 아이콘 애니메이션: 0.5초마다 아이콘 변경
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsFirstIcon((prev) => !prev);
+        }, 500);
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -81,9 +76,6 @@ function SelectGiftTypeView() {
             </div>
 
             <div className="absolute mt-24">
-
-                
-
                 {/* 일반/특별 버튼 */}
                 <div className="flex flex-col items-center justify-center m-4 gap-[30px]">
                     <div className="w-[291px] h-[75px] flex flex-col px-[15px] gap-[20px] justify-center items-center mt-[30px] mb-[100px]">
@@ -148,33 +140,6 @@ function SelectGiftTypeView() {
                 </div>
             </div>
         </div>
-      </div>
-      <div className="absolute mt-24">
-        {/* 일반/특별 버튼 영역 */}
-        <div className="flex flex-col items-center justify-center m-4 gap-[30px]">
-          <div className="w-[291px] h-[75px] flex flex-col px-[15px] gap-[29px] justify-center items-center mt-[30px] mb-[100px]">
-            <div className="flex flex-col justify-center items-center gap-[15px]">
-              <div style={{ textAlign: "center", marginTop: "50px" }}>
-                {isFirstIcon ? (
-                  <BsEnvelopeHeart className="text-chocoletterPurpleBold text-[40px] transition-opacity duration-500" />
-                ) : (
-                  <BsEnvelopeOpenHeart className="text-chocoletterPurpleBold text-[40px] transition-opacity duration-500" />
-                )}
-              </div>
-              <p className="text-2xl font-bold text-left">같이 개봉하실래요?</p>
-            </div>
-            <p className="self-stretch text-[13px] leading-[140%]">
-              같이 개봉하는 경우 지정된 시간에 편지를 전해드리고, <br />
-              화면 너머로 따스한 마음을 나눌 수 있습니다.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-[15px]">
-            <ImageButton onClick={handleAccept} src={special_gift_button} />
-            <ImageButton onClick={handleReject} src={general_gift_button} />
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
 

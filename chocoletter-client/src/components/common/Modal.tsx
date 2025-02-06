@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className }) =
     >
       <FocusLock>
         <div
-          className={`pl-5 bg-white rounded-lg shadow-lg p-6 relative w-11/12 max-w-md ${
+          className={`bg-white rounded-lg shadow-lg p-6 relative w-11/12 max-w-md ${
             className || ""
           }`}
           onClick={handleContentClick}
