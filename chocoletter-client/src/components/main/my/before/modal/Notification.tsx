@@ -16,7 +16,7 @@ const getAlarmMessage = (alarm: Alarm): string => {
 		case "REJECT_SPECIAL":
 			return `${alarm.partnerName}님께 보낸 영상통화 일정이 거절되었습니다.`;
 		case "RECEIVE_SPECIAL":
-			return `누군가가 영상통화를 요청했어요.\n일정을 확인인하시겠어요?`;
+			return `누군가가 영상통화를 요청했어요.\n일정을 확인하시겠어요?`;
 		case "UNBOXING_NOTICE":
 			return `${alarm.partnerName}님과 함께하는 영상통화 일정 30분 전이에요.`;
 		default:
