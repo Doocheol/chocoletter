@@ -210,23 +210,36 @@ public class GiftService {
         if (!gift.getReceiverId().equals(memberId)) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-        gift.rejectUnboxing();
+        rejectSpecialGift(gift, memberId);
+    }
 
-        // 거절해서 일반으로 바뀌면 받은 일반 초콜릿 개수 +1
+    @Transactional
+    public void changeToGeneralGift(Long memberId, Long giftId) {
+        Gift gift = giftRepository.findGiftByIdOrThrow(giftId);
+        if (!gift.getSenderId().equals(memberId)) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        rejectSpecialGift(gift, memberId);
+    }
+
+    private void rejectSpecialGift(Gift gift, Long memberId) {
+        gift.changeToGeneralGift();
+
+        // 받은 일반 초콜릿 개수 +1
         Member receiver = memberService.findMember(memberId);
         GiftBox receiverGiftBox = giftBoxRepository.findGiftBoxByMemberId(receiver.getId());
         receiverGiftBox.addGeneralGiftCount();
 
-        // 거절해서 일반으로 바뀌었는데 서로 보냈다면 채팅방 파주기
+        // 서로 보냈다면 채팅방 생성
         Gift receiverGift = findGeneralGiftEachOther(gift.getReceiverId(), memberId);
         if (receiverGift != null) {
-            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), giftId, receiverGift.getId());
+            chatRoomService.saveChatRoom(gift.getSenderId(), gift.getReceiverId(), gift.getId(), receiverGift.getId());
         }
-        
-        // 거절했다는 알림을 보낸 사람에게 전송
+
+        // 거절 알림 전송
         Alarm alarm = Alarm.builder()
                 .type(AlarmType.REJECT_SPECIAL)
-                .giftId(giftId)
+                .giftId(gift.getId())
                 .member(memberService.findMember(gift.getSenderId()))
                 .partnerName(receiver.getName())
                 .build();
