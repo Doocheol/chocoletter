@@ -6,7 +6,7 @@ import Loading from "../common/Loading";
 
 // 초콜릿 더미 데이터
 const dummyChocolates = [
-    {'giftId': "0", 'giftType': "GENERAL", 'isOpened': true, "unBoxingTime": null},
+    {'giftId': "0", 'giftType': "GENERAL", 'isOpened': true, "unBoxingTime": null, isAccept: false, unBoxingRoomId: null},
     {'giftId': "1", 'giftType': "GENERAL", 'isOpened': false, "unBoxingTime": null},
     {'giftId': "2", 'giftType': "SPECIAL", 'isOpened': false, "unBoxingTime": "2025-02-03T08:50:00.000Z"},
     {'giftId': "3", 'giftType': "GENERAL", 'isOpened': false, "unBoxingTime": null},

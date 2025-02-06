@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
+import { AnnounceGoNotificationModal } from "../modal/AnnounceGoNotification";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
 import { useRecoilState } from "recoil";
@@ -53,6 +54,7 @@ const compareDates = (current: Date, eventday: Date) => {
 export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime, isAccepted, roomId }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
+    const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
     const navigate = useNavigate();
     const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom)
 
@@ -97,6 +99,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
         setIsNonOpen(false);
     };
 
+    const closeGoNotificationModal = () => {
+        setIsAnnounceNoti(false);
+    }
+
     // 버튼 onClick 메서드
     const giftOpenButtonClickHandler = async () => {
         if (giftType === 'SPECIAL') {
@@ -105,9 +111,16 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             const unboxingDate = new Date(unboxingTime);
             const unboxingMinusFive = new Date(unboxingDate.getTime() - 5 * 60 * 1000);
             const currentDate = new Date();
-
+            
+            // 이거 이벤트 이후도 추가해야 할 것 같은데...
+            // 날짜 분류도 필요할 것 같은데...
             if (currentDate < unboxingMinusFive) {
-                setIsRTC(true);
+                if (isAccepted) {
+                    setIsRTC(true);
+                } else {
+                    setIsAnnounceNoti(true);
+                }
+                
             } else {
                 if (roomId === null) {
                     navigate("/gift-list/before")
@@ -128,6 +141,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
 
     return (
         <div className="relative w-[100px] h-full aspect-square rounded-lg flex items-center justify-center">
+            <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} />
             <AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
             <IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={closeGeneralModal} />
             <div className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${isRTC || isNonOpen ? "[&>button>img]:scale-125" : "[&>button>img]:hover:scale-125"}`}>
