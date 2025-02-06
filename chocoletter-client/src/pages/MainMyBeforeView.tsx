@@ -7,6 +7,7 @@ import {
 	isFirstLoginAtom,
 	giftBoxNumAtom,
 	giftBoxIdAtom,
+	isGiftBoxSelectedAtom,
 } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
@@ -54,7 +55,7 @@ const MainMyBeforeView: React.FC = () => {
 	const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
 	const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
-
+	
 	// 주소창 높이 보정
 	useViewportHeight();
 

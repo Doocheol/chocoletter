@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { giftBoxNumAtom, giftBoxIdAtom } from "../atoms/auth/userAtoms";
+import { giftBoxNumAtom, giftBoxIdAtom, isGiftBoxSelectedAtom } from "../atoms/auth/userAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
 
 // 선물상자 에셋 임포트
@@ -19,6 +19,7 @@ const SelectGiftBoxView: React.FC = () => {
 	const navigate = useNavigate();
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 	const setGiftBoxNum = useSetRecoilState(giftBoxNumAtom);
+	const setIsGiftBoxSelected = useSetRecoilState(isGiftBoxSelectedAtom);
 
 	const [selectedBox, setSelectedBox] = useState<number>(1);
 
@@ -40,6 +41,7 @@ const SelectGiftBoxView: React.FC = () => {
 			await updateGiftBoxType(selectedBox);
 			// 성공하면 recoil 상태에 선택한 번호 저장 후 다음 페이지로 이동
 			setGiftBoxNum(selectedBox);
+			setIsGiftBoxSelected(true);
 			navigate(`/main/${giftBoxId}`);
 		} catch (error) {
 			toast.error(
