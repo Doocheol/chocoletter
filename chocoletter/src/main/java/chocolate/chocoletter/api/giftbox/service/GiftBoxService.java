@@ -124,7 +124,7 @@ public class GiftBoxService {
     public GiftBoxResponseDto findFriendGiftBox(Long giftBoxId) {
         GiftBox friendGiftBox = findGiftBox(giftBoxId);
         String encryptedGiftBoxId = idEncryptionUtil.encrypt(friendGiftBox.getId());
-        return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId, calcGiftBoxStyle(friendGiftBox));
+        return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId, calcGiftBoxFillLevel(friendGiftBox));
     }
 
     public UnboxingTimesResponseDto findUnBoxingTimes(Long giftBoxId) {
@@ -219,7 +219,7 @@ public class GiftBoxService {
                 giftBoxRepository.findGiftBoxByGiftBoxId(giftBoxId).getMember().getPublicKey());
     }
 
-    public Integer calcGiftBoxStyle(GiftBox giftBox) {
+    public Integer calcGiftBoxFillLevel(GiftBox giftBox) {
         if (0 <= giftBox.getGiftCount() && giftBox.getGiftCount() <= 5) {
             return 1;
         }
