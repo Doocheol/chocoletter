@@ -1,7 +1,15 @@
 package chocolate.chocoletter.api.member.domain;
 
 import chocolate.chocoletter.common.entity.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +18,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Entity
@@ -38,9 +41,11 @@ public class Member extends BaseTimeEntity implements OAuth2User, UserDetails {
     @Column
     private Integer sendGiftCount;
 
+    @Column
+    private String publicKey;
+
     @Builder
-    public Member(Long id, String name, String socialId, String profileImgUrl) {
-        this.id = id;
+    public Member(String name, String socialId, String profileImgUrl) {
         this.name = name;
         this.socialId = socialId;
         this.profileImgUrl = profileImgUrl;
@@ -69,6 +74,10 @@ public class Member extends BaseTimeEntity implements OAuth2User, UserDetails {
     public String getPassword() {
         return null;
     } // OAuth2는 비밀번호 없음
+
+    public void initPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public int increaseSendGiftCount() {
         return ++sendGiftCount;
