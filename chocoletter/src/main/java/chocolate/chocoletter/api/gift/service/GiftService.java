@@ -182,14 +182,6 @@ public class GiftService {
         gift.acceptUnboxing();
 
         Member receiver = memberService.findMember(memberId);
-        Alarm alarm = Alarm.builder()
-                .type(AlarmType.ACCEPT_SPECIAL)
-                .giftId(giftId)
-                .member(memberService.findMember(gift.getSenderId()))
-                .partnerName(receiver.getName())
-                .build();
-        alarmService.save(alarm);
-
         UnboxingRoom unboxingRoom = UnboxingRoom.builder()
                 .gift(gift)
                 .receiverId(gift.getReceiverId())
@@ -198,6 +190,13 @@ public class GiftService {
                 .build();
 
         unboxingRoomService.saveUnboxingRoom(unboxingRoom);
+        Alarm alarm = Alarm.builder()
+                .type(AlarmType.ACCEPT_SPECIAL)
+                .giftId(giftId)
+                .member(memberService.findMember(gift.getSenderId()))
+                .partnerName(receiver.getName())
+                .build();
+        alarmService.save(alarm);
     }
 
     @Transactional
