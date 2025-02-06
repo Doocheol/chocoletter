@@ -21,9 +21,9 @@ export const IsOpenGeneralGiftModal: React.FC<IsOpenGeneralGiftModalProps> = ({ 
                     <img src={readLetterIcon} alt="편지 아이콘" className="w-full h-full" />
                 </div>
                 <div className="flex flex-col gap-4">
-                    <p>초콜릿을 열어 편지를 확인하시겠어요?<br/>개봉 가능한 초콜릿 수가 차감됩니다!</p>
+                    <p>초콜릿을 열어 편지를 확인하시겠어요?<br/>열어볼 수 있는 초콜릿 수가 차감됩니다!</p>
                     <div className="h-7 px-[15px] py-[5px] bg-[#efe1ff] rounded-[18px] justify-center items-center gap-1 inline-flex">
-                        <div className="text-center text-[#5800be] text-[13px] font-normal font-sans leading-[18.20px]">현재 개봉 가능한 횟수 : {remainOpenCount}개</div>
+                        <div className="text-center text-[#5800be] text-[13px] font-normal font-sans leading-[18.20px]">현재 열어볼 수 있는 초콜릿 : {remainOpenCount}개</div>
                     </div>
                 </div>
                 <div className="w-full flex justify-evenly">

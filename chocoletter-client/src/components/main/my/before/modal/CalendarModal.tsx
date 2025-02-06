@@ -172,7 +172,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-sm sm:max-w-lg md:max-w-xl max-h-[80vh] ml-1 !bg-chocoletterLetterBgBlue"
+      className="max-w-sm sm:max-w-lg md:max-w-xl max-h-[80vh] !bg-chocoletterLetterBgBlue"
     >
       <div className="flex flex-col w-full">
         {/* ChatRoomListView 스타일 헤더 */}
