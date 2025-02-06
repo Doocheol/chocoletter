@@ -20,7 +20,7 @@ interface GiftData {
 }
 
 const LetterView = () => {
-  const selectedGiftId = useRecoilValue(selectedGiftIdAtom); //giftlist 페이지에서 저장된 giftId
+  const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
   const memberId = useRecoilValue(memberIdAtom);
   const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
@@ -77,7 +77,7 @@ const LetterView = () => {
       }
     };
     fetchGiftData();
-  }, [selectedGiftId, memberId, giftBoxId]);
+  }, [selectedGiftId]);
 
   const backgroundClass = giftData?.question
     ? "bg-letter-blue-background"

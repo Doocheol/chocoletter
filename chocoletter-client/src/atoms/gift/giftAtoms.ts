@@ -1,4 +1,7 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
 
 /**
  * 개봉 가능한(열 수 있는) 초콜릿 수
@@ -25,18 +28,16 @@ export const sentGiftsAtom = atom<number>({
   default: 0,
 });
 
-/**
- * 선택된 특정 초콜릿 ID
- */
-export const selectedGiftIdAtom = atom<string>({
+export const selectedGiftIdAtom = atom<string | null>({
   key: "selectedGiftId",
-  default: "",
+  default: null,
+  effects_UNSTABLE: [persistAtom],
 });
 
 /**
  * 사용자가 선택한 필터(전체, 일반, 특별)
  */
-export const selectedGiftTypeAtom = atom<'all' | 'general' | 'special'>({
+export const selectedGiftTypeAtom = atom<"all" | "general" | "special">({
   key: "selectedGiftType",
   default: "all",
-})
+});
