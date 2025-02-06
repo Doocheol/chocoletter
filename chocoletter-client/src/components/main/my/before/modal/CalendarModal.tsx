@@ -74,17 +74,27 @@ const ChangeAmPm = (strTime: string) => {
 // 시간 변환 함수
 const convertToEventDate = (unBoxingTime: string, eventDay: string, timeZone: string = "Asia/Seoul"): Date => {
   const currentYear = new Date().getFullYear();
-  const eventMonth = parseInt(eventDay.substring(0, 2), 10) - 1; // Convert "MM" to number (0-based)
-  const eventDate = parseInt(eventDay.substring(2, 4), 10); // Convert "DD" to number
+  const eventMonth = eventDay.substring(0, 2); // "02" (월)
+  const eventDate = eventDay.substring(2, 4);  // "14" (일)
   const [hour, minute] = unBoxingTime.split(":").map(Number);
 
-  // Create the date object directly in the target timezone
-  const eventDateTime = new Date(Date.UTC(currentYear, eventMonth, eventDate, hour, minute));
+  // UTC 기준으로 Date 객체 생성 후, timeZone 적용
+  const eventDateTime = new Date(currentYear, Number(eventMonth) - 1, Number(eventDate), hour, minute);
 
-  // Convert to the target timezone using `toLocaleString` instead of parsing a formatted string
-  const localizedDate = new Date(eventDateTime.toLocaleString("en-US", { timeZone }));
-  console.log(localizedDate);
-  return localizedDate;
+  // Intl.DateTimeFormat을 이용해 KST 변환
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false, // 24시간제
+  });
+
+  // 변환된 날짜를 다시 Date 객체로 변환 (KST 적용)
+  const formattedDate = formatter.format(eventDateTime);
+  return new Date(formattedDate);
 };
 
 // 5분 전 시간 계산 함수
@@ -120,6 +130,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     let isMounted = true;
 
     const fetchSchedule = async () => {
+      if (!isOpen) return;
+      
       const unboxingSchedule = await GetMyUnboxingSchedule();
       if (isMounted && unboxingSchedule) {
         setSchedules(unboxingSchedule);
@@ -131,7 +143,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     return () => {
       isMounted = false;
     };
-  }, [setSchedules]);
+  }, [isOpen]);
 
   // 더미 일정을 unboxingTime 기준 오름차순 정렬
   const sortedSchedules = useMemo(() => {
