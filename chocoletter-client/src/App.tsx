@@ -36,6 +36,7 @@ import MainMyAfterView from "./pages/MainMyAfterView";
 import ChatRoomView from "./pages/ChatRoomView";
 import TestVideoRoomView from "./pages/TestVideoRoomView";
 import GiftBoxIdRouter from "./pages/GiftBoxIdRouter";
+import { useMemo } from "react";
 
 declare global {
 	interface Window {
@@ -44,7 +45,7 @@ declare global {
 }
 
 function App() {
-	useViewportHeight(); // 커스텀 훅 호출
+	useViewportHeight(); // 모바일 전용 사이즈 조절 훅
 
 	return (
 		<div className="mx-auto w-full md:max-w-sm lg:min-h-screen bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
@@ -145,17 +146,18 @@ function App() {
 				</BrowserRouter>
 			</ErrorBoundary>
 			<ToastContainer
-				position="top-right"
-				autoClose={2000}
-				hideProgressBar={false}
-				newestOnTop={false}
+				position="top-center"
+				autoClose={750}
+				hideProgressBar={true}
 				closeOnClick
-				rtl={false}
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
 				theme="colored"
-				className="custom-toast-body" /* 필요 시 추가 */
+				toastStyle={{
+					background: "rgba(0, 0, 0, 0.6)",
+				}}
+				className="mobile-toast-container"
 			/>
 		</div>
 	);
