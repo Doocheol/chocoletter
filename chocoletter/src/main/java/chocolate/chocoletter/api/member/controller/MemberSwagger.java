@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.security.Principal;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface MemberSwagger {
 
@@ -54,6 +54,6 @@ public interface MemberSwagger {
                                                     mediaType = "application/json",
                                                     schema = @Schema(implementation = PublicKeyRequestDto.class)
                                             )
-                                    ) @RequestParam PublicKeyRequestDto requestDto,
+                                    ) @RequestBody PublicKeyRequestDto requestDto,
                                     Principal principal);
 }
