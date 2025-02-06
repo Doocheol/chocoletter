@@ -29,7 +29,7 @@ function OnboardingIntro() {
 	}, []);
 
 	return (
-		<div className="flex flex-col w-full">
+		<div className="onboarding-intro-container flex flex-col w-full">
 			{/* 첫 번째 소개 이미지 */}
 
 			<div
@@ -50,7 +50,7 @@ function OnboardingIntro() {
 
 			{/* 서비스 소개 제목 */}
 			<div
-				className={`mb-12 ${
+				className={`mb-20 ${
 					scrollPosition > 90 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
@@ -65,7 +65,7 @@ function OnboardingIntro() {
 
 			{/* 서비스 설명 */}
 			<div
-				className={`mb-10 ${
+				className={`mb-16 ${
 					scrollPosition > 110 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
@@ -80,7 +80,7 @@ function OnboardingIntro() {
         </span> */}
 
 				{/* 두 번째 소개 이미지 */}
-				<div className="flex flex-col items-center mx-8 mb-10">
+				<div className="flex flex-col items-center mx-8 mb-14">
 					<img
 						src={onboarding_intro_choco_1}
 						alt="onboarding_intro_choco_1"
@@ -96,11 +96,11 @@ function OnboardingIntro() {
 
 			{/* 추가 서비스 기능 설명 */}
 			<div
-				className={`mb-8 ${
+				className={`mb-14 ${
 					scrollPosition > 220 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
-				<div className="flex flex-col items-center mx-8 mb-10">
+				<div className="flex flex-col items-center mx-8 mb-14">
 					{/* 세 번째 소개 이미지 */}
 					<img
 						src={onboarding_intro_choco_2}
@@ -120,7 +120,7 @@ function OnboardingIntro() {
 					scrollPosition > 400 ? "slide-in-bottom" : "collapse"
 				}`}
 			>
-				<div className="flex flex-col items-center mx-8 mb-10">
+				<div className="flex flex-col items-center mx-8 mb-14">
 					{/* 세 번째 소개 이미지 */}
 					<img
 						src={onboarding_intro_choco_3}
