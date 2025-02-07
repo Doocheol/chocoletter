@@ -1,5 +1,6 @@
 import React from "react";
 import { OtherModal } from "../../../../common/OtherModal";
+import { PurpleButton } from "../../../../common/PurpleButton";
 
 interface AlreadySentModalProps {
 	isOpen: boolean;
@@ -15,15 +16,15 @@ const AlreadySentModal: React.FC<AlreadySentModalProps> = ({
 			<div className="text-center flex flex-col justify-center items-center gap-6">
 				<div className="text-lg font-bold">이미 선물을 보냈습니다!</div>
 				<p className="text-sm text-gray-700">
-					해당 선물상자에 이미 선물이 전송되어 더 이상 선물하기가
+					해당 초콜릿 보관함에 이미 선물을 전송하여 더 이상 선물하기가
 					불가능합니다.
 				</p>
-				<button
+				<PurpleButton
 					onClick={onClose}
-					className="px-6 py-3 bg-chocoletterPurpleBold text-xl font-medium text-white rounded-lg shadow"
+					className="px-6 py-3 text-white bg-chocoletterPurpleBold border border-black outline-none focus:ring-0"
 				>
 					확인
-				</button>
+				</PurpleButton>
 			</div>
 		</OtherModal>
 	);
