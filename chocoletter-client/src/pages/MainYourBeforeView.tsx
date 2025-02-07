@@ -27,6 +27,7 @@ import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
+import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
@@ -237,6 +238,9 @@ const MainYourBeforeView: React.FC = () => {
 
 				{/* 선물하기 버튼 */}
 				<div className="mt-10 px-4 flex flex-row items-center justify-center">
+					<div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-max">
+						<img src={tool_tip_your} alt="tooltip" />
+					</div>
 					<ImageButton
 						onClick={handleSendGift}
 						src={gift_send_button}
