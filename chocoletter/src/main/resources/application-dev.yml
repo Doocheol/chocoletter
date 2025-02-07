@@ -16,7 +16,7 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      maximumPoolSize: 20  # 최대 커넥션 수 (기본값 10)
+      maximumPoolSize: 40  # 최대 커넥션 수 (기본값 10)
       minimumIdle: 10       # 최소 유지 커넥션
       idleTimeout: 30000    # (30초) 사용하지 않는 커넥션 종료
       connectionTimeout: 30000  # (30초) 커넥션 대기 시간
