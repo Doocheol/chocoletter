@@ -59,12 +59,12 @@ const KakaoLoginCallback: React.FC = () => {
         removeUserInfo();
         setIsLogin(false);
         if (!toast.isActive("require-login-toast")) {
-                  toast.error("다시 로그인해주세요.", {
-                    toastId: "require-login-toast",
-                    position: "top-center",
-                    autoClose: 2000,
-                  });
-                }
+          toast.error("다시 로그인해주세요.", {
+            toastId: "require-login-toast",
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
         navigate("/");
         return;
       }
