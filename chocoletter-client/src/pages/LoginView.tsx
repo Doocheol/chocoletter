@@ -48,7 +48,7 @@ function LoginView() {
       </div>
 
       {/* 로그인 버튼들 */}
-      <div className="flex flex-col items-center mb-4">
+      <div className="flex flex-col items-center mb-10">
         <KakaoLoginButton />
       </div>
     </div>

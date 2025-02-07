@@ -1,6 +1,7 @@
 import React from "react";
 
 type ImageButtonProps = {
+  ref?: React.Ref<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
   children?: React.ReactNode;
@@ -10,6 +11,7 @@ type ImageButtonProps = {
 };
 
 const ImageButton = ({
+  ref,
   type = "button",
   onClick,
   children,
@@ -19,6 +21,7 @@ const ImageButton = ({
 }: ImageButtonProps) => {
   return (
     <button
+      ref={ref}
       type={type}
       onClick={onClick}
       className={`${className} p-0 border-0`} // 패딩과 테두리 제거

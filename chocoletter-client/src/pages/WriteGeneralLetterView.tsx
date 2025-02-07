@@ -30,21 +30,27 @@ const WriteGeneralLetterView = () => {
     };
 
     const handleNextClick  = () => {
-            if (letter.nickname.length < 1) {
+        if (letter.nickname.length < 1) {
+            if (!toast.isActive("min-nickname-toast")) {
                 toast.error("닉네임은 최소 1글자 이상 입력해야 합니다!", {
-                position: "top-center",
-                autoClose: 2000,
+                    toastId: "min-nickname-toast",
+                    position: "top-center",
+                    autoClose: 2000,
                 });
-                return;
             }
+            return;
+        }
         
-            if (letter.contentLength < 10) {
+        if (letter.contentLength < 10) {
+            if (!toast.isActive("min-content-toast")) {
                 toast.error("메세지는 최소 10글자 이상 작성해야 합니다!", {
-                position: "top-center",
-                autoClose: 2000,
+                    toastId: "min-content-toast",
+                    position: "top-center",
+                    autoClose: 2000,
                 });
-                return;
             }
+            return;
+        }
     
             setIsModalOpen(true);
         };
