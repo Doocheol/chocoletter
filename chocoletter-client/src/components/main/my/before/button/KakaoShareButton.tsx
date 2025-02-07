@@ -1,18 +1,22 @@
 import React from "react";
 import { sendKakaoShare } from "../../../../../utils/sendKakaoTalk";
+import { userNameAtom } from "../../../../../atoms/auth/userAtoms";
+import { useRecoilValue } from "recoil";
 
 interface KakaoShareButtonProps {
 	shareLink: string; // 부모(ShareModal)에서 받은 공유 링크
 }
 
 const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
+	const userName = useRecoilValue(userNameAtom);
+
 	const handleKakaoShare = () => {
 		// Kakao 링크에 사용될 옵션
 		const shareContent: Kakao.ShareOptions = {
 			objectType: "feed",
 			content: {
-				title: "초콜릿으로 마음을 전해보세요!💌",
-				description: "모든 초콜릿은 익명으로 전달됩니다.",
+				title: `${userName}님에게 초콜릿을 전해보세요!💌`,
+				description: "모든 초콜릿(편지)은 익명으로 전달됩니다.",
 				imageUrl:
 					"https://www.chocolate-letter.com/chocoletter_kakao_logo.png",
 				link: {
@@ -22,7 +26,7 @@ const KakaoShareButton: React.FC<KakaoShareButtonProps> = ({ shareLink }) => {
 			},
 			buttons: [
 				{
-					title: "초콜릿 보내기",
+					title: `초콜릿 보내러 가기`,
 					link: {
 						mobileWebUrl: shareLink,
 						webUrl: shareLink,
