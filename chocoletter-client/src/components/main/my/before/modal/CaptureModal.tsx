@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import Modal from "../../../../common/Modal";
 import "../../../../../styles/animation.css";
@@ -48,7 +48,22 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	// 캔버스 그림 완료 여부 (완료되기 전까지는 미리보기를 숨김)
 	const [isLoading, setIsLoading] = useState(true);
 
-	const canvasRef = useRef<HTMLCanvasElement>(null);
+	// 기존의 useRef 대신 캔버스 요소가 할당될 때 바로 처리할 수 있는 콜백 ref 생성
+	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+	// 캔버스가 할당될 때마다 호출되는 콜백 ref 함수
+	const setCanvasRef = useCallback(
+		(node: HTMLCanvasElement | null) => {
+			canvasRef.current = node;
+			if (node && isVisible) {
+				// 캔버스가 실제로 DOM에 추가되고, 모달이 열려있다면 그리기 함수를 호출합니다.
+				drawCanvas();
+			}
+		},
+		[
+			isVisible /* drawCanvas가 외부 함수라면 의존성에 추가 (혹은 내부로 옮겨서 처리) */,
+		]
+	);
 
 	const userName = useRecoilValue(userNameAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
@@ -105,11 +120,10 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	};
 
 	// 캔버스에 그림을 그리는 함수 (html2canvas 등 불필요한 캡처 없이, 내부에서 바로 이미지 로드)
+	// drawCanvas 함수는 동일하게 유지합니다.
 	const drawCanvas = () => {
 		if (!canvasRef.current) {
-			toast.dismiss();
-			toast.error("캔버스가 준비되지 않았습니다.");
-			setIsLoading(false);
+			// 더 이상 바로 리턴하지 않고, 캔버스가 준비되지 않은 경우 나중에 콜백 ref가 호출되면 drawCanvas가 실행됩니다.
 			return;
 		}
 		const canvas = canvasRef.current;
@@ -212,10 +226,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		};
 	};
 
-	// 모달이 열리면 캔버스 그리기 시작
+	// isVisible이 변경될 때 캔버스 그리기를 재시도하는 useEffect (필요한 경우)
 	useEffect(() => {
-		if (isVisible) {
-			setIsLoading(true);
+		if (isVisible && canvasRef.current) {
 			drawCanvas();
 		}
 	}, [isVisible, shapeNum, appliedText]);
