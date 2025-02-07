@@ -93,8 +93,7 @@ const QuestionLetterForm: React.FC = () => {
                     <img src={question_icon} alt="login_view_service_title" className="" />
                     <h1 className={`flex-1 text-center font-sans leading-[22px] tracking-[-0.408px] break-keep ${
                         letter.question.length > 50 ? "text-[14px]" : "text-[18px]"
-                    }`} >
-                        {letter.question.length}
+                    }`} >                        
                         {letter.question ? letter.question : "질문을 불러오는 중입니다..."}
                     </h1>
                 </div>
