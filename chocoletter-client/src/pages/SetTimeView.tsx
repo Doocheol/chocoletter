@@ -95,21 +95,7 @@ const SetTimeView = () => {
       toast.error("해당 시간은 이미 예약되었습니다.", {
         toastId,
         position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        pauseOnHover: false,
-        draggable: true,
-        style: {
-          backgroundColor: "#2C2F33",
-          color: "#FFFFFF",
-          borderRadius: "8px",
-          padding: "16px",
-          fontSize: "14px",
-          fontWeight: "bold",
-          textAlign: "center",
-          marginBottom: "100px",
-          maxWidth: "300px",
-        },
+        autoClose: 2000,
       });
     }
 

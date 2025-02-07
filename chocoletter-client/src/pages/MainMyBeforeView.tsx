@@ -134,21 +134,21 @@ const MainMyBeforeView: React.FC = () => {
 	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	const giftBoxImages: { [key: number]: string } = {
-		10: giftbox_before_10,
-		20: giftbox_before_20,
-		30: giftbox_before_30,
-		40: giftbox_before_40,
-		50: giftbox_before_50,
-		11: giftbox_before_11,
-		21: giftbox_before_21,
-		31: giftbox_before_31,
-		41: giftbox_before_41,
-		51: giftbox_before_51,
-		12: giftbox_before_12,
-		22: giftbox_before_22,
-		32: giftbox_before_32,
-		42: giftbox_before_42,
-		52: giftbox_before_52,
+		11: giftbox_before_10,
+		21: giftbox_before_20,
+		31: giftbox_before_30,
+		41: giftbox_before_40,
+		51: giftbox_before_50,
+		12: giftbox_before_11,
+		22: giftbox_before_21,
+		32: giftbox_before_31,
+		42: giftbox_before_41,
+		52: giftbox_before_51,
+		13: giftbox_before_12,
+		23: giftbox_before_22,
+		33: giftbox_before_32,
+		43: giftbox_before_42,
+		53: giftbox_before_52,
 	};
 
 	// 핸들러들

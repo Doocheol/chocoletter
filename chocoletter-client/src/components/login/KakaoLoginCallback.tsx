@@ -129,6 +129,10 @@ const KakaoLoginCallback: React.FC = () => {
 
       const redirectPath = localStorage.getItem("redirect");
       if (redirectPath) {
+        if (type !== 0) {
+          setGiftBoxNum(type);
+          setIsGiftBoxSelected(true);
+        }
         navigate(redirectPath);
         localStorage.removeItem("redirect");
         return;
