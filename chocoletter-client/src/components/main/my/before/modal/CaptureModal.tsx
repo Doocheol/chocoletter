@@ -179,8 +179,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					// 5. 처리된 baseImage(offCanvas)를 x: (원본 절반의 시작 위치 +30) y: (원본 절반 시작 위치)에서 원본의 절반 크기로 그림
 					ctx.drawImage(
 						offCanvas,
-						baseImage.width / 4 + 20,
-						baseImage.height / 4,
+						baseImage.width / 4,
+						baseImage.height / 4 + 20,
 						baseImage.width / 2 + 60,
 						baseImage.height / 2 + 60
 					);
@@ -273,9 +273,18 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 
 	// 기존 링크 복사, 이미지 다운로드/공유 함수 (변경 없음)
 	const handleCopyLink = async () => {
-		const giftBoxId = await getGiftBoxId();
-		const sharedLink = `https://www.chocolate-letter.com/main/${giftBoxId}`;
-		await copyToClipboard(sharedLink);
+		try {
+			const giftBoxId = await getGiftBoxId();
+			const sharedLink = !giftBoxId
+				? window.location.href
+				: `https://www.chocolate-letter.com/main/${giftBoxId}`;
+			await copyToClipboard(sharedLink);
+			toast.dismiss();
+			toast.success("링크가 복사되었습니다!");
+		} catch (error) {
+			console.error("링크 복사 오류:", error);
+			toast.dismiss();
+		}
 	};
 
 	const handleImageDownload = async () => {
@@ -364,16 +373,16 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
 						/>
 					</div>
-					<div className="w-full mt-4 flex flex-row">
+					<div className="w-full mt-4 flex flex-row gap-2">
 						<button
 							onClick={handleApplyText}
-							className="w-1/2 px-4 py-2 bg-white text-black rounded-md transition-colors"
+							className="w-1/2 px-4 py-2 bg-white text-black rounded-md transition-colors border border-black"
 						>
 							텍스트 적용
 						</button>
 						<button
 							onClick={handleDownload}
-							className="w-1/2 px-4 py-2 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							className="w-1/2 px-4 py-2 bg-chocoletterPurpleBold border border-black text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 							disabled={isAnimating}
 						>
 							{isAnimating ? "..." : "저장 & 공유"}
