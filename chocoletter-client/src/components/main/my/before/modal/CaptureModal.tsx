@@ -124,6 +124,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	const drawCanvas = () => {
 		if (!canvasRef.current) {
 			// 더 이상 바로 리턴하지 않고, 캔버스가 준비되지 않은 경우 나중에 콜백 ref가 호출되면 drawCanvas가 실행됩니다.
+			// setIsLoading(false);
+
 			return;
 		}
 		const canvas = canvasRef.current;
@@ -321,46 +323,47 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	return (
 		<Modal isOpen={isVisible} onClose={onClose}>
 			<div
-				className={`p-2 flex flex-col items-center rounded-lg ${
+				className={`p-2 flex flex-col items-center rounded-lg relative ${
 					isAnimating ? "jello-vertical" : ""
 				}`}
 			>
-				{/* 캔버스 미리보기: 완전히 그려질 때까지 로딩 컴포넌트 표시 */}
-				{isLoading ? (
-					<Loading />
-				) : (
-					<canvas
-						ref={canvasRef}
-						className="w-full h-auto rounded-md"
-						style={{ border: "1px solid #ccc" }}
-					></canvas>
+				<canvas
+					ref={setCanvasRef}
+					className="w-full h-auto rounded-md"
+					style={{ border: "1px solid #ccc" }}
+				></canvas>
+				{isLoading && (
+					<div className="absolute inset-0 flex items-center justify-center">
+						<Loading />
+
+						{/* 텍스트 입력창 */}
+						<div className="w-full mt-4">
+							<input
+								type="text"
+								value={overlayText}
+								onChange={(e) => setOverlayText(e.target.value)}
+								placeholder="내용을 입력하세요."
+								className="px-4 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
+							/>
+						</div>
+						{/* 버튼 영역: 왼쪽은 "텍스트 적용", 오른쪽은 "저장 & 공유" */}
+						<div className="w-full mt-4 flex flex-row gap-2">
+							<button
+								onClick={handleApplyText}
+								className="w-1/2 px-4 py-2 bg-white text-black rounded-md transition-colors"
+							>
+								텍스트 적용
+							</button>
+							<button
+								onClick={handleDownload}
+								className="w-1/2 px-4 py-2 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+								disabled={isAnimating}
+							>
+								{isAnimating ? "..." : "저장 & 공유"}
+							</button>
+						</div>
+					</div>
 				)}
-				{/* 텍스트 입력창 */}
-				<div className="w-full mt-4">
-					<input
-						type="text"
-						value={overlayText}
-						onChange={(e) => setOverlayText(e.target.value)}
-						placeholder="내용을 입력하세요."
-						className="px-4 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-1 focus:ring-chocoletterPurple"
-					/>
-				</div>
-				{/* 버튼 영역: 왼쪽은 "텍스트 적용", 오른쪽은 "저장 & 공유" */}
-				<div className="w-full mt-4 flex flex-row gap-2">
-					<button
-						onClick={handleApplyText}
-						className="w-1/2 px-3 py-2 bg-white text-black rounded-md transition-colors"
-					>
-						텍스트 적용
-					</button>
-					<button
-						onClick={handleDownload}
-						className="w-1/2 px-3 py-2 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-						disabled={isAnimating}
-					>
-						{isAnimating ? "..." : "저장 & 공유"}
-					</button>
-				</div>
 			</div>
 		</Modal>
 	);
