@@ -48,7 +48,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	// 캔버스 그림 완료 여부 (완료되기 전까지는 미리보기를 숨김)
 	const [isLoading, setIsLoading] = useState(true);
 
-	// 기존의 useRef 대신 캔버스 요소가 할당될 때 바로 처리할 수 있는 콜백 ref 생성
+	// 캔버스 요소에 접근하기 위한 ref (콜백 ref 사용)
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	// 캔버스가 할당될 때마다 호출되는 콜백 ref 함수
@@ -56,21 +56,18 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		(node: HTMLCanvasElement | null) => {
 			canvasRef.current = node;
 			if (node && isVisible) {
-				// 캔버스가 실제로 DOM에 추가되고, 모달이 열려있다면 그리기 함수를 호출합니다.
 				drawCanvas();
 			}
 		},
-		[
-			isVisible /* drawCanvas가 외부 함수라면 의존성에 추가 (혹은 내부로 옮겨서 처리) */,
-		]
+		[isVisible]
 	);
 
 	const userName = useRecoilValue(userNameAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
-	// 여기서는 내부 상태로 이미지 번호를 관리합니다. (기본값 "12")
+	// 내부 상태로 이미지 번호를 관리 (기본값 "12")
 	const [shapeNum, setShapeNum] = useState("12");
 
-	// 선물 상자 이미지 매핑 (필요한 경우 Recoil의 giftBoxNum을 활용할 수 있습니다)
+	// 선물 상자 이미지 매핑 (필요시 giftBoxNum도 활용 가능)
 	const giftBoxImages: { [key: number]: string } = {
 		11: giftbox_before_11,
 		21: giftbox_before_21,
@@ -88,7 +85,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		43: giftbox_before_43,
 		53: giftbox_before_53,
 	};
-	// 텍스트 자동 줄바꿈 함수 (변경 없음)
+
+	// 텍스트 자동 줄바꿈 함수
 	const wrapText = (
 		ctx: CanvasRenderingContext2D,
 		text: string,
@@ -119,13 +117,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		}
 	};
 
-	// 캔버스에 그림을 그리는 함수 (html2canvas 등 불필요한 캡처 없이, 내부에서 바로 이미지 로드)
-	// drawCanvas 함수는 동일하게 유지합니다.
+	// 캔버스에 그림을 그리는 함수
 	const drawCanvas = () => {
 		if (!canvasRef.current) {
-			// 더 이상 바로 리턴하지 않고, 캔버스가 준비되지 않은 경우 나중에 콜백 ref가 호출되면 drawCanvas가 실행됩니다.
-			// setIsLoading(false);
-
 			return;
 		}
 		const canvas = canvasRef.current;
@@ -137,31 +131,62 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 			return;
 		}
 
-		// 기본 선물 상자 이미지 로드
-		const baseImage = new Image();
-		baseImage.crossOrigin = "anonymous";
-		baseImage.src = giftBoxImages[Number(shapeNum)] || giftbox_before_12;
-		baseImage.onload = () => {
-			// 캔버스 크기는 기존과 동일하게 유지합니다.
-			canvas.width = baseImage.width;
-			canvas.height = baseImage.height;
-			// 기본 이미지를 캔버스에 그림: x좌표 30, y좌표 0, 크기는 원본의 절반으로
-			ctx.drawImage(
-				baseImage,
-				30,
-				0,
-				baseImage.width / 2,
-				baseImage.height / 2
-			);
+		// 1. 프레임 이미지 로드
+		const frame = new Image();
+		frame.crossOrigin = "anonymous";
+		frame.src = frameImage;
+		frame.onload = () => {
+			// 2. baseImage 로드
+			const baseImage = new Image();
+			baseImage.crossOrigin = "anonymous";
+			baseImage.src =
+				giftBoxImages[Number(shapeNum)] || giftbox_before_12;
+			baseImage.onload = () => {
+				// 캔버스 크기를 baseImage의 크기로 설정
+				canvas.width = baseImage.width;
+				canvas.height = baseImage.height;
 
-			// 이후 프레임 이미지 등 다른 작업은 그대로 진행
-			const frame = new Image();
-			frame.crossOrigin = "anonymous";
-			frame.src = frameImage;
-			frame.onload = () => {
+				// 3. 먼저 프레임 이미지를 전체 캔버스에 그림
 				ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
 
-				// 상단 중앙에 사용자 이름 텍스트 그리기
+				// 4. offscreen canvas를 만들어 baseImage의 배경(예를 들어 흰색 부분)을 제거
+				const offCanvas = document.createElement("canvas");
+				offCanvas.width = baseImage.width;
+				offCanvas.height = baseImage.height;
+				const offCtx = offCanvas.getContext("2d");
+				if (offCtx) {
+					// baseImage를 offscreen canvas에 그림
+					offCtx.drawImage(baseImage, 0, 0);
+					const imgData = offCtx.getImageData(
+						0,
+						0,
+						offCanvas.width,
+						offCanvas.height
+					);
+					const data = imgData.data;
+					// (예시) 픽셀 값이 거의 흰색(255,255,255)에 가까우면 알파값을 0으로 설정하여 투명하게 만듦
+					for (let i = 0; i < data.length; i += 4) {
+						if (
+							data[i] > 240 &&
+							data[i + 1] > 240 &&
+							data[i + 2] > 240
+						) {
+							data[i + 3] = 0;
+						}
+					}
+					offCtx.putImageData(imgData, 0, 0);
+
+					// 5. 처리된 baseImage(offCanvas)를 x:30, y:0에서 원본의 절반 크기로 그림
+					ctx.drawImage(
+						offCanvas,
+						30,
+						0,
+						baseImage.width / 2,
+						baseImage.height / 2
+					);
+				}
+
+				// 6. 상단 중앙에 사용자 이름 텍스트 그리기
 				const nameFontSize = Math.floor(canvas.width / 15);
 				ctx.font = `${nameFontSize}px "Dovemayo_gothic"`;
 				ctx.fillStyle = "black";
@@ -174,7 +199,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 				const nameY = 60;
 				ctx.fillText(nameText, nameX, nameY);
 
-				// 하단에 오버레이 텍스트 그리기 (appliedText 사용)
+				// 7. 하단에 오버레이 텍스트 그리기 (appliedText 사용)
 				const fontSize = Math.floor(canvas.width / 20);
 				ctx.font = `${fontSize}px "Dovemayo_gothic"`;
 				const maxTextWidth = canvas.width - 40;
@@ -190,7 +215,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					lineHeight
 				);
 
-				// 좌측 상단에 로고 이미지 및 "초코레터" 텍스트 그리기
+				// 8. 좌측 상단에 로고 이미지 및 "초코레터" 텍스트 그리기
 				const logoImage = new Image();
 				logoImage.crossOrigin = "anonymous";
 				logoImage.src = choco_asset;
@@ -222,18 +247,18 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					setIsLoading(false);
 				};
 			};
-			frame.onerror = () => {
-				toast.error("프레임 이미지 로드에 실패했습니다.");
+			baseImage.onerror = () => {
+				toast.error("기본 이미지 로드에 실패했습니다.");
 				setIsLoading(false);
 			};
 		};
-		baseImage.onerror = () => {
-			toast.error("기본 이미지 로드에 실패했습니다.");
+		frame.onerror = () => {
+			toast.error("프레임 이미지 로드에 실패했습니다.");
 			setIsLoading(false);
 		};
 	};
 
-	// isVisible이 변경될 때 캔버스 그리기를 재시도하는 useEffect (필요한 경우)
+	// 모달이 열릴 때 캔버스 그리기 재시도
 	useEffect(() => {
 		if (isVisible && canvasRef.current) {
 			drawCanvas();
@@ -341,8 +366,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					<Loading />
 				) : (
 					<div className="absolute inset-0 flex items-center justify-center">
-						<Loading />
-
 						{/* 텍스트 입력창 */}
 						<div className="w-full mt-4">
 							<input
