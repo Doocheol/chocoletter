@@ -4,6 +4,7 @@ type ImageButtonProps = {
   ref?: React.Ref<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
+  onLoad?: () => void;
   children?: React.ReactNode;
   className?: string;
   src?: string; // 이미지 소스
@@ -11,9 +12,9 @@ type ImageButtonProps = {
 };
 
 const ImageButton = ({
-  ref,
   type = "button",
   onClick,
+  onLoad,
   children,
   className = "",
   src = "",
@@ -21,12 +22,19 @@ const ImageButton = ({
 }: ImageButtonProps) => {
   return (
     <button
-      ref={ref}
       type={type}
       onClick={onClick}
       className={`${className} p-0 border-0`} // 패딩과 테두리 제거
     >
-      <img src={src} alt={alt} className="display-block" />
+      <img
+        src={src}
+        alt={alt}
+        className="display-block"
+        onLoad={() => {
+          console.log(`Image Loaded: ${src}`); // ✅ 디버깅용 로그
+          if (onLoad) onLoad();
+        }}
+      />
       {children}
     </button>
   );
