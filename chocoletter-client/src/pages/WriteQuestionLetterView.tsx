@@ -34,7 +34,6 @@ const WriteQuestionLetterView = () => {
     const handleNextClick  = () => {
         if (letter.nickname.length < 1) {
             if (!toast.isActive("min-nickname-toast")){
-                toast.dismiss();
                 toast.error("닉네임은 최소 1글자 이상 입력해야 합니다!", {
                     toastId: "min-nickname-toast",
                     position: "top-center",
@@ -46,7 +45,6 @@ const WriteQuestionLetterView = () => {
     
         if (letter.answerLength < 10) {
             if (!toast.isActive("min-content-toast")) {
-                toast.dismiss();
                 toast.error("메세지는 최소 10글자 이상 작성해야 합니다!", {
                     toastId: "min-content-toast",
                     position: "top-center",
