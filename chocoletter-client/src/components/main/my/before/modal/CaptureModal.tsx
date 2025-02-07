@@ -179,8 +179,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					// 5. 처리된 baseImage(offCanvas)를 x: (원본 절반의 시작 위치 +30) y: (원본 절반 시작 위치)에서 원본의 절반 크기로 그림
 					ctx.drawImage(
 						offCanvas,
-						baseImage.width / 4,
-						baseImage.height / 4 + 20,
+						baseImage.width / 4 - 10,
+						baseImage.height / 4 - 30,
 						baseImage.width / 2 + 60,
 						baseImage.height / 2 + 60
 					);
