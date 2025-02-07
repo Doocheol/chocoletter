@@ -16,7 +16,7 @@ const AlreadySentModal: React.FC<AlreadySentModalProps> = ({
 			<div className="text-center flex flex-col justify-center items-center gap-6">
 				<div className="text-lg font-bold">이미 선물을 보냈습니다!</div>
 				<p className="text-sm text-gray-700">
-					해당 초콜릿 보관함에 이미 선물을 전송하여 더 이상 선물하기가
+					해당 초콜릿 보관함에 이미 선물을 전송하여<br/> 더 이상 선물하기가
 					불가능합니다.
 				</p>
 				<PurpleButton
