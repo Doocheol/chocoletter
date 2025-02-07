@@ -4,19 +4,27 @@ import Modal from "../../../../common/Modal";
 import "../../../../../styles/animation.css";
 import frameImage from "../../../../../assets/images/letter/letter_pink.svg";
 
-import giftbox_before_12 from "../../../../../assets/images/giftbox/giftbox_before_12.svg";
-import giftbox_before_22 from "../../../../../assets/images/giftbox/giftbox_before_22.svg";
-import giftbox_before_32 from "../../../../../assets/images/giftbox/giftbox_before_32.svg";
-import giftbox_before_42 from "../../../../../assets/images/giftbox/giftbox_before_42.svg";
-import giftbox_before_52 from "../../../../../assets/images/giftbox/giftbox_before_52.svg";
+import giftbox_before_10 from "../assets/images/giftbox/giftbox_before_10.svg";
+import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";
+import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";
+import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";
+import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";
+import giftbox_before_11 from "../assets/images/giftbox/giftbox_before_11.svg";
+import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";
+import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";
+import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";
+import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";
+import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
+import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
+import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
+import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
+import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
 import { useRecoilValue } from "recoil";
 import {
-	giftBoxNumAtom,
 	userNameAtom,
+	giftBoxNumAtom,
 } from "../../../../../atoms/auth/userAtoms";
-import html2canvas from "html2canvas";
 
-// 로고 이미지 임포트
 import choco_asset from "../../../../../assets/images/main/choco_asset.svg";
 import Loading from "../../../../common/Loading";
 import { copyToClipboard } from "../../../../../utils/copyToClipboard";
@@ -25,32 +33,47 @@ import { getGiftBoxId } from "../../../../../services/userApi";
 type CaptureModalProps = {
 	isVisible: boolean;
 	onClose: () => void;
-	captureTargetId: string; // 캡처할 대상 요소의 id
 };
 
-const CaptureModal: React.FC<CaptureModalProps> = ({
-	isVisible,
-	onClose,
-	captureTargetId,
-}) => {
+const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 	const [isAnimating, setIsAnimating] = useState(false);
 	// 사용자가 입력하는 텍스트 (즉시 캔버스에 반영되지 않음)
 	const [overlayText, setOverlayText] = useState(
 		"내 초코레터 링크로 들어와서 편지 써줘..!"
 	);
-	// 현재 캔버스에 적용된 텍스트 (초기값은 overlayText와 동일)
+	// 캔버스에 적용될 최종 텍스트 (초기값은 overlayText와 동일)
 	const [appliedText, setAppliedText] = useState(
 		"내 초코레터 링크로 들어와서 편지 써줘..!"
 	);
-	// 캔버스 이미지 완성 여부 (완료되기 전까지는 미리보기를 숨김)
+	// 캔버스 그림 완료 여부 (완료되기 전까지는 미리보기를 숨김)
 	const [isLoading, setIsLoading] = useState(true);
 
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const userName = useRecoilValue(userNameAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
+	// 여기서는 내부 상태로 이미지 번호를 관리합니다. (기본값 "12")
+	const [shapeNum, setShapeNum] = useState("12");
 
-	// 텍스트 자동 줄바꿈 함수
+	// 선물 상자 이미지 매핑 (필요한 경우 Recoil의 giftBoxNum을 활용할 수 있습니다)
+	const giftBoxImages: { [key: number]: string } = {
+		11: giftbox_before_10,
+		21: giftbox_before_20,
+		31: giftbox_before_30,
+		41: giftbox_before_40,
+		51: giftbox_before_50,
+		12: giftbox_before_11,
+		22: giftbox_before_21,
+		32: giftbox_before_31,
+		42: giftbox_before_41,
+		52: giftbox_before_51,
+		13: giftbox_before_12,
+		23: giftbox_before_22,
+		33: giftbox_before_32,
+		43: giftbox_before_42,
+		53: giftbox_before_52,
+	};
+	// 텍스트 자동 줄바꿈 함수 (변경 없음)
 	const wrapText = (
 		ctx: CanvasRenderingContext2D,
 		text: string,
@@ -81,95 +104,43 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		}
 	};
 
-	// 캔버스에 이미지 및 텍스트를 그리는 함수 (appliedText 사용)
-	const drawCanvas = (capturedCanvas: HTMLCanvasElement) => {
+	// 캔버스에 그림을 그리는 함수 (html2canvas 등 불필요한 캡처 없이, 내부에서 바로 이미지 로드)
+	const drawCanvas = () => {
 		if (!canvasRef.current) {
 			toast.dismiss();
 			toast.error("캔버스가 준비되지 않았습니다.");
+			setIsLoading(false);
 			return;
 		}
-
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext("2d");
 		if (!ctx) {
 			toast.dismiss();
 			toast.error("Canvas 컨텍스트를 가져올 수 없습니다.");
+			setIsLoading(false);
 			return;
 		}
 
-		// 캡처된 캔버스를 기반으로 캔버스 크기 조정
-		canvas.width = capturedCanvas.width;
-		canvas.height = capturedCanvas.height;
+		// 기본 선물 상자 이미지 로드
+		const baseImage = new Image();
+		baseImage.crossOrigin = "anonymous";
+		baseImage.src = giftBoxImages[Number(shapeNum)] || giftbox_before_12;
+		baseImage.onload = () => {
+			// 캔버스 크기를 기본 이미지 크기로 설정
+			canvas.width = baseImage.width;
+			canvas.height = baseImage.height;
+			// 기본 이미지를 캔버스에 그림
+			ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
 
-		// 캡처된 이미지를 먼저 캔버스에 그림
-		ctx.drawImage(capturedCanvas, 0, 0, canvas.width, canvas.height);
+			// 프레임 이미지 로드
+			const frame = new Image();
+			frame.crossOrigin = "anonymous";
+			frame.src = frameImage;
+			frame.onload = () => {
+				// 프레임을 캔버스 전체에 그림
+				ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
 
-		// 프레임 이미지 로드 및 그림
-		const frame = new Image();
-		frame.crossOrigin = "anonymous";
-		frame.src = frameImage;
-
-		// giftbox_before 이미지 배열
-		const giftboxImages = [
-			giftbox_before_12,
-			giftbox_before_22,
-			giftbox_before_32,
-			giftbox_before_42,
-			giftbox_before_52,
-		];
-
-		let selectedGiftboxImage: string;
-		if (giftBoxNum >= 1 && giftBoxNum <= 5) {
-			selectedGiftboxImage = giftboxImages[giftBoxNum - 1];
-		} else {
-			selectedGiftboxImage =
-				giftboxImages[Math.floor(Math.random() * giftboxImages.length)];
-		}
-
-		const selectedGiftbox = new Image();
-		selectedGiftbox.crossOrigin = "anonymous";
-		selectedGiftbox.src = selectedGiftboxImage;
-
-		Promise.all([
-			new Promise<void>((resolve, reject) => {
-				frame.onload = () => resolve();
-				frame.onerror = () =>
-					reject(new Error("Frame Image Failed to Load"));
-			}),
-			new Promise<void>((resolve, reject) => {
-				selectedGiftbox.onload = () => resolve();
-				selectedGiftbox.onerror = () =>
-					reject(new Error("Selected Giftbox Image Failed to Load"));
-			}),
-		])
-			.then(() => {
-				// 프레임 이미지 그리기 (원본 크롭 후 캔버스에 맞게 그리기)
-				ctx.drawImage(
-					frame,
-					0,
-					0,
-					frame.width,
-					frame.width,
-					0,
-					0,
-					canvas.width,
-					canvas.height
-				);
-
-				// 선택된 giftbox 이미지 그리기 (크기를 300x300으로 확대)
-				const giftboxWidth = 300;
-				const giftboxHeight = 300;
-				const giftboxX = (canvas.width - giftboxWidth + 40) / 2;
-				const giftboxY = (canvas.height - giftboxHeight) / 2;
-				ctx.drawImage(
-					selectedGiftbox,
-					giftboxX,
-					giftboxY,
-					giftboxWidth,
-					giftboxHeight
-				);
-
-				// 사용자 이름 텍스트 그리기 (상단 중앙)
+				// 상단 중앙에 사용자 이름 텍스트 그리기
 				const nameFontSize = Math.floor(canvas.width / 15);
 				ctx.font = `${nameFontSize}px "Dovemayo_gothic"`;
 				ctx.fillStyle = "black";
@@ -182,7 +153,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				const nameY = 60;
 				ctx.fillText(nameText, nameX, nameY);
 
-				// 오버레이 텍스트 그리기 (하단) - appliedText 사용
+				// 하단에 오버레이 텍스트 그리기 (appliedText 사용)
 				const fontSize = Math.floor(canvas.width / 20);
 				ctx.font = `${fontSize}px "Dovemayo_gothic"`;
 				const maxTextWidth = canvas.width - 40;
@@ -198,7 +169,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 					lineHeight
 				);
 
-				// 캔버스 왼쪽 상단에 로고 이미지와 텍스트 그리기
+				// 좌측 상단에 로고 이미지 및 "초코레터" 텍스트 그리기
 				const logoImage = new Image();
 				logoImage.crossOrigin = "anonymous";
 				logoImage.src = choco_asset;
@@ -214,8 +185,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 						logoWidth,
 						logoHeight
 					);
-
-					// 로고 이미지 오른쪽에 "초코레터" 텍스트 그리기
 					ctx.font = "12px Dovemayo_gothic";
 					ctx.fillStyle = "black";
 					ctx.textAlign = "left";
@@ -225,51 +194,39 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 						logoX + logoWidth + 5,
 						logoY + logoHeight / 2
 					);
-					// 모든 이미지 합성이 완료되었으므로 로딩 해제
 					setIsLoading(false);
 				};
-			})
-			.catch((error) => {
-				console.error("이미지 합성 중 오류 발생:", error);
-				toast.dismiss();
-				toast.error("이미지 합성에 실패했습니다.");
-			});
+				logoImage.onerror = () => {
+					toast.error("로고 이미지 로드에 실패했습니다.");
+					setIsLoading(false);
+				};
+			};
+			frame.onerror = () => {
+				toast.error("프레임 이미지 로드에 실패했습니다.");
+				setIsLoading(false);
+			};
+		};
+		baseImage.onerror = () => {
+			toast.error("기본 이미지 로드에 실패했습니다.");
+			setIsLoading(false);
+		};
 	};
 
-	// 캔버스 렌더링 함수 (대상 요소 캡처 후 drawCanvas 호출)
-	const renderCanvas = () => {
-		const targetElement = document.getElementById(captureTargetId);
-		if (!targetElement) {
-			toast.dismiss();
-			toast.error("캡처할 요소를 찾을 수 없습니다.");
-			return;
-		}
-		html2canvas(targetElement)
-			.then((capturedCanvas) => {
-				drawCanvas(capturedCanvas);
-			})
-			.catch((error) => {
-				console.error("캡처에 실패했습니다:", error);
-				toast.dismiss();
-				toast.error("캡처에 실패했습니다.");
-			});
-	};
-
-	// 모달이 열리면 캔버스 렌더링 (초기 미리보기)
+	// 모달이 열리면 캔버스 그리기 시작
 	useEffect(() => {
 		if (isVisible) {
 			setIsLoading(true);
-			renderCanvas();
+			drawCanvas();
 		}
-	}, [isVisible, captureTargetId]);
+	}, [isVisible, shapeNum, appliedText]);
 
-	// "텍스트 적용" 버튼 클릭 시, 입력한 텍스트를 적용하고 캔버스를 재렌더링
+	// "텍스트 적용" 버튼 클릭 시, 입력한 텍스트를 캔버스에 반영
 	const handleApplyText = () => {
 		setAppliedText(overlayText);
-		renderCanvas();
+		drawCanvas();
 	};
 
-	// 기존 링크 복사 및 이미지 다운로드/공유 함수들 (이전 코드와 동일)
+	// 기존 링크 복사, 이미지 다운로드/공유 함수 (변경 없음)
 	const handleCopyLink = async () => {
 		try {
 			const giftBoxId = await getGiftBoxId();
@@ -322,7 +279,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		}
 	};
 
-	// 전체 다운로드 처리: 먼저 링크 복사 후 이미지 다운로드/공유 실행
 	const handleDownload = async () => {
 		try {
 			await handleCopyLink();
@@ -346,7 +302,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 		link.click();
 		document.body.removeChild(link);
 		toast.dismiss();
-		toast.success("다운로드 완료!");
+		toast.success("링크 복사까지 완료! 인스타 스토리로 공유해보세요!");
 	};
 
 	return (
@@ -356,7 +312,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 					isAnimating ? "jello-vertical" : ""
 				}`}
 			>
-				{/* 캔버스 미리보기: 완전히 렌더링된 후에만 보임 */}
+				{/* 캔버스 미리보기: 완전히 그려질 때까지 로딩 컴포넌트 표시 */}
 				{isLoading ? (
 					<Loading />
 				) : (
@@ -380,13 +336,13 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
 				<div className="w-full mt-4 flex flex-row gap-2">
 					<button
 						onClick={handleApplyText}
-						className="w-1/2 px-4 py-2 bg-blue-500 text-white rounded-md transition-colors"
+						className="w-1/2 px-3 py-2 bg-white text-black rounded-md transition-colors"
 					>
 						텍스트 적용
 					</button>
 					<button
 						onClick={handleDownload}
-						className="w-1/2 px-4 py-2 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						className="w-1/2 px-3 py-2 bg-chocoletterPurpleBold text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						disabled={isAnimating}
 					>
 						{isAnimating ? "..." : "저장 & 공유"}

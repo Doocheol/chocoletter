@@ -425,7 +425,6 @@ const MainMyBeforeView: React.FC = () => {
 						key={captureModalKey} // key 추가
 						isVisible={isCaptureModalVisible}
 						onClose={() => setIsCaptureModalVisible(false)}
-						captureTargetId="capture-target"
 					/>
 					<ShareModal
 						isOpen={isShareModalOpen}
