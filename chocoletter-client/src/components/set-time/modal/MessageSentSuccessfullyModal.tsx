@@ -24,7 +24,7 @@ const MessageSentSuccessfullyModal: React.FC<MessageSentSuccessfullyProps> = ({ 
                     상대방이 시간을 수락하면 알림을 보내드릴 예정입니다 😊 <br />
                     나중에 <strong>알림 탭에서 확인해주세요!</strong> <br/>
                 </p>    
-                <Button onClick={onClose} className="flex w-[267px] h-[45px] justify-center items-center gap-[8px] rounded-[15px] border bg-[#9E4AFF]">
+                <Button onClick={onClose} className="flex w-[267px] h-[45px] justify-center items-center gap-[8px] rounded-[15px] border border-black bg-[#9E4AFF]">
                     <p className="text-white text-center text-[18px] leading-[22px] tracking-[-0.408px]">확인</p>
                 </Button>
             </Modal>
