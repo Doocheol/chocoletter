@@ -142,18 +142,23 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		baseImage.crossOrigin = "anonymous";
 		baseImage.src = giftBoxImages[Number(shapeNum)] || giftbox_before_12;
 		baseImage.onload = () => {
-			// 캔버스 크기를 기본 이미지 크기로 설정
+			// 캔버스 크기는 기존과 동일하게 유지합니다.
 			canvas.width = baseImage.width;
 			canvas.height = baseImage.height;
-			// 기본 이미지를 캔버스에 그림
-			ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+			// 기본 이미지를 캔버스에 그림: x좌표 30, y좌표 0, 크기는 원본의 절반으로
+			ctx.drawImage(
+				baseImage,
+				30,
+				0,
+				baseImage.width / 2,
+				baseImage.height / 2
+			);
 
-			// 프레임 이미지 로드
+			// 이후 프레임 이미지 등 다른 작업은 그대로 진행
 			const frame = new Image();
 			frame.crossOrigin = "anonymous";
 			frame.src = frameImage;
 			frame.onload = () => {
-				// 프레임을 캔버스 전체에 그림
 				ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
 
 				// 상단 중앙에 사용자 이름 텍스트 그리기
@@ -332,7 +337,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					className="w-full h-auto rounded-md"
 					style={{ border: "1px solid #ccc" }}
 				></canvas>
-				{isLoading && (
+				{isLoading ? (
+					<Loading />
+				) : (
 					<div className="absolute inset-0 flex items-center justify-center">
 						<Loading />
 
