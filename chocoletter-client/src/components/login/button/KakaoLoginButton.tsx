@@ -31,7 +31,13 @@ const KakaoLoginButton: React.FC = () => {
 				removeUserInfo();
 				await logout();
 				navigate("/");
-				toast.error("다시 로그인해주세요.");
+				if (!toast.isActive("require-login-toast")) {
+					toast.error("다시 로그인해주세요.", {
+						toastId: "require-login-toast",
+						position: "top-center",
+						autoClose: 2000,
+					});
+				}
 			}
 		} else {
 			// 처음 로그인 -> 백엔드로 리다이렉트
