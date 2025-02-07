@@ -179,10 +179,10 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					// 5. 처리된 baseImage(offCanvas)를 x: (원본 절반의 시작 위치 +30) y: (원본 절반 시작 위치)에서 원본의 절반 크기로 그림
 					ctx.drawImage(
 						offCanvas,
-						baseImage.width / 2 + 30,
-						baseImage.height / 2,
-						baseImage.width / 2,
-						baseImage.height / 2
+						baseImage.width / 4 + 20,
+						baseImage.height / 4,
+						baseImage.width / 2 + 60,
+						baseImage.height / 2 + 60
 					);
 				}
 
@@ -273,20 +273,9 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 
 	// 기존 링크 복사, 이미지 다운로드/공유 함수 (변경 없음)
 	const handleCopyLink = async () => {
-		try {
-			const giftBoxId = await getGiftBoxId();
-			const sharedLink =
-				!giftBoxId || giftBoxId.trim() === ""
-					? window.location.href
-					: `https://www.chocolate-letter.com/main/${giftBoxId}`;
-			await copyToClipboard(sharedLink);
-			toast.dismiss();
-			toast.success("링크가 복사되었습니다!");
-		} catch (error) {
-			console.error("링크 복사 오류:", error);
-			toast.dismiss();
-			toast.error("링크 복사에 실패했습니다.");
-		}
+		const giftBoxId = await getGiftBoxId();
+		const sharedLink = `https://www.chocolate-letter.com/main/${giftBoxId}`;
+		await copyToClipboard(sharedLink);
 	};
 
 	const handleImageDownload = async () => {
