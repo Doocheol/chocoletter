@@ -91,7 +91,12 @@ const QuestionLetterForm: React.FC = () => {
             <div className="flex flex-raw justify-center items-center gap-[5px]">
                 <div className="flex w-[260px] h-[70px] p-[10px] items-center gap-[10px] rounded-[15px] border border-black bg-white">
                     <img src={question_icon} alt="login_view_service_title" className="" />
-                    <h1 className="flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px]">{letter.question ? letter.question : "질문을 불러오는 중입니다..."}</h1>
+                    <h1 className={`flex-1 text-center font-sans leading-[22px] tracking-[-0.408px] break-keep ${
+                        letter.question.length > 50 ? "text-[14px]" : "text-[18px]"
+                    }`} >
+                        {letter.question.length}
+                        {letter.question ? letter.question : "질문을 불러오는 중입니다..."}
+                    </h1>
                 </div>
                 <div className="relative z-50">
                     <ShuffleButton
