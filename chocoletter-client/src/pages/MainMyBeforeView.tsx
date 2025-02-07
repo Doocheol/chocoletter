@@ -22,15 +22,15 @@ import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
 import giftbox_before_10 from "../assets/images/giftbox/giftbox_before_10.svg";
-import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";	
-import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";	
-import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";	
-import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";	
+import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";
+import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";
+import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";
+import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";
 import giftbox_before_11 from "../assets/images/giftbox/giftbox_before_11.svg";
-import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";	
-import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";	
-import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";	
-import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";	
+import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";
+import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";
+import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";
+import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";
 import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
 import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
 import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
@@ -66,7 +66,7 @@ const MainMyBeforeView: React.FC = () => {
 	const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
 	const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
-	const [shapeNum, setShapeNum] = useState('12');
+	const [shapeNum, setShapeNum] = useState("12");
 
 	// 주소창 높이 보정
 	useViewportHeight();
@@ -102,7 +102,8 @@ const MainMyBeforeView: React.FC = () => {
 		useState<boolean>(false);
 
 	// API 진행 시 로딩 상태가 하나라도 true면 전역 로딩 표시
-	const isLoading = isGiftCountLoading || isAlarmCountLoading || isGiftShapeLoading;
+	const isLoading =
+		isGiftCountLoading || isAlarmCountLoading || isGiftShapeLoading;
 
 	// URL 파라미터와 Recoil에 저장된 shareCode 검증
 	useEffect(() => {
@@ -194,7 +195,9 @@ const MainMyBeforeView: React.FC = () => {
 			setIsGiftShapeLoading(true);
 			try {
 				if (urlGiftBoxId) {
-					const { name, type, fillLevel } = await getGiftBoxName(urlGiftBoxId);
+					const { name, type, fillLevel } = await getGiftBoxName(
+						urlGiftBoxId
+					);
 					setShapeNum(String(type) + String(fillLevel));
 				} else {
 					throw new Error("Gift Box ID is undefined");
@@ -316,7 +319,7 @@ const MainMyBeforeView: React.FC = () => {
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
 							<div className="flex flex-row w-full truncate">
 								<span className="text-xl font-normal text-center text-black truncate">
-									개봉 가능한&nbsp;
+									열어볼 수 있는&nbsp;
 								</span>
 								<object
 									data={choco_asset}
@@ -367,7 +370,12 @@ const MainMyBeforeView: React.FC = () => {
 					{/* 초콜릿 박스 & 안내 문구 */}
 					<div className="mt-6 flex flex-col items-center px-4">
 						<div className="flex justify-center gap-1.5 mb-3 w-[225px]">
-							<img src={click_text} alt="click_text" style={{ width: "35%" }} className="heartbeat" />
+							<img
+								src={click_text}
+								alt="click_text"
+								style={{ width: "35%" }}
+								className="heartbeat"
+							/>
 						</div>
 						<div
 							ref={captureRef}
