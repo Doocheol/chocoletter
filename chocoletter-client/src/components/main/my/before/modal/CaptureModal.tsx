@@ -4,21 +4,21 @@ import Modal from "../../../../common/Modal";
 import "../../../../../styles/animation.css";
 import frameImage from "../../../../../assets/images/letter/letter_pink.svg";
 
-import giftbox_before_10 from "../assets/images/giftbox/giftbox_before_10.svg";
-import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";
-import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";
-import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";
-import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";
-import giftbox_before_11 from "../assets/images/giftbox/giftbox_before_11.svg";
-import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";
-import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";
-import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";
-import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";
-import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
-import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
-import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
-import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
-import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
+import giftbox_before_11 from "../../../../../assets/images/giftbox/giftbox_before_10.svg";
+import giftbox_before_21 from "../../../../../assets/images/giftbox/giftbox_before_20.svg";
+import giftbox_before_31 from "../../../../../assets/images/giftbox/giftbox_before_30.svg";
+import giftbox_before_41 from "../../../../../assets/images/giftbox/giftbox_before_40.svg";
+import giftbox_before_51 from "../../../../../assets/images/giftbox/giftbox_before_50.svg";
+import giftbox_before_12 from "../../../../../assets/images/giftbox/giftbox_before_11.svg";
+import giftbox_before_22 from "../../../../../assets/images/giftbox/giftbox_before_21.svg";
+import giftbox_before_32 from "../../../../../assets/images/giftbox/giftbox_before_31.svg";
+import giftbox_before_42 from "../../../../../assets/images/giftbox/giftbox_before_41.svg";
+import giftbox_before_52 from "../../../../../assets/images/giftbox/giftbox_before_51.svg";
+import giftbox_before_13 from "../../../../../assets/images/giftbox/giftbox_before_12.svg";
+import giftbox_before_23 from "../../../../../assets/images/giftbox/giftbox_before_22.svg";
+import giftbox_before_33 from "../../../../../assets/images/giftbox/giftbox_before_32.svg";
+import giftbox_before_43 from "../../../../../assets/images/giftbox/giftbox_before_42.svg";
+import giftbox_before_53 from "../../../../../assets/images/giftbox/giftbox_before_52.svg";
 import { useRecoilValue } from "recoil";
 import {
 	userNameAtom,
@@ -57,21 +57,21 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 
 	// 선물 상자 이미지 매핑 (필요한 경우 Recoil의 giftBoxNum을 활용할 수 있습니다)
 	const giftBoxImages: { [key: number]: string } = {
-		11: giftbox_before_10,
-		21: giftbox_before_20,
-		31: giftbox_before_30,
-		41: giftbox_before_40,
-		51: giftbox_before_50,
-		12: giftbox_before_11,
-		22: giftbox_before_21,
-		32: giftbox_before_31,
-		42: giftbox_before_41,
-		52: giftbox_before_51,
-		13: giftbox_before_12,
-		23: giftbox_before_22,
-		33: giftbox_before_32,
-		43: giftbox_before_42,
-		53: giftbox_before_52,
+		11: giftbox_before_11,
+		21: giftbox_before_21,
+		31: giftbox_before_31,
+		41: giftbox_before_41,
+		51: giftbox_before_51,
+		12: giftbox_before_12,
+		22: giftbox_before_22,
+		32: giftbox_before_32,
+		42: giftbox_before_42,
+		52: giftbox_before_52,
+		13: giftbox_before_13,
+		23: giftbox_before_23,
+		33: giftbox_before_33,
+		43: giftbox_before_43,
+		53: giftbox_before_53,
 	};
 	// 텍스트 자동 줄바꿈 함수 (변경 없음)
 	const wrapText = (
