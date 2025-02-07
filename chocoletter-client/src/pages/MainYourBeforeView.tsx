@@ -28,6 +28,12 @@ import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
 import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
+import {
+	deleteUserInfo,
+	getUserInfo,
+	savingUserInfo,
+} from "../services/userInfo";
+import { MyUserInfo } from "../types/user";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
@@ -176,6 +182,40 @@ const MainYourBeforeView: React.FC = () => {
 		}
 	}, [giftBoxId]);
 
+	// 로컬스토리지에서 가져온 사용자 정보를 상태로 관리
+	const [userInfo, setUserInfo] = useState<MyUserInfo | null>(null);
+
+	// 컴포넌트가 마운트될 때 로컬스토리지에 저장된 사용자 정보를 확인
+	useEffect(() => {
+		const storedUserInfo = getUserInfo();
+		if (storedUserInfo) {
+			setUserInfo(storedUserInfo);
+		}
+	}, []);
+
+	// 로그인 버튼 클릭 시 호출되는 함수 (실제 로그인 API 호출 대신 예시 데이터 사용)
+	const handledummyLogin = () => {
+		// 실제 환경에서는 로그인 API를 통해 받아온 데이터를 사용하세요.
+		const dummyUser: MyUserInfo = {
+			userName: "johnDoe",
+			accessToken: "fakeAccessToken123",
+			giftBoxId: "giftBox_123",
+		};
+
+		// 로컬스토리지에 저장
+		savingUserInfo(dummyUser);
+		// 상태 업데이트
+		setUserInfo(dummyUser);
+	};
+
+	// 로그아웃 버튼 클릭 시 호출되는 함수
+	const handledummyLogout = () => {
+		// 로컬스토리지에서 사용자 정보 삭제
+		deleteUserInfo();
+		// 상태 초기화
+		setUserInfo(null);
+	};
+
 	// API 호출이 끝나기 전에는 전체 페이지를 Loading 컴포넌트로 대체
 	if (!isGiftBoxNameLoaded) {
 		return (
@@ -202,6 +242,17 @@ const MainYourBeforeView: React.FC = () => {
 					</button>
 				</div>
 
+				<button
+					onClick={handledummyLogin}
+					className="w-16 h-16 flex justify-center items-center bg-yellow-300 p-1 rounded-lg border border-black transition focus:outline-none"
+					aria-label="카카오톡 공유"
+				></button>
+				<button
+					onClick={handledummyLogout}
+					className="w-16 h-16 flex justify-center items-center bg-yellow-300 p-1 rounded-lg border border-black transition focus:outline-none"
+					aria-label="카카오톡 공유"
+				></button>
+
 				{/* 선물상자 컨테이너 */}
 				<div
 					className="mt-8 mb-10 mx-auto relative flex items-center justify-center"
@@ -219,7 +270,10 @@ const MainYourBeforeView: React.FC = () => {
 							<span className="text-2xl text-center max-w-full truncate">
 								{recipientNickname}
 							</span>
-							<span className="text-lg text-center max-w-full truncate"> 님의 </span>
+							<span className="text-lg text-center max-w-full truncate">
+								{" "}
+								님의{" "}
+							</span>
 						</div>
 						<span className="text-lg text-center max-w-full truncate">
 							초콜릿 보관함
