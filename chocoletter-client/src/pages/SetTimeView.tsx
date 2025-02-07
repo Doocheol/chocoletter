@@ -34,27 +34,15 @@ const SetTimeView = () => {
   const navigate = useNavigate();
   const [alreadySent, setAlreadySent] = useState(false);
 
-  const showErrorToast = (message: string) => {
-    toast.error(message, {
-      position: "bottom-center",
-      autoClose: 10000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      style: {
-        backgroundColor: "#2C2F33",
-        color: "#FFFFFF",
-        borderRadius: "8px",
-        padding: "16px",
-        fontSize: "14px",
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: "100px",
-      },
-    });
-  };
+  // const showErrorToast = (message: string) => {
+  //   if (!toast.isActive("set-time-toast")) {
+  //         toast.error(message, {
+  //             toastId: "set-time-toast",
+  //             position: "top-center",
+  //             autoClose: 2000,
+  //         });
+	//   }
+  // };
 
   useEffect(() => {
     const fetchDisableTimes = async () => {
@@ -62,13 +50,13 @@ const SetTimeView = () => {
         const data = await getUnboxingSchedule(giftBoxId as string);
         if (data && data.unboxingTimes) {
           setDisableTimes(data.unboxingTimes);
-          console.log("Fetched disableTimes:", data.unboxingTimes);
+          // console.log("Fetched disableTimes:", data.unboxingTimes);
         } else {
-          console.error("No unboxing times received from API");
+          // console.error("No unboxing times received from API");
         }
       } catch (error: any) {
-        console.error("Error fetching unboxing times:", error);
-        showErrorToast(error.message || "Error fetching unboxing times");
+        // console.error("Error fetching unboxing times:", error);
+        // showErrorToast(error.message || "Error fetching unboxing times");
       }
     };
 
@@ -119,7 +107,7 @@ const SetTimeView = () => {
           unBoxingTime
         );
       } else {
-        console.log(giftBoxId, freeLetter.nickname, freeLetter.content, unBoxingTime);
+        // console.log(giftBoxId, freeLetter.nickname, freeLetter.content, unBoxingTime);
         await sendSpecialFreeGift(
           giftBoxId as string,
           freeLetter.nickname,
@@ -129,13 +117,13 @@ const SetTimeView = () => {
       }
       setIsModalOpen(true);
     } catch (error: any) {
-      console.error("Gift sending failed:", error);
+      // console.error("Gift sending failed:", error);
       const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
-      console.log("Received error message:", errorMessage);
+      // console.log("Received error message:", errorMessage);
       if (errorMessage === "ERR_ALREADY_EXISTS_GIFT" || errorMessage === "알 수 없는 에러 발생") {
         setAlreadySent(true);
       }
-      showErrorToast(error.response?.data?.message || "An unknown error occurred");
+      // showErrorToast(error.response?.data?.message || "An unknown error occurred");
     }
   };
 

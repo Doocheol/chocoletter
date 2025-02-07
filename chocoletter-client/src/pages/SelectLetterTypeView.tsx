@@ -2,8 +2,6 @@ import React, {useState, useEffect, useRef} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
-import blue from "../assets/images/letter/letter_blue.svg"
-import pink from "../assets/images/letter/letter_pink.svg"
 import { ImageButton } from "../components/common/ImageButton";
 import free_letter_button from "../assets/images/button/free_letter_button.svg";
 import question_letter_button from "../assets/images/button/question_letter_button.svg";
@@ -12,24 +10,37 @@ import Loading from "../components/common/Loading";
 function SelectLetterTypeView() {
     const { giftBoxId } = useParams();
     const navigate = useNavigate();
+
+    // 로딩 상태 및 로드된 버튼 개수 관리
     const [loading, setLoading] = useState(true);
+    const [loadedButtons, setLoadedButtons] = useState(0);
+    const totalButtons = 2; // ✅ 총 버튼 개수
 
-    // 버튼들의 ref를 관리하기 위한 배열 생성
-    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-     // 모든 버튼이 렌더링되었는지 확인하는 함수
-    const checkButtonsRendered = () => {
-        // 모든 버튼이 렌더링되었는지 확인
-        const allRendered = buttonRefs.current.every((ref) => ref !== null);
-        if (allRendered) {
-            setLoading(false); // 로딩 상태 종료
-        }
-    };
-
-    // 컴포넌트가 마운트될 때 렌더링 확인
+    // ✅ 모든 버튼이 로드될 때까지 기다림
     useEffect(() => {
-        checkButtonsRendered();
+        console.log(`Loaded Buttons: ${loadedButtons}/${totalButtons}`); // ✅ 디버깅 로그 추가
+        if (loadedButtons > totalButtons) {
+            setTimeout(() => setLoading(false), 500); // 부드러운 전환 효과
+        }
+    }, [loadedButtons]); // ✅ 버튼 개수 변경 감지
+
+     // **백그라운드에서 이미지 미리 로드 후 버튼을 렌더링**
+    useEffect(() => {
+        const img1 = new Image();
+        const img2 = new Image();
+
+        img1.src = free_letter_button;
+        img2.src = question_letter_button;
+
+        img1.onload = () => setLoadedButtons((prev) => prev + 1);
+        img2.onload = () => setLoadedButtons((prev) => prev + 1);
     }, []);
+
+    // // 버튼이 모두 로드되었는지 확인
+    // useEffect(() => {
+    //     setTimeout(() => setLoading(false), 5000); // 부드러운 전환을 위해 최소 500ms 유지
+    //     }
+    // , []);
 
     const handleAccept = () => {
         navigate(`/write/general/${giftBoxId}`); 
@@ -40,7 +51,7 @@ function SelectLetterTypeView() {
     };
 
     if (loading) {
-        return <Loading />; // 로딩 상태 표시
+        return <Loading />; 
     }
 
     return (
@@ -66,44 +77,16 @@ function SelectLetterTypeView() {
                     </h1>
                     <div className="flex flex-col items-center gap-[20px]">
                         <ImageButton
-                            ref={(el) => {
-                                buttonRefs.current[0] = el;
-                                checkButtonsRendered(); // 버튼 렌더링 여부 확인
-                            }}
                             onClick={handleAccept}
                             src={free_letter_button}
                             // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
                         />
                         <ImageButton
-                            ref={(el) => {
-                                buttonRefs.current[1] = el;
-                                checkButtonsRendered(); // 버튼 렌더링 여부 확인
-                            }}
                             onClick={handleReject}
                             src={question_letter_button}
                             // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
                         />
                     </div>
-                    {/* <Button
-                        onClick={handleAccept}
-                        className="w-[364px] h-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 
-                    >
-                        <img src={pink} alt="일반 편지지 이미지" className="w-[100px] h-[100px] flex-shrink-0 rounded-[10px] border-[1px] border-black object-cover"></img>
-                        <div className="flex flex-col gap-[14px] text-left ">
-                            <p className="self-stretch text-[18px] leading-[22px] tracking-[-0.408px]">일반 편지지</p>
-                            <p className="self-stretch font-[Pretendard] text-[13px] leading-[140%]">진심을 담은 자유 형식의 편지를 작성해 상대방에게 마음을 전하세요✏️</p>
-                        </div>
-                    </Button> */}
-                    {/* <Button
-                        onClick={handleReject}
-                        className="w-[364px] h-[132px] inline-flex p-[15px_25px] items-center gap-[27px] rounded-[20px] border border-black bg-white" 
-                    >
-                        <img src={blue} alt="랜덤 질문 편지지 이미지" className="w-[100px] h-[100px] flex-shrink-0 rounded-[10px] border-[1px] border-black object-cover"></img>
-                        <div className="flex flex-col gap-[14px] text-left ">
-                            <p className="self-stretch text-[18px] leading-[22px] tracking-[-0.408px]">랜덤 질문 편지지</p>
-                            <p className="self-stretch font-[Pretendard] text-[13px] leading-[140%]">랜덤하게 생성된 질문에 답하며 색다른 감동을 선사해 보세요🎁</p>
-                        </div>
-                    </Button> */}
                 </div>
             </div>
         </div>
