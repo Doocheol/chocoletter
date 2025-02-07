@@ -42,18 +42,36 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 	const handleLogout = async () => {
 		await logout();
 		setIsLogin(false);
-		toast.info("로그아웃 완료!");
+		if (!toast.isActive("logout-toast")) {
+			toast.info("로그아웃 완료!.", {
+				toastId: "logout-toast",
+				position: "top-center",
+				autoClose: 2000,
+			});
+		}
 		onClose(); // 로그아웃 후 닫기
 		navigate("/"); // 홈으로 이동
 	};
 
 	const handleHome = () => {
-		toast.info("내 선물상자로 이동!");
+		if (!toast.isActive("go-to-main-toast")) {
+			toast.info("내 초콜릿 보관함으로 이동!.", {
+				toastId: "go-to-main-toast",
+				position: "top-center",
+				autoClose: 2000,
+			});
+		}
 		onClose(); // 홈으로 이동 후 MyPage 닫기
 		if (giftBoxId) {
 			navigate(`/main/${giftBoxId}`);
 		} else {
-			toast.error("다시 로그인해주세요!");
+			if (!toast.isActive("require-login-toast")) {
+			toast.error("다시 로그인해주세요!.", {
+				toastId: "require-login-toast",
+				position: "top-center",
+				autoClose: 2000,
+			});
+		}
 			removeUserInfo();
 			navigate("/");
 		}

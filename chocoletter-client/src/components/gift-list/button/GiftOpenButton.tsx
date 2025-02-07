@@ -136,7 +136,13 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
             } else {
                 if (roomId === null) {
                     navigate("/gift-list/before")
-                    toast.error("방 정보가 없습니다.");
+                    if (!toast.isActive("no-room-toast")) {
+                        toast.error("방 정보가 없습니다.", {
+                            toastId: "no-room-toast",
+                            position: "top-center",
+                            autoClose: 2000,
+                        });
+                    }
                 } else {
                     navigate(`/video/${roomId}`);
                 }

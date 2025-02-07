@@ -58,7 +58,13 @@ const KakaoLoginCallback: React.FC = () => {
       if (!accessToken || !userName || !giftBoxId || !memberId) {
         removeUserInfo();
         setIsLogin(false);
-        toast.error("다시 로그인해주세요!");
+        if (!toast.isActive("require-login-toast")) {
+          toast.error("다시 로그인해주세요.", {
+            toastId: "require-login-toast",
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
         navigate("/");
         return;
       }
