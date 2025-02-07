@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GoBackButton } from "../components/common/GoBackButton";
 import { Button } from "../components/common/Button";
@@ -7,10 +7,29 @@ import pink from "../assets/images/letter/letter_pink.svg"
 import { ImageButton } from "../components/common/ImageButton";
 import free_letter_button from "../assets/images/button/free_letter_button.svg";
 import question_letter_button from "../assets/images/button/question_letter_button.svg";
+import Loading from "../components/common/Loading";
 
 function SelectLetterTypeView() {
     const { giftBoxId } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+
+    // 버튼들의 ref를 관리하기 위한 배열 생성
+    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+     // 모든 버튼이 렌더링되었는지 확인하는 함수
+    const checkButtonsRendered = () => {
+        // 모든 버튼이 렌더링되었는지 확인
+        const allRendered = buttonRefs.current.every((ref) => ref !== null);
+        if (allRendered) {
+            setLoading(false); // 로딩 상태 종료
+        }
+    };
+
+    // 컴포넌트가 마운트될 때 렌더링 확인
+    useEffect(() => {
+        checkButtonsRendered();
+    }, []);
 
     const handleAccept = () => {
         navigate(`/write/general/${giftBoxId}`); 
@@ -19,6 +38,10 @@ function SelectLetterTypeView() {
     const handleReject = () => {
         navigate(`/write/question/${giftBoxId}`);
     };
+
+    if (loading) {
+        return <Loading />; // 로딩 상태 표시
+    }
 
     return (
         <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
@@ -43,11 +66,19 @@ function SelectLetterTypeView() {
                     </h1>
                     <div className="flex flex-col items-center gap-[20px]">
                         <ImageButton
+                            ref={(el) => {
+                                buttonRefs.current[0] = el;
+                                checkButtonsRendered(); // 버튼 렌더링 여부 확인
+                            }}
                             onClick={handleAccept}
                             src={free_letter_button}
                             // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
                         />
                         <ImageButton
+                            ref={(el) => {
+                                buttonRefs.current[1] = el;
+                                checkButtonsRendered(); // 버튼 렌더링 여부 확인
+                            }}
                             onClick={handleReject}
                             src={question_letter_button}
                             // className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
