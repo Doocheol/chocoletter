@@ -220,10 +220,10 @@ public class GiftBoxService {
     }
 
     public Integer calcGiftBoxFillLevel(GiftBox giftBox) {
-        if (0 <= giftBox.getGiftCount() && giftBox.getGiftCount() <= 5) {
+        if (giftBox.getGiftCount() == 0) {
             return 1;
         }
-        if (5 < giftBox.getGiftCount() && giftBox.getGiftCount() <= 15) {
+        if (1 <= giftBox.getGiftCount() && giftBox.getGiftCount() <= 9) {
             return 2;
         }
         return 3;
