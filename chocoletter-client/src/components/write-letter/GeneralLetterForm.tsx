@@ -14,7 +14,7 @@ const GeneralLetterForm: React.FC = () => {
         const value = e.target.value;
         if (value.length > 8) {
             if (!toast.isActive(nicknameToastId)) {
-                toast.warn("닉네임은 8글자 이하로 설정해주세요!", {
+                toast.error("닉네임은 8글자 이하로 설정해주세요!", {
                     toastId: nicknameToastId,
                     position: "top-center",
                     autoClose: 2000,
@@ -30,7 +30,7 @@ const GeneralLetterForm: React.FC = () => {
         const value = e.target.value;
         if (value.length > 150) {
         if (!toast.isActive(contentToastId)) {
-            toast.warn("150글자 이하로 작성해주세요!", {
+            toast.error("150글자 이하로 작성해주세요!", {
             toastId: contentToastId,
             position: "top-center",
             autoClose: 2000,
