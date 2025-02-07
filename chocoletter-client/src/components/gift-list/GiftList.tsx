@@ -24,7 +24,7 @@ const dummyChocolates = [
     {'giftId': "15", 'giftType': "GENERAL", 'isOpened': false, "unBoxingTime": null},
     {'giftId': "16", 'giftType': "GENERAL", 'isOpened': true, "unBoxingTime": null},
     {'giftId': "17", 'giftType': "SPECIAL", 'isOpened': false, "unBoxingTime": "2025-02-14T18:50:00.000Z"},
-    {'giftId': "18", 'giftType': "GENERAL", 'isOpened': false, "unBoxingTime": null},
+    {'giftId': "18", 'giftType': "GENERAL", 'isOpened': true, "unBoxingTime": null},
     {'giftId': "19", 'giftType': "GENERAL", 'isOpened': true, "unBoxingTime": null},
     {'giftId': "20", 'giftType': "SPECIAL", 'isOpened': false, "unBoxingTime": "2025-02-14T19:00:00.000Z"},
 ]
