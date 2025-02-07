@@ -44,9 +44,13 @@ const SelectGiftBoxView: React.FC = () => {
 			setIsGiftBoxSelected(true);
 			navigate(`/main/${giftBoxId}`);
 		} catch (error) {
-			toast.error(
-				"선물상자 선택 업데이트에 실패했습니다. 다시 시도해주세요!"
-			);
+			if (!toast.isActive("select-giftbox-toast")) {
+				toast.error("초콜릿 보관함 업데이트에 실패했습니다. 다시 시도해주세요!", {
+					toastId: "select-giftbox-toast",
+					position: "top-center",
+					autoClose: 2000,
+				});
+			}
 		}
 	};
 
@@ -57,7 +61,13 @@ const SelectGiftBoxView: React.FC = () => {
 
 	useEffect(() => {
 		if (!giftBoxId) {
-			toast.error("다시 로그인 해주세요!");
+			if (!toast.isActive("retry-login-toast")) {
+                toast.error("다시 로그인 해주세요!", {
+                    toastId: "retry-login-toast",
+                    position: "top-center",
+                    autoClose: 2000,
+                });
+			}
 			removeUserInfo();
 			navigate("/");
 		}
