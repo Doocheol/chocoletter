@@ -1,6 +1,10 @@
 package chocolate.chocoletter.api.giftbox.controller;
 
-import chocolate.chocoletter.api.giftbox.dto.request.*;
+import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.GiftBoxTypeRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.SpecialFreeGiftRequestDto;
+import chocolate.chocoletter.api.giftbox.dto.request.SpecialQuestionGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftBoxResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.GiftCountResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.response.MyUnBoxingTimesResponseDto;
@@ -186,7 +190,7 @@ public interface GiftBoxSwagger {
                     description = "암호화된 형태의 giftBox Id (String 타입으로 전달)",
                     schema = @Schema(type = "string")
             )
-            @PathVariable("giftBoxId") Long giftBoxId);
+            @PathVariable("giftBoxId") Long giftBoxId, Principal principal);
 
     @Operation(
             summary = "열어볼 수 있는 선물 카운트 사용",

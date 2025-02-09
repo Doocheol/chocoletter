@@ -127,9 +127,9 @@ public class GiftBoxService {
         return GiftBoxResponseDto.of(friendGiftBox, encryptedGiftBoxId, calcGiftBoxFillLevel(friendGiftBox));
     }
 
-    public UnboxingTimesResponseDto findUnBoxingTimes(Long giftBoxId) {
+    public UnboxingTimesResponseDto findUnBoxingTimes(Long giftBoxId, Long memberId) {
         return UnboxingTimesResponseDto.of(
-                giftService.findReceiverUnboxingTimes(findGiftBox(giftBoxId).getMember().getId()));
+                giftService.findReceiverUnboxingTimes(findGiftBox(giftBoxId).getMember().getId(), memberId));
     }
 
     @Transactional

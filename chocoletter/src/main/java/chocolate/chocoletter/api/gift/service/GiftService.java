@@ -167,8 +167,9 @@ public class GiftService {
         alarmService.save(alarm);
     }
 
-    public List<String> findReceiverUnboxingTimes(Long memberId) {
-        List<Gift> receiverSpecialGifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
+    public List<String> findReceiverUnboxingTimes(Long receiverId, Long memberId) {
+        List<Gift> receiverSpecialGifts = giftRepository.findAllSpecialGifts(receiverId, memberId, GiftType.SPECIAL);
+
         return receiverSpecialGifts.stream()
                 .map(Gift::getUnBoxingTime)
                 .distinct()
@@ -238,7 +239,7 @@ public class GiftService {
     }
 
     public MyUnBoxingTimesResponseDto findMyUnBoxingTimes(Long memberId) {
-        List<Gift> gifts = giftRepository.findAllSpecialGifts(memberId, GiftType.SPECIAL);
+        List<Gift> gifts = giftRepository.findMySpecialGifts(memberId, GiftType.SPECIAL);
         List<Long> giftIds = gifts.stream()
                 .map(Gift::getId)
                 .collect(Collectors.toList());

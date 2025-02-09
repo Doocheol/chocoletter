@@ -22,8 +22,12 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
     @Query("select g from Gift g where g.id = :giftId")
     Gift findGiftById(@Param("giftId") Long giftId);
 
+    @Query("select g from Gift g where g.type = :giftType and (g.receiverId = :receiverId or g.senderId = :receiverId or g.receiverId = :memberId or g.senderId = :memberId)")
+    List<Gift> findAllSpecialGifts(@Param("receiverId") Long receiverId, @Param("memberId") Long memberId,
+                                   @Param("giftType") GiftType giftType);
+
     @Query("select g from Gift g where g.type = :giftType and (g.receiverId = :memberId or g.senderId = :memberId)")
-    List<Gift> findAllSpecialGifts(@Param("memberId") Long memberId, @Param("giftType") GiftType giftType);
+    List<Gift> findMySpecialGifts(@Param("memberId") Long memberId, @Param("giftType") GiftType giftType);
 
     @Query("select g from Gift g where g.senderId = :senderId and g.giftBox.id = :giftBoxId")
     Gift findGiftBySenderIdAndGiftBoxId(Long senderId, Long giftBoxId);
