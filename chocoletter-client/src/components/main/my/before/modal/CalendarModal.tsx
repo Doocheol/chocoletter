@@ -94,7 +94,7 @@ const convertToEventDate = (unBoxingTime: string, eventDay: string, timeZone: st
 
     // 변환된 날짜를 다시 Date 객체로 변환 (KST 적용)
     const formattedDate = formatter.format(eventDateTime);
-        return new Date(formattedDate);
+    return new Date(formattedDate);
 };
 
 // 5분 전 시간 계산 함수
