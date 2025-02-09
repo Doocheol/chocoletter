@@ -64,7 +64,9 @@ public class SecurityConfig {
                 "https://www.chocolate-letter.com",
                 "https://chocolate-letter.com",
                 "https://api.chocolate-letter.com",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://www.chocoletter.store",
+                "https://chocoletter.store"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
