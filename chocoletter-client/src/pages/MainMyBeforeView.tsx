@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,6 +17,7 @@ import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
 import ChatModal from "../components/main/my/before/modal/ChatModal";
 import TutorialModal from "../components/main/my/before/modal/TutorialModal";
+import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 
 import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
@@ -85,6 +86,11 @@ const MainMyBeforeView: React.FC = () => {
 
 	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
+	const watchOpenCountRef = useRef<HTMLDivElement>(null);
+	const calendarIconRef = useRef<HTMLButtonElement>(null);
+	const chatIconRef = useRef<HTMLButtonElement>(null);
+	const giftBoxRef = useRef<HTMLButtonElement>(null);
+	const dummyRef = useRef<HTMLDivElement>(null);
 
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isChatModalOpen, setIsChatModalOpen] = useState(false);
@@ -112,26 +118,26 @@ const MainMyBeforeView: React.FC = () => {
 		}
 	}, [giftBoxNum, navigate]);
 
-	useEffect(() => {
-		if (urlGiftBoxId && savedGiftBoxId) {
-			if (urlGiftBoxId !== savedGiftBoxId) {
-				console.warn(
-					"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
-				);
-				navigate("/error");
-			}
-		} else if (!urlGiftBoxId && savedGiftBoxId) {
-			navigate(`/main/${savedGiftBoxId}`);
-		} else if (urlGiftBoxId && !savedGiftBoxId) {
-			console.warn(
-				"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
-			);
-			navigate("/error");
-		} else {
-			console.warn("shareCode 정보가 없습니다.");
-			navigate("/");
-		}
-	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
+	// useEffect(() => {
+	// 	if (urlGiftBoxId && savedGiftBoxId) {
+	// 		if (urlGiftBoxId !== savedGiftBoxId) {
+	// 			console.warn(
+	// 				"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
+	// 			);
+	// 			navigate("/error");
+	// 		}
+	// 	} else if (!urlGiftBoxId && savedGiftBoxId) {
+	// 		navigate(`/main/${savedGiftBoxId}`);
+	// 	} else if (urlGiftBoxId && !savedGiftBoxId) {
+	// 		console.warn(
+	// 			"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
+	// 		);
+	// 		navigate("/error");
+	// 	} else {
+	// 		console.warn("shareCode 정보가 없습니다.");
+	// 		navigate("/");
+	// 	}
+	// }, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	const giftBoxImages: { [key: number]: string } = {
 		11: giftbox_before_10,
@@ -150,6 +156,15 @@ const MainMyBeforeView: React.FC = () => {
 		43: giftbox_before_42,
 		53: giftbox_before_52,
 	};
+
+	const tutorialIcons = useMemo(() => [
+		tutorialIconRef, 
+		watchOpenCountRef, 
+		calendarIconRef, 
+		calendarIconRef, 
+		chatIconRef, 
+		dummyRef, 
+		giftBoxRef], []);
 
 	// 핸들러들
 	const handleShare = () => {
@@ -255,7 +270,7 @@ const MainMyBeforeView: React.FC = () => {
 				</div>
 			)}
 			<div className="flex justify-center w-full bg-white">
-				<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
+				<div className="w-full sm:max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
 					{/* 상단 아이콘 바 */}
 					<div className="mt-5 ml-6 flex items-center justify-between ">
 						<div className="flex items-center gap-6">
@@ -269,7 +284,10 @@ const MainMyBeforeView: React.FC = () => {
 									alt="tutorial icon"
 								/>
 							</button>
-							<button onClick={handleCalendar}>
+							<button 
+								onClick={handleCalendar}
+								ref={calendarIconRef}  
+							>
 								<img
 									src={calendar_icon}
 									className="w-7 h-7"
@@ -293,7 +311,10 @@ const MainMyBeforeView: React.FC = () => {
 									/>
 								</button>
 							</div>
-							<button onClick={handleChat}>
+							<button 
+								onClick={handleChat}
+								ref={chatIconRef}
+							>
 								<img
 									src={chat_icon}
 									className="w-6 h-6"
@@ -315,6 +336,7 @@ const MainMyBeforeView: React.FC = () => {
 							width: "74%",
 							aspectRatio: "258/96",
 						}}
+						ref={watchOpenCountRef}
 					>
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
 							<div className="flex flex-row w-full truncate">
@@ -385,6 +407,7 @@ const MainMyBeforeView: React.FC = () => {
 							<button
 								onClick={handleMyChocolateBox}
 								className="w-[255px] pl-8 flex items-center justify-center"
+								ref={giftBoxRef}
 							>
 								<img
 									src={giftBoxImages[Number(shapeNum)]}
@@ -403,7 +426,7 @@ const MainMyBeforeView: React.FC = () => {
 						</div> */}
 					</div>
 					{/* 공유 및 캡처 버튼 영역 */}
-					<div className="mt-14 px-4 flex flex-row items-center gap-2.5">
+					<div className="mt-14 px-4 flex flex-row justify-center items-center gap-2.5">
 						<div className="relative group">
 							<div className="absolute bottom-full mb-1 left-4 w-max">
 								<img src={tool_tip} alt="tooltip" />
@@ -431,8 +454,8 @@ const MainMyBeforeView: React.FC = () => {
 						onClose={() => setIsShareModalOpen(false)}
 					/>
 					{isFirstLogin && (
-						<FirstLoginTutorialOverlay
-							targetRef={tutorialIconRef}
+						<FowardTutorialOverlay
+							targetRefs={tutorialIcons}
 							onClose={() => setIsFirstLogin(false)}
 						/>
 					)}
@@ -446,10 +469,12 @@ const MainMyBeforeView: React.FC = () => {
 						isOpen={isChatModalOpen}
 						onClose={() => setIsChatModalOpen(false)}
 					/>
-					<TutorialModal
-						isOpen={isTutorialModalOpen}
-						onClose={() => setIsTutorialModalOpen(false)}
-					/>
+					{isTutorialModalOpen && (
+						<FowardTutorialOverlay
+							targetRefs={tutorialIcons}
+							onClose={() => setIsTutorialModalOpen(false)}
+						/>
+					)}
 					<CalendarModal
 						isOpen={isCalendarModalOpen}
 						onClose={() => setIsCalendarModalOpen(false)}
