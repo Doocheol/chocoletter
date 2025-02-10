@@ -17,15 +17,15 @@ const QuestionLetterForm: React.FC = () => {
 
     const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        if (value.length > 8) {
+        if (value.length > 15) {
             if (!toast.isActive(nicknameToastId)) {
-                toast.error("닉네임은 8글자 이하로 설정해주세요!", {
+                toast.error("닉네임은 15글자 이하로 설정해주세요!", {
                     toastId: nicknameToastId,
                     position: "top-center",
                     autoClose: 2000,
                 });
             }
-            setLetter((prev) => ({ ...prev, nickname: value.substring(0,8) }));
+            setLetter((prev) => ({ ...prev, nickname: value.substring(0,15) }));
         } else {
             setLetter((prev) => ({ ...prev, nickname: value }));
         }
@@ -83,8 +83,8 @@ const QuestionLetterForm: React.FC = () => {
                     className="flex w-[270px] p-2 items-center gap-2 rounded-[15px] border border-black bg-white flex-1 text-center font-sans text-[18px] leading-[22px] tracking-[-0.408px] outline-none focus:ring-0"
                     onChange={handleNicknameChange}
                     onFocus={(e) => (e.target.placeholder = "")}
-                    onBlur={(e) => (e.target.placeholder = "상대방이 보게 될 이름입니다.")}
-                    placeholder="상대방이 보게 될 이름입니다."
+                    onBlur={(e) => (e.target.placeholder = "익명 닉네임을 설정해주세요.")}
+                    placeholder="익명 닉네임을 설정해주세요."
                 />
             </div>
             {/* 질문 */}
