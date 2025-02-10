@@ -105,11 +105,10 @@ public class GiftController implements GiftSwagger {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{giftId}/modify")
+    @PatchMapping("/{giftId}/letter")
     public ResponseEntity<?> modifyGift(@DecryptedId @PathVariable Long giftId,
                                         @RequestBody ModifyLetterRequestDto requestDto, Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
-        System.out.println(requestDto.content());
         giftService.modifyGift(memberId, giftId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
