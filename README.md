@@ -1,8 +1,8 @@
 ## 발렌타인데이를 특별하게, 익명 편지 서비스 🍫Chocoletter🍫
 
-[![Website](https://img.shields.io/badge/Website-준비중입니다.-red)](https://chocoletter.store)
-[![API Status](https://img.shields.io/badge/API-준비중입니다.-red)](https://api.chocoletter.store)
-![Version](https://img.shields.io/badge/Version-0.0.0-yellow)
+[![Website](https://img.shields.io/badge/Link-초코레터-pink)](https://www.chocolate-letter.com)
+[![API Status](https://img.shields.io/badge/API-Swagger-green)](https://api.chocoletter.store)
+![Version](https://img.shields.io/badge/Version-0.1.0-yellow)
 <br>
 <br>
 
@@ -27,11 +27,23 @@ Chocoletter와 함께 특별한 발렌타인데이를 만들어보세요. <br>
 ### FE
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/) [![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)](https://axios-http.com/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 ### BE
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot) [![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-data-jpa) [![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)](https://hibernate.org/) [![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)](https://kafka.apache.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot) [![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-data-jpa) [![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-security) [![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)](https://kafka.apache.org/) [![STOMP](https://img.shields.io/badge/STOMP-000000?style=for-the-badge&logo=stomp&logoColor=white)](https://stomp.github.io/)
+
 ### Infra
-[![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) [![MobaXterm](https://img.shields.io/badge/MobaXterm-000000?style=for-the-badge&logo=terminal&logoColor=white)](https://mobaxterm.mobatek.net/) [![Portainer](https://img.shields.io/badge/Portainer-13BEF9?style=for-the-badge&logo=portainer&logoColor=white)](https://www.portainer.io/)
+[![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) [![Portainer](https://img.shields.io/badge/Portainer-13BEF9?style=for-the-badge&logo=portainer&logoColor=white)](https://www.portainer.io/) [![Datadog](https://img.shields.io/badge/Datadog-FF7700?style=for-the-badge&logo=datadog&logoColor=white)](https://www.datadoghq.com/)
+
 ### DB
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/) [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
+### Co-Op
+[![GitLab](https://img.shields.io/badge/GitLab-FCA121?style=for-the-badge&logo=gitlab&logoColor=white)](https://about.gitlab.com/)
+[![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)](https://www.atlassian.com/software/jira)
+
+
+### WebRTC
+[![OpenVidu](https://img.shields.io/badge/OpenVidu-2C2C2C?style=for-the-badge&logo=openvidu&logoColor=white)](https://openvidu.io/)
+
+
 <br>
 
 
@@ -42,7 +54,7 @@ Chocoletter와 함께 특별한 발렌타인데이를 만들어보세요. <br>
 
 ## ERD
 
-![image.png](./image.png)
+![image.png](./readmeImg/image.png)
 <br>
 
 ## Member 👨‍👩‍👧‍👦
