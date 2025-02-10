@@ -347,7 +347,6 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             }}
             className="flex flex-col items-center text-center text-white"
         >
-            <p>{page}</p>
             {page < 6 ? 
                 <ImageButton
                     onClick={nextPage}
@@ -361,6 +360,9 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
                 /> 
             }
             
+        </div>
+        <div className="absolute bottom-4">
+            <p className="text-white">{page + 1} / 7</p>
         </div>
         </div>,
         document.body

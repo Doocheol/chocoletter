@@ -97,9 +97,14 @@ module.exports = {
           "50%": { transform: "translateX(-30%)" },
           "100%": { transform: "translateX(0%)" },
         },
+        reverseBounce: {
+          "0%, 100%": { transform: "translateY(50%)" }, 
+          "50%": { transform: "translateY(0%)" },
+        },
       },
       animation: {
         slideWiggle: "slideWiggle 2s ease-in-out",
+        reverseBounce: "reverseBounce 0.98s infinite",
       }
     },
   },
