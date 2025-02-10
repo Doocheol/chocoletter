@@ -105,7 +105,7 @@ public class GiftBoxController implements GiftBoxSwagger {
         return ResponseEntity.ok(myUnbBoxingTimes);
     }
 
-    @GetMapping("/{giftBoxId}/modify")
+    @GetMapping("/{giftBoxId}/sent-letter")
     public ResponseEntity<?> findMyGiftDetail(@DecryptedId @PathVariable("giftBoxId") Long giftBoxId,
                                               Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
