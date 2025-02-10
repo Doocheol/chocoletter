@@ -7,6 +7,7 @@ import {
 	isFirstLoginAtom,
 	giftBoxNumAtom,
 	giftBoxIdAtom,
+	isWatchNewTutorialAtom,
 } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
@@ -59,6 +60,7 @@ import Notification from "../components/main/my/before/modal/Notification";
 
 import Loading from "../components/common/Loading";
 import ValentineDayCountdownModal from "../components/main/my/before/popup/ValentineDayCountdownModal";
+import { PointTutorialOverlay } from "../components/tutorial/PointTutorialOverlay";
 import { useCookies } from "react-cookie";
 
 const MainMyBeforeView: React.FC = () => {
@@ -84,6 +86,7 @@ const MainMyBeforeView: React.FC = () => {
 	const setAvailableGifts = useSetRecoilState(availableGiftsAtom);
 	const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
 
+	const [isWatchNewTutorial, setIsWatchNewTutorial] = useRecoilState(isWatchNewTutorialAtom);
 	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 	const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
 	const captureRef = useRef<HTMLDivElement>(null);
@@ -152,10 +155,11 @@ const MainMyBeforeView: React.FC = () => {
 	};
 
 	const tutorialIcons = useMemo(() => [
-		tutorialIconRef, 
+		tutorialIconRef,
+		dummyRef,
 		watchOpenCountRef, 
 		calendarIconRef, 
-		calendarIconRef, 
+		dummyRef, 
 		chatIconRef, 
 		dummyRef, 
 		giftBoxRef], []);
@@ -448,7 +452,10 @@ const MainMyBeforeView: React.FC = () => {
 					{isFirstLogin && (
 						<FowardTutorialOverlay
 							targetRefs={tutorialIcons}
-							onClose={() => setIsFirstLogin(false)}
+							onClose={() => {
+								setIsWatchNewTutorial(true)
+								setIsFirstLogin(false)
+							}}
 						/>
 					)}
 					{isProfileOpen && (
@@ -475,6 +482,14 @@ const MainMyBeforeView: React.FC = () => {
 						isOpen={isNotificationOpen}
 						onClose={() => setIsNotificationOpen(false)}
 					/>
+					{!isFirstLogin && !isWatchNewTutorial && (<PointTutorialOverlay 
+						targetRef={tutorialIconRef}
+						onClose={() => setIsWatchNewTutorial(true)}
+						onOpenTutorial={() => {
+							setIsWatchNewTutorial(true)
+							setIsTutorialModalOpen(true)
+						}}
+					/>)}
 				</div>
 			</div>
 		</div>
