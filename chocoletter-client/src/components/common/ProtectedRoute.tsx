@@ -8,7 +8,7 @@ const ProtectedRoute: React.FC = () => {
 	const isLogin = useRecoilValue(isLoginAtom);
 
 	useEffect(() => {
-		if (isLogin) {
+		if (!isLogin) {
 			navigate("/");
 		}
 	}, [isLogin, navigate]);
