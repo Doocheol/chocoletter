@@ -1,7 +1,7 @@
 ## 발렌타인데이를 특별하게, 익명 편지 서비스 🍫Chocoletter🍫
 
 [![Website](https://img.shields.io/badge/Link-초코레터-pink)](https://www.chocolate-letter.com)
-[![API Status](https://img.shields.io/badge/API-Swagger-green)](https://api.chocoletter.store)
+[![API Status](https://img.shields.io/badge/API-Swagger-green)](https://api.chocolate-letter.com/swagger-ui/index.html)
 ![Version](https://img.shields.io/badge/Version-0.1.0-yellow)
 <br>
 <br>
