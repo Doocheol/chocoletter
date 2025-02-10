@@ -5,6 +5,7 @@ import chocolate.chocoletter.api.alarm.domain.AlarmType;
 import chocolate.chocoletter.api.alarm.service.AlarmService;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
+import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.repository.GiftRepository;
 import chocolate.chocoletter.api.gift.service.GiftService;
 import chocolate.chocoletter.api.giftbox.domain.GiftBox;
@@ -206,6 +207,17 @@ public class GiftBoxService {
     public VerifyIsSendResponseDto findVerifyIsSend(Long giftBoxId, Long memberId) {
         boolean isSend = giftRepository.findGiftBySenderIdAndGiftBoxId(memberId, giftBoxId) != null;
         return VerifyIsSendResponseDto.of(isSend);
+    }
+
+    public GiftDetailResponseDto findMyGiftDetail(Long giftBoxId, Long memberId) {
+        Gift myGift = giftService.findMyGiftDetail(giftBoxId, memberId);
+        if (myGift == null) {
+            throw new NotFoundException(ErrorMessage.ERR_NOT_FOUND_GIFT);
+        }
+        if (myGift.getIsOpened()) {
+            throw new BadRequestException(ErrorMessage.ERR_GIFT_ALREADY_OPENED);
+        }
+        return giftService.findSendGiftDetail(memberId, myGift.getId());
     }
 
     @Transactional

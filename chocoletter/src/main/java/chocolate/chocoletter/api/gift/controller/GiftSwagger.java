@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.request.ModifyLetterRequestDto;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
@@ -10,11 +11,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.security.Principal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.security.Principal;
 
 public interface GiftSwagger {
 
@@ -251,4 +251,36 @@ public interface GiftSwagger {
                     description = "암호화된 형태의 giftId (String 타입으로 전달)",
                     schema = @Schema(type = "string")
             ) Long giftId, Principal principal);
+
+    @Operation(
+            summary = "편지 수정",
+            description = "상대방에게 이미 편지를 보냈고, 상대가 읽지 않았을 경우 수정합니다."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "성공적으로 변경",
+                            content = @Content(
+                                    mediaType = "application/json"
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "404", description = "해당하는 초대장이 없습니다.")
+            }
+    )
+    public ResponseEntity<?> modifyGift(
+            @Parameter(
+                    description = "암호화된 형태의 giftId (String 타입으로 전달)",
+                    schema = @Schema(type = "string")
+            ) Long giftId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "변경할 편지 내용",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ModifyLetterRequestDto.class)
+                    )
+            )
+            @RequestBody ModifyLetterRequestDto requestDto, Principal principal);
 }
