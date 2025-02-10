@@ -19,7 +19,9 @@ Chocoletter와 함께 특별한 발렌타인데이를 만들어보세요. <br>
 
 ## 서비스 사용 예시
 
-- 제작 후 gif 형식으로 들어갈 예정입니다.
+![gif1.gif](./readmeImg/gif1.gif)
+![gif2.gif](./readmeImg/gif2.gif)
+
 <br>
 
 ## Tech Stack 🛠️
