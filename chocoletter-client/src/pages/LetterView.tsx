@@ -50,7 +50,7 @@ const LetterView = () => {
               updatedData.answer = plainAnswer; // 복호화된 답변을 giftData.answer에 반영
             } catch (e) {
               console.error("답변 복호화 실패:", e);
-              updatedData.answer = "로그인을 다시 해주세요!";
+              updatedData.answer = "잘못된 접근입니다. 로그인을 다시 해주세요!";
             }
           } else if (data.content) {
             try {
