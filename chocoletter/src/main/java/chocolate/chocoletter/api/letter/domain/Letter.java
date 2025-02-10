@@ -20,44 +20,51 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Letter extends BaseTimeEntity {
-	@Id
-	@Column(unique = true, nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@OneToOne
-	@JoinColumn(name = "gift_id", nullable = false, unique = true)
-	private Gift gift;
+    @OneToOne
+    @JoinColumn(name = "gift_id", nullable = false, unique = true)
+    private Gift gift;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private LetterType type;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LetterType type;
 
-	@Column(nullable = false, length = 25)
-	private String nickname;
+    @Column(nullable = false, length = 25)
+    private String nickname;
 
-	private String content;
+    private String content;
 
-	private String question;
+    private String question;
 
-	private String answer;
+    private String answer;
 
-	public Letter(Gift gift, LetterType type, String nickname, String content, String question, String answer) {
-		this.gift = gift;
-		this.type = type;
-		this.nickname = nickname;
-		this.content = content;
-		this.question = question;
-		this.answer = answer;
-	}
+    public Letter(Gift gift, LetterType type, String nickname, String content, String question, String answer) {
+        this.gift = gift;
+        this.type = type;
+        this.nickname = nickname;
+        this.content = content;
+        this.question = question;
+        this.answer = answer;
+    }
 
-	@Builder(builderClassName = "createGeneralLetter", builderMethodName = "createGeneralLetter")
-	public static Letter createGeneralLetter(Gift gift, String nickname, String content) {
-		return new Letter(gift, LetterType.FREE, nickname, content, null, null);
-	}
+    @Builder(builderClassName = "createGeneralLetter", builderMethodName = "createGeneralLetter")
+    public static Letter createGeneralLetter(Gift gift, String nickname, String content) {
+        return new Letter(gift, LetterType.FREE, nickname, content, null, null);
+    }
 
-	@Builder(builderClassName = "createQuestionLetter", builderMethodName = "createQuestionLetter")
-	public static Letter createQuestionLetter(Gift gift, String nickname, String question, String answer) {
-		return new Letter(gift, LetterType.QUESTION, nickname, null, question, answer);
-	}
+    @Builder(builderClassName = "createQuestionLetter", builderMethodName = "createQuestionLetter")
+    public static Letter createQuestionLetter(Gift gift, String nickname, String question, String answer) {
+        return new Letter(gift, LetterType.QUESTION, nickname, null, question, answer);
+    }
+
+    public void modify(String nickname, String question, String answer, String content) {
+        this.nickname = nickname;
+        this.question = question;
+        this.answer = answer;
+        this.content = content;
+    }
 }

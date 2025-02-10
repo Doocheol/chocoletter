@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.alarm.service.AlarmService;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
+import chocolate.chocoletter.api.gift.dto.request.ModifyLetterRequestDto;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
@@ -299,6 +300,15 @@ public class GiftService {
         removeGiftAlarmOnAcceptOrReject(gift, memberId);
     }
 
+    @Transactional
+    public void modifyGift(Long memberId, Long giftId, ModifyLetterRequestDto requestDto) {
+        Gift gift = giftRepository.findGiftById(giftId);
+        if (!memberId.equals(gift.getSenderId())) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        letterService.modifyLetter(giftId, requestDto);
+    }
+
     private void removeGiftAlarmOnAcceptOrReject(Gift gift, Long receiverId) {
         // 받은 사람에게 RECEIVE_SPECIAL 타입 알림 삭제
         List<Alarm> alarms = alarmService.findMyAlarmsByAlarmType(receiverId, gift.getId(), AlarmType.RECEIVE_SPECIAL);
@@ -308,5 +318,9 @@ public class GiftService {
                     alarmService.delete(alarm.getId());
                 }
         );
+    }
+
+    public Gift findMyGiftDetail(Long giftBoxId, Long memberId) {
+        return giftRepository.findMyGift(giftBoxId, memberId);
     }
 }
