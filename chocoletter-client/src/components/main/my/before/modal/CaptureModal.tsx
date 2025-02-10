@@ -307,8 +307,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		) {
 			try {
 				await navigator.share({
-					title: "'초코레터!'",
-					text: "내 초콜릿 보관함 이미지를 공유하고, 링크를 공유하여 편지를 받아보세요!",
+					// title: "'초코레터!'",
+					// text: "내 초콜릿 보관함 이미지를 공유하고, 링크를 공유하여 편지를 받아보세요!",
 					files: [file],
 				});
 				toast.dismiss();
