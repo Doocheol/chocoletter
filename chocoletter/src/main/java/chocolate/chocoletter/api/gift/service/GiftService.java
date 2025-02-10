@@ -6,6 +6,7 @@ import chocolate.chocoletter.api.alarm.service.AlarmService;
 import chocolate.chocoletter.api.chatroom.service.ChatRoomService;
 import chocolate.chocoletter.api.gift.domain.Gift;
 import chocolate.chocoletter.api.gift.domain.GiftType;
+import chocolate.chocoletter.api.gift.dto.request.ModifyLetterRequestDto;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftResponseDto;
@@ -297,6 +298,15 @@ public class GiftService {
         alarmService.save(alarm);
 
         removeGiftAlarmOnAcceptOrReject(gift, memberId);
+    }
+
+    @Transactional
+    public void modifyGift(Long memberId, Long giftId, ModifyLetterRequestDto requestDto) {
+        Gift gift = giftRepository.findGiftById(giftId);
+        if (!memberId.equals(gift.getSenderId())) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
+        }
+        letterService.modifyLetter(giftId, requestDto);
     }
 
     private void removeGiftAlarmOnAcceptOrReject(Gift gift, Long receiverId) {

@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.letter.service;
 
+import chocolate.chocoletter.api.gift.dto.request.ModifyLetterRequestDto;
 import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.domain.Question;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
@@ -41,5 +42,11 @@ public class LetterService {
 
     public String findNickNameByGiftId(Long giftId) {
         return letterRepository.findNickNameByGiftId(giftId);
+    }
+
+    @Transactional
+    public void modifyLetter(Long giftId, ModifyLetterRequestDto requestDto) {
+        Letter letter = letterRepository.findLetterByGiftId(giftId);
+        letter.modify(requestDto.nickname(), requestDto.question(), requestDto.answer(), requestDto.content());
     }
 }

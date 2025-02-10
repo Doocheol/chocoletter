@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.gift.controller;
 
+import chocolate.chocoletter.api.gift.dto.request.ModifyLetterRequestDto;
 import chocolate.chocoletter.api.gift.dto.request.UnboxingInvitationRequestDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.gift.dto.response.GiftUnboxingInvitationResponseDto;
@@ -9,6 +10,7 @@ import chocolate.chocoletter.common.annotation.DecryptedId;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -101,5 +103,14 @@ public class GiftController implements GiftSwagger {
         Long memberId = Long.parseLong(principal.getName());
         giftService.changeToGeneralGift(memberId, giftId);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{giftId}/modify")
+    public ResponseEntity<?> modifyGift(@DecryptedId @PathVariable Long giftId,
+                                        @RequestBody ModifyLetterRequestDto requestDto, Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        System.out.println(requestDto.content());
+        giftService.modifyGift(memberId, giftId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
