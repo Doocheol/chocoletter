@@ -64,7 +64,7 @@ Chocoletter와 함께 특별한 발렌타인데이를 만들어보세요. <br>
 
 ## ERD
 
-![image.png](./readmeImg/image.png)
+![erd.png](./readmeImg/erd.png)
 <br>
 
 ## Member 👨‍👩‍👧‍👦
