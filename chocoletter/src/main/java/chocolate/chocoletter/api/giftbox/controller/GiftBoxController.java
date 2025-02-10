@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.giftbox.controller;
 
+import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GiftBoxTypeRequestDto;
@@ -102,6 +103,14 @@ public class GiftBoxController implements GiftBoxSwagger {
         Long memberId = Long.parseLong(principal.getName());
         MyUnBoxingTimesResponseDto myUnbBoxingTimes = giftBoxService.findMyUnbBoxingTimes(memberId);
         return ResponseEntity.ok(myUnbBoxingTimes);
+    }
+
+    @GetMapping("/{giftBoxId}/modify")
+    public ResponseEntity<?> findMyGiftDetail(@DecryptedId @PathVariable("giftBoxId") Long giftBoxId,
+                                              Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        GiftDetailResponseDto myGiftDetail = giftBoxService.findMyGiftDetail(giftBoxId, memberId);
+        return ResponseEntity.ok(myGiftDetail);
     }
 
     /**

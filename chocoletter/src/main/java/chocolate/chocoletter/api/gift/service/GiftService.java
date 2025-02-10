@@ -309,4 +309,8 @@ public class GiftService {
                 }
         );
     }
+
+    public Gift findMyGiftDetail(Long giftBoxId, Long memberId) {
+        return giftRepository.findMyGift(giftBoxId, memberId);
+    }
 }
