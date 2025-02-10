@@ -10,7 +10,6 @@ import {
 } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 import ShareModal from "../components/main/my/before/modal/ShareModal";
 import CaptureModal from "../components/main/my/before/modal/CaptureModal";
@@ -57,18 +56,24 @@ import { getGiftBoxName } from "../services/giftBoxApi";
 
 import Notification from "../components/main/my/before/modal/Notification";
 
-// Loading 컴포넌트 import (로딩 중임을 보여줄 오버레이)
 import Loading from "../components/common/Loading";
+import ValentineDayCountdownModal from "../components/main/my/before/popup/ValentineDayCountdownModal";
+import { useCookies } from "react-cookie";
 
 const MainMyBeforeView: React.FC = () => {
 	const navigate = useNavigate();
+
+	const [cookies] = useCookies(["valentineCountdownShown"]);
+	const todayStr = new Date().toISOString().split("T")[0];
+	const [IsPopupOpen, setIsPopupOpen] = useState(
+		cookies.valentineCountdownShown === todayStr ? false : true
+	);
 
 	const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
 	const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 	const giftBoxNum = useRecoilValue(giftBoxNumAtom);
 	const [shapeNum, setShapeNum] = useState("12");
 
-	// 주소창 높이 보정
 	useViewportHeight();
 
 	const availableGifts = useRecoilValue(availableGiftsAtom);
@@ -90,10 +95,8 @@ const MainMyBeforeView: React.FC = () => {
 	const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 	const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
-	// 알림 개수 상태
 	const [alarmCount, setAlarmCount] = useState<number>(0);
 
-	// 로딩 상태들 (API 호출 또는 모달 전환 중)
 	const [isGiftCountLoading, setIsGiftCountLoading] =
 		useState<boolean>(false);
 	const [isAlarmCountLoading, setIsAlarmCountLoading] =
@@ -101,11 +104,9 @@ const MainMyBeforeView: React.FC = () => {
 	const [isGiftShapeLoading, setIsGiftShapeLoading] =
 		useState<boolean>(false);
 
-	// API 진행 시 로딩 상태가 하나라도 true면 전역 로딩 표시
 	const isLoading =
 		isGiftCountLoading || isAlarmCountLoading || isGiftShapeLoading;
 
-	// URL 파라미터와 Recoil에 저장된 shareCode 검증
 	useEffect(() => {
 		if (!giftBoxNum) {
 			navigate("/select-giftbox");
@@ -115,20 +116,13 @@ const MainMyBeforeView: React.FC = () => {
 	useEffect(() => {
 		if (urlGiftBoxId && savedGiftBoxId) {
 			if (urlGiftBoxId !== savedGiftBoxId) {
-				console.warn(
-					"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
-				);
 				navigate("/error");
 			}
 		} else if (!urlGiftBoxId && savedGiftBoxId) {
 			navigate(`/main/${savedGiftBoxId}`);
 		} else if (urlGiftBoxId && !savedGiftBoxId) {
-			console.warn(
-				"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
-			);
 			navigate("/error");
 		} else {
-			console.warn("shareCode 정보가 없습니다.");
 			navigate("/");
 		}
 	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
@@ -151,13 +145,11 @@ const MainMyBeforeView: React.FC = () => {
 		53: giftbox_before_52,
 	};
 
-	// 핸들러들
 	const handleShare = () => {
 		setIsShareModalOpen(true);
 	};
 
 	const handleCapture = () => {
-		// 캡처 버튼 클릭 시, key 값을 증가시켜 모달을 강제 remount
 		setCaptureModalKey((prev) => prev + 1);
 		setIsCaptureModalVisible(true);
 	};
@@ -170,7 +162,6 @@ const MainMyBeforeView: React.FC = () => {
 		setIsCalendarModalOpen(true);
 	};
 
-	// 알림 아이콘 클릭 시 알림 모달을 여는 핸들러 (여기서는 모달 오픈 동작만 처리)
 	const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
 	const handleNotification = () => {
@@ -189,7 +180,7 @@ const MainMyBeforeView: React.FC = () => {
 	const handleMyChocolateBox = () => {
 		navigate("/gift-list/before");
 	};
-	// 선물상자 이미지 API 호출
+
 	useEffect(() => {
 		async function fetchGiftShape() {
 			setIsGiftShapeLoading(true);
@@ -200,7 +191,7 @@ const MainMyBeforeView: React.FC = () => {
 					);
 					setShapeNum(String(type) + String(fillLevel));
 				} else {
-					throw new Error("Gift Box ID is undefined");
+					throw new Error("Gift Box ID가 없어요!");
 				}
 			} catch (err) {
 				console.error("Gift Box name API 실패:", err);
@@ -211,7 +202,6 @@ const MainMyBeforeView: React.FC = () => {
 		fetchGiftShape();
 	}, [urlGiftBoxId, setIsGiftShapeLoading]);
 
-	// 선물 개수 API 호출 (로딩 포함)
 	useEffect(() => {
 		async function fetchGiftCount() {
 			setIsGiftCountLoading(true);
@@ -248,15 +238,22 @@ const MainMyBeforeView: React.FC = () => {
 
 	return (
 		<div className="relative">
+			{/* 전역 로딩 오버레이 (로딩 중일 때만 표시) */}
 			{isLoading && (
-				// 전역 로딩 오버레이 (API 호출 중)
 				<div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
 					<Loading />
 				</div>
 			)}
+
+			{/* 디데이 카운트 팝업창 */}
+			<ValentineDayCountdownModal
+				isOpen={IsPopupOpen}
+				onClose={() => setIsPopupOpen(false)}
+			/>
+
 			<div className="flex justify-center w-full bg-white">
 				<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
-					{/* 상단 아이콘 바 */}
+					{/* 헤더 아이콘 */}
 					<div className="mt-5 ml-6 flex items-center justify-between ">
 						<div className="flex items-center gap-6">
 							<button
@@ -305,7 +302,8 @@ const MainMyBeforeView: React.FC = () => {
 							</button>
 						</div>
 					</div>
-					{/* 초콜릿 개봉/받은 정보 카드 */}
+
+					{/* 초콜릿 개봉/받은 정보 컨테이너 */}
 					<div
 						className="mt-6 mx-auto relative flex items-center justify-center"
 						style={{
@@ -367,7 +365,7 @@ const MainMyBeforeView: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					{/* 초콜릿 박스 & 안내 문구 */}
+					{/* 초콜릿 박스 & 클릭 이미지 */}
 					<div className="mt-6 flex flex-col items-center px-4">
 						<div className="flex justify-center gap-1.5 mb-3 w-[225px]">
 							<img
@@ -393,14 +391,6 @@ const MainMyBeforeView: React.FC = () => {
 								/>
 							</button>
 						</div>
-						{/* <div className="flex items-start pl-4 gap-1.5 mt-1 mb-3 w-[225px]">
-							<AiOutlineExclamationCircle className="w-3 h-3 text-gray-500" />
-							<p className="text-xs text-gray-500 leading-snug">
-								개봉 가능한 일반 초콜릿이 있다면
-								<br />
-								박스를 클릭하여 편지를 읽어볼 수 있어요.
-							</p>
-						</div> */}
 					</div>
 					{/* 공유 및 캡처 버튼 영역 */}
 					<div className="mt-14 px-4 flex flex-row items-center gap-2.5">
@@ -420,6 +410,7 @@ const MainMyBeforeView: React.FC = () => {
 							className="w-[81px] h-14 flex items-center justify-center rounded-[15px] border border-black group"
 						/>
 					</div>
+
 					{/* 모달 및 오버레이 */}
 					<CaptureModal
 						key={captureModalKey} // key 추가
