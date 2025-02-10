@@ -35,7 +35,7 @@ const TestVideoRoomView = () => {
     const [ countFive, setCountFive ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
-    const [leftTime, setLeftTime] = useState(65);
+    const [leftTime, setLeftTime] = useState(95);
     const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
