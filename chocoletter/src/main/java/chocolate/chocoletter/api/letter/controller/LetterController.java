@@ -20,7 +20,7 @@ public class LetterController implements LetterSwagger {
     private final LetterService letterService;
 
     @GetMapping("/question")
-    public ResponseEntity<?> findRandomQuestion(@RequestParam @Min(0) @Max(20) Long previousQuestionId) {
+    public ResponseEntity<?> findRandomQuestion(@RequestParam @Min(0) @Max(40) Long previousQuestionId) {
         RandomQuestionResponseDto randomQuestion = letterService.findRandomQuestion(previousQuestionId);
         return ResponseEntity.ok(randomQuestion);
     }

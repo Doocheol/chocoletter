@@ -30,10 +30,10 @@ public class LetterService {
         Random random = new Random();
         Long randomId;
         if (questionId == 0) {
-            randomId = random.nextLong(1, 21L);
+            randomId = random.nextLong(1, 41L);
         } else {
             do {
-                randomId = random.nextLong(1, 21L);
+                randomId = random.nextLong(1, 41L);
             } while (randomId.equals(questionId));
         }
         Question question = letterRepository.findQuestion(randomId);
