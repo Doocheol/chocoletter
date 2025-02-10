@@ -155,10 +155,11 @@ const MainMyBeforeView: React.FC = () => {
 	};
 
 	const tutorialIcons = useMemo(() => [
-		tutorialIconRef, 
+		tutorialIconRef,
+		dummyRef,
 		watchOpenCountRef, 
 		calendarIconRef, 
-		calendarIconRef, 
+		dummyRef, 
 		chatIconRef, 
 		dummyRef, 
 		giftBoxRef], []);

@@ -10,6 +10,8 @@ import sharemodal_ex from "../../assets/images/tutorial/sharemodal_ex.svg"
 // import giftbox_before_12 from "../../assets/images/giftbox/giftbox_before_12.svg";
 import { FiArrowUpCircle } from "react-icons/fi";
 import share_button from "../../assets/images/button/share_button.svg";
+import encrypted_icon from "../../assets/images/tutorial/encrypted.svg";
+import start_button from "../../assets/images/button/start_button.svg";
 
 interface FowardTutorialOverlayProps {
     /** 강조(구멍) 처리할 아이콘 버튼의 ref */
@@ -54,6 +56,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         const updatePosition = () => {
         if (!targetRef || !targetRef.current) return;
         const rect = targetRef.current.getBoundingClientRect();
+        console.log(rect, page, 'page');
 
         // 스크롤 보정
         const x = rect.left + rect.width / 2 + window.scrollX;
@@ -93,7 +96,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
     const screenH = window.innerHeight;
     const borderRadius = 12;
     const rectWidth = radius * 2;
-    const rectHeight = radius * 1.2;
+    const rectHeight = radius * 0.8;
     console.log(x, y, borderRadius, rectHeight, rectWidth);
 
     // 원형 path: SVG 원 그리는 명령어
@@ -103,21 +106,29 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             `a ${radius},${radius} 0 1,0 -${radius * 2},0 Z`,
         ].join(" ");
 
-    const roundedRectPath = [
-        `M ${x - radius + borderRadius},${y - radius}`, // 시작점 (좌측 상단 모서리 시작)
-        `h ${(radius * 2) - (borderRadius * 2)}`, // 상단 가로선
-        `q ${borderRadius},0 ${borderRadius},${borderRadius}`, // 우측 상단 모서리
-        `v ${(radius * 2) - (borderRadius * 2)}`, // 우측 세로선
-        `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 모서리
-        `h -${(radius * 2) - (borderRadius * 2)}`, // 하단 가로선
-        `q -${borderRadius},0 -${borderRadius},-${borderRadius}`, // 좌측 하단 모서리
-        `v -${(radius * 2) - (borderRadius * 2)}`, // 좌측 세로선
-        `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 모서리
-        'Z' // 경로 닫기
-    ].join(" ");
+        const startX = x - rectWidth / 2 + borderRadius;
+        const startY = y - rectHeight / 2;
+        
+        // 수평 길이와 수직 길이
+        const horizontalLength = rectWidth - 2 * borderRadius;
+        const verticalLength = rectHeight - 2 * borderRadius;
+        
+        const roundedRectPath = [
+            `M ${startX},${startY}`,               // 시작점: 좌측 상단 (borderRadius offset 적용)
+            `h ${horizontalLength}`,              // 상단 가로선
+            `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
+            `v ${verticalLength}`,                // 우측 세로선
+            `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
+            `h -${horizontalLength}`,             // 하단 가로선
+            `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
+            `v -${verticalLength}`,               // 좌측 세로선
+            `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
+            'Z'
+        ].join(" ");
     console.log(`Rounded Rect Path: ${roundedRectPath}`);
 
     const shapePaths = [
+        circlePath,
         circlePath,
         roundedRectPath,
         circlePath,
@@ -145,6 +156,20 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             className="flex flex-col items-center text-center text-white text-nowrap"
         >
             <p className="mb-4">여기서 <span className="text-chocoletterTextYellow">초코레터</span>를 자세히 볼 수 있어요!</p>
+        </div>),
+        (<div
+            style={{
+            position: "fixed",
+            top: "33%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "auto",
+            }}
+            className="flex flex-col items-center text-center text-white text-nowrap"
+        >
+            <img src={encrypted_icon} alt="보안 강화" />
+            <p className="mb-4">초코레터는 이용자분들의<br/><span className="text-chocoletterTextYellow">개인정보를 수집하지 않아요!</span></p>
+            <p>작성되는 편지는 <span className="text-chocoletterTextYellow">철저히 암호화</span>되어<br/>편지를 받는 사람 외에는<br/>아무도 내용을 확인할 수 없어요!</p>
         </div>),
         (<div
             style={{
@@ -185,7 +210,10 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         >
             <div className="relative flex justify-center items-center w-full">
                 <img src={unboxing_tutorial} alt="언박싱_차은우_카리나" className="h-screen" style={{ width: "100%"}} />
-                <p className="absolute mb-[10dvh] text-center">2월 14일, 화상 채팅으로 <br/><span className="text-chocoletterTextYellow">편지를 보낸 사람</span>을 확인해보세요!</p>
+                <div className="absolute text-center bottom-[34%]">
+                    <p>2월 14일, 5분 전부터 언박싱 초대장이 활성화 돼요.<br/>클릭하면 영상통화가 연결되고,<br/><span className="text-chocoletterTextYellow">1분 30초 동안 친구와 통화</span>를 할 수 있어요.</p>
+                    <p>같이 편지를 읽어보면서<br/>친구와 특별한 순간을 함께 해보세요!</p>
+                </div>
             </div>
         </div>),
         (<div
@@ -347,7 +375,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             }}
             className="flex flex-col items-center text-center text-white"
         >
-            {page < 6 ? 
+            {page < 7 ? 
                 <ImageButton
                     onClick={nextPage}
                     src={ok_button}
@@ -355,14 +383,14 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
                 /> :
                 <ImageButton
                     onClick={onClose}
-                    src={ok_button}
+                    src={start_button}
                     className="w-[88px] h-[54px]"
                 /> 
             }
             
         </div>
         <div className="absolute bottom-4">
-            <p className="text-white">{page + 1} / 7</p>
+            <p className="text-white">{page + 1} / 8</p>
         </div>
         </div>,
         document.body
@@ -374,6 +402,8 @@ function makeHighlightPath(x: number, y: number, radius: number, page: number,) 
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
     const borderRadius = 12;
+    const rectWidth = radius * 2;
+    const rectHeight = radius * 0.8;
     let circle: string | null = null;
     // 화면 전체 사각형
     const rect = `M 0,0 H ${screenW} V ${screenH} H 0 Z`;
@@ -385,18 +415,26 @@ function makeHighlightPath(x: number, y: number, radius: number, page: number,) 
             `a ${radius},${radius} 0 1,0 -${radius * 2},0 Z`,
         ].join(" ");
     } else {
+        const startX = x - rectWidth / 2 + borderRadius;
+        const startY = y - rectHeight / 2;
+
+        // 수평 길이와 수직 길이
+        const horizontalLength = rectWidth - 2 * borderRadius;
+        const verticalLength = rectHeight - 2 * borderRadius;
+
         circle = [
-            `M ${x - radius + borderRadius},${y - radius}`, // 시작점 (좌측 상단 모서리 시작)
-            `h ${(radius * 2) - (borderRadius * 2)}`, // 상단 가로선
-            `q ${borderRadius},0 ${borderRadius},${borderRadius}`, // 우측 상단 모서리
-            `v ${(radius * 2) - (borderRadius * 2)}`, // 우측 세로선
-            `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 모서리
-            `h -${(radius * 2) - (borderRadius * 2)}`, // 하단 가로선
-            `q -${borderRadius},0 -${borderRadius},-${borderRadius}`, // 좌측 하단 모서리
-            `v -${(radius * 2) - (borderRadius * 2)}`, // 좌측 세로선
-            `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 모서리
-            'Z' // 경로 닫기
+        `M ${startX},${startY}`,               // 시작점: 좌측 상단 (borderRadius offset 적용)
+        `h ${horizontalLength}`,              // 상단 가로선
+        `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
+        `v ${verticalLength}`,                // 우측 세로선
+        `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
+        `h -${horizontalLength}`,             // 하단 가로선
+        `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
+        `v -${verticalLength}`,               // 좌측 세로선
+        `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
+        'Z'
         ].join(" ");
+        console.log(`Rounded Rect Path: ${circle}`);
     }
     return [rect, circle].join(" ");
 }
