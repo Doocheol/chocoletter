@@ -58,3 +58,9 @@ export const isGiftBoxSelectedAtom = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const isWatchNewTutorialAtom = atom<boolean>({
+  key: "isWatchNewTutorial",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+})
