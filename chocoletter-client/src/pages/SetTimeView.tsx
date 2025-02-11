@@ -12,7 +12,7 @@ import { freeLetterState, questionLetterState } from "../atoms/letter/letterAtom
 import { sendSpecialFreeGift, sendSpecialQuestionGift } from "../services/giftEncryptedApi";
 import { getUnboxingSchedule } from "../services/unboxingApi";
 import { CantSendMessageModal } from "../components/common/CantSendMessageModal";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 import set_time_box_white from "../assets/images/letter/set_time_box_white.svg";
 import set_time_box_gray from "../assets/images/letter/set_time_box_gray.svg";
 import { ImageButton } from "../components/common/ImageButton";
@@ -136,7 +136,7 @@ const SetTimeView = () => {
     <div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">
       <MessageSentSuccessfullyModal isOpen={isModalOpen} onClose={closeModalAndNavigate} />
       <CantSendMessageModal isOpen={alreadySent} onClose={() => setAlreadySent(false)} />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
         <div className="self-stretch justify-between items-center inline-flex">
           <div className="w-6 h-6 flex justify-center items-center">
@@ -151,7 +151,7 @@ const SetTimeView = () => {
       <div className="mt-24 flex flex-col w-[284px] px-[16px] py-[10px] justify-center items-center gap-[10px] rounded-[11px] bg-white">
         <p className="text-center text-[15px] leading-[22px] tracking-[-0.408px]">
           2월 14일, 설렘 가득한 순간을 함께하세요. <br />
-          화상통화로 연결될 시간을 선택해 주세요! 😊
+          영상통화로 연결될 시간을 선택해 주세요!
           <br />
         </p>
         <p className="text-center text-[12px] leading-[22px] text-gray-500 tracking-[-0.408px]">
