@@ -264,7 +264,8 @@ const MainMyBeforeView: React.FC = () => {
 					<Loading />
 				</div>
 			)}
-
+			{/* 더미 div  */}
+			<div ref={dummyRef} className="w-0 h-0" />
 			{/* 디데이 카운트 팝업창 */}
 			<ValentineDayCountdownModal
 				isOpen={IsPopupOpen}

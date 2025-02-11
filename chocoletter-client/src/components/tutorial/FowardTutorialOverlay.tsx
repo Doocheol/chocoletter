@@ -12,6 +12,7 @@ import { FiArrowUpCircle } from "react-icons/fi";
 import share_button from "../../assets/images/button/share_button.svg";
 import encrypted_icon from "../../assets/images/tutorial/encrypted.svg";
 import start_button from "../../assets/images/button/start_button.svg";
+import prev_choco from "../../assets/images/tutorial/prev_choco.svg";
 
 interface FowardTutorialOverlayProps {
     /** 강조(구멍) 처리할 아이콘 버튼의 ref */
@@ -47,7 +48,6 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
     useEffect(() => {
         if (targetRefs.length > 0 && targetRefs[0].current) {
             setTargetRef(targetRefs[0]);
-            console.log(targetRef);
         }
     }, [targetRefs]);
 
@@ -56,14 +56,15 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         const updatePosition = () => {
         if (!targetRef || !targetRef.current) return;
         const rect = targetRef.current.getBoundingClientRect();
-        console.log(rect, page, 'page');
 
         // 스크롤 보정
         const x = rect.left + rect.width / 2 + window.scrollX;
         const y = rect.top + rect.height / 2 + window.scrollY;
         // 아이콘보다 약간 크게 오려서 여유를 둠
-        const radius = Math.max(rect.width, rect.height) / 2 + 8;
-        console.log(x, y, radius, page);
+        let radius = Math.max(rect.width, rect.height) / 2 + 8;
+        if ([1, 4, 6].includes(page)) {
+            radius = 0;
+        }
         setCircleInfo({ x, y, radius });
         };
 
@@ -94,10 +95,8 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
      */
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
-    const borderRadius = 12;
     const rectWidth = radius * 2;
     const rectHeight = radius * 0.8;
-    console.log(x, y, borderRadius, rectHeight, rectWidth);
 
     // 원형 path: SVG 원 그리는 명령어
     const circlePath = [
@@ -106,26 +105,25 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             `a ${radius},${radius} 0 1,0 -${radius * 2},0 Z`,
         ].join(" ");
 
-        const startX = x - rectWidth / 2 + borderRadius;
+        const startX = x - rectWidth / 2;
         const startY = y - rectHeight / 2;
         
         // 수평 길이와 수직 길이
-        const horizontalLength = rectWidth - 2 * borderRadius;
-        const verticalLength = rectHeight - 2 * borderRadius;
+        const horizontalLength = rectWidth;
+        const verticalLength = rectHeight;
         
         const roundedRectPath = [
             `M ${startX},${startY}`,               // 시작점: 좌측 상단 (borderRadius offset 적용)
             `h ${horizontalLength}`,              // 상단 가로선
-            `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
+            // `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
             `v ${verticalLength}`,                // 우측 세로선
-            `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
+            // `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
             `h -${horizontalLength}`,             // 하단 가로선
-            `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
+            // `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
             `v -${verticalLength}`,               // 좌측 세로선
-            `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
+            // `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
             'Z'
         ].join(" ");
-    console.log(`Rounded Rect Path: ${roundedRectPath}`);
 
     const shapePaths = [
         circlePath,
@@ -160,7 +158,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "33%",
+            top: "28%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
@@ -174,13 +172,16 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "50%",
+            top: "32%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
             }}
             className="flex flex-col items-center text-center text-white text-nowrap"
         >
+            <div className="mb-4">
+                <img src={prev_choco} alt="미리 열기" />
+            </div>
             <p className="mb-4">모든 편지는 2월 14일에 열어볼 수 있지만,<br/> 2월 14일 전에 열어볼 수도 있어요!</p>
             <p className="mb-4">친구들에게 초콜릿을 <span className="text-chocoletterTextYellow">2개</span> 받을 때마다,<br/> 미리 열어볼 수 있는 기회를 <span className="text-chocoletterTextYellow">1개씩</span> 드립니다!</p>
             <p className="mb-4"><span className="text-chocoletterTextYellow">처음에 미리 열어볼 수 있는 기회를<br/> 1번 드릴게요!</span></p>
@@ -188,7 +189,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "33%",
+            top: "32%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
@@ -352,7 +353,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             left: 0,
             width: screenW,
             height: screenH,
-            clipPath: `path('${makeHighlightPath(x, y, radius + 4, page)}')`,
+            clipPath: `path('${page in [1, 4, 6] ? "" : makeHighlightPath(x, y, radius + 4, page)}')`,
             clipRule: "evenodd",
             boxShadow: "0 0 10px 5px rgba(255,255,255,0.8)",
             pointerEvents: "none", // 장식용
@@ -401,40 +402,38 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
 function makeHighlightPath(x: number, y: number, radius: number, page: number,) {
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
-    const borderRadius = 12;
     const rectWidth = radius * 2;
     const rectHeight = radius * 0.8;
     let circle: string | null = null;
     // 화면 전체 사각형
     const rect = `M 0,0 H ${screenW} V ${screenH} H 0 Z`;
     // 원
-    if (page !== 1) {
+    if (page !== 8) {
         circle = [
             `M ${x - radius},${y}`,
             `a ${radius},${radius} 0 1,0 ${radius * 2},0`,
             `a ${radius},${radius} 0 1,0 -${radius * 2},0 Z`,
         ].join(" ");
     } else {
-        const startX = x - rectWidth / 2 + borderRadius;
+        const startX = x - rectWidth / 2;
         const startY = y - rectHeight / 2;
 
         // 수평 길이와 수직 길이
-        const horizontalLength = rectWidth - 2 * borderRadius;
-        const verticalLength = rectHeight - 2 * borderRadius;
+        const horizontalLength = rectWidth;
+        const verticalLength = rectHeight;
 
         circle = [
         `M ${startX},${startY}`,               // 시작점: 좌측 상단 (borderRadius offset 적용)
         `h ${horizontalLength}`,              // 상단 가로선
-        `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
+        // `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
         `v ${verticalLength}`,                // 우측 세로선
-        `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
+        // `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
         `h -${horizontalLength}`,             // 하단 가로선
-        `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
+        // `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
         `v -${verticalLength}`,               // 좌측 세로선
-        `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
+        // `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
         'Z'
         ].join(" ");
-        console.log(`Rounded Rect Path: ${circle}`);
     }
     return [rect, circle].join(" ");
 }
