@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { GoBackMainMyButton } from "../components/gift-list/button/GoBackMainMyButton";
 import { GiftList } from "../components/gift-list/GiftList";
@@ -7,15 +7,15 @@ import {
 	availableGiftsAtom,
 	giftListRefreshAtom,
 } from "../atoms/gift/giftAtoms";
+import { getGiftList } from "../services/giftApi";
 
 const GiftListBeforeView = () => {
 	const [remainOpenCount, setRemainOpenCount] =
 		useRecoilState(availableGiftsAtom);
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 플래그
 
-	const [dummy, setDummy] = useState(0);
 	useEffect(() => {
-		setDummy((prev) => prev + 1);
+		getGiftList("all");
 	}, [refresh]);
 
 	useEffect(() => {
