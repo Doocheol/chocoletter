@@ -4,7 +4,7 @@ import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
 import { AnnounceGoNotificationModal } from "../modal/AnnounceGoNotification";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
 	giftListRefreshAtom,
 	selectedGiftIdAtom,
@@ -84,9 +84,15 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
 	const setRefresh = useSetRecoilState(giftListRefreshAtom); // 새로고침 플래그 관리
+	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
 
 	const [buttonImage, setButtonImage] = useState("");
 	const currentDate = new Date();
+
+	// refresh 값이 변경되면 AcceptRejectModal을 자동으로 닫음
+	useEffect(() => {
+		setIsAcceptRejectOpen(false);
+	}, [refresh]);
 
 	// 1. 안 열린 일반 초콜릿
 	// 횟수를 사용하는 모달로 안내

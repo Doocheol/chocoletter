@@ -117,7 +117,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 				}
 			}
 		});
-	}, [chocolates]);
+	}, [refresh, chocolates]);
 
 	if (isLoading) {
 		return <Loading />; // 로딩 상태 표시
