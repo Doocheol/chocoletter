@@ -182,6 +182,73 @@ export async function sendSpecialQuestionGift(
 }
 
 /**
+ * 하이브리드 암호화를 이용한 편지 수정하기 API (FixedSymmetricKey 버전)
+ *
+ * 평문 편지 내용을 AES‑GCM (고정 IV 사용)으로 암호화한 후, 고정 대칭키를 RSA-OAEP 방식으로 암호화한 결과(encryptedKey)
+ * 와 함께 질문과 개봉 시간(unBoxingTime)을 서버에 전송합니다.
+ *
+ * @param giftId - 선물 ID
+ * @param nickName - 발신자 닉네임
+ * @param question - 질문 내용 (평문)
+ * @param plainAnswer - 평문 편지 답변 내용 (암호화 대상)
+ * @param plainContent - 평문 편지 내용 (암호화 대상)
+ */
+export async function updateLetter(
+  giftId: string,
+  nickName: string,
+  question?: string,
+  plainAnswer?: string,
+  plainContent?: string,
+) {
+  try {
+    // 초기화
+    let encryptedContent: string | undefined;
+    let encryptedAnswer: string | undefined;
+
+    // question이 있는 경우 (답변도 암호화)
+    if (question && plainAnswer) {
+      const symmetricKey = await getFixedSymmetricKey();
+      const encryptedBuffer = await encryptMessageAES(plainAnswer, symmetricKey);
+      encryptedAnswer = arrayBufferToBase64(encryptedBuffer);
+    }
+    // question이 없는 경우 (편지 내용 암호화)
+    else if (plainContent) {
+      const symmetricKey = await getFixedSymmetricKey();
+      const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
+      encryptedContent = arrayBufferToBase64(encryptedBuffer);
+    } else {
+      // 둘 다 없는 경우에 대한 예외 처리
+      throw new Error('Neither question nor content provided.');
+    }
+
+    // API 요청 본문 준비
+    const requestBody: any = {
+      nickName,
+    };
+
+    // question이 있는 경우, question과 answer 포함
+    if (question && encryptedAnswer) {
+      requestBody.question = question;
+      requestBody.answer = encryptedAnswer;
+    }
+    // question이 없는 경우, content만 포함
+    else if (encryptedContent) {
+      requestBody.content = encryptedContent;
+    }
+
+    // API 호출
+    const res = await api.patch(`/api/v1/gift/${giftId}/letter`, requestBody);
+    return res.data;
+
+  } catch (err) {
+    console.error("updateLetter API 호출 중 에러 발생:", err);
+    throw err;
+  }
+}
+
+
+
+/**
  * 수신자가 받은 암호화된 편지를 복호화하는 함수
  *
  * 수신자는 자신의 RSA-OAEP 개인키(privateKey)를 이용하여 암호화된 대칭키(encryptedKey)를 복호화한 후,
