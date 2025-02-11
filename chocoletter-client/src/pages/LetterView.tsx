@@ -15,6 +15,7 @@ import { getMemberPrivateKey } from "../utils/keyManager";
 import { getGiftBoxPublicKey } from "../services/keyApi";
 import { logout } from "../services/userApi";
 import LetterEncryptedNoneModal from "../components/letter/modal/LetterEncryptedNoneModal";
+import { useNavigate } from "react-router-dom";
 
 // 편지 보는 뷰
 // gift list page 에서 초콜릿 선택 시 보이게 됨.
@@ -30,6 +31,7 @@ const LetterView = () => {
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 	const isLogin = useRecoilValue(isLoginAtom);
+	const navigate = useNavigate();
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -64,7 +66,6 @@ const LetterView = () => {
 							updatedData.answer =
 								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
 							setIsLetterEncryptedNoneModalOpen(true);
-							await logout();
 						}
 					} else if (data.content) {
 						try {
@@ -77,7 +78,6 @@ const LetterView = () => {
 						} catch (e) {
 							updatedData.content =
 								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
-							await logout();
 							setIsLetterEncryptedNoneModalOpen(true);
 						}
 					}
@@ -137,9 +137,7 @@ const LetterView = () => {
 					{isLetterEncryptedNoneModalOpen && (
 						<LetterEncryptedNoneModal
 							isOpen={isLetterEncryptedNoneModalOpen}
-							onClose={() =>
-								setIsLetterEncryptedNoneModalOpen(false)
-							}
+							onClose={() => navigate("/", { replace: true })}
 						/>
 					)}
 				</div>
