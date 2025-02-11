@@ -5,10 +5,17 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { getGiftDetail } from "../services/giftApi";
 import Gift from "../components/letter/Letter";
 import Loading from "../components/common/Loading";
-import { giftBoxIdAtom, memberIdAtom } from "../atoms/auth/userAtoms";
+import {
+	giftBoxIdAtom,
+	isLoginAtom,
+	memberIdAtom,
+} from "../atoms/auth/userAtoms";
 import { decryptLetter } from "../services/giftEncryptedApi";
 import { getMemberPrivateKey } from "../utils/keyManager";
 import { getGiftBoxPublicKey } from "../services/keyApi";
+import { logout } from "../services/userApi";
+import { useNavigate } from "react-router-dom";
+import LetterEncryptedNoneModal from "../components/letter/modal/LetterEncryptedNoneModal";
 
 // 편지 보는 뷰
 // gift list page 에서 초콜릿 선택 시 보이게 됨.
@@ -23,10 +30,51 @@ const LetterView = () => {
 	const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
+	const isLogin = useRecoilValue(isLoginAtom);
+	const navigate = useNavigate();
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
+	const [IsLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
+		useState(false);
+
+	useEffect(() => {
+		const checkPublicKey = async () => {
+			if (memberId && giftBoxId) {
+				const localPublicKey = localStorage.getItem(
+					`memberPublicKey_${memberId}`
+				);
+				try {
+					const fetchedPublicKey = await getGiftBoxPublicKey(
+						giftBoxId
+					);
+					if (localPublicKey !== fetchedPublicKey) {
+						await logout();
+						setIsLetterEncryptedNoneModalOpen(true);
+					}
+				} catch (error) {
+					await logout();
+					setIsLetterEncryptedNoneModalOpen(true);
+				}
+			} else {
+				await logout();
+				setIsLetterEncryptedNoneModalOpen(true);
+			}
+		};
+
+		if (!isLogin) {
+			(async () => {
+				try {
+					await logout();
+				} catch (error) {
+					navigate("/");
+				}
+			})();
+		} else {
+			checkPublicKey();
+		}
+	}, [isLogin, memberId, giftBoxId]);
 
 	useEffect(() => {
 		const fetchGiftData = async () => {
@@ -121,6 +169,14 @@ const LetterView = () => {
 							}
 						}
 					/>
+					{!isLogin && (
+						<LetterEncryptedNoneModal
+							isOpen={IsLetterEncryptedNoneModalOpen}
+							onClose={() =>
+								setIsLetterEncryptedNoneModalOpen(false)
+							}
+						/>
+					)}
 				</div>
 			)}
 		</div>

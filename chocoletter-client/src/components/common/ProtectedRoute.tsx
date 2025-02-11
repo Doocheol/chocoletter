@@ -1,77 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import {
-	giftBoxIdAtom,
-	isLoginAtom,
-	memberIdAtom,
-} from "../../atoms/auth/userAtoms";
-import { getGiftBoxPublicKey } from "../../services/keyApi";
-import { logout } from "../../services/userApi";
-import Loading from "./Loading";
+import { isLoginAtom } from "../../atoms/auth/userAtoms";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const PrivateRoute: React.FC = () => {
-	const isLogin = useRecoilValue(isLoginAtom);
-	const memberId = useRecoilValue(memberIdAtom);
-	const giftBoxId = useRecoilValue(giftBoxIdAtom);
+const ProtectedRoute: React.FC = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-
-	const [isValid, setIsValid] = useState<boolean | null>(null);
+	const isLogin = useRecoilValue(isLoginAtom);
 
 	useEffect(() => {
-		const checkPublicKey = async () => {
-			if (memberId && giftBoxId) {
-				const localPublicKey = localStorage.getItem(
-					`memberPublicKey_${memberId}`
-				);
-				try {
-					const fetchedPublicKey = await getGiftBoxPublicKey(
-						giftBoxId
-					);
-					if (localPublicKey === fetchedPublicKey) {
-						setIsValid(true);
-					} else {
-						setIsValid(false);
-					}
-				} catch (error) {
-					setIsValid(false);
-				}
-			} else {
-				setIsValid(false);
-			}
-		};
-
 		if (!isLogin) {
-			(async () => {
-				try {
-					await logout();
-				} catch (error) {
-					navigate("/");
-				}
-			})();
-			sessionStorage.setItem("showNotLoginModal", "true");
-			setIsValid(false);
-		} else {
-			checkPublicKey();
+			navigate("/");
 		}
-	}, [isLogin, memberId, giftBoxId, location.pathname]);
+	}, [isLogin, navigate]);
 
-	useEffect(() => {
-		if (isValid === false) {
-			navigate("/", { replace: true });
-		}
-	}, [isValid, navigate]);
-
-	if (isValid === null) {
-		return <Loading />;
-	}
-
-	if (isValid) {
-		return <Outlet />;
-	}
-
-	return null;
+	return <Outlet />;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;
