@@ -45,4 +45,5 @@ export const selectedGiftTypeAtom = atom<"all" | "general" | "special">({
 export const giftListRefreshAtom = atom<boolean>({
   key: 'giftListRefreshAtom',
   default: false,
+  effects_UNSTABLE: [persistAtom],
 });

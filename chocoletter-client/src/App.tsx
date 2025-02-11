@@ -54,7 +54,12 @@ function App() {
 						<Route
 							path="/auth/kakao/callback"
 							element={<KakaoLoginCallback />}
-						/>											
+						/>
+
+						<Route
+							path="/main/:giftBoxId"
+							element={<GiftBoxIdRouter />}
+						/>
 
 						{/* 전역 로그인 설정 */}
 						<Route element={<ProtectedRoute />}>
@@ -62,10 +67,7 @@ function App() {
 								path="/main/my/before"
 								element={<MainMyBeforeView />}
 							/>
-							<Route
-								path="/main/:giftBoxId"
-								element={<GiftBoxIdRouter />}
-							/>{" "}
+
 							<Route
 								path="/receive/:giftId"
 								element={<ReceiveView />}
@@ -131,10 +133,7 @@ function App() {
 								path="/select-giftbox"
 								element={<SelectGiftBoxView />}
 							/>
-							<Route
-								path="/main/your/before"
-								element={<MainYourBeforeView />}
-							/>
+
 							<Route
 								path="/main/my/event"
 								element={<MainMyEventView />}

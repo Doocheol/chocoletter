@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { GoBackMainMyButton } from "../components/gift-list/button/GoBackMainMyButton";
 import { GiftList } from "../components/gift-list/GiftList";
@@ -13,6 +13,11 @@ const GiftListBeforeView = () => {
 		useRecoilState(availableGiftsAtom);
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 플래그
 
+	const [dummy, setDummy] = useState(0);
+	useEffect(() => {
+		setDummy((prev) => prev + 1);
+	}, [refresh]);
+
 	useEffect(() => {
 		const getCanOpenGiftCount = async () => {
 			try {
@@ -24,7 +29,7 @@ const GiftListBeforeView = () => {
 		};
 
 		getCanOpenGiftCount();
-	}, [refresh, setRemainOpenCount]);
+	}, [remainOpenCount, setRemainOpenCount]);
 
 	return (
 		<div>
