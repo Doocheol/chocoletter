@@ -5,6 +5,9 @@ const path = require("path");
 
 module.exports = {
   mode: 'jit',
+  future: {
+    hoverOnlyWhenSupported: true, // 호버 기능이 지원되는 장치에서만 호버 스타일 적용
+  },
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontSize: {
@@ -84,6 +87,7 @@ module.exports = {
         chocoletterLetterBgBlue: "#FAFCFF",
         chocoletterCharacter: "#151517",
         chocoletterGreen: "#78E150",
+        chocoletterTextYellow: "#FFF09A",
         chocoletterBackground: {
           light: "#E6F5FF",
           dark: "#F4D3FF",
@@ -96,9 +100,14 @@ module.exports = {
           "50%": { transform: "translateX(-30%)" },
           "100%": { transform: "translateX(0%)" },
         },
+        reverseBounce: {
+          "0%, 100%": { transform: "translateY(50%)" }, 
+          "50%": { transform: "translateY(0%)" },
+        },
       },
       animation: {
         slideWiggle: "slideWiggle 2s ease-in-out",
+        reverseBounce: "reverseBounce 0.98s infinite",
       }
     },
   },

@@ -5,17 +5,15 @@ import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
 import { giftBoxIdAtom, isLoginAtom } from "../atoms/auth/userAtoms";
 import { useRecoilValue } from "recoil";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function LoginView() {
 	const isLogin = useRecoilValue(isLoginAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
-
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (isLogin) {
-			// 이미 로그인됨 → 메인 페이지로 이동
 			navigate(`/main/${giftBoxId}`);
 		}
 	}, [isLogin, giftBoxId, navigate]);

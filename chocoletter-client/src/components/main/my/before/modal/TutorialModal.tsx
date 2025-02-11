@@ -9,7 +9,6 @@ interface TutorialModalProps {
 
 const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
   const messages = [
-    "'초코레터'의 초콜릿은 특별합니다.",
     "- 익명으로 상대방에게 편지를 쓰고 초콜릿을 전달할 수 있어요.",
     "- 편지는 자유 양식과 랜덤 질문으로 구성되어 있어요.",
     "- 2월 14일, 상대방과 함께 편지를 열기로 약속한 경우",
@@ -26,10 +25,8 @@ const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
     "- 선물상자를 오픈하면 모든 편지를 확인할 수 있어요.",
     "- 채팅 아이콘을 클릭하면 익명의 상대방과 대화할 수 있어요.",
     "- 영상통화 가능한 초콜릿은 지정된 시간에 클릭하면 통화가 연결됩니다.",
-    "- 2월 14일에 접속하면 오늘 일정을 제공해드려요.",
     " ",
     " ",
-    "그러면, 이제 누가 초콜릿을 만들어줬는지 같이 상상해 볼까요?",
     "작성된 모든 개인정보와 편지는 암호화되어 안전하게 보관됩니다.",
   ];
 
