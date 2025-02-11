@@ -158,28 +158,28 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "28%",
+            top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
             }}
             className="flex flex-col items-center text-center text-white text-nowrap"
         >
-            <img src={encrypted_icon} alt="보안 강화" />
+            <img src={encrypted_icon} alt="보안 강화" className="mb-[10dvh]" />
             <p className="mb-4">초코레터는 이용자분들의<br/><span className="text-chocoletterTextYellow">개인정보를 수집하지 않아요!</span></p>
             <p>작성되는 편지는 <span className="text-chocoletterTextYellow">철저히 암호화</span>되어<br/>편지를 받는 사람 외에는<br/>아무도 내용을 확인할 수 없어요!</p>
         </div>),
         (<div
             style={{
             position: "fixed",
-            top: "32%",
+            top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
             }}
             className="flex flex-col items-center text-center text-white text-nowrap"
         >
-            <div className="mb-4">
+            <div className="mb-[10dvh]">
                 <img src={prev_choco} alt="미리 열기" />
             </div>
             <p className="mb-4">모든 편지는 2월 14일에 열어볼 수 있지만,<br/> 2월 14일 전에 열어볼 수도 있어요!</p>
@@ -189,14 +189,14 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "32%",
+            top: "35%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
             }}
             className="flex flex-col items-center text-center text-white text-nowrap text-sm"
         >
-            <div className="mt-[120px]">
+            <div className="mb-[3dvh] mt-[20dvh]">
                 <img src={unboxing_explain} alt="언박싱 설명" style={{ width: 'auto', height: '200px' }} className="mb-5" />
             </div>
             <p className="mb-4">캘린더 아이콘을 클릭하면 2월 14일에<br/><span className="text-chocoletterTextYellow">예약되어 있는 화상 채팅 일정을 확인</span>할 수 있어요!</p>
@@ -207,27 +207,29 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             style={{
             pointerEvents: "auto",
             }}
-            className="absolute w-full flex flex-col justify-center items-center text-center text-white text-nowrap"
+            className="absolute w-full sm:max-w-sm flex flex-col justify-center items-center text-center text-white text-nowrap"
         >
-            <div className="relative flex justify-center items-center w-full">
-                <img src={unboxing_tutorial} alt="언박싱_차은우_카리나" className="h-screen" style={{ width: "100%"}} />
-                <div className="absolute text-center bottom-[34%]">
-                    <p>2월 14일, 5분 전부터 언박싱 초대장이 활성화 돼요.<br/>클릭하면 영상통화가 연결되고,<br/><span className="text-chocoletterTextYellow">1분 30초 동안 친구와 통화</span>를 할 수 있어요.</p>
-                    <p>같이 편지를 읽어보면서<br/>친구와 특별한 순간을 함께 해보세요!</p>
+            <div className="bg-black/80 w-full">
+                <div className="relative flex justify-center items-center w-full sm:max-w-sm">
+                    <img src={unboxing_tutorial} alt="언박싱_차은우_카리나" className="h-screen" style={{ width: "100%"}} />
+                    <div className="absolute text-center bottom-[25%]">
+                        <p className="mb-4">2월 14일, 5분 전부터 언박싱 초대장이 활성화 돼요.<br/>클릭하면 영상통화가 연결되고,<br/><span className="text-chocoletterTextYellow">1분 30초 동안 친구와 통화</span>를 할 수 있어요.</p>
+                        <p>같이 편지를 읽어보면서<br/>친구와 특별한 순간을 함께 해보세요!</p>
+                    </div>
                 </div>
             </div>
         </div>),
         (<div
             style={{
             position: "fixed",
-            top: "35%",
+            top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
             }}
             className="w-[310px] flex flex-col items-center text-center text-white"
         >
-            <div className="mb-[40px]">
+            <div className="mb-[10dvh]">
                 <img src={chatlist_ex} alt="채팅방 목록 예시" />
             </div>
             <div className="text-[18px]">
@@ -249,7 +251,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "37%",
+            top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
@@ -369,7 +371,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         <div
             style={{
             position: "fixed",
-            top: "70%",
+            bottom: "5%",
             left: "85%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
