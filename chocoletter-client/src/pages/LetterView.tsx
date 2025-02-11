@@ -14,7 +14,6 @@ import { decryptLetter } from "../services/giftEncryptedApi";
 import { getMemberPrivateKey } from "../utils/keyManager";
 import { getGiftBoxPublicKey } from "../services/keyApi";
 import { logout } from "../services/userApi";
-import { useNavigate } from "react-router-dom";
 import LetterEncryptedNoneModal from "../components/letter/modal/LetterEncryptedNoneModal";
 
 // 편지 보는 뷰
@@ -31,50 +30,12 @@ const LetterView = () => {
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 	const isLogin = useRecoilValue(isLoginAtom);
-	const navigate = useNavigate();
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	const [IsLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
+	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
 		useState(false);
-
-	useEffect(() => {
-		const checkPublicKey = async () => {
-			if (memberId && giftBoxId) {
-				const localPublicKey = localStorage.getItem(
-					`memberPublicKey_${memberId}`
-				);
-				try {
-					const fetchedPublicKey = await getGiftBoxPublicKey(
-						giftBoxId
-					);
-					if (localPublicKey !== fetchedPublicKey) {
-						await logout();
-						setIsLetterEncryptedNoneModalOpen(true);
-					}
-				} catch (error) {
-					await logout();
-					setIsLetterEncryptedNoneModalOpen(true);
-				}
-			} else {
-				await logout();
-				setIsLetterEncryptedNoneModalOpen(true);
-			}
-		};
-
-		if (!isLogin) {
-			(async () => {
-				try {
-					await logout();
-				} catch (error) {
-					navigate("/");
-				}
-			})();
-		} else {
-			checkPublicKey();
-		}
-	}, [isLogin, memberId, giftBoxId]);
 
 	useEffect(() => {
 		const fetchGiftData = async () => {
@@ -101,7 +62,9 @@ const LetterView = () => {
 							updatedData.answer = plainAnswer; // 복호화된 답변을 giftData.answer에 반영
 						} catch (e) {
 							updatedData.answer =
-								"잘못된 접근입니다. 로그인을 다시 해주세요!";
+								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
+							setIsLetterEncryptedNoneModalOpen(true);
+							await logout();
 						}
 					} else if (data.content) {
 						try {
@@ -113,7 +76,9 @@ const LetterView = () => {
 							updatedData.content = plainContent; // 복호화된 편지 내용을 giftData.content에 반영
 						} catch (e) {
 							updatedData.content =
-								"잘못된 접근입니다. 로그인을 다시 해주세요!";
+								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
+							await logout();
+							setIsLetterEncryptedNoneModalOpen(true);
 						}
 					}
 
@@ -171,7 +136,7 @@ const LetterView = () => {
 					/>
 					{!isLogin && (
 						<LetterEncryptedNoneModal
-							isOpen={IsLetterEncryptedNoneModalOpen}
+							isOpen={isLetterEncryptedNoneModalOpen}
 							onClose={() =>
 								setIsLetterEncryptedNoneModalOpen(false)
 							}
