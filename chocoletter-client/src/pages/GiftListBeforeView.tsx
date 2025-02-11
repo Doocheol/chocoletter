@@ -24,7 +24,7 @@ const GiftListBeforeView = () => {
 		};
 
 		getCanOpenGiftCount();
-	}, [remainOpenCount, setRemainOpenCount, refresh]);
+	}, [refresh, setRemainOpenCount]);
 
 	return (
 		<div>
