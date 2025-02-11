@@ -5,17 +5,26 @@ import KakaoLoginButton from "../components/login/button/KakaoLoginButton";
 import Onboarding from "../components/onboarding/Onboarding";
 import { giftBoxIdAtom, isLoginAtom } from "../atoms/auth/userAtoms";
 import { useRecoilValue } from "recoil";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 
 function LoginView() {
 	const isLogin = useRecoilValue(isLoginAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
 	const navigate = useNavigate();
+	const [showModal, setShowModal] = useState(false);
+
+	useEffect(() => {
+		const shouldShowModal = sessionStorage.getItem("showNotLoginModal");
+		if (shouldShowModal === "true") {
+			setShowModal(true);
+			sessionStorage.removeItem("showNotLoginModal");
+		}
+	}, []);
 
 	useEffect(() => {
 		if (isLogin) {
-			// 이미 로그인됨 → 메인 페이지로 이동
 			navigate(`/main/${giftBoxId}`);
 		}
 	}, [isLogin, giftBoxId, navigate]);
@@ -56,6 +65,20 @@ function LoginView() {
 			<div className="flex flex-col items-center mb-4">
 				<KakaoLoginButton />
 			</div>
+
+			{showModal && (
+				<NotLoginModal
+					isOpen={showModal}
+					onClose={() => {
+						setShowModal(false);
+						navigate("/");
+					}}
+					onLogin={() => {
+						setShowModal(false);
+						navigate("/");
+					}}
+				/>
+			)}
 		</div>
 	);
 }
