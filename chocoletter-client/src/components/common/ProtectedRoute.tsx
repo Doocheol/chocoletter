@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
 	giftBoxIdAtom,
@@ -9,16 +9,15 @@ import {
 import { getGiftBoxPublicKey } from "../../services/keyApi";
 import { logout } from "../../services/userApi";
 import Loading from "./Loading";
-import NotLoginModal from "../main/your/before/modal/NotLoginModal";
 
 const PrivateRoute: React.FC = () => {
 	const isLogin = useRecoilValue(isLoginAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	const [isValid, setIsValid] = useState<boolean | null>(null);
-	const [modalOpen, setModalOpen] = useState(false);
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		const checkPublicKey = async () => {
@@ -34,15 +33,12 @@ const PrivateRoute: React.FC = () => {
 						setIsValid(true);
 					} else {
 						setIsValid(false);
-						setModalOpen(true);
 					}
 				} catch (error) {
 					setIsValid(false);
-					setModalOpen(true);
 				}
 			} else {
 				setIsValid(false);
-				setModalOpen(true);
 			}
 		};
 
@@ -54,13 +50,18 @@ const PrivateRoute: React.FC = () => {
 					navigate("/");
 				}
 			})();
-			// sessionStorage.setItem("redirectRoute", location.pathname);
+			sessionStorage.setItem("showNotLoginModal", "true");
 			setIsValid(false);
-			setModalOpen(true);
 		} else {
 			checkPublicKey();
 		}
-	}, [isLogin, memberId, giftBoxId]);
+	}, [isLogin, memberId, giftBoxId, location.pathname]);
+
+	useEffect(() => {
+		if (isValid === false) {
+			navigate("/", { replace: true });
+		}
+	}, [isValid, navigate]);
 
 	if (isValid === null) {
 		return <Loading />;
@@ -70,20 +71,7 @@ const PrivateRoute: React.FC = () => {
 		return <Outlet />;
 	}
 
-	// const redirectTo = sessionStorage.getItem("redirectRoute") || "/";
-
-	return (
-		<>
-			<Outlet />
-			{(!isValid || !isLogin) && (
-				<NotLoginModal
-					isOpen={modalOpen}
-					onClose={() => navigate("/")}
-					onLogin={() => navigate("/")}
-				/>
-			)}
-		</>
-	);
+	return null;
 };
 
 export default PrivateRoute;
