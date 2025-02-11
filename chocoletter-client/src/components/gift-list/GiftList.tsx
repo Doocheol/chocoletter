@@ -74,10 +74,10 @@ interface GiftListProps {
 }
 
 export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
-	const { data: chocolates, isLoading } = useFetchChocolates("all");
+    const [refresh, setRefresh] = useState(false);
+	const { data: chocolates, isLoading } = useFetchChocolates("all", refresh);
 	const [localChocolates, setLocalChocolates] = useState(chocolates);
 	const currentTimeUTC = new Date().getTime();
-	const [refresh, setRefresh] = useState(false);
 
     const onChange = () => {
         setRefresh((prev) => !prev)

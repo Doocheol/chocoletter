@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getGiftList } from "../services/giftApi";
 
-export const useFetchChocolates = (filter: string) => {
+export const useFetchChocolates = (filter: string, refresh: boolean) => {
     const [cachedData, setCachedData] = useState<{ [key: string]: any[] }>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -28,7 +28,7 @@ export const useFetchChocolates = (filter: string) => {
         // 5분마다 데이터 갱신
         const interval = setInterval(fetchData, 300000); 
         return () => clearInterval(interval); // 컴포넌트 언마운트 시 정리
-    }, [filter]);
+    }, [filter, refresh]);
 
     return { data: cachedData[filter] || [], isLoading };
 };
