@@ -122,19 +122,19 @@ const MainMyBeforeView: React.FC = () => {
 		}
 	}, [giftBoxNum, navigate]);
 
-	// useEffect(() => {
-	// 	if (urlGiftBoxId && savedGiftBoxId) {
-	// 		if (urlGiftBoxId !== savedGiftBoxId) {
-	// 			navigate("/error");
-	// 		}
-	// 	} else if (!urlGiftBoxId && savedGiftBoxId) {
-	// 		navigate(`/main/${savedGiftBoxId}`);
-	// 	} else if (urlGiftBoxId && !savedGiftBoxId) {
-	// 		navigate("/error");
-	// 	} else {
-	// 		navigate("/");
-	// 	}
-	// }, [urlGiftBoxId, savedGiftBoxId, navigate]);
+	useEffect(() => {
+		if (urlGiftBoxId && savedGiftBoxId) {
+			if (urlGiftBoxId !== savedGiftBoxId) {
+				navigate("/error");
+			}
+		} else if (!urlGiftBoxId && savedGiftBoxId) {
+			navigate(`/main/${savedGiftBoxId}`);
+		} else if (urlGiftBoxId && !savedGiftBoxId) {
+			navigate("/error");
+		} else {
+			navigate("/");
+		}
+	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	const giftBoxImages: { [key: number]: string } = {
 		11: giftbox_before_10,
