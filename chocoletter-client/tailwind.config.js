@@ -5,6 +5,9 @@ const path = require("path");
 
 module.exports = {
   mode: 'jit',
+  future: {
+    hoverOnlyWhenSupported: true, // 호버 기능이 지원되는 장치에서만 호버 스타일 적용
+  },
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontSize: {
