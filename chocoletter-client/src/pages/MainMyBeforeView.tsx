@@ -345,7 +345,7 @@ const MainMyBeforeView: React.FC = () => {
 						<div className="flex flex-col items-center gap-2.5 px-6 py-4 relative">
 							<div className="flex flex-row w-full truncate">
 								<span className="text-xl font-normal text-center text-black truncate">
-									열어볼 수 있는&nbsp;
+									미리 열어볼 수 있는&nbsp;
 								</span>
 								<object
 									data={choco_asset}

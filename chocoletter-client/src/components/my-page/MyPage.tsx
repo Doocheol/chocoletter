@@ -43,7 +43,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 		await logout();
 		setIsLogin(false);
 		if (!toast.isActive("logout-toast")) {
-			toast.info("로그아웃 완료!.", {
+			toast.info("로그아웃 완료!", {
 				toastId: "logout-toast",
 				position: "top-center",
 				autoClose: 2000,
@@ -55,7 +55,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 
 	const handleHome = () => {
 		if (!toast.isActive("go-to-main-toast")) {
-			toast.info("내 초콜릿 보관함으로 이동!.", {
+			toast.info("내 초콜릿 보관함으로 이동!", {
 				toastId: "go-to-main-toast",
 				position: "top-center",
 				autoClose: 2000,
@@ -66,7 +66,7 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 			navigate(`/main/${giftBoxId}`);
 		} else {
 			if (!toast.isActive("require-login-toast")) {
-			toast.error("다시 로그인해주세요!.", {
+			toast.error("다시 로그인해주세요!", {
 				toastId: "require-login-toast",
 				position: "top-center",
 				autoClose: 2000,
