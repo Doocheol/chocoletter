@@ -77,7 +77,11 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 	const { data: chocolates, isLoading } = useFetchChocolates("all");
 	const [localChocolates, setLocalChocolates] = useState(chocolates);
 	const currentTimeUTC = new Date().getTime();
-	const refresh = useRecoilValue(giftListRefreshAtom);
+	const [refresh, setRefresh] = useState(false);
+
+    const onChange = () => {
+        setRefresh((prev) => !prev)
+    }
 
 	useEffect(() => {
 		setLocalChocolates(chocolates);
@@ -117,7 +121,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 				}
 			}
 		});
-	}, [chocolates]);
+	}, [refresh, chocolates]);
 
 	if (isLoading) {
 		return <Loading />; // 로딩 상태 표시
@@ -149,6 +153,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 						unboxingTime={chocolate.unBoxingTime}
 						isAccepted={chocolate.isAccept}
 						roomId={chocolate.unBoxingRoomId}
+                        onRefresh={onChange}
 					/>
 				))}
 			</div>

@@ -45,6 +45,7 @@ interface GiftOpenButtonProps {
 	unboxingTime: string | null;
 	isAccepted?: boolean;
 	roomId?: string | null;
+    onRefresh: () => void;
 }
 
 const getEventDate = (): Date => {
@@ -76,6 +77,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	unboxingTime,
 	isAccepted,
 	roomId,
+    onRefresh,
 }) => {
 	const [isRTC, setIsRTC] = useState(false);
 	const [isNonOpen, setIsNonOpen] = useState(false);
@@ -83,7 +85,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
-	const setRefresh = useSetRecoilState(giftListRefreshAtom); // 새로고침 플래그 관리
 
 	const [buttonImage, setButtonImage] = useState("");
 	const currentDate = new Date();
@@ -189,7 +190,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			const result = await patchUnboxingAccept(giftId);
 			console.log("수락 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
-			setRefresh((prev) => !prev);
+			onRefresh();
 		} catch (error) {
 			console.error("수락 처리 중 에러 발생:", error);
 		}
@@ -201,7 +202,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			const result = await patchUnboxingReject(giftId);
 			console.log("거절 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
-			setRefresh((prev) => !prev);
+			onRefresh();
 		} catch (error) {
 			console.error("거절 처리 중 에러 발생:", error);
 		}
