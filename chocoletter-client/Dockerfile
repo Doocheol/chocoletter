@@ -34,6 +34,8 @@ RUN echo 'server { \
     index index.html; \
     location / { \
     try_files $uri $uri/ /index.html; \
+    add_header Cache-Control "no-cache, must-revalidate"; \
+    add_header Pragma "no-cache"; \
     expires off; \
     } \
     }' > /etc/nginx/conf.d/default.conf
