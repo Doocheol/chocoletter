@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router";
 import { OtherModal } from "../../common/OtherModal";
 import { PurpleButton } from "../../common/PurpleButton";
+import { logout } from "../../../services/userApi";
+import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
+import { isLoginAtom } from "../../../atoms/auth/userAtoms";
 
 interface LetterEncryptedNoneModalProps {
 	isOpen: boolean;
@@ -12,10 +16,20 @@ const LetterEncryptedNoneModal: React.FC<LetterEncryptedNoneModalProps> = ({
 	onClose,
 }) => {
 	const navigate = useNavigate();
+	const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
 
-	const handleConfirm = () => {
-		navigate("/");
-		onClose();
+	const handleConfirm = async () => {
+		await logout();
+		setIsLogin(false);
+		if (!toast.isActive("logout-toast")) {
+			toast.info("로그아웃 완료!", {
+				toastId: "logout-toast",
+				position: "top-center",
+				autoClose: 2000,
+			});
+		}
+		onClose(); // 로그아웃 후 닫기
+		navigate("/"); // 홈으로 이동
 	};
 
 	return (
