@@ -196,45 +196,41 @@ export async function sendSpecialQuestionGift(
 export async function updateLetter(
   giftId: string,
   nickName: string,
-  question?: string,
-  plainAnswer?: string,
-  plainContent?: string,
+  question: string | null,
+  plainAnswer: string | null,
+  plainContent: string | null,
 ) {
   try {
     // 초기화
     let encryptedContent: string | undefined;
     let encryptedAnswer: string | undefined;
 
-    // question이 있는 경우 (답변도 암호화)
-    if (question && plainAnswer) {
+    // question과 plainAnswer가 모두 있을 때만 암호화
+    if (question && plainAnswer) {  
       const symmetricKey = await getFixedSymmetricKey();
       const encryptedBuffer = await encryptMessageAES(plainAnswer, symmetricKey);
       encryptedAnswer = arrayBufferToBase64(encryptedBuffer);
     }
-    // question이 없는 경우 (편지 내용 암호화)
-    else if (plainContent) {
+
+    // plainContent가 있을 때만 암호화
+    if (plainContent) {
       const symmetricKey = await getFixedSymmetricKey();
       const encryptedBuffer = await encryptMessageAES(plainContent, symmetricKey);
       encryptedContent = arrayBufferToBase64(encryptedBuffer);
-    } else {
-      // 둘 다 없는 경우에 대한 예외 처리
-      throw new Error('Neither question nor content provided.');
+    }
+
+    // question, plainAnswer, plainContent가 모두 null이면 예외 처리
+    if (!question && !plainAnswer && !plainContent) {
+      throw new Error("🚨 Neither question, answer, nor content provided.");
     }
 
     // API 요청 본문 준비
     const requestBody: any = {
       nickName,
+      question: question, // null이면 null 그대로 전달
+      answer: encryptedAnswer ?? null, // 암호화된 값이 없으면 null 전달
+      content: encryptedContent ?? null // 암호화된 값이 없으면 null 전달
     };
-
-    // question이 있는 경우, question과 answer 포함
-    if (question && encryptedAnswer) {
-      requestBody.question = question;
-      requestBody.answer = encryptedAnswer;
-    }
-    // question이 없는 경우, content만 포함
-    else if (encryptedContent) {
-      requestBody.content = encryptedContent;
-    }
 
     // API 호출
     const res = await api.patch(`/api/v1/gift/${giftId}/letter`, requestBody);

@@ -40,7 +40,7 @@ const ModifyQuestionLetterView = () => {
                     letter.nickname,
                     letter.question,
                     letter.answer,
-                    undefined);
+                    null);
             } catch (error: any) {
                 console.error("updateLetter failed:", error);
             }

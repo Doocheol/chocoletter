@@ -36,8 +36,8 @@ const ModifyGeneralLetterView = () => {
             await updateLetter(
                 giftId as string,
                 letter.nickname,
-                undefined,
-                undefined,
+                null,
+                null,
                 letter.content);
         } catch (error: any) {
             console.error("updateLetter failed:", error);

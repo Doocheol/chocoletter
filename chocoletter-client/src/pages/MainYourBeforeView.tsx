@@ -131,7 +131,7 @@ const MainYourBeforeView: React.FC = () => {
 				return;
 			}
 			const sentLetterData = await getSentLetter(giftBoxId);
-			// console.log("getSentLetter Response:", sentLetterData);
+			console.log("getSentLetter Response:", sentLetterData);
 			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동 
 			if (sentLetterData.type == "FREE") {
 				// 자유 편지인 경우
