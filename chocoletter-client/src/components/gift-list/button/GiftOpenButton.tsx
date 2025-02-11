@@ -36,6 +36,7 @@ interface GiftOpenButtonProps {
     unboxingTime: string | null;
     isAccepted?: boolean;
     roomId?: string | null;
+    onRepair: () => void;
 }
 
 const getEventDate = (): Date => {
@@ -56,7 +57,7 @@ const compareDates = (current: Date, eventday: Date) => {
     return false;
 }
 
-export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime, isAccepted, roomId }) => {
+export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType, isOpened, unboxingTime, isAccepted, roomId, onRepair }) => {
     const [isRTC, setIsRTC] = useState(false);
     const [isNonOpen, setIsNonOpen] = useState(false);
     // const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
@@ -163,6 +164,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({ giftId, giftType
                 const result = await patchUnboxingAccept(giftId);
                 console.log("수락 처리 성공:", result);
                 setIsAcceptRejectOpen(false);
+                onRepair();
             } catch (error) {
                 console.error("수락 처리 중 에러 발생:", error);
             }

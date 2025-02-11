@@ -38,10 +38,15 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
     const { data: chocolates, isLoading } = useFetchChocolates('all');
     const [localChocolates, setLocalChocolates] = useState(chocolates);
     const currentTimeUTC = new Date().getTime()
+    const [repair, setRepair] = useState(0);
+
+    const changeRepair = () => {
+        setRepair((prev) => prev + 1);
+    }
 
     useEffect(() => {
         setLocalChocolates(chocolates);
-    }, [chocolates])
+    }, [chocolates, repair])
 
     useEffect(() => {
         const eventDay = import.meta.env.VITE_EVENT_DAY;
@@ -73,7 +78,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
                 }
             }
         })
-    }, [chocolates])
+    }, [chocolates, repair])
 
     if (isLoading) {
         return <Loading />; // 로딩 상태 표시
@@ -91,7 +96,7 @@ export const GiftList: React.FC<GiftListProps> = ({filter}) => {
             <div className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[90px]`}>
                 {/* api 연동 후 추가 수정 */}
                 {filteredChocolates.map((chocolate) => (
-                    <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} isAccepted={chocolate.isAccept} roomId={chocolate.unBoxingRoomId} />
+                    <GiftOpenButton key={chocolate.giftId} giftId={chocolate.giftId} giftType={chocolate.giftType} isOpened={chocolate.isOpened} unboxingTime={chocolate.unBoxingTime} isAccepted={chocolate.isAccept} roomId={chocolate.unBoxingRoomId} onRepair={changeRepair} />
                 ))}
             </div>
         </div>
