@@ -137,7 +137,9 @@ const LetterView = () => {
 					{isLetterEncryptedNoneModalOpen && (
 						<LetterEncryptedNoneModal
 							isOpen={isLetterEncryptedNoneModalOpen}
-							onClose={() => navigate("/", { replace: true })}
+							onClose={() =>
+								setIsLetterEncryptedNoneModalOpen(false)
+							}
 						/>
 					)}
 				</div>
