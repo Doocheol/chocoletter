@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginAtom } from "../atoms/auth/userAtoms";
@@ -25,6 +25,7 @@ import AlreadySentModal from "../components/main/your/before/modal/AlreadySentMo
 import AlreadyReadModal from "../components/main/your/before/modal/AlreadyReadModal";
 import { getGiftBoxName, verifyGiftSend, getSentLetter } from "../services/giftBoxApi";
 import TutorialModal from "../components/main/my/before/modal/TutorialModal";
+import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
@@ -50,6 +51,10 @@ const MainYourBeforeView: React.FC = () => {
 
 	// 로그인 여부 확인
 	const isLoggedIn = useRecoilValue(isLoginAtom);
+
+	const tutorialIconRef = useRef<HTMLButtonElement>(null);
+	const giftBoxRef = useRef<HTMLDivElement>(null);
+	const dummyRef = useRef<HTMLDivElement>(null);
 
 	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
 	if (!isLoggedIn) {
@@ -166,6 +171,16 @@ const MainYourBeforeView: React.FC = () => {
 	const shouldShowCountdown = today >= eventDate && today < whiteDay;
 	const [isCountdownOpen, setIsCountdownOpen] = useState(shouldShowCountdown);
 
+	const tutorialIcons = useMemo(() => [
+		tutorialIconRef,
+		dummyRef,
+		dummyRef, 
+		dummyRef, 
+		dummyRef, 
+		dummyRef, 
+		dummyRef, 
+		giftBoxRef], []);
+
 	// giftBoxId가 있을 경우, 상대방 선물상자 정보 조회 (이제 name과 type을 받아옴)
 	useEffect(() => {
 		if (giftBoxId) {
@@ -222,9 +237,11 @@ const MainYourBeforeView: React.FC = () => {
 	return (
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
+				{/* 더미 div  */}
+				<div ref={dummyRef} className="w-0 h-0" />
 				{/* 상단 아이콘 바 */}
 				<div className="mt-7 ml-6 flex items-center justify-between">
-					<button onClick={handleTutorial}>
+					<button onClick={handleTutorial} ref={tutorialIconRef}>
 						<img
 							src={tutorial_icon}
 							className="w-6 h-6"
@@ -264,7 +281,7 @@ const MainYourBeforeView: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-col items-center pl-10 mb-6">
+				<div className="flex flex-col items-center pl-10 mb-6" ref={giftBoxRef}>
 					{/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
 					<img
 						src={giftboxImages[giftBoxType]}
@@ -326,10 +343,12 @@ const MainYourBeforeView: React.FC = () => {
 					onClose={() => setIsCountdownOpen(false)}
 				/>
 				{/* 튜토리얼 모달 */}
-				<TutorialModal
-					isOpen={isTutorialModalOpen}
-					onClose={() => setIsTutorialModalOpen(false)}
-				/>
+				{isTutorialModalOpen && (
+					<FowardTutorialOverlay
+						targetRefs={tutorialIcons}
+						onClose={() => setIsTutorialModalOpen(false)}
+					/>
+				)}
 			</div>
 		</div>
 	);

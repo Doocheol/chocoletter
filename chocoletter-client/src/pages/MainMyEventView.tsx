@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
@@ -14,6 +14,7 @@ import CaptureModal from "../components/main/my/before/modal/CaptureModal";
 import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
 import ChatModal from "../components/main/my/before/modal/ChatModal"; // ChatModal 임포트
 import TutorialModal from "../components/main/my/before/modal/TutorialModal"; // TutorialModal 임포트
+import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 
 // === 프로필 드롭다운 내용
 import MyPage from "../components/my-page/MyPage";
@@ -40,7 +41,7 @@ const MainMyEventView: React.FC = () => {
 
 	// (1) 주소창 높이 보정 훅
 	useViewportHeight();
-
+	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false); // 새로운 상태 추가
 	const { giftBoxId: urlGiftBoxId } = useParams<{ giftBoxId?: string }>();
 	const savedGiftBoxId = useRecoilValue(giftBoxIdAtom);
 
@@ -63,10 +64,13 @@ const MainMyEventView: React.FC = () => {
 		useState<boolean>(false);
 	const [shapeNum, setShapeNum] = useState("12");
 
-	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false); // 새로운 상태 추가
-
 	// 튜토리얼 아이콘 ref
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
+	const watchOpenCountRef = useRef<HTMLDivElement>(null);
+	const calendarIconRef = useRef<HTMLButtonElement>(null);
+	const chatIconRef = useRef<HTMLButtonElement>(null);
+	const giftBoxRef = useRef<HTMLButtonElement>(null);
+	const dummyRef = useRef<HTMLDivElement>(null);
 
 	// 프로필 드롭다운 열림 여부
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -84,6 +88,16 @@ const MainMyEventView: React.FC = () => {
 	// 알림 아이콘 클릭 시 알림 모달을 여는 핸들러 (여기서는 모달 오픈 동작만 처리)
 	const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
+	const tutorialIcons = useMemo(() => [
+			tutorialIconRef,
+			dummyRef,
+			watchOpenCountRef, 
+			calendarIconRef, 
+			dummyRef, 
+			chatIconRef, 
+			dummyRef, 
+			giftBoxRef], []);
+	
 	const handleNotification = () => {
 		setAlarmCount(0);
 		setIsNotificationOpen(true);
@@ -112,26 +126,26 @@ const MainMyEventView: React.FC = () => {
 		navigate("/gift-list/event");
 	};
 
-	useEffect(() => {
-		if (urlGiftBoxId && savedGiftBoxId) {
-			if (urlGiftBoxId !== savedGiftBoxId) {
-				console.warn(
-					"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
-				);
-				navigate("/error");
-			}
-		} else if (!urlGiftBoxId && savedGiftBoxId) {
-			navigate(`/main/${savedGiftBoxId}`);
-		} else if (urlGiftBoxId && !savedGiftBoxId) {
-			console.warn(
-				"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
-			);
-			navigate("/error");
-		} else {
-			console.warn("shareCode 정보가 없습니다.");
-			navigate("/");
-		}
-	}, [urlGiftBoxId, savedGiftBoxId, navigate]);
+	// useEffect(() => {
+	// 	if (urlGiftBoxId && savedGiftBoxId) {
+	// 		if (urlGiftBoxId !== savedGiftBoxId) {
+	// 			console.warn(
+	// 				"URL의 shareCode와 저장된 shareCode가 일치하지 않습니다."
+	// 			);
+	// 			navigate("/error");
+	// 		}
+	// 	} else if (!urlGiftBoxId && savedGiftBoxId) {
+	// 		navigate(`/main/${savedGiftBoxId}`);
+	// 	} else if (urlGiftBoxId && !savedGiftBoxId) {
+	// 		console.warn(
+	// 			"URL에 shareCode는 있으나 저장된 shareCode가 없습니다."
+	// 		);
+	// 		navigate("/error");
+	// 	} else {
+	// 		console.warn("shareCode 정보가 없습니다.");
+	// 		navigate("/");
+	// 	}
+	// }, [urlGiftBoxId, savedGiftBoxId, navigate]);
 
 	// 선물상자 이미지 API 호출
 	useEffect(() => {
@@ -197,6 +211,8 @@ const MainMyEventView: React.FC = () => {
         h-[calc(var(--vh)*100)]와 min-h-screen 병행
         + 그라디언트 배경
       */}
+			{/* 더미 div  */}
+			<div ref={dummyRef} className="w-0 h-0" />
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
 				{/** 상단 아이콘 바 (slide-in-bottom 애니메이션) */}
 				<div className="mt-6 ml-6 flex items-center justify-between ">
@@ -204,7 +220,7 @@ const MainMyEventView: React.FC = () => {
 						<button onClick={handleTutorial} ref={tutorialIconRef}>
 							<img src={tutorial_icon} className="w-6 h-6" />
 						</button>
-						<button onClick={handleCalendar}>
+						<button onClick={handleCalendar} ref={calendarIconRef}>
 							<img src={calendar_icon} className="w-7 h-7" />
 						</button>
 					</div>
@@ -216,7 +232,7 @@ const MainMyEventView: React.FC = () => {
 							</button>
 						</div>
 
-						<button onClick={handleChat}>
+						<button onClick={handleChat} ref={chatIconRef}>
 							<img src={chat_icon} className="w-6 h-6" />
 						</button>
 						<button onClick={handleProfile}>
@@ -232,6 +248,7 @@ const MainMyEventView: React.FC = () => {
 						<button
 							onClick={handleMyChocolateBox}
 							className="w-[255px] pl-8 flex items-center justify-center"
+							ref={giftBoxRef}
 						>
 							<img
 								src={giftbox_event_1}
@@ -270,10 +287,12 @@ const MainMyEventView: React.FC = () => {
 				/>
 
 				{/* 튜토리얼 모달 */}
-				<TutorialModal
-					isOpen={isTutorialModalOpen}
-					onClose={() => setIsTutorialModalOpen(false)}
-				/>
+				{isTutorialModalOpen && (
+					<FowardTutorialOverlay
+						targetRefs={tutorialIcons}
+						onClose={() => setIsTutorialModalOpen(false)}
+					/>
+				)}
 
 				{/* 새로 추가된 CalendarModal */}
 				<CalendarModal
