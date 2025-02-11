@@ -45,7 +45,7 @@ interface GiftOpenButtonProps {
 	unboxingTime: string | null;
 	isAccepted?: boolean;
 	roomId?: string | null;
-    onRefresh: () => void;
+	onRefresh: () => void;
 }
 
 const getEventDate = (): Date => {
@@ -77,7 +77,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	unboxingTime,
 	isAccepted,
 	roomId,
-    onRefresh,
+	onRefresh,
 }) => {
 	const [isRTC, setIsRTC] = useState(false);
 	const [isNonOpen, setIsNonOpen] = useState(false);
@@ -85,11 +85,8 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
-<<<<<<< HEAD
-=======
 	const setRefresh = useSetRecoilState(giftListRefreshAtom); // 새로고침 플래그 관리
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
->>>>>>> 417c45e74565408c2fd6c17997406a292f14d78a
 
 	const [buttonImage, setButtonImage] = useState("");
 	const currentDate = new Date();
