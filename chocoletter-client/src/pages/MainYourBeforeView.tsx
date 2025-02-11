@@ -142,7 +142,7 @@ const MainYourBeforeView: React.FC = () => {
 			}
 		} catch (error: any) {
 			console.error("getSentLetter API 호출 오류:", error);
-			const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+			const errorMessage = error.response?.data?.errorMessage || "알 수 없는 에러 발생";
 			// console.log("Received error message:", errorMessage);
 			if (errorMessage === "ERR_GIFT_ALREADY_OPENED") {
 				// 이미 읽은 상태라면 수정 불가 모달 표시
