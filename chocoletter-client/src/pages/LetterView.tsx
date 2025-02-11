@@ -134,7 +134,7 @@ const LetterView = () => {
 							}
 						}
 					/>
-					{!isLogin && (
+					{isLetterEncryptedNoneModalOpen && (
 						<LetterEncryptedNoneModal
 							isOpen={isLetterEncryptedNoneModalOpen}
 							onClose={() =>
