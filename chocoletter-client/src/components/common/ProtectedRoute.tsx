@@ -54,6 +54,7 @@ const PrivateRoute: React.FC = () => {
 					navigate("/");
 				}
 			})();
+			sessionStorage.setItem("redirectRoute", location.pathname);
 			setIsValid(false);
 			setModalOpen(true);
 		} else {
@@ -69,11 +70,13 @@ const PrivateRoute: React.FC = () => {
 		return <Outlet />;
 	}
 
+	const redirectTo = sessionStorage.getItem("redirectRoute") || "/";
+
 	return (
 		<NotLoginModal
 			isOpen={modalOpen}
-			onClose={() => navigate("/")}
-			onLogin={() => navigate("/")}
+			onClose={() => navigate(redirectTo, { replace: true })}
+			onLogin={() => navigate(redirectTo, { replace: true })}
 		/>
 	);
 };
