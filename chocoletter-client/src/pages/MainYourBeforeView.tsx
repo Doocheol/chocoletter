@@ -22,7 +22,8 @@ import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
-import { getGiftBoxName, verifyGiftSend } from "../services/giftBoxApi";
+import AlreadyReadModal from "../components/main/your/before/modal/AlreadyReadModal";
+import { getGiftBoxName, verifyGiftSend, getSentLetter } from "../services/giftBoxApi";
 import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
@@ -74,6 +75,7 @@ const MainYourBeforeView: React.FC = () => {
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);
 	const [isAlreadySentModalOpen, setIsAlreadySentModalOpen] = useState(false);
+	const [isAlreadyReadModalOpen, setIsAlreadyReadModalOpen] = useState(false);
 	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
 
 	const handleProfile = () => {
@@ -115,6 +117,38 @@ const MainYourBeforeView: React.FC = () => {
 			// removeUserInfo();
 			// setIsLogin(false);
 			// navigate("/");
+		}
+	};
+
+	// 이미 선물을 전송하였고, 수정하기를 누른 경우 상대가 내가 보낸 편지 정보를 가져옵니다. 
+	const handleModify = async () => {
+		try {
+			if (!giftBoxId) {
+				// giftBoxId가 없으면 에러 처리
+				removeUserInfo();
+				setIsLogin(false);
+				navigate("/");
+				return;
+			}
+			const sentLetterData = await getSentLetter(giftBoxId);
+			// console.log("getSentLetter Response:", sentLetterData);
+			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동 
+			if (sentLetterData.type == "FREE") {
+				// 자유 편지인 경우
+				navigate(`/modify/general/${giftBoxId}?giftId=${sentLetterData.giftId}`);
+			} else {
+				// 질문 편지인 경우 
+				navigate(`/modify/question/${giftBoxId}?giftId=${sentLetterData.giftId}`);
+			}
+		} catch (error: any) {
+			console.error("getSentLetter API 호출 오류:", error);
+			const errorMessage = error.response?.data?.message || "알 수 없는 에러 발생";
+			// console.log("Received error message:", errorMessage);
+			if (errorMessage === "ERR_GIFT_ALREADY_OPENED") {
+				// 이미 읽은 상태라면 수정 불가 모달 표시
+				setIsAlreadySentModalOpen(false);
+				setIsAlreadyReadModalOpen(true);
+			}
 		}
 	};
 
@@ -262,13 +296,20 @@ const MainYourBeforeView: React.FC = () => {
 					/>
 				)}
 
-				{/* 이미 선물을 보냈음을 알리는 모달 */}
+				{/* 이미 선물을 보냈음을 알리고 수정할지 묻는 모달 */}
 				{isAlreadySentModalOpen && (
 					<AlreadySentModal
 						isOpen={isAlreadySentModalOpen}
 						onClose={() => setIsAlreadySentModalOpen(false)}
+						onModify={handleModify}
 					/>
 				)}
+
+				{/* 수정한다고 했지만 이미 상대가 읽음을 알리는 모달 */}
+				<AlreadyReadModal
+					isOpen={isAlreadyReadModalOpen}
+					onClose={() => setIsAlreadyReadModalOpen(false)}
+				/>				
 
 				{/* 프로필 모달 */}
 				{isProfileOpen && (
