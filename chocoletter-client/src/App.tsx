@@ -30,6 +30,8 @@ import ChatRoomView from "./pages/ChatRoomView";
 import TestVideoRoomView from "./pages/TestVideoRoomView";
 import GiftBoxIdRouter from "./pages/GiftBoxIdRouter";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import ModifyGeneralLetterView from "./pages/ModifyGeneralLetterView";
+import ModifyQuestionLetterView from "./pages/ModifyQuestionLetterView";
 
 declare global {
 	interface Window {
@@ -52,7 +54,7 @@ function App() {
 						<Route
 							path="/auth/kakao/callback"
 							element={<KakaoLoginCallback />}
-						/>
+						/>											
 
 						{/* 전역 로그인 설정 */}
 						<Route element={<ProtectedRoute />}>
@@ -149,6 +151,14 @@ function App() {
 							<Route
 								path="/video/:sessionIdInit"
 								element={<TestVideoRoomView />}
+							/>
+							<Route
+								path="/modify/general/:giftBoxId"
+								element={<ModifyGeneralLetterView />}
+							/>
+							<Route
+								path="/modify/question/:giftBoxId"
+								element={<ModifyQuestionLetterView />}
 							/>
 						</Route>
 					</Routes>
