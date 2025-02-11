@@ -1,31 +1,41 @@
-# 베이스 이미지로 OpenJDK 17을 사용  
-FROM openjdk:17-slim AS build  
-  
-# 기본 패키지 설치  
-RUN apt-get update && apt-get install -y bash  
-  
-WORKDIR /app  
-  
-# 필요한 파일들을 복사  
-COPY gradlew .  
-COPY gradle/ gradle/  
-COPY build.gradle .  
-COPY settings.gradle .  
-COPY src src  
-  
-# Gradle Wrapper에 실행 권한을 부여합니다.  
-RUN chmod +x gradlew  
-  
-# 애플리케이션 빌드  
-RUN ./gradlew clean build -x test  
-  
-# 빌드 결과물을 실행할 새로운 스테이지  
-FROM openjdk:17-slim  
-  
-WORKDIR /app  
-  
-# 빌드된 JAR 파일 복사  
-COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar  
-  
-# 애플리케이션 실행  
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+# 베이스 이미지로 OpenJDK 17을 사용
+FROM openjdk:17-slim AS build
+
+# 기본 패키지 설치
+RUN apt-get update && apt-get install -y bash
+
+WORKDIR /app
+
+# 필요한 파일들을 복사
+COPY gradlew .
+COPY gradle/ gradle/
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
+
+# Gradle Wrapper에 실행 권한을 부여합니다.
+RUN chmod +x gradlew
+
+# 애플리케이션 빌드
+RUN ./gradlew clean build -x test
+
+# 빌드 결과물을 실행할 새로운 스테이지
+FROM openjdk:17-slim
+
+WORKDIR /app
+
+# 빌드된 JAR 파일 복사
+COPY --from=build /app/build/libs/chocoletter-0.0.1-SNAPSHOT.jar app.jar
+
+# 빌드 시 필요한 인자 선언
+ARG CONTAINER_KEY_DIR
+ARG NAS_KEY_DIR
+ARG PRIVATE_KEY_PATH
+
+# AWS pem 키 컨테이너 안에 복사 (for test)
+RUN mkdir -p $CONTAINER_KEY_DIR
+COPY $NAS_KEY_DIR $CONTAINER_KEY_DIR
+RUN chmod 600 $PRIVATE_KEY_PATH
+
+# 애플리케이션 실행
+ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-jar", "app.jar"]
