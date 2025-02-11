@@ -1,5 +1,6 @@
 package chocolate.chocoletter.api.giftbox.controller;
 
+import chocolate.chocoletter.api.gift.dto.response.GiftDetailResponseDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralFreeGiftRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GeneralQuestionRequestDto;
 import chocolate.chocoletter.api.giftbox.dto.request.GiftBoxTypeRequestDto;
@@ -309,4 +310,24 @@ public interface GiftBoxSwagger {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 선물함")
     })
     ResponseEntity<?> findGiftBoxType(Principal principal);
+
+    @Operation(
+            summary = "내가 보낸 선물 조회",
+            description = "내가 보낸 편지를 조회합니다.",
+            tags = {"GiftBox"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "편지 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GiftDetailResponseDto.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "상대방이 이미 열어본 편지"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 선물함")
+    })
+    ResponseEntity<?> findMyGiftDetail(Long giftBoxId,
+                                       Principal principal);
 }
