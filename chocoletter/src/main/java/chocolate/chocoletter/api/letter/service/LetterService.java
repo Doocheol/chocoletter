@@ -47,6 +47,6 @@ public class LetterService {
     @Transactional
     public void modifyLetter(Long giftId, ModifyLetterRequestDto requestDto) {
         Letter letter = letterRepository.findLetterByGiftId(giftId);
-        letter.modify(requestDto.nickname(), requestDto.question(), requestDto.answer(), requestDto.content());
+        letter.modify(requestDto.nickName(), requestDto.question(), requestDto.answer(), requestDto.content());
     }
 }
