@@ -230,7 +230,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
             className="w-[310px] flex flex-col items-center text-center text-white"
         >
             <div className="mb-[10dvh]">
-                <img src={chatlist_ex} alt="채팅방 목록 예시" />
+                <img src={chatlist_ex} alt="채팅방 목록 예시" style={{ width: "100%", height: "auto" }} />
             </div>
             <div className="text-[18px]">
                 <p className="text-[#FFF09A]">서로 익명 편지를 주고 받았다면,</p>
