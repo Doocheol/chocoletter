@@ -23,7 +23,11 @@ import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
 import AlreadyReadModal from "../components/main/your/before/modal/AlreadyReadModal";
-import { getGiftBoxName, verifyGiftSend, getSentLetter } from "../services/giftBoxApi";
+import {
+	getGiftBoxName,
+	verifyGiftSend,
+	getSentLetter,
+} from "../services/giftBoxApi";
 import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
@@ -125,7 +129,7 @@ const MainYourBeforeView: React.FC = () => {
 		}
 	};
 
-	// 이미 선물을 전송하였고, 수정하기를 누른 경우 상대가 내가 보낸 편지 정보를 가져옵니다. 
+	// 이미 선물을 전송하였고, 수정하기를 누른 경우 상대가 내가 보낸 편지 정보를 가져옵니다.
 	const handleModify = async () => {
 		try {
 			if (!giftBoxId) {
@@ -137,17 +141,22 @@ const MainYourBeforeView: React.FC = () => {
 			}
 			const sentLetterData = await getSentLetter(giftBoxId);
 			console.log("getSentLetter Response:", sentLetterData);
-			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동 
+			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동
 			if (sentLetterData.type == "FREE") {
 				// 자유 편지인 경우
-				navigate(`/modify/general/${giftBoxId}?giftId=${sentLetterData.giftId}`);
+				navigate(
+					`/modify/general/${giftBoxId}?giftId=${sentLetterData.giftId}`
+				);
 			} else {
-				// 질문 편지인 경우 
-				navigate(`/modify/question/${giftBoxId}?giftId=${sentLetterData.giftId}`);
+				// 질문 편지인 경우
+				navigate(
+					`/modify/question/${giftBoxId}?giftId=${sentLetterData.giftId}`
+				);
 			}
 		} catch (error: any) {
 			console.error("getSentLetter API 호출 오류:", error);
-			const errorMessage = error.response?.data?.errorMessage || "알 수 없는 에러 발생";
+			const errorMessage =
+				error.response?.data?.errorMessage || "알 수 없는 에러 발생";
 			// console.log("Received error message:", errorMessage);
 			if (errorMessage === "ERR_GIFT_ALREADY_OPENED") {
 				// 이미 읽은 상태라면 수정 불가 모달 표시
@@ -171,15 +180,19 @@ const MainYourBeforeView: React.FC = () => {
 	const shouldShowCountdown = today >= eventDate && today < whiteDay;
 	const [isCountdownOpen, setIsCountdownOpen] = useState(shouldShowCountdown);
 
-	const tutorialIcons = useMemo(() => [
-		tutorialIconRef,
-		dummyRef,
-		dummyRef, 
-		dummyRef, 
-		dummyRef, 
-		dummyRef, 
-		dummyRef, 
-		giftBoxRef], []);
+	const tutorialIcons = useMemo(
+		() => [
+			tutorialIconRef,
+			dummyRef,
+			dummyRef,
+			dummyRef,
+			dummyRef,
+			dummyRef,
+			dummyRef,
+			giftBoxRef,
+		],
+		[]
+	);
 
 	// giftBoxId가 있을 경우, 상대방 선물상자 정보 조회 (이제 name과 type을 받아옴)
 	useEffect(() => {
@@ -281,23 +294,17 @@ const MainYourBeforeView: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="relative flex flex-col items-center pl-10 mb-6">
-                    {/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
-                    <div 
-                        ref={giftBoxRef}
-                        className="flex flex-col items-center"
-                        style={{
-                            width: 'fit-content',
-                            height: 'fit-content',
-                        }}
-                    >
-                    <img
-                        src={giftboxImages[giftBoxType]}
-                        alt={`giftbox_before_${giftBoxType}`}
-                        className="p-2 max-h-60"
-                    />
-                    </div>
-                </div>
+				<div
+					className="flex flex-col items-center pl-10 mb-6"
+					ref={giftBoxRef}
+				>
+					{/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
+					<img
+						src={giftboxImages[giftBoxType]}
+						alt={`giftbox_before_${giftBoxType}`}
+						className="p-2 max-h-60"
+					/>
+				</div>
 
 				{/* 선물하기 버튼 */}
 				<div className="mt-10 px-4 flex flex-row items-center justify-center">
@@ -310,7 +317,7 @@ const MainYourBeforeView: React.FC = () => {
 							src={gift_send_button}
 							className="flex items-center justify-center heartbeat"
 						/>
-					</div>	
+					</div>
 				</div>
 
 				{/* 로그인 필요 모달 */}
@@ -335,7 +342,7 @@ const MainYourBeforeView: React.FC = () => {
 				<AlreadyReadModal
 					isOpen={isAlreadyReadModalOpen}
 					onClose={() => setIsAlreadyReadModalOpen(false)}
-				/>				
+				/>
 
 				{/* 프로필 모달 */}
 				{isProfileOpen && (
