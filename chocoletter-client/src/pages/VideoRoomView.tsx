@@ -108,8 +108,7 @@ const VideoRoomView = () => {
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
-                    nickName="송신자"
-                    content="loving"
+                    giftId=""
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
