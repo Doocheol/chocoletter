@@ -6,17 +6,13 @@ import question_icon from "../../assets/images/letter/question_icon.svg";
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    sender?: string; // 삭제 고려
-    receiver?: string; // 삭제 고려
     nickName?: string
     content?: string | null;
     question?: string | null;
     answer?: string | null;
-    children?: React.ReactNode;
-    className?: string;
 }
 
-const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, sender, receiver, nickName, content, question, answer, children, className }) => {
+const GeneralLetterModal: React.FC<ModalProps> = ({ isOpen, onClose, nickName, content, question, answer }) => {
     // 편지 담을 state
     // const letter = "Sweet Valentine Letter";
     
