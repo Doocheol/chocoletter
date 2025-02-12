@@ -57,7 +57,7 @@ const TestVideoRoomView = () => {
     const setQuestionLetter = useSetRecoilState(questionLetterState);
     const username = useRecoilValue(userNameAtom);
     const [user, setUser] = useState(() => getUserInfo());
-    const [unboxingTime, setUnboxingTime] = useState(undefined);
+    const [unboxingTime, setUnboxingTime] = useState<string>('');
     const [isPermit, setIsPermit] = useState(false);
     const onEnd = async () => {
         setIsTerminate(true)
@@ -65,7 +65,7 @@ const TestVideoRoomView = () => {
             await deleteSession(videoState.session.sessionId);
         }
         await leaveSession(videoState, setVideoState);
-        // if (sessionIdInit) terminateVideoRoom(sessionIdInit);
+        if (sessionIdInit) terminateVideoRoom(sessionIdInit);
     }
 
     const onSemiEnd = async () => {
@@ -73,32 +73,32 @@ const TestVideoRoomView = () => {
     }
 
     // 로그인 확인 및 입장 확인 API
-    // useEffect(() => {
-    //     if (!isLogin) {
-    //         navigate("/");
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!isLogin) {
+            navigate("/");
+            return;
+        }
 
-    //     if (!sessionIdInit) {
-    //         console.error("세션 ID가 없습니다.");
-    //         navigate(`/main/${user?.giftBoxId || ""}`);
-    //         return;
-    //     }
+        if (!sessionIdInit) {
+            console.error("세션 ID가 없습니다.");
+            navigate(`/main/${user?.giftBoxId || ""}`);
+            return;
+        }
 
-    //     const checkAuth = async () => {
-    //         try {
-    //             const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
-    //             console.log(checkAuthResult);
-    //             setLetterInfo(checkAuthResult.giftDetail);
-    //             setUnboxingTime(checkAuthResult.unboxingTime);
-    //         } catch (err) {
-    //             console.error("입장 확인 실패:", err);
-    //             navigate(`/main/${user?.giftBoxId}`);
-    //         }
-    //     };
+        const checkAuth = async () => {
+            try {
+                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
+                console.log(checkAuthResult);
+                setLetterInfo(checkAuthResult.giftDetail);
+                setUnboxingTime(checkAuthResult.unboxingTime);
+            } catch (err) {
+                console.error("입장 확인 실패:", err);
+                navigate(`/main/${user?.giftBoxId}`);
+            }
+        };
 
-    //     checkAuth();
-    // }, []);
+        checkAuth();
+    }, []);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
@@ -191,16 +191,16 @@ const TestVideoRoomView = () => {
                 {!isPermit && (<AnnouncePermitModal videoPermit={() => {setIsPermit(true)}} />)}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-13T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
+                        <WaitingTest unboxing={unboxingTime || ''} onEnd={onEnd} isReady={isReady} isItThere={isItThere} videoState={videoState} trans={transRemoteMuted} letterInfo={letterInfo} />
                     </div>
                 )}
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
-                    nickName="도리도리"
-                    content="Is it LOVE? all not,"
-                    question={null}
-                    answer={null}
+                    nickName={letterInfo?.nickName}
+                    content={letterInfo?.content || "No Content"}
+                    question={letterInfo?.question || "No Question"}
+                    answer={letterInfo?.answer || "No Answer"}
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />

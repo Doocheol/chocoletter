@@ -21,11 +21,10 @@ interface WaitingRoomProps {
     isItThere: boolean,
     videoState: VideoState,
     trans: () => void,
-    content?: string,
-    letterInfo?: GiftDetail,
+    letterInfo?: GiftDetail | null,
 }
 
-export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, videoState, trans }: WaitingRoomProps) => {
+export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const [remainTime, setRemainTime] = useState(300);
@@ -107,8 +106,10 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, vide
             <LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
-                nickName="도리도리"
-                content="Is it LOVE? all not,"
+                nickName={letterInfo?.nickName || "Anonymous"}
+                content={letterInfo?.content || "No content provided"}
+                question={letterInfo?.question || "No question provided"}
+                answer={letterInfo?.answer || "No answer provided"}
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />
