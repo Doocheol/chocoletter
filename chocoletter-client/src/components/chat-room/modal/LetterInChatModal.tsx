@@ -35,8 +35,7 @@ const LetterInChatModal: React.FC<LetterInChatModalProps> = ({ isOpen, onClose, 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
-		useState(false);
+	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchGiftData = async () => {
