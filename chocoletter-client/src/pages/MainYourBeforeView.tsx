@@ -281,14 +281,23 @@ const MainYourBeforeView: React.FC = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-col items-center pl-10 mb-6" ref={giftBoxRef}>
-					{/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
-					<img
-						src={giftboxImages[giftBoxType]}
-						alt={`giftbox_before_${giftBoxType}`}
-						className="p-2 max-h-60"
-					/>
-				</div>
+				<div className="relative flex flex-col items-center pl-10 mb-6">
+                    {/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
+                    <div 
+                        ref={giftBoxRef}
+                        className="flex flex-col items-center"
+                        style={{
+                            width: 'fit-content',
+                            height: 'fit-content',
+                        }}
+                    >
+                    <img
+                        src={giftboxImages[giftBoxType]}
+                        alt={`giftbox_before_${giftBoxType}`}
+                        className="p-2 max-h-60"
+                    />
+                    </div>
+                </div>
 
 				{/* 선물하기 버튼 */}
 				<div className="mt-10 px-4 flex flex-row items-center justify-center">
