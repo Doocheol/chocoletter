@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
@@ -16,9 +16,8 @@ import classes from "../styles/videoRoom.module.css"
 import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
-import { MdHeadsetOff, MdHeadset } from "react-icons/md";
 import { getUserInfo } from '../services/userInfo';
-import { joinSession, leaveSession, pushPublish, deleteSession } from '../utils/openviduTest';
+import { joinSession, leaveSession, deleteSession } from '../utils/openviduTest';
 
 import { WaitingTest } from '../components/video-room/VideoWaiting';
 import { VideoState } from "../types/openvidutest";
@@ -27,17 +26,15 @@ import { GiftDetail } from '../types/openvidutest';
 
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
-    const localPreviewRef = useRef<HTMLDivElement>(null);
+    // const localPreviewRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
-    const { sessionIdInit } = useParams();
     const [ isItThere, setIsItThere ] = useState(false);
     const [ isReady, setIsReady ] = useState(false);
     const [ countFive, setCountFive ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(95);
-    const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
     const [isVideo, setIsVideo] = useState(true);
@@ -59,6 +56,8 @@ const TestVideoRoomView = () => {
     const [user, setUser] = useState(() => getUserInfo());
     const [unboxingTime, setUnboxingTime] = useState<string>('');
     const [isPermit, setIsPermit] = useState(false);
+    const [sessionIdInit, setSessionIdInit] = useState<string | null>(null);
+
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
@@ -74,6 +73,9 @@ const TestVideoRoomView = () => {
 
     // 로그인 확인 및 입장 확인 API
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionIdInit = urlParams.get("sessionIdInit");
+
         if (!isLogin) {
             navigate("/");
             return;
@@ -84,7 +86,7 @@ const TestVideoRoomView = () => {
             navigate(`/main/${user?.giftBoxId || ""}`);
             return;
         }
-
+        setSessionIdInit(sessionIdInit);
         const checkAuth = async () => {
             try {
                 const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
