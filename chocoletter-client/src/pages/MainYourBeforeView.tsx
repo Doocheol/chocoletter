@@ -9,6 +9,7 @@ import Backdrop from "../components/common/Backdrop";
 import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
+import bell_icon from "../assets/images/main/bell_icon.svg";
 // 이미지 및 버튼 파일들
 import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
 import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
@@ -28,12 +29,13 @@ import {
 	verifyGiftSend,
 	getSentLetter,
 } from "../services/giftBoxApi";
-import TutorialModal from "../components/main/my/before/modal/TutorialModal";
 import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 // 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
 import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
+import { getAlarmCount } from "../services/alarmApi";
+import Notification from "../components/main/my/before/modal/Notification";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
@@ -59,6 +61,10 @@ const MainYourBeforeView: React.FC = () => {
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
 	const giftBoxRef = useRef<HTMLDivElement>(null);
 	const dummyRef = useRef<HTMLDivElement>(null);
+
+	const [alarmCount, setAlarmCount] = useState<number>(0);
+	const [isAlarmCountLoading, setIsAlarmCountLoading] =
+		useState<boolean>(false);
 
 	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
 	if (!isLoggedIn) {
@@ -172,6 +178,13 @@ const MainYourBeforeView: React.FC = () => {
 		navigate("/");
 	};
 
+	const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+	const handleNotification = () => {
+		setAlarmCount(0);
+		setIsNotificationOpen(true);
+	};
+
 	const today = new Date();
 	const currentYear = today.getFullYear();
 	const eventDate = new Date(currentYear, 1, 14); // 2월 14일
@@ -238,6 +251,24 @@ const MainYourBeforeView: React.FC = () => {
 		}
 	}, [giftBoxId]);
 
+	// 알림 개수 API 호출 (로딩 포함)
+	useEffect(() => {
+		async function fetchAlarmCount() {
+			setIsAlarmCountLoading(true);
+			try {
+				const count = await getAlarmCount();
+				setAlarmCount(count);
+			} catch (err) {
+				console.error("알림 개수 불러오기 실패:", err);
+			} finally {
+				setIsAlarmCountLoading(false);
+			}
+		}
+		if (!isNotificationOpen) {
+			fetchAlarmCount();
+		}
+	}, [isNotificationOpen]);
+
 	// API 호출이 끝나기 전에는 전체 페이지를 Loading 컴포넌트로 대체
 	if (!isGiftBoxNameLoaded) {
 		return (
@@ -259,6 +290,13 @@ const MainYourBeforeView: React.FC = () => {
 							src={tutorial_icon}
 							className="w-6 h-6"
 							alt="tutorial icon"
+						/>
+					</button>
+					<button onClick={handleNotification}>
+						<img
+							src={bell_icon}
+							className="w-7 h-7 mt-2"
+							alt="notification icon"
 						/>
 					</button>
 					<button onClick={handleProfile} className="mr-5">
@@ -365,6 +403,10 @@ const MainYourBeforeView: React.FC = () => {
 						onClose={() => setIsTutorialModalOpen(false)}
 					/>
 				)}
+				<Notification
+					isOpen={isNotificationOpen}
+					onClose={() => setIsNotificationOpen(false)}
+				/>
 			</div>
 		</div>
 	);
