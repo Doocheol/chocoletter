@@ -11,6 +11,8 @@ import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.exception.NotFoundException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,6 +67,12 @@ public class UnboxingRoomService {
                         row -> (Long) row[0],  // giftId
                         row -> (Long) row[1]  // unboxingRoomId
                 ));
+    }
+
+    public List<UnboxingRoom> findUpcomingUnboxingRoomsIn30Minutes() {
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime targetTime = now.plusMinutes(30);
+        return unboxingRoomRepository.findUpcomingUnboxingRoomsTargetTime(targetTime, targetTime.plusMinutes(1));
     }
 }
 
