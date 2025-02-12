@@ -359,7 +359,7 @@ const ChatRoomView = () => {
                         )}
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} style={{ height: "60px" }} />
             </div>
 
 
