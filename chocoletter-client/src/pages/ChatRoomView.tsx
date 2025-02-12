@@ -388,9 +388,10 @@ const ChatRoomView = () => {
                         onKeyDown={(e) => handleKeyDown(e)}
                         onCompositionStart={handleCompositionStart} // 한글 입력 지원
                         onCompositionEnd={handleCompositionEnd}
-                        onFocus={() => setPlaceholder("")}
-                         onBlur={() => setPlaceholder("내용을 입력하세요")}
-                        // onBlur={(e) => setTimeout(() => e.target.focus(), 0)} // 자동 `blur` 방지
+                        onBlur={(e) => {
+                            setPlaceholder("내용을 입력하세요"); // Placeholder 복원
+                            setTimeout(() => e.target.focus(), 0); // 블러 방지 & 포커스 유지
+                        }}                        
                     />
 
 
