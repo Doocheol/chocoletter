@@ -1,8 +1,7 @@
 import React from "react";
-// import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GeneralLetterModal from "../../common/GeneralLetterModal"
+import GeneralLetterModal from "../../common/GeneralLetterModal";
 import { useRecoilValue } from "recoil";
 import { getGiftDetail } from "../../../services/giftApi";
 import { memberIdAtom, giftBoxIdAtom } from "../../../atoms/auth/userAtoms";
@@ -13,12 +12,12 @@ import { getGiftBoxPublicKey } from "../../../services/keyApi";
 import LetterEncryptedNoneModal from "../../letter/modal/LetterEncryptedNoneModal";
 
 interface LetterInChatModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    nickName?: string;
-    content?: string | null;
-    question?: string | null;
-    answer?: string | null;
+	isOpen: boolean;
+	onClose: () => void;
+	nickName?: string;
+	content?: string | null;
+	question?: string | null;
+	answer?: string | null;
 }
 
 interface GiftData {
@@ -28,25 +27,33 @@ interface GiftData {
 	answer?: string | null;
 }
 
-const LetterInChatModal: React.FC<LetterInChatModalProps> = ({ isOpen, onClose, nickName, content, question, answer }) => {
+const LetterInChatModal: React.FC<LetterInChatModalProps> = ({
+	isOpen,
+	onClose,
+	nickName,
+	content,
+	question,
+	answer,
+}) => {
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
+	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
+		useState(false);
 
 	useEffect(() => {
 		const fetchGiftData = async () => {
-			if (nickName && (content || answer)) {
+			if (nickName && (content || answer || question)) {
 				try {
 					const data = {
-            "nickName": nickName,
-            "content": content,
-            "question": question,
-            "answer": answer
-          };
+						nickName: nickName,
+						content: content,
+						question: question,
+						answer: answer,
+					};
 					let updatedData: GiftData = { ...data };
 
 					const privateKey = await getMemberPrivateKey(memberId);
@@ -100,37 +107,37 @@ const LetterInChatModal: React.FC<LetterInChatModalProps> = ({ isOpen, onClose, 
 			}
 		};
 		fetchGiftData();
-	}, [content, answer]);
+	}, [nickName, content, question, answer]);
 
-  return (
-    <>
-      {/* 메인 콘텐츠 렌더링 */}
-        {loading ? (
-          <Loading />
-        ) : error === 403 ? (
-          <ForbiddenView />
-        ) : (
-          <div className="absolute mt-[41px] m-4">
-            <GeneralLetterModal 
-              isOpen={isOpen} 
-              onClose={onClose} 
-              nickName={giftData?.nickName || "Anonymous"} 
-              content={giftData?.content || "No content provided"} 
-              question={giftData?.question || "No question provided"} 
-              answer={giftData?.answer || "No answer provided"} 
-            />
-            {isLetterEncryptedNoneModalOpen && (
-              <LetterEncryptedNoneModal
-                isOpen={isLetterEncryptedNoneModalOpen}
-                onClose={() =>
-                  setIsLetterEncryptedNoneModalOpen(false)
-                }
-              />
-            )}
-          </div>
-        )}
-    </>
-  );
+	return (
+		<>
+			{/* 메인 콘텐츠 렌더링 */}
+			{loading ? (
+				<Loading />
+			) : error === 403 ? (
+				<ForbiddenView />
+			) : (
+				<div className="absolute mt-[41px] m-4">
+					<GeneralLetterModal
+						isOpen={isOpen}
+						onClose={onClose}
+						nickName={giftData?.nickName}
+						content={giftData?.content}
+						question={giftData?.question}
+						answer={giftData?.answer}
+					/>
+					{isLetterEncryptedNoneModalOpen && (
+						<LetterEncryptedNoneModal
+							isOpen={isLetterEncryptedNoneModalOpen}
+							onClose={() =>
+								setIsLetterEncryptedNoneModalOpen(false)
+							}
+						/>
+					)}
+				</div>
+			)}
+		</>
+	);
 };
 
 const ForbiddenView = () => (
