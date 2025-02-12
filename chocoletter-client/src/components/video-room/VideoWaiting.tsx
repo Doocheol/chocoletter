@@ -106,10 +106,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
             <LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
-                nickName={letterInfo?.nickName || "Anonymous"}
-                content={letterInfo?.content || "No content provided"}
-                question={letterInfo?.question || "No question provided"}
-                answer={letterInfo?.answer || "No answer provided"}
+                giftId={letterInfo?.giftId || ""}
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />

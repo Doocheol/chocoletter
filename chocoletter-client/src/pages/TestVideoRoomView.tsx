@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
@@ -26,6 +26,7 @@ import { GiftDetail } from '../types/openvidutest';
 
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
+    const { sessionIdInit } = useParams();
     // const localPreviewRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
@@ -56,7 +57,7 @@ const TestVideoRoomView = () => {
     const [user, setUser] = useState(() => getUserInfo());
     const [unboxingTime, setUnboxingTime] = useState<string>('');
     const [isPermit, setIsPermit] = useState(false);
-    const [sessionIdInit, setSessionIdInit] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | undefined>();
 
     const onEnd = async () => {
         setIsTerminate(true)
@@ -64,7 +65,7 @@ const TestVideoRoomView = () => {
             await deleteSession(videoState.session.sessionId);
         }
         await leaveSession(videoState, setVideoState);
-        if (sessionIdInit) terminateVideoRoom(sessionIdInit);
+        if (sessionId) terminateVideoRoom(sessionId);
     }
 
     const onSemiEnd = async () => {
@@ -74,22 +75,22 @@ const TestVideoRoomView = () => {
     // 로그인 확인 및 입장 확인 API
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        const sessionIdInit = urlParams.get("sessionIdInit");
+        
 
         if (!isLogin) {
             navigate("/");
             return;
         }
 
-        if (!sessionIdInit) {
+        if (!sessionId) {
             console.error("세션 ID가 없습니다.");
             navigate(`/main/${user?.giftBoxId || ""}`);
             return;
         }
-        setSessionIdInit(sessionIdInit);
+        setSessionId(sessionIdInit);
         const checkAuth = async () => {
             try {
-                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
+                const checkAuthResult = await checkAuthVideoRoom(sessionId);
                 console.log(checkAuthResult);
                 setLetterInfo(checkAuthResult.giftDetail);
                 setUnboxingTime(checkAuthResult.unboxingTime);
@@ -111,7 +112,7 @@ const TestVideoRoomView = () => {
             console.log("세션 생성 중")
 
             await joinSession(
-                { sessionId: sessionIdInit, username },
+                { sessionId, username },
                 setVideoState,
                 setIsTerminate,
                 setIsItThere,
@@ -199,10 +200,7 @@ const TestVideoRoomView = () => {
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
-                    nickName={letterInfo?.nickName}
-                    content={letterInfo?.content || "No Content"}
-                    question={letterInfo?.question || "No Question"}
-                    answer={letterInfo?.answer || "No Answer"}
+                    giftId={letterInfo?.giftId || ""}
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
