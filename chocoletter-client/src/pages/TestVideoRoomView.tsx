@@ -74,15 +74,12 @@ const TestVideoRoomView = () => {
 
     // 로그인 확인 및 입장 확인 API
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-
         if (!isLogin) {
             navigate("/");
             return;
         }
 
-        if (!sessionId) {
+        if (!sessionIdInit) {
             console.error("세션 ID가 없습니다.");
             navigate(`/main/${user?.giftBoxId || ""}`);
             return;
@@ -90,7 +87,7 @@ const TestVideoRoomView = () => {
         setSessionId(sessionIdInit);
         const checkAuth = async () => {
             try {
-                const checkAuthResult = await checkAuthVideoRoom(sessionId);
+                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
                 console.log(checkAuthResult);
                 setLetterInfo(checkAuthResult.giftDetail);
                 setUnboxingTime(checkAuthResult.unboxingTime);
@@ -112,7 +109,7 @@ const TestVideoRoomView = () => {
             console.log("세션 생성 중")
 
             await joinSession(
-                { sessionId, username },
+                { sessionId: sessionIdInit, username },
                 setVideoState,
                 setIsTerminate,
                 setIsItThere,
