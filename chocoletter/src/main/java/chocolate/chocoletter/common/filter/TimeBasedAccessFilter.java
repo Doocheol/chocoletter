@@ -29,22 +29,22 @@ public class TimeBasedAccessFilter extends OncePerRequestFilter {
     @Getter
     private static class BlockedEndpoint {
         private final String pattern;
-        private final List<String> methods; // 차단할 HTTP 메서드 목록
+        private final String method; // 차단할 HTTP 메서드 목록
 
-        public BlockedEndpoint(String pattern, List<String> methods) {
+        public BlockedEndpoint(String pattern, String method) {
             this.pattern = pattern;
-            this.methods = methods;
+            this.method = method;
         }
     }
 
     // 차단 대상 엔드포인트 목록
     private static final List<BlockedEndpoint> BLOCKED_ENDPOINTS = List.of(
-            new BlockedEndpoint("/api/v1/gift/*/unboxing/invitation", List.of("POST")),
-            new BlockedEndpoint("/api/v1/gift/*/letter", List.of("PATCH")),
-            new BlockedEndpoint("/api/v1/gift-box/*/gift/special/question", List.of("POST")),
-            new BlockedEndpoint("/api/v1/gift-box/*/gift/special/free", List.of("POST")),
-            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/question", List.of("POST")),
-            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/free", List.of("POST"))
+            new BlockedEndpoint("/api/v1/gift/*/unboxing/invitation", "POST"),
+            new BlockedEndpoint("/api/v1/gift/*/letter", "PATCH"),
+            new BlockedEndpoint("/api/v1/gift-box/*/gift/special/question", "POST"),
+            new BlockedEndpoint("/api/v1/gift-box/*/gift/special/free", "POST"),
+            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/question", "POST"),
+            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/free", "POST")
     );
 
     @Override
@@ -61,7 +61,7 @@ public class TimeBasedAccessFilter extends OncePerRequestFilter {
         // 대상 엔드포인트에 대하여 URI와 HTTP 메서드 모두 매칭하는지 확인
         for (BlockedEndpoint endpoint : BLOCKED_ENDPOINTS) {
             if (pathMatcher.match(endpoint.getPattern(), requestURI)
-                    && endpoint.getMethods().contains(requestMethod)) {
+                    && endpoint.getMethod().equals(requestMethod)) {
 
                 // 예시 조건: 현재 시간이 오픈일 이후이면 차단 (GET/POST 등 메서드 상관없이 차단)
                 if (now.isAfter(openDayTime)) {
