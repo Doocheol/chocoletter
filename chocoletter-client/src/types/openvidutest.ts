@@ -1,7 +1,7 @@
 import { Publisher, Session, StreamManager, Subscriber } from "openvidu-browser";
 
 export interface User {
-    sessionId?: string;
+    sessionId?: string | null;
     username?: string;
 }
 
