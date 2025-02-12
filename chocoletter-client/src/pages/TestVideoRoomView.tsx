@@ -5,6 +5,7 @@ import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
 import { userNameAtom } from '../atoms/auth/userAtoms';
 import { FiveSecondModal } from '../components/video-waiting-room/modal/FiveSecondModal';
+import { AnnouncePermitModal } from '../components/video-room/modal/AnnouncePermitModal';
 
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
@@ -57,6 +58,7 @@ const TestVideoRoomView = () => {
     const username = useRecoilValue(userNameAtom);
     const [user, setUser] = useState(() => getUserInfo());
     const [unboxingTime, setUnboxingTime] = useState(undefined);
+    const [isPermit, setIsPermit] = useState(false);
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
@@ -191,6 +193,7 @@ const TestVideoRoomView = () => {
                         <WaitingTest unboxing="2025-02-13T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
                     </div>
                 )}
+                {!isPermit && (<AnnouncePermitModal videoPermit={() => {setIsPermit(true)}} />)}
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}

@@ -129,7 +129,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, vide
                 </div>
                 <div className={`w-[11dvh] h-[11dvh] bottom-[10dvh] absolute ${isReady? "bg-chocoletterGiftBg" : "bg-chocoletterGreen"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                     {isReady ? 
-                        (<div className="font-bold font-sans text-md">기다리는 중</div>) : 
+                        (<div className="font-bold font-sans text-sm text-nowrap">상대방<br/>기다리는 중</div>) : 
                         (<button onClick={trans} className="w-full h-full aspect-square flex justify-center items-center" >
                             <p className="text-white text-center font-bold font-sans w-[50%] h-[50%] flex items-center justify-center text-2xl" >Ready</p>
                         </button>)
