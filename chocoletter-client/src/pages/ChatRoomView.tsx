@@ -39,7 +39,7 @@ const ChatRoomView = () => {
     
     // 채팅방 및 유저 정보 
     const location = useLocation();
-    const sender = location.state?.nickName // ✅ 추후 수정
+    const sender = location.state?.nickName
     const { roomId } = useParams()
     const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
@@ -91,7 +91,7 @@ const ChatRoomView = () => {
                     currentInput.removeAttribute("readonly"); // ✅ 메시지 전송 후 다시 활성화
                     currentInput.focus(); // ✅ 키보드 유지
                 }
-            }, 10); // 아주 짧은 딜레이 후 포커스 유지
+            }, 10);
             }
         }
     };
@@ -123,7 +123,7 @@ const ChatRoomView = () => {
 
     // 최하단으로 자동 스크롤
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, [messages]);
     
     // 편지 불러오기 
@@ -204,9 +204,7 @@ const ChatRoomView = () => {
                                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                             } else if (newMessage.messageType === "READ_STATUS") {
                                 console.log("읽음 상태 변경 감지, 메시지 새로고침");
-                                fetchChatHistory().then(() => {
-                                    setMessages([...messages]); // ✅ 강제로 상태 업데이트
-                                });
+                                fetchChatHistory()
                             }
                         }
                     } catch (error) {
@@ -297,7 +295,6 @@ const ChatRoomView = () => {
     
 
     return (
-        // TODO : 스타일 추후에 파일 따로 빼기
         <div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
             {/* 편지 모달 */}
             <LetterInChatModal
@@ -314,7 +311,7 @@ const ChatRoomView = () => {
                     <div className="w-6 h-6 justify-center items-center flex">
                         <GoBackButton />
                     </div>
-                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">{sender}</div>
+                    <div className="text-center text-white text-2xl font-normal font-sans leading-snug">{letter?.nickName}</div>
                     <div className="w-6 h-6"><LetterInChatOpenButton onPush={() => setIsOpenLetter(true)} /></div>
                 </div>
             </div>
