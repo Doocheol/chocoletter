@@ -203,7 +203,10 @@ const ChatRoomView = () => {
                             if (newMessage.messageType === "CHAT") {
                                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                             } else if (newMessage.messageType === "READ_STATUS") {
-                                fetchChatHistory();
+                                console.log("읽음 상태 변경 감지, 메시지 새로고침");
+                                fetchChatHistory().then(() => {
+                                    setMessages([...messages]); // ✅ 강제로 상태 업데이트
+                                });
                             }
                         }
                     } catch (error) {
@@ -332,7 +335,7 @@ const ChatRoomView = () => {
                                     <div className="text-sans text-[15px]">{msg.content}</div>
                                 </div>
                                 <div className="flex flex-col justify-end">
-                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt.split('.')[0] + 'Z', format: "HH:mm" })}</div>
+                                    <div className="text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt.split('.')[0] + 'Z', format: "HH:mm" })}</div>
                                 </div>
                             </div>
                         )}
@@ -342,11 +345,11 @@ const ChatRoomView = () => {
                             <div className="flex w-full gap-[5px] justify-end">
                                 <div className="flex flex-col justify-end items-end">
                                     {!msg.isRead && (
-                                        <div className="font-[Pretendard] text-[10px] text-red-500">
+                                        <div className="text-[10px] text-red-500">
                                             1 {/* 읽지 않은 경우 표시 */}
                                         </div>
                                     )}
-                                    <div className="font-[Pretendard] text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt.split('.')[0] + 'Z', format: "HH:mm" })}</div>
+                                    <div className="text-[12px] text-[#7F8087]">{changeKSTDate({ givenDate: msg.createdAt.split('.')[0] + 'Z', format: "HH:mm" })}</div>
                                 </div>
                                 <div 
                                     className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white"
