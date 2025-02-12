@@ -65,7 +65,7 @@ const TestVideoRoomView = () => {
             await deleteSession(videoState.session.sessionId);
         }
         await leaveSession(videoState, setVideoState);
-        // if (sessionIdInit) terminateVideoRoom(sessionIdInit);
+        if (sessionIdInit) terminateVideoRoom(sessionIdInit);
     }
 
     const onSemiEnd = async () => {
