@@ -72,6 +72,7 @@ public class UnboxingRoomService {
     public List<UnboxingRoom> findUpcomingUnboxingRoomsIn30Minutes() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime targetTime = now.plusMinutes(30);
+        System.out.println(targetTime);
         return unboxingRoomRepository.findUpcomingUnboxingRoomsTargetTime(targetTime, targetTime.plusMinutes(1));
     }
 }

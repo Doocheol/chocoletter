@@ -27,10 +27,19 @@ public class AlarmScheduler {
     private final MemberService memberService;
     private final LetterRepository letterRepository;
 
-    @Scheduled(cron = "0 30-59/10 23 11 2 ?")
-    @Scheduled(cron = "0 */10 * 12 2 ?")
     @Transactional
-    public void scheduleUnboxingReminder() {
+    @Scheduled(cron = "#{@alarmSchedulerProperties.getEventDayTransitionCron()}")
+    public void scheduleUnboxingReminderDay() {
+        scheduleUnboxingReminder();
+    }
+
+    @Transactional
+    @Scheduled(cron = "#{@alarmSchedulerProperties.getEventEveTransitionCron()}")
+    public void scheduleUnboxingReminderEve() {
+        scheduleUnboxingReminder();
+    }
+
+    private void scheduleUnboxingReminder() {
         unboxingRoomService.findUpcomingUnboxingRoomsIn30Minutes()
                 .forEach(this::createAndSaveUnboxingAlarms);
     }

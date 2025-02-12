@@ -25,7 +25,7 @@ public interface UnboxingRoomRepository extends JpaRepository<UnboxingRoom, Long
     @Query("select r.gift.id, r.id from UnboxingRoom r where r.gift.id in :giftIds")
     List<Object[]> findUnBoxingRoomIdsByGiftIds(@Param("giftIds") List<Long> giftIds);
 
-    @Query("SELECT r FROM UnboxingRoom r WHERE r.startTime >= :startTargetTime AND r.startTime < :endTargetTime")
+    @Query("select r from UnboxingRoom r where r.startTime >= :startTargetTime and r.startTime < :endTargetTime")
     List<UnboxingRoom> findUpcomingUnboxingRoomsTargetTime(
             @Param("startTargetTime") LocalDateTime startTargetTime,
             @Param("endTargetTime") LocalDateTime endTargetTime
