@@ -64,3 +64,9 @@ export const isWatchNewTutorialAtom = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom],
 })
+
+export const isFirstLoginEventAtom = atom<boolean>({
+  key: "isFirstLoginEvent",
+  default: true, // 기본값은 true (최초 로그인 가정)
+  effects_UNSTABLE: [persistAtom],
+});

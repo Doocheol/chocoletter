@@ -1,19 +1,18 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
-import html2canvas from "html2canvas";
 
 import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
-import { giftBoxIdAtom, isFirstLoginAtom } from "../atoms/auth/userAtoms";
+import {
+	giftBoxIdAtom,
+	isFirstLoginAtom,
+	isFirstLoginEventAtom,
+	isLoginAtom,
+} from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
 
-import ShareModal from "../components/main/my/before/modal/ShareModal";
-import CaptureModal from "../components/main/my/before/modal/CaptureModal";
-import FirstLoginTutorialOverlay from "../components/tutorial/FirstLoginTutorialOverlay";
 import ChatModal from "../components/main/my/before/modal/ChatModal"; // ChatModal 임포트
-import TutorialModal from "../components/main/my/before/modal/TutorialModal"; // TutorialModal 임포트
 import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
 
 // === 프로필 드롭다운 내용
@@ -31,10 +30,10 @@ import open_text from "../assets/images/main/open_text.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
-import { getGiftList } from "../services/giftApi";
 import CalendarModal from "../components/main/my/before/modal/CalendarModal";
 import { countMyGiftBox, getGiftBoxName } from "../services/giftBoxApi";
 import { getAlarmCount } from "../services/alarmApi";
+import FirstLoginEventModal from "../components/main/your/before/modal/FirstLoginEventModal";
 
 const MainMyEventView: React.FC = () => {
 	const navigate = useNavigate();
@@ -55,6 +54,8 @@ const MainMyEventView: React.FC = () => {
 	const setAvailableGifts = useSetRecoilState(availableGiftsAtom);
 	const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
 
+	const isFirstLoginEvent = useRecoilValue(isFirstLoginEventAtom);
+
 	// 로딩 상태들 (API 호출 또는 모달 전환 중)
 	const [isGiftCountLoading, setIsGiftCountLoading] =
 		useState<boolean>(false);
@@ -63,6 +64,8 @@ const MainMyEventView: React.FC = () => {
 	const [isGiftShapeLoading, setIsGiftShapeLoading] =
 		useState<boolean>(false);
 	const [shapeNum, setShapeNum] = useState("12");
+	const [isFirstLoginEventModalOpen, setIsFirstLoginEventModalOpen] =
+		useState(false);
 
 	// 튜토리얼 아이콘 ref
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
@@ -88,16 +91,20 @@ const MainMyEventView: React.FC = () => {
 	// 알림 아이콘 클릭 시 알림 모달을 여는 핸들러 (여기서는 모달 오픈 동작만 처리)
 	const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-	const tutorialIcons = useMemo(() => [
+	const tutorialIcons = useMemo(
+		() => [
 			tutorialIconRef,
 			dummyRef,
-			watchOpenCountRef, 
-			calendarIconRef, 
-			dummyRef, 
-			chatIconRef, 
-			dummyRef, 
-			giftBoxRef], []);
-	
+			watchOpenCountRef,
+			calendarIconRef,
+			dummyRef,
+			chatIconRef,
+			dummyRef,
+			giftBoxRef,
+		],
+		[]
+	);
+
 	const handleNotification = () => {
 		setAlarmCount(0);
 		setIsNotificationOpen(true);
@@ -168,6 +175,15 @@ const MainMyEventView: React.FC = () => {
 		}
 		fetchGiftShape();
 	}, [urlGiftBoxId, setIsGiftShapeLoading]);
+
+	useEffect(() => {
+		async function updateFirstLoginEvent() {
+			if (isFirstLoginEvent) {
+				setIsFirstLoginEventModalOpen(true);
+			}
+		}
+		updateFirstLoginEvent();
+	}, [isFirstLoginEvent, isFirstLoginEventModalOpen]);
 
 	// 선물 개수 API 호출 (로딩 포함)
 	useEffect(() => {
@@ -299,6 +315,13 @@ const MainMyEventView: React.FC = () => {
 					isOpen={isCalendarModalOpen}
 					onClose={() => setIsCalendarModalOpen(false)}
 				/>
+
+				{isFirstLoginEventModalOpen && (
+					<FirstLoginEventModal
+						isOpen={isFirstLoginEventModalOpen}
+						onClose={() => setIsFirstLoginEventModalOpen(false)}
+					/>
+				)}
 			</div>
 		</div>
 	);
