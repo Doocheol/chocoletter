@@ -173,9 +173,15 @@ const MainMyEventView: React.FC = () => {
 
   useEffect(() => {
     async function updateFirstLoginEvent() {
+      const modalShown = localStorage.getItem("firstLoginEventShown");
+
       if (isFirstLoginEvent) {
         setIsFirstLoginEvent(false);
+      }
+      if (!modalShown) {
+        // 모달을 한번만 보여줌
         setIsFirstLoginEventModalOpen(true);
+        localStorage.setItem("firstLoginEventShown", "true");
       }
     }
     updateFirstLoginEvent();
