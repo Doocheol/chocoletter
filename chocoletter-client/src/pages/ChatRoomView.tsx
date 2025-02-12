@@ -81,8 +81,17 @@ const ChatRoomView = () => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault(); // 기본 Enter 키 동작 방지 (줄바꿈 방지), 기본 `blur` 동작 방지
             if (message.trim() !== "") {
+                const currentInput = inputRef.current;
+                if (currentInput) {
+                    currentInput.setAttribute("readonly", "true"); // ✅ 입력 필드가 비활성화되지 않도록 방지
+                }
                 sendMessage();
-                // setTimeout(() => inputRef.current?.focus(), 0); // 전송 후 포커스 유지
+                setTimeout(() => {
+                if (currentInput) {
+                    currentInput.removeAttribute("readonly"); // ✅ 메시지 전송 후 다시 활성화
+                    currentInput.focus(); // ✅ 키보드 유지
+                }
+            }, 10); // 아주 짧은 딜레이 후 포커스 유지
             }
         }
     };
