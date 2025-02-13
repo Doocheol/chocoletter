@@ -61,7 +61,6 @@ const ChatRoomView = () => {
     const stompClient = useRef<Client | null>(null); // STOMP(WebSocket) 연결을 관리하는 객체
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
-    const AccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNSIsImlhdCI6MTczOTM1NTg4MywiZXhwIjoxNzM5OTYwNjgzfQ.D2XrKAOPgb1T6_J_jToOITl3UvBEYIibvRB7Mj9fIX4'
     
     //입력 구성 시작 핸들러
     const handleCompositionStart = () => {
@@ -178,10 +177,10 @@ const ChatRoomView = () => {
     // WebSocket을 통해 STOMP 연결 설정
     const connect = () => {
         
-        // if (!userInfo || !userInfo.accessToken) {
-        //         // console.error("🚨 connect : Access token is missing!");
-        //         return;
-        //     }
+        if (!userInfo || !userInfo.accessToken) {
+                // console.error("🚨 connect : Access token is missing!");
+                return;
+            }
     
         stompClient.current = new Client({
             brokerURL: import.meta.env.VITE_CHAT_WEBSOCKET_ENDPOINT, // WebSocket 서버 주소
@@ -189,7 +188,7 @@ const ChatRoomView = () => {
             heartbeatIncoming: 4000, // 서버가 4초 동안 데이터를 보내지 않으면 연결이 끊겼다고 판단
             heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
             connectHeaders: {
-                Authorization: `Bearer ${AccessToken}`, // 인증 토큰 포함 userInfo?.accessToken
+                Authorization: `Bearer ${userInfo?.accessToken}`, // 인증 토큰 포함 userInfo?.accessToken
             },
             
             onConnect: () => {
@@ -201,7 +200,7 @@ const ChatRoomView = () => {
                 }
 
                 const headers = {
-                    Authorization: `Bearer ${AccessToken}`, // 헤더 추가
+                    Authorization: `Bearer ${userInfo?.accessToken}`, // 헤더 추가
                 };
                 
                 stompClient.current?.subscribe(`/topic/${roomId}`, (message) => {                    
@@ -239,10 +238,10 @@ const ChatRoomView = () => {
     // WebSocket을 통해 메시지 전송
     const sendMessage = () => {
 
-        // if (!userInfo || !userInfo.accessToken) {
-        //         // console.error("sendMessage : 🚨 Access token is missing!");
-        //         return;
-        // }
+        if (!userInfo || !userInfo.accessToken) {
+                // console.error("sendMessage : 🚨 Access token is missing!");
+                return;
+        }
 
         if (!stompClient.current || !stompClient.current.connected) {
             // console.error("STOMP 연결이 없습니다. 메시지를 보낼 수 없습니다.");
@@ -263,7 +262,7 @@ const ChatRoomView = () => {
                 destination: `/app/send`,
                 body: JSON.stringify(msgObject),
                 headers: {
-                    Authorization: `Bearer ${AccessToken}`,
+                    Authorization: `Bearer ${userInfo?.accessToken}`,
                 }
             });
 
