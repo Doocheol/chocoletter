@@ -34,6 +34,7 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 	// const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
 
 	useEffect(() => {
+		console.log(giftId);
 		const fetchGiftData = async () => {
 			if (giftId) {
 				try {
@@ -48,37 +49,40 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 
 					const publicKey = await getGiftBoxPublicKey(giftBoxId);
 
-					if (data.question && data.answer) {
-						try {
-							const plainAnswer = await decryptLetter(
-								data.answer,
-								publicKey,
-								privateKey
-							);
-							updatedData.answer = plainAnswer; // 복호화된 답변을 giftData.answer에 반영
-						} catch (e) {
-							updatedData.answer =
-								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
-							// setIsLetterEncryptedNoneModalOpen(true);
-						}
-					} else if (data.content) {
-						try {
-							const plainContent = await decryptLetter(
-								data.content,
-								publicKey,
-								privateKey
-							);
-							updatedData.content = plainContent; // 복호화된 편지 내용을 giftData.content에 반영
-						} catch (e) {
-							updatedData.content =
-								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
-							// setIsLetterEncryptedNoneModalOpen(true);
+					if (data !== null) {
+						if (data.question && data.answer) {
+							try {
+								const plainAnswer = await decryptLetter(
+									data.answer,
+									publicKey,
+									privateKey
+								);
+								updatedData.answer = plainAnswer; // 복호화된 답변을 giftData.answer에 반영
+							} catch (e) {
+								updatedData.answer =
+									"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
+								// setIsLetterEncryptedNoneModalOpen(true);
+							}
+						} else if (data.content) {
+							try {
+								const plainContent = await decryptLetter(
+									data.content,
+									publicKey,
+									privateKey
+								);
+								updatedData.content = plainContent; // 복호화된 편지 내용을 giftData.content에 반영
+							} catch (e) {
+								updatedData.content =
+									"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
+								// setIsLetterEncryptedNoneModalOpen(true);
+							}
 						}
 					}
 
 					setGiftData(updatedData);
 				} catch (error: any) {
 					if (error.response?.status === 403) {
+						onClose();
 						setError(403); // 에러 상태 설정
 					} else {
 						setError(error.response?.status || 500); // 기타 에러 처리
@@ -104,9 +108,9 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
             isOpen={isOpen} 
             onClose={onClose} 
             nickName={giftData?.nickName}
-						content={giftData?.content}
-						question={giftData?.question}
-						answer={giftData?.answer}
+			content={giftData?.content}
+			question={giftData?.question}
+			answer={giftData?.answer}
           />
 				</div>
 			)}
