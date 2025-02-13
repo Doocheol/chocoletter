@@ -47,7 +47,9 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     // 남은 시간 계산
     useEffect(() => {
+        console.log("언박싱시간 : ", unboxing);
         const targetTime = new Date(unboxing);
+        console.log("targetTime : ", targetTime);
         const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000 + 60 * 1000);
         
         const now = new Date();
