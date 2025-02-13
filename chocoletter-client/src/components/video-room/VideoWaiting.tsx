@@ -23,9 +23,10 @@ interface WaitingRoomProps {
     trans: () => void,
     letterInfo?: GiftDetail | null,
     isOpenLetter: boolean,
+    onErrorClose: () => void,
 }
 
-export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo }: WaitingRoomProps) => {
+export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo, onErrorClose }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const [remainTime, setRemainTime] = useState(300);
@@ -107,10 +108,11 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
-            {isOpenLetter && 
+            {isOpenLetter && isReady &&
             (<LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
+                onErrorClose={onErrorClose}
                 giftId={letterInfo?.giftId || ""}
             />)}
             
