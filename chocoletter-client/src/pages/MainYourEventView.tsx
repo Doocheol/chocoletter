@@ -250,9 +250,6 @@ const MainYourEventView: React.FC = () => {
 				{/* 선물하기 버튼 */}
 				<div className="mt-10 px-4 flex flex-row items-center justify-center">
 					<div className="relative group">
-						<div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-max">
-							<img src={tool_tip_your} alt="tooltip" />
-						</div>
 						<ImageButton
 							onClick={handleGoToMyGiftBox}
 							src={my_chocolate_box_move_button}
