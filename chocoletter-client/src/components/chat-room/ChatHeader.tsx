@@ -13,10 +13,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 }) => {
 	return (
 		<div
-			className="fixed top-0 left-0 right-0 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px]"
-			style={{ paddingTop: "env(safe-area-inset-top)" }}
+			className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold gap-[15px]"
+			style={{ marginTop: "env(safe-area-inset-top)" }}
 		>
-			<div className="self-stretch justify-between items-center inline-flex">
+			<div className="self-stretch justify-between items-center flex h-full">
 				<div className="w-6 h-6 flex justify-center items-center">
 					<GoBackButton />
 				</div>
