@@ -109,8 +109,9 @@ public class GiftService {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_SPECIAL_BEFORE_DATE);
         }
         gift.openGift();
+        String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
         LetterDto letter = letterService.findLetter(giftId);
-        return GiftDetailResponseDto.of(gift, letter);
+        return GiftDetailResponseDto.of(encryptedGiftId, letter);
     }
 
     public GiftDetailResponseDto findSendGiftDetail(Long memberId, Long giftId) {
@@ -118,8 +119,9 @@ public class GiftService {
         if (!memberId.equals(gift.getSenderId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
+        String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
         LetterDto letter = letterService.findLetter(giftId);
-        return GiftDetailResponseDto.of(gift, letter);
+        return GiftDetailResponseDto.of(encryptedGiftId, letter);
     }
 
     public GiftsResponseDto findGeneralGifts(Long memberId) {
