@@ -91,6 +91,7 @@ const TestVideoRoomView = () => {
                 console.log(checkAuthResult);
                 setLetterInfo(checkAuthResult.giftDetail);
                 setUnboxingTime(checkAuthResult.unboxingTime);
+                console.log(unboxingTime, letterInfo);
             } catch (err) {
                 console.error("입장 확인 실패:", err);
                 navigate(`/main/${user?.giftBoxId}`);
