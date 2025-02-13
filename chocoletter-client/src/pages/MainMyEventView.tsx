@@ -287,11 +287,11 @@ const MainMyEventView: React.FC = () => {
 
 				{/** 초콜릿 박스 & 안내 문구 */}
 				<div className="mt-36 flex flex-col items-center px-4">
-					<div className="flex justify-center gap-1.5 mb-3 w-[260px]">
+					<div className="flex justify-center gap-1.5 mb-3 w-[240px]">
 						<img
 							src={open_text2}
 							alt="open_text2"
-							style={{ width: "40%" }}
+							style={{ width: "50%" }}
 							className="heartbeat"
 						/>
 					</div>
