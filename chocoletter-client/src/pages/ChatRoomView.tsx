@@ -139,14 +139,14 @@ const ChatRoomView = () => {
 				setIsKeyboardOpen(true);
 
 				// iOS에서 textarea가 키보드 뒤로 숨는 문제 해결
-				if (!isAndroid) {
-					setTimeout(() => {
-						textareaRef.current?.scrollIntoView({
-							behavior: "smooth",
-							block: "nearest",
-						});
-					}, 100);
-				}
+				// if (!isAndroid) {
+				// 	setTimeout(() => {
+				// 		textareaRef.current?.scrollIntoView({
+				// 			behavior: "smooth",
+				// 			block: "nearest",
+				// 		});
+				// 	}, 100);
+				// }
 			} else {
 				setKeyboardHeight(0);
 				setIsKeyboardOpen(false);
