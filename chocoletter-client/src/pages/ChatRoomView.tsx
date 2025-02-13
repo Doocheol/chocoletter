@@ -67,24 +67,27 @@ const ChatRoomView = () => {
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
     
-    // //입력 구성 시작 핸들러
-    // const handleCompositionStart = () => {
-    //     setIsComposing(true);
-    // };
+    // 한글 조합이 시작될 때
+    const handleCompositionStart = () => {
+        setIsComposing(true);
+    };
     
-    // //입력 구성 끝 핸들러
-    // const handleCompositionEnd = (
-    //     e: React.CompositionEvent<HTMLTextAreaElement>
-    // ) => {
-    //     setIsComposing(false);
-    //     setMessage(e.currentTarget.value);
-    // };
+    // 한글 조합이 끝났을 때
+    const handleCompositionEnd = (event: React.CompositionEvent<HTMLTextAreaElement>) => {
+        setIsComposing(false);
+        setMessage(event.currentTarget.value); // 최종 입력값 반영
+    };
     
     // 엔터 키 이벤트 핸들러
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         
         // 한글 중복 방지
-        if (event.nativeEvent.isComposing) {
+        // if (event.nativeEvent.isComposing) {
+        //     event.stopPropagation();
+        //     return;
+        // }
+        // IME(한글 조합) 상태에서는 Enter 입력을 무시
+        if (isComposing) {
             event.stopPropagation();
             return;
         }
@@ -109,14 +112,23 @@ const ChatRoomView = () => {
         }
     };
 
+    // 
+    useEffect(() => {
+        if (!isComposing) {
+            setMessage(""); // 한글 조합 중이 아닐 때만 실행
+        }
+    }, [isComposing]);
+
     // 키보드 사용시 입력창 높이 조정
     useEffect(() => {
         const handleResize = () => {
+            const isAndroid = /Android/i.test(navigator.userAgent);
             const fullHeight = window.innerHeight; //Android에서 사용할 기본 화면 높이
             const viewportHeight = window.visualViewport?.height || fullHeight; //iOS에서는 visualViewport 사용
             
             const keyboardSize = fullHeight - viewportHeight;
 
+            console.log("OS 감지:", isAndroid ? "Android" : "iOS");
             console.log("fullHeight : ", fullHeight)
             console.log("viewportHeight : ", viewportHeight)
             console.log("keyboardSize : ", keyboardSize)
@@ -126,9 +138,11 @@ const ChatRoomView = () => {
                 setIsKeyboardOpen(true);
 
                 // iOS에서 textarea가 키보드 뒤로 숨는 문제 해결
-                setTimeout(() => {
-                    textareaRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }, 100);
+                if (!isAndroid) {                    
+                    setTimeout(() => {
+                        textareaRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    }, 100);
+                }
             } else {
                 setKeyboardHeight(0);
                 setIsKeyboardOpen(false);
@@ -447,8 +461,8 @@ const ChatRoomView = () => {
                         value={message} // 현재 message 상태를 textarea에 반영
                         onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
                         onKeyDown={(e) => handleKeyDown(e)}
-                        // onCompositionStart={handleCompositionStart} // 한글 입력 지원
-                        // onCompositionEnd={handleCompositionEnd}
+                        onCompositionStart={handleCompositionStart} // 한글 입력 지원
+                        onCompositionEnd={handleCompositionEnd}
                         onBlur={(e) => {
                             setPlaceholder("내용을 입력하세요"); // Placeholder 복원
                             setTimeout(() => e.target.focus(), 0); // 블러 방지 & 포커스 유지
