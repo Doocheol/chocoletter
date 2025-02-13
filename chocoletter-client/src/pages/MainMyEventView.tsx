@@ -43,7 +43,7 @@ import giftbox_event_1 from "../assets/images/giftbox/giftbox_event_1.svg";
 import Backdrop from "../components/common/Backdrop";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 import chat_icon from "../assets/images/main/chat_icon.svg";
-import open_text from "../assets/images/main/open_text.svg";
+import open_text2 from "../assets/images/main/open_text2.svg";
 import bell_icon from "../assets/images/main/bell_icon.svg";
 import calendar_icon from "../assets/images/main/calendar_icon.svg";
 
@@ -289,8 +289,8 @@ const MainMyEventView: React.FC = () => {
 				<div className="mt-36 flex flex-col items-center px-4">
 					<div className="flex justify-center gap-1.5 mb-3 w-[225px]">
 						<img
-							src={open_text}
-							alt="open_text"
+							src={open_text2}
+							alt="open_text2"
 							style={{ width: "35%" }}
 							className="heartbeat"
 						/>
@@ -320,9 +320,6 @@ const MainMyEventView: React.FC = () => {
           "공유하기" 버튼 위에만 나타나도록 수정
           (위아래로 움직이는 애니메이션: shake-vertical)
         */}
-				<div className="mt-2 flex flex-row justify-center items-center gap-2.5">
-					<img src={open_text} alt="open_text" className="" />
-				</div>
 
 				{isProfileOpen && (
 					<>
