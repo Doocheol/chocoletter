@@ -274,10 +274,7 @@ const ChatRoomView = () => {
 	}, [roomId]);
 
 	return (
-		<div
-			className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden"
-			style={{ height: "var(--vh)" }} // 초기 뷰포트 높이로 고정
-		>
+		<div className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden">
 			{/* 편지 모달 */}
 			<LetterInChatModal
 				isOpen={isOpenLetter}
