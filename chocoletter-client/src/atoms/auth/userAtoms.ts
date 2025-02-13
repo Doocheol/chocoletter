@@ -43,7 +43,7 @@ export const giftBoxIdAtom = atom<string>({
 // 새로 추가: 사용자가 선택한 선물상자 번호 (1 ~ 5)
 export const giftBoxNumAtom = atom<number>({
   key: "giftBoxNum",
-  default: 1,
+  default: 0,
   effects_UNSTABLE: [persistAtom],
 });
 

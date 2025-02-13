@@ -86,7 +86,9 @@ const MainMyBeforeView: React.FC = () => {
 	const setAvailableGifts = useSetRecoilState(availableGiftsAtom);
 	const setReceivedGifts = useSetRecoilState(receivedGiftsAtom);
 
-	const [isWatchNewTutorial, setIsWatchNewTutorial] = useRecoilState(isWatchNewTutorialAtom);
+	const [isWatchNewTutorial, setIsWatchNewTutorial] = useRecoilState(
+		isWatchNewTutorialAtom
+	);
 	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 	const [isCaptureModalVisible, setIsCaptureModalVisible] = useState(false);
 	const captureRef = useRef<HTMLDivElement>(null);
@@ -117,7 +119,7 @@ const MainMyBeforeView: React.FC = () => {
 		isGiftCountLoading || isAlarmCountLoading || isGiftShapeLoading;
 
 	useEffect(() => {
-		if (!giftBoxNum) {
+		if (!giftBoxNum || giftBoxNum === 0) {
 			navigate("/select-giftbox");
 		}
 	}, [giftBoxNum, navigate]);
@@ -154,15 +156,19 @@ const MainMyBeforeView: React.FC = () => {
 		53: giftbox_before_52,
 	};
 
-	const tutorialIcons = useMemo(() => [
-		tutorialIconRef,
-		dummyRef,
-		watchOpenCountRef, 
-		calendarIconRef, 
-		dummyRef, 
-		chatIconRef, 
-		dummyRef, 
-		giftBoxRef], []);
+	const tutorialIcons = useMemo(
+		() => [
+			tutorialIconRef,
+			dummyRef,
+			watchOpenCountRef,
+			calendarIconRef,
+			dummyRef,
+			chatIconRef,
+			dummyRef,
+			giftBoxRef,
+		],
+		[]
+	);
 
 	// 핸들러들
 	const handleShare = () => {
@@ -287,9 +293,9 @@ const MainMyBeforeView: React.FC = () => {
 									alt="tutorial icon"
 								/>
 							</button>
-							<button 
+							<button
 								onClick={handleCalendar}
-								ref={calendarIconRef}  
+								ref={calendarIconRef}
 							>
 								<img
 									src={calendar_icon}
@@ -314,10 +320,7 @@ const MainMyBeforeView: React.FC = () => {
 									/>
 								</button>
 							</div>
-							<button 
-								onClick={handleChat}
-								ref={chatIconRef}
-							>
+							<button onClick={handleChat} ref={chatIconRef}>
 								<img
 									src={chat_icon}
 									className="w-6 h-6"
@@ -454,8 +457,8 @@ const MainMyBeforeView: React.FC = () => {
 						<FowardTutorialOverlay
 							targetRefs={tutorialIcons}
 							onClose={() => {
-								setIsWatchNewTutorial(true)
-								setIsFirstLogin(false)
+								setIsWatchNewTutorial(true);
+								setIsFirstLogin(false);
 							}}
 						/>
 					)}
@@ -483,14 +486,16 @@ const MainMyBeforeView: React.FC = () => {
 						isOpen={isNotificationOpen}
 						onClose={() => setIsNotificationOpen(false)}
 					/>
-					{!isFirstLogin && !isWatchNewTutorial && (<PointTutorialOverlay 
-						targetRef={tutorialIconRef}
-						onClose={() => setIsWatchNewTutorial(true)}
-						onOpenTutorial={() => {
-							setIsWatchNewTutorial(true)
-							setIsTutorialModalOpen(true)
-						}}
-					/>)}
+					{!isFirstLogin && !isWatchNewTutorial && (
+						<PointTutorialOverlay
+							targetRef={tutorialIconRef}
+							onClose={() => setIsWatchNewTutorial(true)}
+							onOpenTutorial={() => {
+								setIsWatchNewTutorial(true);
+								setIsTutorialModalOpen(true);
+							}}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
