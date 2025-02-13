@@ -53,7 +53,7 @@ const ChatRoomView = () => {
     const [isComposing, setIsComposing] = useState(false); // IME(한글 조합) 상태 관리
     const [placeholder, setPlaceholder] = useState("내용을 입력하세요");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);// 채팅창 스크롤을 맨 아래로 이동
-    const inputRef = useRef<HTMLTextAreaElement | null>(null);
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const [showScrollButton, setShowScrollButton] = useState(false); // 최하단 버튼 상태 추가
     const chatContainerRef = useRef<HTMLDivElement | null>(null); // 스크롤 감지용 Ref 추가
@@ -67,35 +67,44 @@ const ChatRoomView = () => {
     // const currentUser = useSelector((state) => state.user); // 현재 로그인된 사용자 정보(id, 프로필 이미지 등)를 가져옴.
     // const [customerSeq, setCustomerSeq] = useState(""); // 대화 중인 상대방의 사용자 ID
     
-    //입력 구성 시작 핸들러
-    const handleCompositionStart = () => {
-        setIsComposing(true);
-    };
+    // //입력 구성 시작 핸들러
+    // const handleCompositionStart = () => {
+    //     setIsComposing(true);
+    // };
     
-    //입력 구성 끝 핸들러
-    const handleCompositionEnd = (
-        e: React.CompositionEvent<HTMLTextAreaElement>
-    ) => {
-        setIsComposing(false);
-        setMessage(e.currentTarget.value);
-    };
+    // //입력 구성 끝 핸들러
+    // const handleCompositionEnd = (
+    //     e: React.CompositionEvent<HTMLTextAreaElement>
+    // ) => {
+    //     setIsComposing(false);
+    //     setMessage(e.currentTarget.value);
+    // };
     
     // 엔터 키 이벤트 핸들러
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        
+        // 한글 중복 방지
+        if (event.nativeEvent.isComposing) {
+            event.stopPropagation();
+            return;
+        }
+        
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault(); // 기본 Enter 키 동작 방지 (줄바꿈 방지), 기본 `blur` 동작 방지
+            
+            // Enter 키를 눌렀을 때 메시지를 전송하고, 키보드가 내려가지 않도록 방지
             if (message.trim() !== "") {
-                const currentInput = inputRef.current;
+                const currentInput = textareaRef.current;
                 if (currentInput) {
-                    currentInput.setAttribute("readonly", "true"); // ✅ 입력 필드가 비활성화되지 않도록 방지
+                    currentInput.setAttribute("readonly", "true"); // 입력 필드가 비활성화되지 않도록 방지
                 }
                 sendMessage();
                 setTimeout(() => {
-                if (currentInput) {
-                    currentInput.removeAttribute("readonly"); // ✅ 메시지 전송 후 다시 활성화
-                    currentInput.focus(); // ✅ 키보드 유지
-                }
-            }, 10);
+                    if (currentInput) {
+                        currentInput.removeAttribute("readonly"); // 메시지 전송 후 다시 활성화
+                        currentInput.focus(); // 키보드 유지
+                    }
+                }, 10);
             }
         }
     };
@@ -107,21 +116,31 @@ const ChatRoomView = () => {
             const viewportHeight = window.visualViewport?.height || fullHeight; //iOS에서는 visualViewport 사용
             
             const keyboardSize = fullHeight - viewportHeight;
-            
+
+            console.log("fullHeight : ", fullHeight)
+            console.log("viewportHeight : ", viewportHeight)
+            console.log("keyboardSize : ", keyboardSize)
+
             if (keyboardSize > 100) {
                 setKeyboardHeight(keyboardSize); //키보드가 차지하는 높이 설정
                 setIsKeyboardOpen(true);
+
+                // iOS에서 textarea가 키보드 뒤로 숨는 문제 해결
+                setTimeout(() => {
+                    textareaRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }, 100);
             } else {
                 setKeyboardHeight(0);
                 setIsKeyboardOpen(false);
             }
+            console.log("키보드 열림 여부 : ", isKeyboardOpen)
         };
         
-        window.addEventListener("resize", handleResize);
-        handleResize();
+        window.addEventListener("resize", handleResize); //화면 크기가 변할 때마다 adjustTextareaPosition 함수가 실행됨
+        handleResize(); // 컴포넌트가 처음 마운트될 때
         
         return () => {
-            window.removeEventListener("resize", handleResize);
+            window.removeEventListener("resize", handleResize); // 컴포넌트가 언마운트될 때 resize 이벤트 제거
         };
     }, []);
 
@@ -131,7 +150,7 @@ const ChatRoomView = () => {
         setShowScrollButton(false); // 하단 버튼 숨김
     };
 
-    // 스크롤 이벤트 감지
+    // 스크롤 이벤트 감지 : 최하단 이동 버튼
     useEffect(() => {
         const chatContainer = chatContainerRef.current;
         if (!chatContainer) return;
@@ -151,7 +170,7 @@ const ChatRoomView = () => {
        scrollToBottom();
     }, [messages]);
 
-    // 키보드 열려있지 않고 페이지 처음 렌더링되면 최하단 이동동
+    // 키보드 열려있지 않고 페이지 처음 렌더링되면 최하단 이동
     useEffect(() => {
         if (!isKeyboardOpen) { 
             setTimeout(scrollToBottom, 100);
@@ -293,7 +312,7 @@ const ChatRoomView = () => {
             
             // 메시지 전송 후 입력 필드에 포커스 유지
             setTimeout(() => {
-                inputRef.current?.focus();
+                textareaRef.current?.focus();
             }, 0);
         }
     };
@@ -424,23 +443,23 @@ const ChatRoomView = () => {
                 {/* 입력창 컨테이너 */}
                 <div className="flex items-center w-full max-w-md p-[5px_15px] bg-white rounded-[16px] gap-[10px]">
                     <textarea
-                        ref={inputRef} // 입력 필드 참조 설정
-                        placeholder="내용을 입력하세요"
-                        className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
+                        ref={textareaRef} // 입력 필드 참조 설정
                         value={message} // 현재 message 상태를 textarea에 반영
                         onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
                         onKeyDown={(e) => handleKeyDown(e)}
-                        onCompositionStart={handleCompositionStart} // 한글 입력 지원
-                        onCompositionEnd={handleCompositionEnd}
+                        // onCompositionStart={handleCompositionStart} // 한글 입력 지원
+                        // onCompositionEnd={handleCompositionEnd}
                         onBlur={(e) => {
                             setPlaceholder("내용을 입력하세요"); // Placeholder 복원
                             setTimeout(() => e.target.focus(), 0); // 블러 방지 & 포커스 유지
                         }}                        
+                        placeholder="내용을 입력하세요"
+                        className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
                     />
 
 
                     {/* <input
-                        // ref={inputRef} // 입력 필드 참조 설정
+                        // ref={textareaRef} // 입력 필드 참조 설정
                         type="text"
                         placeholder="내용을 입력하세요"
                         className="flex-1 outline-none placeholder-[#CBCCD1] text-[15px]"
