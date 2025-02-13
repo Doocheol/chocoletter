@@ -83,10 +83,10 @@ const ChatRoomView = () => {
 	// 엔터 키 이벤트 핸들러
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		// 한글 중복 방지
-		if (event.nativeEvent.isComposing) {
-			event.stopPropagation();
-			return;
-		}
+		// if (event.nativeEvent.isComposing) {
+		//     event.stopPropagation();
+		//     return;
+		// }
 		// IME(한글 조합) 상태에서는 Enter 입력을 무시
 		if (isComposing) {
 			event.stopPropagation();
@@ -337,14 +337,12 @@ const ChatRoomView = () => {
 				},
 			});
 
-			setMessage(""); // 상태 초기화
-			if (textareaRef.current) {
-				textareaRef.current.value = ""; // DOM 상의 값도 명시적으로 초기화
-				textareaRef.current.blur(); // 블러를 강제로 발생시켜 컴포지션 종료
-				setTimeout(() => {
-					textareaRef.current?.focus();
-				}, 10);
-			}
+			setMessage(""); // 입력 필드 초기화
+
+			// 메시지 전송 후 입력 필드에 포커스 유지
+			setTimeout(() => {
+				textareaRef.current?.focus();
+			}, 0);
 		}
 	};
 
@@ -376,152 +374,150 @@ const ChatRoomView = () => {
 	}, [roomId]);
 
 	return (
-		<div className="flex justify-center w-full overflow-hidden">
-			<div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
-				{/* 편지 모달 */}
-				<LetterInChatModal
-					isOpen={isOpenLetter}
-					onClose={() => setIsOpenLetter(false)}
-					nickName={letter?.nickName}
-					content={letter?.content ?? ""}
-					question={letter?.question ?? ""}
-					answer={letter?.answer ?? ""}
-				/>
-				{/* 상단바 */}
-				<div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
-					<div className="self-stretch justify-between items-center inline-flex">
-						<div className="w-6 h-6 justify-center items-center flex">
-							<GoBackButton />
-						</div>
-						<div className="text-center text-white text-2xl font-normal font-sans leading-snug">
-							{letter?.nickName}
-						</div>
-						<div className="w-6 h-6">
-							<LetterInChatOpenButton
-								onPush={() => setIsOpenLetter(true)}
-							/>
-						</div>
+		<div className="flex flex-col items-center justify-between min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg">
+			{/* 편지 모달 */}
+			<LetterInChatModal
+				isOpen={isOpenLetter}
+				onClose={() => setIsOpenLetter(false)}
+				nickName={letter?.nickName}
+				content={letter?.content ?? ""}
+				question={letter?.question ?? ""}
+				answer={letter?.answer ?? ""}
+			/>
+			{/* 상단바 */}
+			<div className="w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px] fixed z-50">
+				<div className="self-stretch justify-between items-center inline-flex">
+					<div className="w-6 h-6 justify-center items-center flex">
+						<GoBackButton />
+					</div>
+					<div className="text-center text-white text-2xl font-normal font-sans leading-snug">
+						{letter?.nickName}
+					</div>
+					<div className="w-6 h-6">
+						<LetterInChatOpenButton
+							onPush={() => setIsOpenLetter(true)}
+						/>
 					</div>
 				</div>
+			</div>
 
-				{/* 채팅 내용 */}
-				<div
-					ref={chatContainerRef}
-					className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[55px] overflow-y-auto"
-					style={{
-						height: "400px",
-						minHeight: "400px",
-						maxHeight: "100vh",
-					}}
-				>
-					{messages.map((msg, index) => (
-						<div
-							key={index}
-							className={clsx(
-								"flex items-end mx-2",
-								msg.senderId === memberId
-									? "justify-end"
-									: "justify-start"
-							)}
-						>
-							{/* 상대방 말풍선 */}
-							{msg.senderId !== memberId && (
-								<div className="flex w-full gap-[5px]">
-									<div className="max-w-[200px] flex p-[10px_15px] rounded-r-[15px] rounded-bl-[15px] break-words bg-white border border-black">
-										<div className="text-sans text-[15px]">
-											{msg.content}
-										</div>
-									</div>
-									<div className="flex flex-col justify-end">
-										<div className="text-[12px] text-[#7F8087]">
-											{changeKSTDate({
-												givenDate:
-													msg.createdAt.split(
-														"."
-													)[0] + "Z",
-												format: "HH:mm",
-											})}
-										</div>
-									</div>
-								</div>
-							)}
-
-							{/* 내 말풍선 */}
-							{msg.senderId === memberId && (
-								<div className="flex w-full gap-[5px] justify-end">
-									<div className="flex flex-col justify-end items-end">
-										{!msg.isRead && (
-											<div className="text-[10px] text-red-500">
-												1 {/* 읽지 않은 경우 표시 */}
-											</div>
-										)}
-										<div className="text-[12px] text-[#7F8087]">
-											{changeKSTDate({
-												givenDate:
-													msg.createdAt.split(
-														"."
-													)[0] + "Z",
-												format: "HH:mm",
-											})}
-										</div>
-									</div>
-									<div className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white">
-										<div className="text-sans text-[15px]">
-											{msg.content}
-										</div>
-									</div>
-								</div>
-							)}
-						</div>
-					))}
-					<div ref={messagesEndRef} />
-				</div>
-
-				{/* 최하단 이동 버튼 */}
-				{showScrollButton && (
-					<button
-						onClick={scrollToBottom}
-						className="fixed bottom-[80px] right-3 bg-white text-black p-2 rounded-full shadow-md"
+			{/* 채팅 내용 */}
+			<div
+				ref={chatContainerRef}
+				className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[55px] overflow-y-auto"
+				style={{
+					height: "400px",
+					minHeight: "400px",
+					maxHeight: "100vh",
+				}}
+			>
+				{messages.map((msg, index) => (
+					<div
+						key={index}
+						className={clsx(
+							"flex items-end mx-2",
+							msg.senderId === memberId
+								? "justify-end"
+								: "justify-start"
+						)}
 					>
-						<CgChevronDown size={25} />
-					</button>
-				)}
+						{/* 상대방 말풍선 */}
+						{msg.senderId !== memberId && (
+							<div className="flex w-full gap-[5px]">
+								<div className="max-w-[200px] flex p-[10px_15px] rounded-r-[15px] rounded-bl-[15px] break-words bg-white border border-black">
+									<div className="text-sans text-[15px]">
+										{msg.content}
+									</div>
+								</div>
+								<div className="flex flex-col justify-end">
+									<div className="text-[12px] text-[#7F8087]">
+										{changeKSTDate({
+											givenDate:
+												msg.createdAt.split(".")[0] +
+												"Z",
+											format: "HH:mm",
+										})}
+									</div>
+								</div>
+							</div>
+						)}
 
-				{/* 입력창 */}
-				{/* <div
+						{/* 내 말풍선 */}
+						{msg.senderId === memberId && (
+							<div className="flex w-full gap-[5px] justify-end">
+								<div className="flex flex-col justify-end items-end">
+									{!msg.isRead && (
+										<div className="text-[10px] text-red-500">
+											1 {/* 읽지 않은 경우 표시 */}
+										</div>
+									)}
+									<div className="text-[12px] text-[#7F8087]">
+										{changeKSTDate({
+											givenDate:
+												msg.createdAt.split(".")[0] +
+												"Z",
+											format: "HH:mm",
+										})}
+									</div>
+								</div>
+								<div className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white">
+									<div className="text-sans text-[15px]">
+										{msg.content}
+									</div>
+								</div>
+							</div>
+						)}
+					</div>
+				))}
+				<div ref={messagesEndRef} />
+			</div>
+
+			{/* 최하단 이동 버튼 */}
+			{showScrollButton && (
+				<button
+					onClick={scrollToBottom}
+					className="fixed bottom-[80px] right-3 bg-white text-black p-2 rounded-full shadow-md"
+				>
+					<CgChevronDown size={25} />
+				</button>
+			)}
+
+			{/* 입력창 */}
+			{/* <div
                 className={clsx(
                     "fixed inset-x-0 p-[7px_15px] bg-[#F7F7F8] flex flex-row justify-between mx-auto w-full md:max-w-sm gap-[15px] transition-all duration-300",
                     isKeyboardOpen ? `bottom-[${keyboardHeight}px]` : "bottom-0"
                 )}
             > */}
-				<div
-					className={clsx(
-						"fixed inset-x-0 bottom-0 z-50 p-4 bg-[#F7F7F8] pb-[env(safe-area-inset-bottom)] flex flex-row justify-between mx-auto w-full md:max-w-sm gap-4 transition-all duration-300"
-					)}
-					style={{
-						transform: `translateY(-${
-							isKeyboardOpen ? keyboardHeight : 0
-						}px)`,
-					}}
-				>
-					{/* 입력창 컨테이너 */}
-					<div className="flex items-center w-full max-w-md p-[5px_15px] bg-white rounded-[16px] gap-[10px]">
-						<textarea
-							ref={textareaRef} // 입력 필드 참조 설정
-							value={message} // 현재 message 상태를 textarea에 반영
-							onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
-							onKeyDown={(e) => handleKeyDown(e)}
-							onCompositionStart={handleCompositionStart} // 한글 입력 지원
-							onCompositionEnd={handleCompositionEnd}
-							onBlur={(e) => {
-								setPlaceholder("내용을 입력하세요"); // Placeholder 복원
-								setTimeout(() => e.target.focus(), 0); // 블러 방지 & 포커스 유지
-							}}
-							placeholder="내용을 입력하세요"
-							className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
-						/>
+			<div
+				className={clsx(
+					"fixed inset-x-0 p-[7px_15px] bg-[#F7F7F8] flex flex-row justify-between mx-auto w-full md:max-w-sm gap-[15px] transition-all duration-300"
+				)}
+				style={{
+					bottom: 0, //화면 하단에 고정
+					transform: `translateY(-${
+						isKeyboardOpen ? keyboardHeight : 0
+					}px)`,
+				}}
+			>
+				{/* 입력창 컨테이너 */}
+				<div className="flex items-center w-full max-w-md p-[5px_15px] bg-white rounded-[16px] gap-[10px]">
+					<textarea
+						ref={textareaRef} // 입력 필드 참조 설정
+						value={message} // 현재 message 상태를 textarea에 반영
+						onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
+						onKeyDown={(e) => handleKeyDown(e)}
+						onCompositionStart={handleCompositionStart} // 한글 입력 지원
+						onCompositionEnd={handleCompositionEnd}
+						onBlur={(e) => {
+							setPlaceholder("내용을 입력하세요"); // Placeholder 복원
+							setTimeout(() => e.target.focus(), 0); // 블러 방지 & 포커스 유지
+						}}
+						placeholder="내용을 입력하세요"
+						className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
+					/>
 
-						{/* <input
+					{/* <input
                         // ref={textareaRef} // 입력 필드 참조 설정
                         type="text"
                         placeholder="내용을 입력하세요"
@@ -530,14 +526,13 @@ const ChatRoomView = () => {
                         onChange={(e) => setMessage(e.target.value)} // 입력할 때마다 message 상태 변경
                         onKeyDown={(e) => handleKeyDown(e)}
                     /> */}
-					</div>
-					{/* 전송 버튼 */}
-					<ImageButton
-						onClick={sendMessage}
-						src={send_icon}
-						className="w-[24px]"
-					/>
 				</div>
+				{/* 전송 버튼 */}
+				<ImageButton
+					onClick={sendMessage}
+					src={send_icon}
+					className="w-[24px]"
+				/>
 			</div>
 		</div>
 	);
