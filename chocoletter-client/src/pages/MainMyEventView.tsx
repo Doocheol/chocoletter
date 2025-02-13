@@ -273,9 +273,14 @@ const MainMyEventView: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-6 mr-6">
-              <div className="flex flex-col items-center">
+              <div className="relative">
+                {alarmCount > 0 && (
+                  <div className="absolute -top-1 -right-1 bg-red-400 rounded-md h-3 w-[22px] flex items-center justify-center text-white text-xs font-light">
+                    {alarmCount}
+                  </div>
+                )}
                 <button onClick={handleNotification}>
-                  <img src={bell_icon} className="w-7 h-7" />
+                  <img src={bell_icon} className="w-7 h-7 mt-2" alt="notification icon" />
                 </button>
               </div>
 
