@@ -324,7 +324,7 @@ const ChatRoomView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch pt-4 pb-[50px] overflow-y-auto" >
+            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto" >
                 {messages.map((msg, index) => (
                     <div key={index} className={clsx(
                         "flex items-end mx-2",
