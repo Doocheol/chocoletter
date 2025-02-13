@@ -138,24 +138,13 @@ const ChatRoomView = () => {
 
         const handleScroll = () => {
             const isAtBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 50;
-            console.log("스크롤 이벤트 발생: isAtBottom =", isAtBottom);
+            // console.log("스크롤 이벤트 발생: isAtBottom =", isAtBottom);
             setShowScrollButton(!isAtBottom);
         };
 
         chatContainer.addEventListener("scroll", handleScroll);
         return () => chatContainer.removeEventListener("scroll", handleScroll);
     }, []);
-
-    useEffect(() => {
-    const chatContainer = chatContainerRef.current;
-    if (!chatContainer) return;
-
-    console.log("🔍 scrollHeight:", chatContainer.scrollHeight);
-    console.log("🔍 clientHeight:", chatContainer.clientHeight);
-    console.log("🔍 scrollTop:", chatContainer.scrollTop);
-}, []);
-
-
 
     // 새로운 메세지 보내면 최하단 이동 
     useEffect(() => {
