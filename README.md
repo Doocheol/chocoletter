@@ -4,6 +4,7 @@
 [![API Status](https://img.shields.io/badge/API-Swagger-green)](https://api.chocolate-letter.com/swagger-ui/index.html)
 ![Version](https://img.shields.io/badge/Version-0.1.0-yellow)
 <br>
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/chocoletter_official/?igsh=NmkxdG5ldjl5cm4x#)
 <br>
 
 
@@ -101,8 +102,3 @@ Chocoletter와 함께 특별한 발렌타인데이를 만들어보세요. <br>
 4. 기술 팀 블로그 쓰기
 5. 기획부터 개발까지 Step By Step
 <br>
-
-
-## Contact
-
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://instagram.com/username) (예정)
