@@ -54,6 +54,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
         const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
 
         const timeDiff = targetUTC.getTime() - nowUtc.getTime();
+        console.log("현시간 : ",nowUtc, "언박싱시간 : ", targetUTC)
 
         const secondDiff = Math.floor(timeDiff / 1000);
         setRemainTime(secondDiff);
