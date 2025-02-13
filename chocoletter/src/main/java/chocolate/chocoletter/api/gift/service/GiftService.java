@@ -29,6 +29,7 @@ import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.util.DateTimeUtil;
 import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,11 +103,11 @@ public class GiftService {
         if (!memberId.equals(gift.getReceiverId())) {
             throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN);
         }
-//        LocalDate restrictedDate = dateTimeUtil.getOpenDay();
-//        LocalDate today = LocalDate.now();
-//        if (today.isBefore(restrictedDate) && gift.getType() == GiftType.SPECIAL) {
-//            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_SPECIAL_BEFORE_DATE);
-//        }
+        LocalDate restrictedDate = dateTimeUtil.getOpenDay();
+        LocalDate today = LocalDate.now();
+        if (today.isBefore(restrictedDate) && gift.getType() == GiftType.SPECIAL) {
+            throw new ForbiddenException(ErrorMessage.ERR_FORBIDDEN_SPECIAL_BEFORE_DATE);
+        }
         gift.openGift();
         String encryptedGiftId = idEncryptionUtil.encrypt(gift.getId());
         LetterDto letter = letterService.findLetter(giftId);
