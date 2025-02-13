@@ -62,3 +62,6 @@ jwt:
   secret: ${JWT_SECRET}
 
 frontend-url: ${FRONTEND_URL}
+
+scheduler:
+  event-day-transition-cron: "0 */10 * * * *"
