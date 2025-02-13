@@ -13,7 +13,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 }) => {
 	return (
 		<div
-			className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold gap-[15px]"
+			className="absolute top-0 left-1/2 -translate-x-1/2 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold gap-[15px]"
 			style={{ paddingTop: `calc(env(safe-area-inset-top) + 17px)` }}
 		>
 			<div className="self-stretch justify-between items-center flex h-full">
