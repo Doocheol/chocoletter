@@ -32,6 +32,7 @@ import GiftBoxIdRouter from "./pages/GiftBoxIdRouter";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import ModifyGeneralLetterView from "./pages/ModifyGeneralLetterView";
 import ModifyQuestionLetterView from "./pages/ModifyQuestionLetterView";
+import MainYourEventView from "./pages/MainYourEventView";
 
 declare global {
 	interface Window {
@@ -66,6 +67,10 @@ function App() {
 							<Route
 								path="/main/my/before"
 								element={<MainMyBeforeView />}
+							/>
+							<Route
+								path="/main/your/event"
+								element={<MainYourEventView />}
 							/>
 
 							<Route
@@ -133,7 +138,6 @@ function App() {
 								path="/select-giftbox"
 								element={<SelectGiftBoxView />}
 							/>
-
 							<Route
 								path="/main/my/event"
 								element={<MainMyEventView />}
