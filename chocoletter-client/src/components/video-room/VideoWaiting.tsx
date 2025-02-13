@@ -108,7 +108,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
-            {isOpenLetter &&
+            {isOpenLetter && isReady &&
             (<LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
@@ -121,7 +121,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
                 <div className="w-full h-[107px] px-3 top-[35px] absolute flex-col justify-start items-end gap-0.5 inline-flex">
                     <div className="w-8 h-8 z-10" >
-                        <LetterInVideoOpenButton onPush={showRTCLetter} />
+                        {isReady && (<LetterInVideoOpenButton onPush={showRTCLetter} />)}
                     </div>
                     <div className="self-stretch h-[77px] flex flex-col justify-start items-center gap-[23px]">
                         <div className="self-stretch text-center text-white text-[40px] font-normal font-sans leading-snug z-20">{wcomment}</div>
