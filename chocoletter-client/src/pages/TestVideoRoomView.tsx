@@ -6,6 +6,7 @@ import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtom
 import { userNameAtom } from '../atoms/auth/userAtoms';
 import { FiveSecondModal } from '../components/video-waiting-room/modal/FiveSecondModal';
 import { AnnouncePermitModal } from '../components/video-room/modal/AnnouncePermitModal';
+import { AnnounceSender } from '../components/video-room/modal/AnnounceSender';
 
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
@@ -58,6 +59,7 @@ const TestVideoRoomView = () => {
     const [unboxingTime, setUnboxingTime] = useState<string>('');
     const [isPermit, setIsPermit] = useState(false);
     const [sessionId, setSessionId] = useState<string | undefined>();
+    const [isRTCsender, setIsRTCsender] = useState(false);
 
     const onEnd = async () => {
         setIsTerminate(true)
@@ -85,6 +87,9 @@ const TestVideoRoomView = () => {
             return;
         }
         setSessionId(sessionIdInit);
+
+        if (letterInfo && unboxingTime) return;
+        
         const checkAuth = async () => {
             try {
                 const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
@@ -171,6 +176,7 @@ const TestVideoRoomView = () => {
 
     const hideRTCLetter = () => {
         setIsOpenLetter(false);
+        setIsRTCsender(true);
     }
 
     const transRemoteMuted = async () => {
@@ -194,6 +200,12 @@ const TestVideoRoomView = () => {
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
                         <WaitingTest unboxing={unboxingTime || ''} onEnd={onEnd} isReady={isReady} isItThere={isItThere} videoState={videoState} trans={transRemoteMuted} letterInfo={letterInfo} isOpenLetter={isOpenLetter} />
                     </div>
+                )}
+                {isRTCsender && (
+                    <AnnounceSender 
+                        isOpen={isRTCsender} 
+                        onClose={() => setIsRTCsender(false)} 
+                    />
                 )}
                 {isOpenLetter && 
                 (<LetterInVideoModal
