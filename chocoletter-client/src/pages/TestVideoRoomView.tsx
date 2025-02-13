@@ -221,7 +221,7 @@ const TestVideoRoomView = () => {
                         onClose={() => setIsRTCsender(false)} 
                     />
                 )}
-                {isOpenLetter && 
+                {isOpenLetter && isReady &&
                 (<LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
