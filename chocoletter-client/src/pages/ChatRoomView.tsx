@@ -40,10 +40,10 @@ const ChatRoomView = () => {
     // 채팅방 및 유저 정보 
     const location = useLocation();
     const sender = location.state?.nickName
-    // const { roomId } = useParams()
-    const memberId = "1" //useRecoilValue(memberIdAtom);
+    const { roomId } = useParams()
+    const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
-    const roomId = "1"
+    // const roomId = "1"
     
     // 키보드 관련 변수 
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
