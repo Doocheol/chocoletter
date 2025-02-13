@@ -33,12 +33,6 @@ public class AlarmScheduler {
         scheduleUnboxingReminder();
     }
 
-    @Transactional
-    @Scheduled(cron = "#{@alarmSchedulerProperties.getEventEveTransitionCron()}")
-    public void scheduleUnboxingReminderEve() {
-        scheduleUnboxingReminder();
-    }
-
     private void scheduleUnboxingReminder() {
         unboxingRoomService.findUpcomingUnboxingRoomsIn30Minutes()
                 .forEach(this::createAndSaveUnboxingAlarms);

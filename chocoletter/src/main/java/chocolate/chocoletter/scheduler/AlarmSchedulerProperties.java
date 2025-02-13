@@ -11,5 +11,4 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "scheduler")
 public class AlarmSchedulerProperties {
     private String eventDayTransitionCron;
-    private String eventEveTransitionCron;
 }
