@@ -16,6 +16,8 @@ import { changeKSTDate } from "../utils/changeKSTDate";
 import useViewportHeight from "../hooks/useViewportHeight";
 import { MdRecommend } from "react-icons/md";
 import { getLetterInchat } from "../services/chatApi";
+import { FaArrowDown } from "react-icons/fa"; // ⬇ 아이콘 추가
+import { CgChevronDown } from "react-icons/cg";
 
 interface MessageType {
     messageType: string;
@@ -52,6 +54,9 @@ const ChatRoomView = () => {
     const [placeholder, setPlaceholder] = useState("내용을 입력하세요");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);// 채팅창 스크롤을 맨 아래로 이동
     const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
+    const [showScrollButton, setShowScrollButton] = useState(false); // 최하단 버튼 상태 추가
+    const chatContainerRef = useRef<HTMLDivElement | null>(null); // 스크롤 감지용 Ref 추가
     
     // 편지 및 채팅 메세지
     const [isOpenLetter, setIsOpenLetter] = useState(false);
@@ -120,17 +125,35 @@ const ChatRoomView = () => {
         };
     }, []);
 
-    // 최하단으로 자동 스크롤
+    // 최하단으로 자동 스크롤 함수 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        setShowScrollButton(false); // 하단 버튼 숨김
     };
 
+    // 스크롤 이벤트 감지
+    useEffect(() => {
+        const chatContainer = chatContainerRef.current;
+        if (!chatContainer) return;
+
+        const handleScroll = () => {
+            const isAtBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 50;
+            // console.log("스크롤 이벤트 발생: isAtBottom =", isAtBottom);
+            setShowScrollButton(!isAtBottom);
+        };
+
+        chatContainer.addEventListener("scroll", handleScroll);
+        return () => chatContainer.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // 새로운 메세지 보내면 최하단 이동 
     useEffect(() => {
        scrollToBottom();
     }, [messages]);
 
+    // 키보드 열려있지 않고 페이지 처음 렌더링되면 최하단 이동동
     useEffect(() => {
-        if (!isKeyboardOpen) { // 키보드가 열려 있지 않을 때만 실행
+        if (!isKeyboardOpen) { 
             setTimeout(scrollToBottom, 100);
         }
     }, []);
@@ -324,7 +347,11 @@ const ChatRoomView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto" >
+            <div
+                ref={chatContainerRef}
+                className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[55px] overflow-y-auto"
+                style={{ height: "400px", minHeight: "400px", maxHeight: "100vh" }} 
+            >
                 {messages.map((msg, index) => (
                     <div key={index} className={clsx(
                         "flex items-end mx-2",
@@ -366,6 +393,17 @@ const ChatRoomView = () => {
                 ))}
                 <div ref={messagesEndRef}/>
             </div>
+
+            {/* 최하단 이동 버튼 */}
+            {showScrollButton && (
+                <button 
+                    onClick={scrollToBottom}
+                    className="fixed bottom-[80px] right-3 bg-white text-black p-2 rounded-full shadow-md"
+                >
+                    <CgChevronDown size={25} />
+                </button>
+            )}
+
 
             {/* 입력창 */}
             {/* <div
