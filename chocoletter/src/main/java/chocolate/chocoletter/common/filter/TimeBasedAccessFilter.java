@@ -44,7 +44,8 @@ public class TimeBasedAccessFilter extends OncePerRequestFilter {
             new BlockedEndpoint("/api/v1/gift-box/*/gift/special/question", "POST"),
             new BlockedEndpoint("/api/v1/gift-box/*/gift/special/free", "POST"),
             new BlockedEndpoint("/api/v1/gift-box/*/gift/general/question", "POST"),
-            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/free", "POST")
+            new BlockedEndpoint("/api/v1/gift-box/*/gift/general/free", "POST"),
+            new BlockedEndpoint("/api/v1/gift-box/*/verify", "GET")
     );
 
     @Override
