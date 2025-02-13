@@ -1,16 +1,14 @@
 package chocolate.chocoletter.api.gift.dto.response;
 
-import chocolate.chocoletter.api.gift.domain.Gift;
-import chocolate.chocoletter.api.letter.domain.Letter;
 import chocolate.chocoletter.api.letter.domain.LetterType;
 import chocolate.chocoletter.api.letter.dto.response.LetterDto;
 import lombok.Builder;
 
 @Builder
-public record GiftDetailResponseDto (Long giftId, LetterType type, String nickName, String content, String question, String answer){
-    public static GiftDetailResponseDto of(Gift gift, LetterDto letter) {
+public record GiftDetailResponseDto (String giftId, LetterType type, String nickName, String content, String question, String answer){
+    public static GiftDetailResponseDto of(String encryptGiftId, LetterDto letter) {
         return GiftDetailResponseDto.builder()
-                .giftId(gift.getId())
+                .giftId(encryptGiftId)
                 .type(letter.type())
                 .nickName(letter.nickName())
                 .content(letter.content())
