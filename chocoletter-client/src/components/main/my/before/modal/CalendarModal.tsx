@@ -79,7 +79,7 @@ const convertToEventDate = (unBoxingTime: string, eventDay: string, timeZone: st
     const [hour, minute] = unBoxingTime.split(":").map(Number);
 
     // UTC 기준으로 Date 객체 생성 후, timeZone 적용
-    const eventDateTime = new Date(currentYear, Number(eventMonth) - 1, Number(eventDate), hour, minute + 1);
+    const eventDateTime = new Date(currentYear, Number(eventMonth) - 1, Number(eventDate), hour, minute);
 
     // Intl.DateTimeFormat을 이용해 KST 변환
     const formatter = new Intl.DateTimeFormat("en-US", {

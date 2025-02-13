@@ -108,6 +108,7 @@ const VideoRoomView = () => {
                 <LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
+                    onErrorClose={hideRTCLetter}
                     giftId=""
                 />
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">

@@ -176,6 +176,10 @@ const TestVideoRoomView = () => {
 
     const hideRTCLetter = () => {
         setIsOpenLetter(false);
+    }
+
+    const hideRTCLetterError = () => {
+        setIsOpenLetter(false);
         setIsRTCsender(true);
     }
 
@@ -198,7 +202,17 @@ const TestVideoRoomView = () => {
                 {!isPermit && (<AnnouncePermitModal videoPermit={() => {setIsPermit(true)}} />)}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing={unboxingTime || ''} onEnd={onEnd} isReady={isReady} isItThere={isItThere} videoState={videoState} trans={transRemoteMuted} letterInfo={letterInfo} isOpenLetter={isOpenLetter} />
+                        <WaitingTest 
+                            unboxing={unboxingTime || ''} 
+                            onEnd={onEnd} 
+                            isReady={isReady} 
+                            isItThere={isItThere} 
+                            videoState={videoState} 
+                            trans={transRemoteMuted} 
+                            letterInfo={letterInfo} 
+                            isOpenLetter={isOpenLetter}
+                            onErrorClose={hideRTCLetterError}
+                        />
                     </div>
                 )}
                 {isRTCsender && (
@@ -211,6 +225,7 @@ const TestVideoRoomView = () => {
                 (<LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
+                    onErrorClose={hideRTCLetterError}
                     giftId={letterInfo?.giftId || ""}
                 />)}
                 
