@@ -102,7 +102,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 		chocolates.map(async (choco) => {
 			if (choco.giftType === "SPECIAL" && choco.unBoxingTime) {
 				const unBoxingUTC =
-					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000;
+					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
 				console.log(choco.giftId, currentTimeUTC, unBoxingUTC);
 				if (currentTimeUTC > unBoxingUTC) {
 					try {
