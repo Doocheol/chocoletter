@@ -60,6 +60,7 @@ const TestVideoRoomView = () => {
     const [isPermit, setIsPermit] = useState(false);
     const [sessionId, setSessionId] = useState<string | undefined>();
     const [isRTCsender, setIsRTCsender] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(Date.now());
 
     const onEnd = async () => {
         setIsTerminate(true)
@@ -98,7 +99,7 @@ const TestVideoRoomView = () => {
                 
                 if (!sessionStorage.getItem(refreshStorageKey)) {
                     sessionStorage.setItem(refreshStorageKey, "true");
-                    window.location.reload();
+                    setRefreshKey(Date.now());
                 }
             } catch (err) {
                 console.error("입장 확인 실패:", err);
@@ -194,7 +195,7 @@ const TestVideoRoomView = () => {
     }
 
     return (
-        <>
+        <div key={refreshKey}>
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
                 {isItThere && countFive ? <FiveSecondModal leftTime={leftTime} /> : null}
                 {isTerminate && (
@@ -309,7 +310,7 @@ const TestVideoRoomView = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 
