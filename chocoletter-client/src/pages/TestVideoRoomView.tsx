@@ -99,7 +99,7 @@ const TestVideoRoomView = () => {
         };
 
         checkAuth();
-    }, []);
+    }, [isLogin, letterInfo, navigate, sessionIdInit, unboxingTime, user?.giftBoxId, setSessionId]);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
@@ -192,14 +192,16 @@ const TestVideoRoomView = () => {
                 {!isPermit && (<AnnouncePermitModal videoPermit={() => {setIsPermit(true)}} />)}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing={unboxingTime || ''} onEnd={onEnd} isReady={isReady} isItThere={isItThere} videoState={videoState} trans={transRemoteMuted} letterInfo={letterInfo} />
+                        <WaitingTest unboxing={unboxingTime || ''} onEnd={onEnd} isReady={isReady} isItThere={isItThere} videoState={videoState} trans={transRemoteMuted} letterInfo={letterInfo} isOpenLetter={isOpenLetter} />
                     </div>
                 )}
-                <LetterInVideoModal
+                {isOpenLetter && 
+                (<LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
                     giftId={letterInfo?.giftId || ""}
-                />
+                />)}
+                
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
                 </div>

@@ -22,6 +22,7 @@ interface WaitingRoomProps {
     videoState: VideoState,
     trans: () => void,
     letterInfo?: GiftDetail | null,
+    isOpenLetter: boolean,
 }
 
 export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo }: WaitingRoomProps) => {
@@ -60,7 +61,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
         const secondDiff = Math.floor(timeDiff / 1000);
         setRemainTime(secondDiff);
-    }, [])
+    }, [unboxing])
 
     // 5분동안 타이머
     useEffect(() => {
@@ -106,11 +107,13 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
-            <LetterInVideoModal
+            {isOpenLetter && 
+            (<LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
                 giftId={letterInfo?.giftId || ""}
-            />
+            />)}
+            
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
