@@ -354,7 +354,6 @@ const ChatRoomView = () => {
               onCompositionEnd={handleCompositionEnd}
               onBlur={(e) => {
                 setPlaceholder("내용을 입력하세요");
-                setTimeout(() => e.target.focus(), 0);
               }}
               placeholder="내용을 입력하세요"
               className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
