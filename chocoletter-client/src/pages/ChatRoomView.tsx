@@ -274,7 +274,10 @@ const ChatRoomView = () => {
 	}, [roomId]);
 
 	return (
-		<div className="flex flex-col h-screen bg-gray-100 overflow-hidden">
+		<div
+			className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden"
+			style={{ height: "var(--vh)" }} // 초기 뷰포트 높이로 고정
+		>
 			{/* 편지 모달 */}
 			<LetterInChatModal
 				isOpen={isOpenLetter}
@@ -286,7 +289,7 @@ const ChatRoomView = () => {
 			/>
 			{/* 채팅 헤더 */}
 			<div
-				className="fixed top-0 left-0 right-0 z-50 bg-chocoletterPurpleBold flex items-center justify-center px-4"
+				className="fixed top-0 left-0 right-0 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px]"
 				style={{ paddingTop: "env(safe-area-inset-top)" }}
 			>
 				<div className="self-stretch justify-between items-center inline-flex">
@@ -376,7 +379,7 @@ const ChatRoomView = () => {
 			)}
 			{/* 채팅 입력창 */}
 			<div
-				className="fixed inset-x-0 bottom-0 z-50 bg-gray-100 px-4 py-3"
+				className="fixed inset-x-0 bottom-0 z-50 bg-chocoletterGiftBoxBg px-4 py-3"
 				style={{
 					paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
 				}}
