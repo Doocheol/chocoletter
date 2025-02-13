@@ -6,8 +6,6 @@ import useScript from "../../../../../hooks/useScript";
 import { initializeKakao } from "../../../../../utils/sendKakaoTalk";
 import { QRCodeCanvas } from "qrcode.react";
 import KakaoShareButton from "../button/KakaoShareButton";
-import Loading from "../../../../common/Loading"; // 로딩 컴포넌트 import
-
 import { GoLink } from "react-icons/go";
 import { BsQrCode } from "react-icons/bs";
 
@@ -30,11 +28,12 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 		crossorigin: "anonymous",
 	});
 
+	// 카카오 공유하기 불러오기
 	useEffect(() => {
 		if (loaded && !error) {
 			initializeKakao();
 		} else if (error) {
-			console.error("Failed to load Kakao SDK");
+			new Error("Kakao SDK 로드 중 오류 발생");
 		}
 	}, [loaded, error]);
 
@@ -42,9 +41,8 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 		async function fetchShareCode() {
 			try {
 				setIsLinkLoading(true);
-				setSharedLink(""); // 이전 링크 초기화
+				setSharedLink("");
 				const giftBoxId = await getGiftBoxId();
-				console.log("getGiftBoxId 응답:", giftBoxId);
 				if (!giftBoxId || giftBoxId.trim() === "") {
 					setSharedLink(window.location.href);
 				} else {
@@ -53,13 +51,6 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 					);
 				}
 			} catch (e) {
-				console.error("Error fetching shareCode:", e);
-				// 만약 e가 Error 인스턴스라면, 메시지와 스택 정보를 로그로 찍습니다.
-				if (e instanceof Error) {
-					console.error("에러 메시지:", e.message);
-					console.error("에러 스택:", e.stack);
-				}
-				// 에러 발생 시 fallback으로 현재 URL을 사용
 				setSharedLink(window.location.href);
 			} finally {
 				setIsLinkLoading(false);
@@ -78,12 +69,10 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 			return;
 		}
 
-		// try {
-		// 1) 복사
 		await copyToClipboard(sharedLink);
 		alert("링크 복사 완료! 친구들에게 공유해보세요!");
 
-		// // 2) 모바일 Web Share API 지원 여부 확인
+		// *** 모바일 Web Share API로 공유할 때 사용!
 		// if (navigator.share) {
 		//   await navigator.share({
 		//     title: "초콜릿 박스 공유",
@@ -122,10 +111,10 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 			<div className="flex flex-col items-center rounded-2xl">
 				<h2 className="text-md font-thin mb-4">나도 초콜릿 받기!</h2>
 
-				{/** (1) 만약 shareLink가 로딩 중이면 <Loading />를 화면에 표시 */}
-				{isLinkLoading && <Loading />}
+				{/** 로딩 필요하면 다시 넣을 예정! */}
+				{/* {isLinkLoading && <Loading />} */}
 
-				{/** (2) 로딩 중이 아니라면 UI를 표시 */}
+				{/** 로딩 중이 아니라면 UI를 표시 */}
 				{!isLinkLoading && (
 					<>
 						{!showQRCode ? (
@@ -151,14 +140,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 							</div>
 						) : (
 							<div className="flex flex-col items-center">
-								{qrLoading ? (
-									<Loading />
-								) : (
-									<QRCodeCanvas
-										value={sharedLink}
-										size={256}
-									/>
-								)}
+								<QRCodeCanvas value={sharedLink} size={256} />
 							</div>
 						)}
 					</>

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
 import { userNameAtom } from '../atoms/auth/userAtoms';
 import { FiveSecondModal } from '../components/video-waiting-room/modal/FiveSecondModal';
+import { AnnouncePermitModal } from '../components/video-room/modal/AnnouncePermitModal';
+import { AnnounceSender } from '../components/video-room/modal/AnnounceSender';
 
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
@@ -15,9 +17,8 @@ import classes from "../styles/videoRoom.module.css"
 import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
-import { MdHeadsetOff, MdHeadset } from "react-icons/md";
 import { getUserInfo } from '../services/userInfo';
-import { joinSession, leaveSession, pushPublish, deleteSession } from '../utils/openviduTest';
+import { joinSession, leaveSession, deleteSession } from '../utils/openviduTest';
 
 import { WaitingTest } from '../components/video-room/VideoWaiting';
 import { VideoState } from "../types/openvidutest";
@@ -26,17 +27,16 @@ import { GiftDetail } from '../types/openvidutest';
 
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
-    const localPreviewRef = useRef<HTMLDivElement>(null);
+    const { sessionIdInit } = useParams();
+    // const localPreviewRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
-    const { sessionIdInit } = useParams();
     const [ isItThere, setIsItThere ] = useState(false);
     const [ isReady, setIsReady ] = useState(false);
     const [ countFive, setCountFive ] = useState(false);
 
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(95);
-    const [sessionId, setSessionId] = useState<string | undefined>(undefined); // 세션 ID 상태
     const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
     const [isVideo, setIsVideo] = useState(true);
@@ -56,47 +56,59 @@ const TestVideoRoomView = () => {
     const setQuestionLetter = useSetRecoilState(questionLetterState);
     const username = useRecoilValue(userNameAtom);
     const [user, setUser] = useState(() => getUserInfo());
-    const [unboxingTime, setUnboxingTime] = useState(undefined);
+    const [unboxingTime, setUnboxingTime] = useState<string>('');
+    const [isPermit, setIsPermit] = useState(false);
+    const [sessionId, setSessionId] = useState<string | undefined>();
+    const [isRTCsender, setIsRTCsender] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(Date.now());
+
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
             await deleteSession(videoState.session.sessionId);
         }
         await leaveSession(videoState, setVideoState);
-        // if (sessionIdInit) terminateVideoRoom(sessionIdInit);
-    }
-
-    const onSemiEnd = async () => {
-        await leaveSession(videoState, setVideoState);
+        if (sessionId) terminateVideoRoom(sessionId);
     }
 
     // 로그인 확인 및 입장 확인 API
-    // useEffect(() => {
-    //     if (!isLogin) {
-    //         navigate("/");
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!isLogin) {
+            navigate("/");
+            return;
+        }
 
-    //     if (!sessionIdInit) {
-    //         console.error("세션 ID가 없습니다.");
-    //         navigate(`/main/${user?.giftBoxId || ""}`);
-    //         return;
-    //     }
+        if (!sessionIdInit) {
+            console.error("세션 ID가 없습니다.");
+            navigate(`/main/${user?.giftBoxId || ""}`);
+            return;
+        }
+        setSessionId(sessionIdInit);
 
-    //     const checkAuth = async () => {
-    //         try {
-    //             const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
-    //             console.log(checkAuthResult);
-    //             setLetterInfo(checkAuthResult.giftDetail);
-    //             setUnboxingTime(checkAuthResult.unboxingTime);
-    //         } catch (err) {
-    //             console.error("입장 확인 실패:", err);
-    //             navigate(`/main/${user?.giftBoxId}`);
-    //         }
-    //     };
+        const refreshStorageKey = `autoRefreshed_${sessionIdInit}`;
 
-    //     checkAuth();
-    // }, []);
+        if (letterInfo && unboxingTime) return;
+        
+        const checkAuth = async () => {
+            try {
+                const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
+                console.log(checkAuthResult);
+                setLetterInfo(checkAuthResult.giftDetail);
+                setUnboxingTime(checkAuthResult.unboxingTime);
+                console.log(unboxingTime, letterInfo);
+                
+                if (!sessionStorage.getItem(refreshStorageKey)) {
+                    sessionStorage.setItem(refreshStorageKey, "true");
+                    setRefreshKey(Date.now());
+                }
+            } catch (err) {
+                console.error("입장 확인 실패:", err);
+                navigate(`/main/${user?.giftBoxId}`);
+            }
+        };
+
+        checkAuth();
+    }, [isLogin, letterInfo, navigate, sessionIdInit, unboxingTime, user?.giftBoxId, setSessionId]);
 
     // 편지 찾기(추후 추가)
     // 위의 checkAuth에 존재
@@ -170,6 +182,11 @@ const TestVideoRoomView = () => {
         setIsOpenLetter(false);
     }
 
+    const hideRTCLetterError = () => {
+        setIsOpenLetter(false);
+        setIsRTCsender(true);
+    }
+
     const transRemoteMuted = async () => {
         await initSession();
         setIsRemoteMuted(false);
@@ -178,7 +195,7 @@ const TestVideoRoomView = () => {
     }
 
     return (
-        <>
+        <div key={refreshKey}>
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#A8A8A8] relative overflow-hidden">
                 {isItThere && countFive ? <FiveSecondModal leftTime={leftTime} /> : null}
                 {isTerminate && (
@@ -186,19 +203,36 @@ const TestVideoRoomView = () => {
                         <OutVideoRoomModal giftBoxId={user?.giftBoxId || ''}/>
                     </div>
                 )}
+                {!isPermit && (<AnnouncePermitModal videoPermit={() => {setIsPermit(true)}} />)}
                 {isItThere ? null : (
                     <div className="absolute inset-0 z-50 flex justify-center items-center">
-                        <WaitingTest unboxing="2025-02-13T23:00:00" onEnd={onEnd} isReady={isReady} isItThere={isItThere} content="love" videoState={videoState} trans={transRemoteMuted} />
+                        <WaitingTest 
+                            unboxing={unboxingTime || ''} 
+                            onEnd={onEnd} 
+                            isReady={isReady} 
+                            isItThere={isItThere} 
+                            videoState={videoState} 
+                            trans={transRemoteMuted} 
+                            letterInfo={letterInfo} 
+                            isOpenLetter={isOpenLetter}
+                            onErrorClose={hideRTCLetterError}
+                        />
                     </div>
                 )}
-                <LetterInVideoModal
+                {isRTCsender && (
+                    <AnnounceSender 
+                        isOpen={isRTCsender} 
+                        onClose={() => setIsRTCsender(false)} 
+                    />
+                )}
+                {isOpenLetter &&
+                (<LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}
-                    nickName="도리도리"
-                    content="Is it LOVE? all not,"
-                    question={null}
-                    answer={null}
-                />
+                    onErrorClose={hideRTCLetterError}
+                    giftId={letterInfo?.giftId || ""}
+                />)}
+                
                 <div className="absolute top-9 right-3 w-8 h-8 z-50">
                     <LetterInVideoOpenButton onPush={showRTCLetter} />
                 </div>
@@ -276,7 +310,7 @@ const TestVideoRoomView = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 

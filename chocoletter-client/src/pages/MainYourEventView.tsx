@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginAtom } from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom, isLoginAtom } from "../atoms/auth/userAtoms";
 
 import { FaUserCircle } from "react-icons/fa";
 
@@ -9,33 +9,24 @@ import Backdrop from "../components/common/Backdrop";
 import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
-// 이미지 및 버튼 파일들
 import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
 import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
 import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
 import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
 import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
-import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
-// 선물상자 배경 이미지를 background-image로 사용
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
-import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
-import AlreadyReadModal from "../components/main/your/before/modal/AlreadyReadModal";
-import {
-	getGiftBoxName,
-	verifyGiftSend,
-	getSentLetter,
-} from "../services/giftBoxApi";
+import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
+import { getGiftBoxName } from "../services/giftBoxApi";
 import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
-// 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
 import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
+import my_chocolate_box_move_button from "../assets/images/main/my_chocolate_box_move_button.svg";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
-// giftBoxType에 따른 이미지 매핑
 const giftboxImages: { [key: number]: string } = {
 	1: giftbox_before_12,
 	2: giftbox_before_22,
@@ -44,14 +35,14 @@ const giftboxImages: { [key: number]: string } = {
 	5: giftbox_before_52,
 };
 
-const MainYourBeforeView: React.FC = () => {
+const MainYourEventView: React.FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const setIsLogin = useSetRecoilState(isLoginAtom);
+	const myGiftBoxId = useRecoilValue(giftBoxIdAtom);
 
 	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
 
-	// 로그인 여부 확인
 	const isLoggedIn = useRecoilValue(isLoginAtom);
 
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
@@ -81,8 +72,6 @@ const MainYourBeforeView: React.FC = () => {
 
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isNotLoginModalOpen, setIsNotLoginModalOpen] = useState(false);
-	const [isAlreadySentModalOpen, setIsAlreadySentModalOpen] = useState(false);
-	const [isAlreadyReadModalOpen, setIsAlreadyReadModalOpen] = useState(false);
 	const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
 
 	const handleProfile = () => {
@@ -98,7 +87,7 @@ const MainYourBeforeView: React.FC = () => {
 	};
 
 	// 선물하기 버튼 클릭 시, 먼저 선물 전송 여부를 확인합니다.
-	const handleSendGift = async () => {
+	const handleGoToMyGiftBox = async () => {
 		if (!isLoggedIn) {
 			setIsNotLoginModalOpen(true);
 			return;
@@ -111,57 +100,11 @@ const MainYourBeforeView: React.FC = () => {
 				navigate("/");
 				return;
 			}
-			const verifyData = await verifyGiftSend(giftBoxId);
-			if (verifyData.isSend) {
-				// 이미 선물이 전송된 상태라면 모달 표시
-				setIsAlreadySentModalOpen(true);
-			} else {
-				// 선물이 아직 전송되지 않은 경우, 선물 보내기 화면으로 이동
-				navigate(`/select-letter/${giftBoxId}`);
-			}
 		} catch (error) {
-			console.error("선물 전송 여부 확인 중 오류 발생:", error);
-			// removeUserInfo();
-			// setIsLogin(false);
-			// navigate("/");
+			new Error("선물 상자 정보 조회 오류");
 		}
-	};
 
-	// 이미 선물을 전송하였고, 수정하기를 누른 경우 상대가 내가 보낸 편지 정보를 가져옵니다.
-	const handleModify = async () => {
-		try {
-			if (!giftBoxId) {
-				// giftBoxId가 없으면 에러 처리
-				removeUserInfo();
-				setIsLogin(false);
-				navigate("/");
-				return;
-			}
-			const sentLetterData = await getSentLetter(giftBoxId);
-			console.log("getSentLetter Response:", sentLetterData);
-			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동
-			if (sentLetterData.type == "FREE") {
-				// 자유 편지인 경우
-				navigate(
-					`/modify/general/${giftBoxId}?giftId=${sentLetterData.giftId}`
-				);
-			} else {
-				// 질문 편지인 경우
-				navigate(
-					`/modify/question/${giftBoxId}?giftId=${sentLetterData.giftId}`
-				);
-			}
-		} catch (error: any) {
-			console.error("getSentLetter API 호출 오류:", error);
-			const errorMessage =
-				error.response?.data?.errorMessage || "알 수 없는 에러 발생";
-			// console.log("Received error message:", errorMessage);
-			if (errorMessage === "ERR_GIFT_ALREADY_OPENED") {
-				// 이미 읽은 상태라면 수정 불가 모달 표시
-				setIsAlreadySentModalOpen(false);
-				setIsAlreadyReadModalOpen(true);
-			}
-		}
+		navigate(`/main/${myGiftBoxId}`);
 	};
 
 	// redirect 정보를 localStorage에 저장 후 로그인 페이지로 이동
@@ -307,12 +250,9 @@ const MainYourBeforeView: React.FC = () => {
 				{/* 선물하기 버튼 */}
 				<div className="mt-10 px-4 flex flex-row items-center justify-center">
 					<div className="relative group">
-						<div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-max">
-							<img src={tool_tip_your} alt="tooltip" />
-						</div>
 						<ImageButton
-							onClick={handleSendGift}
-							src={gift_send_button}
+							onClick={handleGoToMyGiftBox}
+							src={my_chocolate_box_move_button}
 							className="flex items-center justify-center heartbeat"
 						/>
 					</div>
@@ -327,21 +267,6 @@ const MainYourBeforeView: React.FC = () => {
 					/>
 				)}
 
-				{/* 이미 선물을 보냈음을 알리고 수정할지 묻는 모달 */}
-				{isAlreadySentModalOpen && (
-					<AlreadySentModal
-						isOpen={isAlreadySentModalOpen}
-						onClose={() => setIsAlreadySentModalOpen(false)}
-						onModify={handleModify}
-					/>
-				)}
-
-				{/* 수정한다고 했지만 이미 상대가 읽음을 알리는 모달 */}
-				<AlreadyReadModal
-					isOpen={isAlreadyReadModalOpen}
-					onClose={() => setIsAlreadyReadModalOpen(false)}
-				/>
-
 				{/* 프로필 모달 */}
 				{isProfileOpen && (
 					<>
@@ -350,6 +275,12 @@ const MainYourBeforeView: React.FC = () => {
 					</>
 				)}
 
+				{/* D-DAY 모달 (화이트데이까지 남은 일수 표시) */}
+				<WhiteDayCountdownModal
+					targetDate={whiteDay}
+					isOpen={isCountdownOpen}
+					onClose={() => setIsCountdownOpen(false)}
+				/>
 				{/* 튜토리얼 모달 */}
 				{isTutorialModalOpen && (
 					<FowardTutorialOverlay
@@ -362,4 +293,4 @@ const MainYourBeforeView: React.FC = () => {
 	);
 };
 
-export default MainYourBeforeView;
+export default MainYourEventView;

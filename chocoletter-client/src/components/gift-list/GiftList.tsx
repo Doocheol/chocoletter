@@ -77,7 +77,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
     const [refresh, setRefresh] = useState(false);
 	const { data: chocolates, isLoading } = useFetchChocolates("all", refresh);
 	const [localChocolates, setLocalChocolates] = useState(chocolates);
-	const currentTimeUTC = new Date().getTime();
+	const currentTimeUTC = new Date().getTime() - 9 * 60 * 60 * 1000;
 
     const onChange = () => {
         setRefresh((prev) => !prev)
@@ -95,14 +95,14 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			"0"
 		)}${String(today.getDate()).padStart(2, "0")}`;
 
-		// 테스트 동안 임시 주석
+		// 테스트 동안 임시 주석임
 		if (formattedToday !== eventDay) return;
 		if (!chocolates) return;
 
 		chocolates.map(async (choco) => {
 			if (choco.giftType === "SPECIAL" && choco.unBoxingTime) {
 				const unBoxingUTC =
-					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000;
+					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
 				console.log(choco.giftId, currentTimeUTC, unBoxingUTC);
 				if (currentTimeUTC > unBoxingUTC) {
 					try {
