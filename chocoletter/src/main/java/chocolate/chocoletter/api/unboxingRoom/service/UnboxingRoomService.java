@@ -10,6 +10,7 @@ import chocolate.chocoletter.api.unboxingRoom.repository.UnboxingRoomRepository;
 import chocolate.chocoletter.common.exception.ErrorMessage;
 import chocolate.chocoletter.common.exception.ForbiddenException;
 import chocolate.chocoletter.common.exception.NotFoundException;
+import chocolate.chocoletter.common.util.IdEncryptionUtil;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class UnboxingRoomService {
     private final UnboxingRoomRepository unboxingRoomRepository;
     private final LetterService letterService;
+    private final IdEncryptionUtil idEncryptionUtil;
 
     @Transactional
     public void saveUnboxingRoom(UnboxingRoom unboxingRoom) {
@@ -40,7 +42,8 @@ public class UnboxingRoomService {
         }
         Gift gift = unboxingRoom.getGift();
         LetterDto letter = letterService.findLetter(gift.getId());
-        GiftDetailResponseDto giftDetail = GiftDetailResponseDto.of(gift, letter);
+        String encryptGiftId = idEncryptionUtil.encrypt(gift.getId());
+        GiftDetailResponseDto giftDetail = GiftDetailResponseDto.of(encryptGiftId, letter);
         return HasAccessUnboxingRoomResponseDto.of(unboxingRoom.getStartTime(), giftDetail);
     }
 
