@@ -16,6 +16,8 @@ import send_icon from "../assets/images/main/send_icon.svg";
 import { changeKSTDate } from "../utils/changeKSTDate";
 import { getLetterInchat } from "../services/chatApi";
 import { CgChevronDown } from "react-icons/cg";
+import ChatHeader from "../components/chat-room/ChatHeader";
+import ReactDOM from "react-dom";
 
 interface MessageType {
 	messageType: string;
@@ -274,136 +276,150 @@ const ChatRoomView = () => {
 	}, [roomId]);
 
 	return (
-		<div className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden">
-			{/* 편지 모달 */}
-			<LetterInChatModal
-				isOpen={isOpenLetter}
-				onClose={() => setIsOpenLetter(false)}
-				nickName={letter?.nickName}
-				content={letter?.content ?? ""}
-				question={letter?.question ?? ""}
-				answer={letter?.answer ?? ""}
-			/>
-			{/* 채팅 헤더 */}
-			<div
-				className="fixed top-0 left-0 right-0 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px]"
-				style={{ paddingTop: "env(safe-area-inset-top)" }}
-			>
-				<div className="self-stretch justify-between items-center inline-flex">
-					<div className="w-6 h-6 justify-center items-center flex">
-						<GoBackButton />
+		<>
+			{/** 헤더를 document.body에 Portal로 렌더링 */}
+			{ReactDOM.createPortal(
+				<ChatHeader
+					letterNickName={letter?.nickName}
+					onOpenLetter={() => setIsOpenLetter(true)}
+				/>,
+				document.body
+			)}
+
+			<div className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden">
+				{/* 편지 모달 */}
+				<LetterInChatModal
+					isOpen={isOpenLetter}
+					onClose={() => setIsOpenLetter(false)}
+					nickName={letter?.nickName}
+					content={letter?.content ?? ""}
+					question={letter?.question ?? ""}
+					answer={letter?.answer ?? ""}
+				/>
+				{/* 채팅 헤더 */}
+				{/* <div
+					className="fixed top-0 left-0 right-0 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px]"
+					style={{ paddingTop: "env(safe-area-inset-top)" }}
+				>
+					<div className="self-stretch justify-between items-center inline-flex">
+						<div className="w-6 h-6 justify-center items-center flex">
+							<GoBackButton />
+						</div>
+						<div className="text-center text-white text-2xl font-normal font-sans leading-snug">
+							{letter?.nickName}
+						</div>
+						<div className="w-6 h-6">
+							<LetterInChatOpenButton
+								onPush={() => setIsOpenLetter(true)}
+							/>
+						</div>
 					</div>
-					<div className="text-center text-white text-2xl font-normal font-sans leading-snug">
-						{letter?.nickName}
-					</div>
-					<div className="w-6 h-6">
-						<LetterInChatOpenButton
-							onPush={() => setIsOpenLetter(true)}
+				</div> */}
+				{/* 채팅 본문 */}
+				<div
+					ref={chatContainerRef}
+					className="flex-1 pt-16 pb-24 overflow-y-auto bg-white"
+				>
+					{messages.map((msg, index) => (
+						<div
+							key={index}
+							className={clsx(
+								"flex items-end mx-2",
+								msg.senderId === memberId
+									? "justify-end"
+									: "justify-start"
+							)}
+						>
+							{msg.senderId !== memberId && (
+								<div className="flex w-full gap-[5px]">
+									<div className="max-w-[200px] flex p-[10px_15px] rounded-r-[15px] rounded-bl-[15px] break-words bg-white border border-black">
+										<div className="text-sans text-[15px]">
+											{msg.content}
+										</div>
+									</div>
+									<div className="flex flex-col justify-end">
+										<div className="text-[12px] text-[#7F8087]">
+											{changeKSTDate({
+												givenDate:
+													msg.createdAt.split(
+														"."
+													)[0] + "Z",
+												format: "HH:mm",
+											})}
+										</div>
+									</div>
+								</div>
+							)}
+							{msg.senderId === memberId && (
+								<div className="flex w-full gap-[5px] justify-end">
+									<div className="flex flex-col justify-end items-end">
+										{!msg.isRead && (
+											<div className="text-[10px] text-red-500">
+												1 {/* 읽지 않은 경우 표시 */}
+											</div>
+										)}
+										<div className="text-[12px] text-[#7F8087]">
+											{changeKSTDate({
+												givenDate:
+													msg.createdAt.split(
+														"."
+													)[0] + "Z",
+												format: "HH:mm",
+											})}
+										</div>
+									</div>
+									<div className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white">
+										<div className="text-sans text-[15px]">
+											{msg.content}
+										</div>
+									</div>
+								</div>
+							)}
+						</div>
+					))}
+					<div ref={messagesEndRef} />
+				</div>
+				{/* 최하단 이동 버튼 */}
+				{showScrollButton && (
+					<button
+						onClick={scrollToBottom}
+						className="fixed bottom-[80px] right-3 bg-white text-black p-2 rounded-full shadow-md"
+					>
+						<CgChevronDown size={25} />
+					</button>
+				)}
+				{/* 채팅 입력창 */}
+				<div
+					className="fixed inset-x-0 bottom-0 z-50 bg-chocoletterGiftBoxBg px-4 py-3"
+					style={{
+						paddingBottom:
+							"calc(env(safe-area-inset-bottom) + 16px)",
+					}}
+				>
+					<div className="flex items-center bg-white rounded-full border border-gray-300 px-4 py-2">
+						<textarea
+							ref={textareaRef}
+							value={message}
+							onChange={(e) => setMessage(e.target.value)}
+							onKeyDown={handleKeyDown}
+							onCompositionStart={handleCompositionStart}
+							onCompositionEnd={handleCompositionEnd}
+							onBlur={(e) => {
+								setPlaceholder("내용을 입력하세요");
+								setTimeout(() => e.target.focus(), 0);
+							}}
+							placeholder="내용을 입력하세요"
+							className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
+						/>
+						<ImageButton
+							onClick={sendMessage}
+							src={send_icon}
+							className="w-[24px]"
 						/>
 					</div>
 				</div>
 			</div>
-			{/* 채팅 본문 */}
-			<div
-				ref={chatContainerRef}
-				className="flex-1 pt-16 pb-24 overflow-y-auto bg-white"
-			>
-				{messages.map((msg, index) => (
-					<div
-						key={index}
-						className={clsx(
-							"flex items-end mx-2",
-							msg.senderId === memberId
-								? "justify-end"
-								: "justify-start"
-						)}
-					>
-						{msg.senderId !== memberId && (
-							<div className="flex w-full gap-[5px]">
-								<div className="max-w-[200px] flex p-[10px_15px] rounded-r-[15px] rounded-bl-[15px] break-words bg-white border border-black">
-									<div className="text-sans text-[15px]">
-										{msg.content}
-									</div>
-								</div>
-								<div className="flex flex-col justify-end">
-									<div className="text-[12px] text-[#7F8087]">
-										{changeKSTDate({
-											givenDate:
-												msg.createdAt.split(".")[0] +
-												"Z",
-											format: "HH:mm",
-										})}
-									</div>
-								</div>
-							</div>
-						)}
-						{msg.senderId === memberId && (
-							<div className="flex w-full gap-[5px] justify-end">
-								<div className="flex flex-col justify-end items-end">
-									{!msg.isRead && (
-										<div className="text-[10px] text-red-500">
-											1 {/* 읽지 않은 경우 표시 */}
-										</div>
-									)}
-									<div className="text-[12px] text-[#7F8087]">
-										{changeKSTDate({
-											givenDate:
-												msg.createdAt.split(".")[0] +
-												"Z",
-											format: "HH:mm",
-										})}
-									</div>
-								</div>
-								<div className="max-w-[200px] flex p-[10px_15px] rounded-l-[15px] rounded-br-[15px] break-words border border-black bg-chocoletterPurpleBold text-white">
-									<div className="text-sans text-[15px]">
-										{msg.content}
-									</div>
-								</div>
-							</div>
-						)}
-					</div>
-				))}
-				<div ref={messagesEndRef} />
-			</div>
-			{/* 최하단 이동 버튼 */}
-			{showScrollButton && (
-				<button
-					onClick={scrollToBottom}
-					className="fixed bottom-[80px] right-3 bg-white text-black p-2 rounded-full shadow-md"
-				>
-					<CgChevronDown size={25} />
-				</button>
-			)}
-			{/* 채팅 입력창 */}
-			<div
-				className="fixed inset-x-0 bottom-0 z-50 bg-chocoletterGiftBoxBg px-4 py-3"
-				style={{
-					paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
-				}}
-			>
-				<div className="flex items-center bg-white rounded-full border border-gray-300 px-4 py-2">
-					<textarea
-						ref={textareaRef}
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
-						onKeyDown={handleKeyDown}
-						onCompositionStart={handleCompositionStart}
-						onCompositionEnd={handleCompositionEnd}
-						onBlur={(e) => {
-							setPlaceholder("내용을 입력하세요");
-							setTimeout(() => e.target.focus(), 0);
-						}}
-						placeholder="내용을 입력하세요"
-						className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
-					/>
-					<ImageButton
-						onClick={sendMessage}
-						src={send_icon}
-						className="w-[24px]"
-					/>
-				</div>
-			</div>
-		</div>
+		</>
 	);
 };
 
