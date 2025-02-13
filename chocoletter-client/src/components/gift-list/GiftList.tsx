@@ -95,7 +95,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			"0"
 		)}${String(today.getDate()).padStart(2, "0")}`;
 
-		// 테스트 동안 임시 주석
+		// 테스트 동안 임시 주석임
 		if (formattedToday !== eventDay) return;
 		if (!chocolates) return;
 
