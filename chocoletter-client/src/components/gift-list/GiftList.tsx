@@ -77,7 +77,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
     const [refresh, setRefresh] = useState(false);
 	const { data: chocolates, isLoading } = useFetchChocolates("all", refresh);
 	const [localChocolates, setLocalChocolates] = useState(chocolates);
-	const currentTimeUTC = new Date().getTime();
+	const currentTimeUTC = new Date().getTime() - 9 * 60 * 60 * 1000;
 
     const onChange = () => {
         setRefresh((prev) => !prev)
