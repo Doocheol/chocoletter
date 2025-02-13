@@ -70,10 +70,6 @@ const TestVideoRoomView = () => {
         if (sessionId) terminateVideoRoom(sessionId);
     }
 
-    const onSemiEnd = async () => {
-        await leaveSession(videoState, setVideoState);
-    }
-
     // 로그인 확인 및 입장 확인 API
     useEffect(() => {
         if (!isLogin) {
@@ -88,6 +84,8 @@ const TestVideoRoomView = () => {
         }
         setSessionId(sessionIdInit);
 
+        const refreshStorageKey = `autoRefreshed_${sessionIdInit}`;
+
         if (letterInfo && unboxingTime) return;
         
         const checkAuth = async () => {
@@ -97,6 +95,11 @@ const TestVideoRoomView = () => {
                 setLetterInfo(checkAuthResult.giftDetail);
                 setUnboxingTime(checkAuthResult.unboxingTime);
                 console.log(unboxingTime, letterInfo);
+                
+                if (!sessionStorage.getItem(refreshStorageKey)) {
+                    sessionStorage.setItem(refreshStorageKey, "true");
+                    window.location.reload();
+                }
             } catch (err) {
                 console.error("입장 확인 실패:", err);
                 navigate(`/main/${user?.giftBoxId}`);
@@ -221,7 +224,7 @@ const TestVideoRoomView = () => {
                         onClose={() => setIsRTCsender(false)} 
                     />
                 )}
-                {isOpenLetter && isReady &&
+                {isOpenLetter &&
                 (<LetterInVideoModal
                     isOpen={isOpenLetter}
                     onClose={hideRTCLetter}

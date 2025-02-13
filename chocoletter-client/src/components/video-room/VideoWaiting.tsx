@@ -108,7 +108,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
-            {isOpenLetter && isReady &&
+            {isOpenLetter &&
             (<LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
