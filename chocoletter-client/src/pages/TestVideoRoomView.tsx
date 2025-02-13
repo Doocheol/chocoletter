@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { toast } from 'react-toastify';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
 import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
 import { userNameAtom } from '../atoms/auth/userAtoms';
@@ -192,6 +193,13 @@ const TestVideoRoomView = () => {
         setIsRemoteMuted(false);
         setIsReady(true);
         if (remoteVideoRef.current) {remoteVideoRef.current.muted = false};
+        if (!toast.isActive("can-see-letter")) {
+            toast.error("이제 편지를 볼 수 있습니다!", {
+                toastId: "can-see-letter",
+                position: "top-center",
+                autoClose: 2500,
+            })
+        }
     }
 
     return (
