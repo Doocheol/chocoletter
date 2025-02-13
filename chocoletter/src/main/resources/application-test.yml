@@ -53,3 +53,6 @@ frontend-url: ${FRONTEND_URL}
 
 special-gift:
   open-day: ${SPECIAL_GIFT_OPEN_DAY}
+
+scheduler:
+  event-day-transition-cron: "0 */10 * * * *"
