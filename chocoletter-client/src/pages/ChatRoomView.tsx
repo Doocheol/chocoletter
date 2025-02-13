@@ -286,7 +286,7 @@ const ChatRoomView = () => {
 				document.body
 			)}
 
-			<div className="flex flex-col h-screen bg-chocoletterGiftBoxBg overflow-hidden">
+			<div className="flex flex-col h-screen overflow-hidden">
 				{/* 편지 모달 */}
 				<LetterInChatModal
 					isOpen={isOpenLetter}
@@ -296,29 +296,11 @@ const ChatRoomView = () => {
 					question={letter?.question ?? ""}
 					answer={letter?.answer ?? ""}
 				/>
-				{/* 채팅 헤더 */}
-				{/* <div
-					className="fixed top-0 left-0 right-0 z-50 w-full md:max-w-sm h-[58px] px-4 py-[17px] bg-chocoletterPurpleBold flex flex-col justify-center items-center gap-[15px]"
-					style={{ paddingTop: "env(safe-area-inset-top)" }}
-				>
-					<div className="self-stretch justify-between items-center inline-flex">
-						<div className="w-6 h-6 justify-center items-center flex">
-							<GoBackButton />
-						</div>
-						<div className="text-center text-white text-2xl font-normal font-sans leading-snug">
-							{letter?.nickName}
-						</div>
-						<div className="w-6 h-6">
-							<LetterInChatOpenButton
-								onPush={() => setIsOpenLetter(true)}
-							/>
-						</div>
-					</div>
-				</div> */}
+
 				{/* 채팅 본문 */}
 				<div
 					ref={chatContainerRef}
-					className="flex-1 pt-16 pb-24 overflow-y-auto bg-white"
+					className="flex-1 pt-16 pb-14 overflow-y-auto bg-chocoletterGiftBoxBg space-y-[15px]"
 				>
 					{messages.map((msg, index) => (
 						<div
@@ -390,13 +372,13 @@ const ChatRoomView = () => {
 				)}
 				{/* 채팅 입력창 */}
 				<div
-					className="fixed inset-x-0 bottom-0 z-50 bg-chocoletterGiftBoxBg px-4 py-3"
+					className="fixed inset-x-0 bottom-0 z-50 bg-[#F7F7F8] p-[5px_10px] gap-[15px] flex flex-row justify-between "
 					style={{
 						paddingBottom:
-							"calc(env(safe-area-inset-bottom) + 16px)",
+							"calc(env(safe-area-inset-bottom) + 5px)",
 					}}
 				>
-					<div className="flex items-center bg-white rounded-full border border-gray-300 px-4 py-2">
+					<div className="flex items-center w-full bg-white rounded-full border border-gray-300 px-4 py-2">
 						<textarea
 							ref={textareaRef}
 							value={message}
@@ -411,12 +393,12 @@ const ChatRoomView = () => {
 							placeholder="내용을 입력하세요"
 							className="flex-1 outline-none placeholder-[#CBCCD1] text-[16px] resize-none h-[30px] text-left py-[5px] leading-[20px]"
 						/>
-						<ImageButton
-							onClick={sendMessage}
-							src={send_icon}
-							className="w-[24px]"
-						/>
-					</div>
+					</div>					
+					<ImageButton
+						onClick={sendMessage}
+						src={send_icon}
+						className="w-[25px]"
+					/>
 				</div>
 			</div>
 		</>
