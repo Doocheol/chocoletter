@@ -57,7 +57,9 @@ const WhiteDayCountdownModal: React.FC<WhiteDayCountdownModalProps> = ({
 	return (
 		<OtherModal isOpen={isOpen} onClose={onClose}>
 			<div className="text-center flex flex-col justify-center items-center gap-6">
-				<div className="text-lg font-bold">화이트데이 D-DAY 카운트</div>
+				<div className="text-lg font-bold">
+					화이트데이 디데이 카운트
+				</div>
 				<p className="text-sm text-gray-700">
 					이제 상대방에게 초콜릿을 보낼 수 없어요! <br />
 					화이트데이까지 {daysLeft}일 남았습니다. 그때 다시 만나요!{" "}
