@@ -16,15 +16,6 @@ interface LetterInVideoModalProps {
   giftId: string;
 }
 
-interface InputData {
-	giftId: string;
-	type?: "FREE" | "QUESTION";
-	nickName?: string;
-	content?: string | null;
-	question?: string | null;
-	answer?: string | null;
-}
-
 interface GiftData {
 	nickName?: string;
 	content?: string | null;
@@ -38,7 +29,6 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
-	const [data, setData] = useState<InputData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
 	// const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
@@ -48,13 +38,7 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 		const fetchGiftData = async () => {
 			if (giftId) {
 				try {
-					try {
-						const inData = await getGiftDetail(giftId);
-						setData(inData);
-					} catch (e) {
-						onClose();
-					}
-
+					const data = await getGiftDetail(giftId);
 					let updatedData: GiftData = { ...data };
 
 					const privateKey = await getMemberPrivateKey(memberId);
@@ -98,6 +82,7 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 					setGiftData(updatedData);
 				} catch (error: any) {
 					if (error.response?.status === 403) {
+						onClose();
 						setError(403); // 에러 상태 설정
 					} else {
 						setError(error.response?.status || 500); // 기타 에러 처리
