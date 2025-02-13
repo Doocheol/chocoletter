@@ -43,8 +43,7 @@ const ChatRoomView = () => {
     const { roomId } = useParams()
     const memberId = useRecoilValue(memberIdAtom);
     const userInfo = getUserInfo();
-    // const roomId = "qP-G0hxQdZYaob4pk-lHvA"
-    // const parsedRoomId = parseInt(roomId ?? "0", 10)
+    // const roomId = "1"
     
     // 키보드 관련 변수 
     const [keyboardHeight, setKeyboardHeight] = useState(0); // 키보드 높이
@@ -122,10 +121,20 @@ const ChatRoomView = () => {
     }, []);
 
     // 최하단으로 자동 스크롤
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+       scrollToBottom();
     }, [messages]);
-    
+
+    useEffect(() => {
+        if (!isKeyboardOpen) { // 키보드가 열려 있지 않을 때만 실행
+            setTimeout(scrollToBottom, 100);
+        }
+    }, []);
+
     // 편지 불러오기 
     useEffect(() => {
         const fetchLetter = async () => {
@@ -148,21 +157,20 @@ const ChatRoomView = () => {
     ///////////////////////////////////////////// 나중에 파일 따로 빼기
     
     // 기존 채팅 메시지를 가져오기
-    // ✅ TODO : 위로 더 올리면 페이지 바뀌게 하는 로직 추가
     const fetchChatHistory = async () => {
         if (!roomId) return;
         
         try {
-            console.log("기존 메시지 불러오는 중...");
+            // console.log("기존 메시지 불러오는 중...");
             const baseUrl = import.meta.env.VITE_CHAT_API_URL;
             const response = await axios.get(`${baseUrl}/api/v1/chat/${roomId}/all`)
             
             if (response.data.chatMessages && Array.isArray(response.data.chatMessages)) {
                 setMessages(response.data.chatMessages.reverse());
-                console.log("⭕기존 메시지 불러오기 성공!", response.data);
+                // console.log("⭕기존 메시지 불러오기 성공!", response.data);
             }
         } catch (error) {
-            console.error("기존 메시지 불러오기 실패!", error);
+            // console.error("기존 메시지 불러오기 실패!", error);
         }
     };
     
@@ -170,7 +178,7 @@ const ChatRoomView = () => {
     const connect = () => {
         
         if (!userInfo || !userInfo.accessToken) {
-                console.error("🚨 connect : Access token is missing!");
+                // console.error("🚨 connect : Access token is missing!");
                 return;
             }
     
@@ -180,14 +188,14 @@ const ChatRoomView = () => {
             heartbeatIncoming: 4000, // 서버가 4초 동안 데이터를 보내지 않으면 연결이 끊겼다고 판단
             heartbeatOutgoing: 4000, // 클라이언트가 4초마다 서버에 "살아 있음" 신호를 보냄
             connectHeaders: {
-                Authorization: `Bearer ${userInfo?.accessToken}`, // 인증 토큰 포함 userInfo?.
+                Authorization: `Bearer ${userInfo?.accessToken}`, // 인증 토큰 포함 userInfo?.accessToken
             },
             
             onConnect: () => {
-                console.log("WebSocket 연결 성공! (채팅방 ID:", roomId, ")");
+                // console.log("WebSocket 연결 성공! (채팅방 ID:", roomId, ")");
                 
                 if (!stompClient.current || !stompClient.current.connected) {
-                    console.error("🚨 STOMP 연결되지 않음. 구독 불가능.");
+                    // console.error("🚨 STOMP 연결되지 않음. 구독 불가능.");
                     return;
                 }
 
@@ -203,25 +211,25 @@ const ChatRoomView = () => {
                             if (newMessage.messageType === "CHAT") {
                                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                             } else if (newMessage.messageType === "READ_STATUS") {
-                                console.log("읽음 상태 변경 감지, 메시지 새로고침");
+                                // console.log("읽음 상태 변경 감지, 메시지 새로고침");
                                 fetchChatHistory()
                             }
                         }
                     } catch (error) {
-                        console.error("메시지 JSON 파싱 오류:", error);
+                        // console.error("메시지 JSON 파싱 오류:", error);
                     }
                 }, 
                 headers
             );
-                console.log(`✅ 채팅방 구독 완료`);
+                // console.log(`✅ 채팅방 구독 완료`);
             },
             
             onDisconnect: () => {
-                console.log("❌ WebSocket 연결 해제됨!");
+                // console.log("WebSocket 연결 해제됨");
             },
             
             onStompError: (error) => {
-                console.error("🚨 STOMP 오류 발생:", error);
+                // console.error("STOMP 오류 발생:", error);
             },
         });        
         stompClient.current.activate(); //STOMP 클라이언트 활성화
@@ -231,12 +239,12 @@ const ChatRoomView = () => {
     const sendMessage = () => {
 
         if (!userInfo || !userInfo.accessToken) {
-                console.error("sendMessage : 🚨 Access token is missing!");
+                // console.error("sendMessage : 🚨 Access token is missing!");
                 return;
         }
 
         if (!stompClient.current || !stompClient.current.connected) {
-            console.error("STOMP 연결이 없습니다. 메시지를 보낼 수 없습니다.");
+            // console.error("STOMP 연결이 없습니다. 메시지를 보낼 수 없습니다.");
             return;
         }
         
@@ -258,7 +266,6 @@ const ChatRoomView = () => {
                 }
             });
 
-            // setMessages((prevMessages) => [...prevMessages, msgObject]); // ✅추후삭제!! 바로 화면에 추가
             setMessage(""); // 입력 필드 초기화
             
             // 메시지 전송 후 입력 필드에 포커스 유지
@@ -275,10 +282,10 @@ const ChatRoomView = () => {
             const response = await axios.post(`${baseUrl}/api/v1/chat/${roomId}/${memberId}/disconnect`)
             
             stompClient.current?.deactivate()
-            console.log("✅ 채팅방 연결이 정상적으로 종료되었습니다.");
+            // console.log("채팅방 연결이 정상적으로 종료되었습니다.");
         } catch (error) {
             stompClient.current?.deactivate() // 옵션: 에러 발생해도 STOMP 연결은 종료
-            console.error("채팅방 연결 끊기 실패:", error);
+            // console.error("채팅방 연결 끊기 실패:", error);
         }
     };
         
@@ -317,7 +324,7 @@ const ChatRoomView = () => {
             </div>
 
             {/* 채팅 내용 */}
-            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch mt-[58px] pt-4 pb-[60px] overflow-y-auto" >
+            <div className="flex-1 w-full md:max-w-[360px] flex flex-col space-y-[15px] justify-start items-stretch pt-4 pb-[50px] overflow-y-auto" >
                 {messages.map((msg, index) => (
                     <div key={index} className={clsx(
                         "flex items-end mx-2",
@@ -357,9 +364,8 @@ const ChatRoomView = () => {
                         )}
                     </div>
                 ))}
-                <div ref={messagesEndRef} style={{ height: "60px" }} />
+                <div ref={messagesEndRef}/>
             </div>
-
 
             {/* 입력창 */}
             {/* <div
