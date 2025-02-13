@@ -99,7 +99,7 @@ const convertToEventDate = (unBoxingTime: string, eventDay: string, timeZone: st
 
 // 5분 전 시간 계산 함수
 const getFiveMinutesBefore = (eventDate: Date): Date => {
-    const fiveMinutesBefore = new Date(eventDate.getTime() - 5 * 60 * 1000); // 5분(300000ms) 빼기
+    const fiveMinutesBefore = new Date(eventDate.getTime() - 6 * 60 * 1000); // 6분
     return fiveMinutesBefore;
 };
 

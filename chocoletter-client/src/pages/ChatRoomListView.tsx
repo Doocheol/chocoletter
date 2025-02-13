@@ -28,10 +28,10 @@ const ChatRoomListView = () => {
     // 채팅방 목록 불러오기
     useEffect(() => {
 
-        // if (!memberId) {
-        //     console.warn("memberId가 설정되지 않았습니다.");
-        //     return;
-        // }
+        if (!memberId) {
+            console.warn("memberId가 설정되지 않았습니다.");
+            return;
+        }
 
         console.log('memberId : ', memberId)
 
@@ -40,11 +40,11 @@ const ChatRoomListView = () => {
             try {
                 const data = await getChatRooms();
                 console.log("채팅방 목록 : ",data)
-                setChatRooms(data.chatRooms); ///
+                setChatRooms(data.chatRooms); 
             } catch (error) {
                 console.error("채팅방 목록 불러오기 실패!", error);
             } finally {
-                setIsLoading(false); ///
+                setIsLoading(false); 
             }
         };
         loadChatRooms();
@@ -71,11 +71,11 @@ const ChatRoomListView = () => {
                             }) 
                             console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 성공!`);
                             console.log('받아온 데이터 : ', response.data)
-                            console.log(`안읽은 메세지 : ${response.data?.unreadCount}`)
+                            console.log(`안읽은 메세지 : ${response.data?.count}`)
                             return {
                                 ...room,
-                                unreadCount: response.data?.unreadCount || 0,
-                                lastMessage: response.data?.lastMessage || "", 
+                                unreadCount: response.data?.count || 0,
+                                lastMessage: response.data?.message || "", 
                             };
                         } catch (error) {
                             console.log(`채팅방(${room.roomId}) 마지막 메시지 불러오기 실패!`, error);

@@ -150,8 +150,8 @@ const WaitingRoomView = () => {
             <LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
-                nickName="송신자"
-                content="loving"
+                onErrorClose={hideRTCLetter}
+                giftId=""
             />
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden">
                 <MyFaceInVideoWaitingRoom videoRef={videoRef} />

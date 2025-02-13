@@ -80,7 +80,7 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
         } else {
             content = (
                 <div className="absolute inset-0 flex justify-center items-center bg-chocoletterYellow bg-opacity-80 rounded-lg pointer-events-none">
-                    <p className="font-sans text-chocoletterPurpleBold text-md font-bold">채팅하러 가기</p>
+                    <p className="font-sans text-chocoletterPurpleBold text-md font-bold text-nowrap text-center">영상통화<br/>연결</p>
                 </div>
             )
         }

@@ -5,35 +5,18 @@ import { isLoginAtom } from "../../../../../atoms/auth/userAtoms";
 import { logout } from "../../../../../services/userApi";
 import { OtherModal } from "../../../../common/OtherModal";
 import { PurpleButton } from "../../../../common/PurpleButton";
-import { useEffect, useState } from "react";
 
-interface WhiteDayCountdownModalProps {
-	targetDate: Date;
+interface FirstLoginEventModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-const WhiteDayCountdownModal: React.FC<WhiteDayCountdownModalProps> = ({
-	targetDate,
+const FirstLoginEventModal: React.FC<FirstLoginEventModalProps> = ({
 	isOpen,
 	onClose,
 }) => {
 	const navigate = useNavigate();
 	const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
-	const [daysLeft, setDaysLeft] = useState<number>(0);
-
-	useEffect(() => {
-		const calculateDaysLeft = () => {
-			const now = new Date();
-			const diffTime = targetDate.getTime() - now.getTime();
-			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-			setDaysLeft(diffDays);
-		};
-
-		calculateDaysLeft();
-		const interval = setInterval(calculateDaysLeft, 60 * 1000);
-		return () => clearInterval(interval);
-	}, [targetDate]);
 
 	const handleLogout = async () => {
 		try {
@@ -55,18 +38,14 @@ const WhiteDayCountdownModal: React.FC<WhiteDayCountdownModalProps> = ({
 	};
 
 	return (
-		<OtherModal isOpen={isOpen} onClose={onClose}>
+		<OtherModal isOpen={isOpen} onClose={handleLogout}>
 			<div className="text-center flex flex-col justify-center items-center gap-6">
-				<div className="text-lg font-bold">
-					화이트데이 디데이 카운트
-				</div>
+				<div className="text-lg font-bold">발렌타인데이 D-DAY</div>
 				<p className="text-sm text-gray-700">
-					이제 상대방에게 초콜릿을 보낼 수 없어요! <br />
-					화이트데이까지 {daysLeft}일 남았습니다. 그때 다시 만나요!{" "}
-					<br />
+					원활한 서비스를 위해 다시 로그인 해주세요!
 				</p>
 				<PurpleButton
-					onClick={onClose}
+					onClick={handleLogout}
 					className="px-6 py-3 text-white bg-chocoletterPurpleBold border border-black outline-none focus:ring-0"
 				>
 					확인
@@ -76,4 +55,4 @@ const WhiteDayCountdownModal: React.FC<WhiteDayCountdownModalProps> = ({
 	);
 };
 
-export default WhiteDayCountdownModal;
+export default FirstLoginEventModal;

@@ -21,11 +21,12 @@ interface WaitingRoomProps {
     isItThere: boolean,
     videoState: VideoState,
     trans: () => void,
-    content?: string,
-    letterInfo?: GiftDetail,
+    letterInfo?: GiftDetail | null,
+    isOpenLetter: boolean,
+    onErrorClose: () => void,
 }
 
-export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, videoState, trans }: WaitingRoomProps) => {
+export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo, onErrorClose }: WaitingRoomProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const [remainTime, setRemainTime] = useState(300);
@@ -48,17 +49,20 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, vide
 
     // 남은 시간 계산
     useEffect(() => {
+        console.log("언박싱시간 : ", unboxing);
         const targetTime = new Date(unboxing);
-        const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000);
+        console.log("targetTime : ", targetTime);
+        const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000 + 60 * 1000);
         
         const now = new Date();
         const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
 
         const timeDiff = targetUTC.getTime() - nowUtc.getTime();
+        console.log("현시간 : ",nowUtc, "언박싱시간 : ", targetUTC)
 
         const secondDiff = Math.floor(timeDiff / 1000);
         setRemainTime(secondDiff);
-    }, [])
+    }, [unboxing])
 
     // 5분동안 타이머
     useEffect(() => {
@@ -104,12 +108,14 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, vide
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
-            <LetterInVideoModal
+            {isOpenLetter &&
+            (<LetterInVideoModal
                 isOpen={isOpenLetter}
                 onClose={hideRTCLetter}
-                nickName="도리도리"
-                content="Is it LOVE? all not,"
-            />
+                onErrorClose={onErrorClose}
+                giftId={letterInfo?.giftId || ""}
+            />)}
+            
             <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white relative overflow-hidden z-[9999]">
                 <MyFaceInVideoWaitingRoom videoState={videoState} />
                 <div className="w-full min-h-[193px] h-auto sm:h-[193px] top-0 bg-gradient-to-b from-chocoletterDarkBlue to-chocoletterLightPurple/1 z-10 absolute" />
@@ -129,7 +135,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, content, vide
                 </div>
                 <div className={`w-[11dvh] h-[11dvh] bottom-[10dvh] absolute ${isReady? "bg-chocoletterGiftBg" : "bg-chocoletterGreen"} rounded-[100px] justify-center items-center gap-2.5 inline-flex z-20`}>
                     {isReady ? 
-                        (<div className="font-bold font-sans text-md">기다리는 중</div>) : 
+                        (<div className="font-bold font-sans text-sm text-nowrap">상대방<br/>기다리는 중</div>) : 
                         (<button onClick={trans} className="w-full h-full aspect-square flex justify-center items-center" >
                             <p className="text-white text-center font-bold font-sans w-[50%] h-[50%] flex items-center justify-center text-2xl" >Ready</p>
                         </button>)

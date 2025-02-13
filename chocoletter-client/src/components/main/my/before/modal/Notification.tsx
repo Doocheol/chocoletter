@@ -58,7 +58,7 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 			const data = await getAllAlarms();
 			setAlarms(data);
 		} catch (err) {
-			console.error("알림 데이터를 불러오는 도중 에러 발생:", err);
+			new Error("알림 목록을 불러오는 중 오류 발생");
 		} finally {
 			setIsLoading(false);
 		}
@@ -98,13 +98,12 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 		if (selectedAlarm?.giftId == null) return;
 		try {
 			const result = await patchUnboxingAccept(selectedAlarm.giftId);
-			console.log("수락 처리 성공:", result);
 			setAlarms((prev) =>
 				prev.filter((a) => a.alarmId !== selectedAlarm?.alarmId)
 			);
 			setSelectedAlarm(null);
 		} catch (error) {
-			console.error("수락 처리 중 에러 발생:", error);
+			new Error("수락 처리 중 에러 발생");
 		}
 	};
 
@@ -113,13 +112,12 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 		if (selectedAlarm?.giftId == null) return;
 		try {
 			const result = await patchUnboxingReject(selectedAlarm.giftId);
-			console.log("거절 처리 성공:", result);
 			setAlarms((prev) =>
 				prev.filter((a) => a.alarmId !== selectedAlarm?.alarmId)
 			);
 			setSelectedAlarm(null);
 		} catch (error) {
-			console.error("거절 처리 중 에러 발생:", error);
+			new Error("거절 처리 중 에러 발생");
 		}
 	};
 
@@ -155,7 +153,9 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 					style={{ maxHeight: "50vh" }}
 				>
 					{isLoading ? (
-						<Loading />
+						<p className="text-center text-gray-500 py-8">
+							로딩중...
+						</p>
 					) : alarms.length === 0 ? (
 						<p className="text-center text-gray-500 py-8">
 							아직 새로운 알림이 없어요.
@@ -190,7 +190,10 @@ const Notification: React.FC<NotificationProps> = ({ isOpen, onClose }) => {
 								>
 									{/* 왼쪽: 알림 메시지 및 약속 시각 */}
 									<div className="flex flex-col">
-										<p className="text-[12px] leading-[14px] font-semibold" style={{ whiteSpace: "pre-line" }}>
+										<p
+											className="text-[12px] leading-[14px] font-semibold"
+											style={{ whiteSpace: "pre-line" }}
+										>
 											{getAlarmMessage(alarm)}
 										</p>
 										{formattedTime && (
