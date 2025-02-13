@@ -13,6 +13,7 @@ import { decryptLetter } from "../../../services/giftEncryptedApi";
 interface LetterInVideoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onErrorClose: () => void;
   giftId: string;
 }
 
@@ -23,7 +24,7 @@ interface GiftData {
 	answer?: string | null;
 }
 
-const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, giftId }) => {
+const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, onErrorClose, giftId }) => {
   // const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
@@ -82,7 +83,7 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 					setGiftData(updatedData);
 				} catch (error: any) {
 					if (error.response?.status === 403) {
-						onClose();
+						onErrorClose();
 						setError(403); // 에러 상태 설정
 					} else {
 						setError(error.response?.status || 500); // 기타 에러 처리
