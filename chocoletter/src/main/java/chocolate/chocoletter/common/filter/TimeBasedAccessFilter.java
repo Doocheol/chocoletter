@@ -54,7 +54,8 @@ public class TimeBasedAccessFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        LocalDateTime openDayTime = dateTimeUtil.getOpenDay().atStartOfDay();
+//        LocalDateTime openDayTime = dateTimeUtil.getOpenDay().atStartOfDay();
+        LocalDateTime openDayTime = LocalDateTime.of(2025, 2, 16, 0, 0);
         LocalDateTime now = LocalDateTime.now();
         String requestURI = request.getRequestURI();
         String requestMethod = request.getMethod();

@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
-//                .addFilterBefore(timeBasedAccessFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(timeBasedAccessFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
