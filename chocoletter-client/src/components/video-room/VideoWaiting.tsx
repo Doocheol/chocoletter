@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { memberCntAtom } from "../../atoms/video/videoAtoms"
 import { GiftDetail } from "../../types/openvidutest";
-
 import { MyFaceInVideoWaitingRoom } from "../../components/video-waiting-room/TestMyFaceInVideoWaitingRoom"
 import timerIcon from "../../assets/images/unboxing/timer.svg";
-import callTerminate from "../../assets/images/unboxing/call_terminate.svg";
 import LetterInVideoModal from "../../components/video-waiting-room/modal/LetterInVideoModal";
 import LetterInVideoOpenButton from "../../components/video-waiting-room/button/LetterInVideoOpenButton";
 import classes from "../../styles/videoRoom.module.css"
@@ -27,17 +22,12 @@ interface WaitingRoomProps {
 }
 
 export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, trans, letterInfo, onErrorClose }: WaitingRoomProps) => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const [remainTime, setRemainTime] = useState(300);
     const [makeMMSS, setMakeMMSS] = useState('');
-
     const [isOpenLetter, setIsOpenLetter] = useState(false);
     const [wcomment, setWcomment] = useState(waitingWords[2]);
     const [wcnt, setWcnt] = useState(0);
-    const [isIn, setIsIn] = useState(true);
-
-    const navigate = useNavigate();
 
     const showRTCLetter = () => {
         setIsOpenLetter(true);
@@ -49,16 +39,13 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
     // 남은 시간 계산
     useEffect(() => {
-        console.log("언박싱시간 : ", unboxing);
         const targetTime = new Date(unboxing);
-        console.log("targetTime : ", targetTime);
         const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000 + 60 * 1000);
         
         const now = new Date();
         const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
 
         const timeDiff = targetUTC.getTime() - nowUtc.getTime();
-        console.log("현시간 : ",nowUtc, "언박싱시간 : ", targetUTC)
 
         const secondDiff = Math.floor(timeDiff / 1000);
         setRemainTime(secondDiff);
@@ -86,7 +73,6 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
     // 5분 후 방 폭파
     useEffect(() => {
         if (remainTime <= 0 && !isItThere) {
-            console.log("아쉽게도 연결이 안되었습니다.")
             onEnd();
         }
     }, [isItThere, remainTime, onEnd])
@@ -100,11 +86,6 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
 
         return () => clearInterval(interval);
     }, [wcnt]);
-
-    // const handleBackClick = () => {
-    //     onSemiEnd();
-    //     window.history.back(); // 브라우저 이전 페이지로 이동
-    // };
 
     return (
         <div className="flex w-full justify-center items-center min-h-screen">
