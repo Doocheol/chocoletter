@@ -38,11 +38,13 @@ const GiftBoxIdRouter: React.FC = () => {
 		(urlGiftBoxId && savedGiftBoxId === "") ||
 		urlGiftBoxId !== savedGiftBoxId
 	) {
-		if (today < eventDate) {
-			return <MainYourBeforeView />;
-		} else {
-			return <MainYourEventView />;
-		}
+		// if (today < eventDate) {
+		// 	return <MainYourBeforeView />;
+		// } else {
+		// 	return <MainYourEventView />;
+		// }
+
+		return <MainYourEventView />;
 	}
 
 	// 발신자: URL과 Recoil의 shareCode가 모두 존재하고 동일한 경우
@@ -55,12 +57,18 @@ const GiftBoxIdRouter: React.FC = () => {
 			return <SelectGiftBoxView />;
 		}
 
-		if (today < eventDate) {
-			return <MainMyBeforeView />;
-		} else if (today.toDateString() === eventDate.toDateString()) {
-			return <MainMyEventView />;
-		} else {
+		// if (today < eventDate) {
+		// 	return <MainMyBeforeView />;
+		// } else if (today.toDateString() === eventDate.toDateString()) {
+		// 	return <MainMyEventView />;
+		// } else {
+		// 	return <MainMyAfterView />;
+		// }
+
+		if (today > eventDate) {
 			return <MainMyAfterView />;
+		} else {
+			return <MainMyEventView />;
 		}
 	} else {
 		navigate("/");

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
-import { AnnounceGoNotificationModal } from "../modal/AnnounceGoNotification";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -89,22 +88,11 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
 
 	const [buttonImage, setButtonImage] = useState("");
-	const currentDate = new Date();
 
 	// refresh 값이 변경되면 AcceptRejectModal을 자동으로 닫음
 	useEffect(() => {
 		setIsAcceptRejectOpen(false);
 	}, [refresh]);
-
-	// 1. 안 열린 일반 초콜릿
-	// 횟수를 사용하는 모달로 안내
-
-	// 2. 열린 일반 초콜릿
-	// 바로 편지로 이동
-
-	// 3. RTC 초콜릿
-	// 열지 못한다는 안내 모달로 이동
-	// 14일 시간 지난 경우
 
 	// localStorage에서 이미지 로드
 	useEffect(() => {
@@ -128,20 +116,11 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			setButtonImage(chocoRandomImage);
 			localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
 		}
-		console.log(giftId, savedImage);
 	}, []);
 
 	const closeRTCModal = () => {
 		setIsRTC(false);
 	};
-
-	const closeGeneralModal = () => {
-		setIsNonOpen(false);
-	};
-
-	// const closeGoNotificationModal = () => {
-	//     setIsAnnounceNoti(false);
-	// }
 
 	const closeAcceptRejectModal = () => {
 		setIsAcceptRejectOpen(false);
@@ -158,13 +137,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			);
 			const currentDate = new Date();
 
-			// 이거 이벤트 이후도 추가해야 할 것 같은데...
-			// 날짜 분류도 필요할 것 같은데...
 			if (currentDate < unboxingMinusFive) {
 				if (isAccepted) {
 					setIsRTC(true);
 				} else {
-					// setIsAnnounceNoti(true);
 					setIsAcceptRejectOpen(true);
 				}
 			} else {
@@ -183,11 +159,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			}
 		} else {
 			setAtomGiftId(giftId);
-			if (isOpened || compareDates(currentDate, getEventDate())) {
-				navigate("/letter");
-			} else {
-				setIsNonOpen(true);
-			}
+			navigate("/letter");
 		}
 	};
 
@@ -195,11 +167,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleAccept = async () => {
 		try {
 			const result = await patchUnboxingAccept(giftId);
-			console.log("수락 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("수락 처리 중 에러 발생:", error);
+			new Error("수락 처리 중 에러 발생");
 		}
 	};
 
@@ -207,11 +178,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleReject = async () => {
 		try {
 			const result = await patchUnboxingReject(giftId);
-			console.log("거절 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("거절 처리 중 에러 발생:", error);
+			new Error("거절 처리 중 에러 발생");
 		}
 	};
 
@@ -224,13 +194,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 					onReject={handleReject}
 				/>
 			)}
-			{/* <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} /> */}
-
 			<AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
-			<IsOpenGeneralGiftModal
-				isOpen={isNonOpen}
-				onClose={closeGeneralModal}
-			/>
 			<div
 				className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${
 					isRTC || isNonOpen

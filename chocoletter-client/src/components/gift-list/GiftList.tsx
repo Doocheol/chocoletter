@@ -3,8 +3,6 @@ import { GiftOpenButton } from "./button/GiftOpenButton";
 import { useFetchChocolates } from "../../hooks/useGetChocolates";
 import { changeSpecialToGeneral } from "../../services/giftApi";
 import Loading from "../common/Loading";
-import { useRecoilValue } from "recoil";
-import { giftListRefreshAtom } from "../../atoms/gift/giftAtoms";
 
 // 초콜릿 더미 데이터
 const dummyChocolates = [
@@ -95,19 +93,15 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			"0"
 		)}${String(today.getDate()).padStart(2, "0")}`;
 
-		// 테스트 동안 임시 주석임
 		if (formattedToday !== eventDay) return;
 		if (!chocolates) return;
 
 		chocolates.map(async (choco) => {
 			if (choco.giftType === "SPECIAL" && choco.unBoxingTime) {
-				const unBoxingUTC =
-					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
-				console.log(choco.giftId, currentTimeUTC, unBoxingUTC);
+				const unBoxingUTC = new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
 				if (currentTimeUTC > unBoxingUTC) {
 					try {
 						const res = await changeSpecialToGeneral(choco.giftId);
-						console.log(res);
 						setLocalChocolates((prevChocos) =>
 							prevChocos.map((item) =>
 								item.giftId === choco.giftId
@@ -116,7 +110,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						console.log("GiftList에서 변환 실패 : ", err);
+						console.log(err);
 					}
 				}
 			}
@@ -126,7 +120,6 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 	if (isLoading) {
 		return <Loading />; // 로딩 상태 표시
 	}
-	console.log(chocolates);
 
 	const filteredChocolates = localChocolates.filter((choco) => {
 		if (filter === "all") return true;
