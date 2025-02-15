@@ -187,16 +187,14 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       className="max-w-sm sm:max-w-lg md:max-w-xl max-h-[80vh] !bg-chocoletterLetterBgBlue"
     >
       <div className="flex flex-col w-full">
-        {/* ChatRoomListView 스타일 헤더 */}
-        <div className="w-full h-[30px] px-4 bg-chocoletterLetterBgBlue rounded-xl flex items-center justify-start">
-          {/* 중앙: 제목 */}
-          <div className="text-center text-nowrap text-black text-xl font-bold font-sans">
-            발렌타인데이 일정
-          </div>
-          {/* 우측: 빈 공간 */}
-          <div className="w-6 h-6">
-            {/* 전체 일정(Schedule[])을 ICSDownloadButton에 전달 */}
+        {/* 헤더 영역 */}
+        <div className="w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+          <div className="flex items-center justify-between h-[30px]">
+            <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
+          </div>
+          <div className="text-center text-gray-400 text-xs mt-1">
+            버튼 클릭하고 캘린더로 열어주세요!
           </div>
         </div>
 
