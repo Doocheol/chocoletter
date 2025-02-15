@@ -21,20 +21,6 @@ interface Schedule {
   isAccept: boolean;
 }
 
-/** 더미 일정 데이터 */
-const dummySchedules: Schedule[] = [
-    { nickName: "Alice", unBoxingTime: "08:50", unboxingRoomId: "1", isAccept: true },
-    { nickName: "Iso", unBoxingTime: "09:20", unboxingRoomId: "2", isAccept: false },
-    { nickName: "Bob", unBoxingTime: "10:20", unboxingRoomId: "3", isAccept: false },
-    { nickName: "Charlie", unBoxingTime: "14:30", unboxingRoomId: "4", isAccept: true },
-    { nickName: "David", unBoxingTime: "16:50", unboxingRoomId: "5", isAccept: false },
-    { nickName: "Eve", unBoxingTime: "19:00", unboxingRoomId: "6", isAccept: true },
-    { nickName: "Andre", unBoxingTime: "19:20", unboxingRoomId: "7", isAccept: true },
-    { nickName: "Bolt", unBoxingTime: "21:00", unboxingRoomId: "8", isAccept: false },
-    { nickName: "Emily", unBoxingTime: "22:00", unboxingRoomId: "9", isAccept: true },
-    { nickName: "Busto", unBoxingTime: "23:40", unboxingRoomId: "10", isAccept: false },
-];
-
 /** "HH:mm" 형식을 분(minute) 단위로 변환 */
 function timeToMinute(time: string): number {
     const [HH, MM] = time.split(":").map(Number);
@@ -52,7 +38,6 @@ const GetMyUnboxingSchedule = async () => {
         const response = await fetchMyUnboxingSchedule();
         return response.myUnBoxingTimes;
     } catch (err) {
-        console.log("내 언박스 일정 조회 실패 : ", err);
         return null;
     }
 }
@@ -192,52 +177,16 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                 const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
                 const fiveBeforeKST = getFiveMinutesBefore(eventKST);
                 const nowKST = CurrentTime();
-                
-                const nowUTC = new Date(Date.UTC(
-                    new Date().getUTCFullYear(),
-                    new Date().getUTCMonth(),
-                    new Date().getUTCDate(),
-                    new Date().getUTCHours(),
-                    new Date().getUTCMinutes(),
-                    new Date().getUTCSeconds()
-                ));
-                const beforeEventTimeUTC = new Date(Date.UTC(2025, 1, 13, 15, 0, 0));
-
 
                 // 조건에 따라 버튼을 다르게 처리
                 let buttonAction;
                 let isHidden = false;
                 let isAfter = false;
 
-
-                if (nowUTC < beforeEventTimeUTC) {
-                    if (item.isAccept) {
-                        buttonAction = () => {
-                            if (!toast.isActive("not-Dday-toast")) {
-                                toast.error("2월 14일 해당되는 시간에 입장 가능합니다.", {
-                                    toastId: "not-Dday-toast",
-                                    position: "top-center",
-                                    autoClose: 2000,
-                                });
-                            }
-                        };
-                    } else {
-                        buttonAction = () => {
-                            if (!toast.isActive("not-accepted-toast")) {
-                                toast.error("아직 수락되지 않은 초대장입니다.", {
-                                    toastId: "not-accepted-toast",
-                                    position: "top-center",
-                                    autoClose: 2000,
-                                });
-                            }
-                        };
-                        isAfter = true;
-                    }
-                } else {
-                    if (nowKST > eventKST) {
+                if (nowKST > eventKST) {
                     // 이벤트 시간이 지난 경우 -> 버튼 숨기기
                     isHidden = true;
-                    } else if (nowKST >= fiveBeforeKST) {
+                } else if (nowKST >= fiveBeforeKST) {
                     // 5분 전 ~ 이벤트 시간까지 -> navigate
                     if (item.unboxingRoomId) {
                         buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
@@ -252,7 +201,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                             }
                         }
                     }
-                    } else {
+                } else {
                     // 이벤트 시간이 아직 안 됨 -> toast 출력
                         buttonAction = () => { 
                             if (!toast.isActive("before-5minute-toast")) {
@@ -264,9 +213,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                             }
                         }
                     isAfter = true;
-                    }
                 }
-                
 
                 return(
                     <button 
