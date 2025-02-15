@@ -56,10 +56,13 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         const updatePosition = () => {
         if (!targetRef || !targetRef.current) return;
         const rect = targetRef.current.getBoundingClientRect();
-
+        
         // 스크롤 보정
-        const x = rect.left + rect.width / 2 + window.scrollX;
+        let x = rect.left + rect.width / 2 + window.scrollX;
         const y = rect.top + rect.height / 2 + window.scrollY;
+        if (targetRef.current instanceof HTMLImageElement) {
+            x = rect.left + rect.width / 2 + window.scrollX - 20;
+        }
         // 아이콘보다 약간 크게 오려서 여유를 둠
         let radius = Math.max(rect.width, rect.height) / 2 + 8;
         if ([1, 4, 6].includes(page)) {
@@ -81,7 +84,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         window.removeEventListener("resize", updatePosition);
         window.removeEventListener("scroll", updatePosition, true);
         };
-    }, [targetRef]);
+    }, [targetRef, page]);
 
     if (!circleInfo) return null;
 
@@ -287,7 +290,7 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
         (<div
             style={{
             position: "fixed",
-            top: "20%",
+            top: "18%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "auto",
