@@ -113,7 +113,7 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
   return (
     <button
       onClick={handleOpenICS}
-      className="px-3 py-1 bg-chocoletterPurpleBold text-white text-sm rounded"
+      className="px-3 py-1 bg-chocoletterPurpleBold hover:bg-chocoletterPurple text-white text-sm rounded"
     >
       캘박
     </button>
