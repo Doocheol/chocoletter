@@ -2,6 +2,8 @@ import React from "react";
 import Modal from "../../../../common/Modal";
 import { FaComments } from "react-icons/fa6";
 import chat_icon from "../../../../../assets/images/main/chat_icon.svg";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../../../../atoms/auth/userAtoms";
 
 interface ChatModalProps {
   isOpen: boolean;
@@ -22,6 +24,11 @@ const eventDate = getEventDate();
 const eventDateText = `${eventDate.getMonth() + 1}월 ${eventDate.getDate()}일`;
 
 const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
+  const memberId = useRecoilValue(memberIdAtom);
+  if (!memberId) {
+    new Error("로그인 정보가 없습니다. Sentry 테스트용 삭제 필요");
+  }
+
   const messages = [
     "서로 편지를 주고받은 사람과",
     "익명으로 대화할 수 있는 채팅방이 2월 14일에 열립니다.",
