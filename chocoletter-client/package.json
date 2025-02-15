@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sentry/react": "^9.1.0",
+    "@sentry/tracing": "^7.120.3",
     "@stomp/stompjs": "^7.0.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
