@@ -2,7 +2,7 @@ package chocolate.chocoletter.common.config;
 
 import chocolate.chocoletter.api.member.service.KakaoOAuth2UserService;
 import chocolate.chocoletter.common.filter.JwtAuthenticationFilter;
-import chocolate.chocoletter.common.filter.TimeBasedAccessFilter;
+//import chocolate.chocoletter.common.filter.TimeBasedAccessFilter;
 import chocolate.chocoletter.common.handler.OAuth2AuthenticationFailureHandler;
 import chocolate.chocoletter.common.handler.OAuth2AuthenticationSuccessHandler;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final TimeBasedAccessFilter timeBasedAccessFilter;
+//    private final TimeBasedAccessFilter timeBasedAccessFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
-                .addFilterBefore(timeBasedAccessFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(timeBasedAccessFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -69,7 +69,9 @@ public class SecurityConfig {
                 "https://api.chocolate-letter.com",
                 "http://localhost:5173",
                 "https://www.chocoletter.store",
-                "https://chocoletter.store"
+                "https://chocoletter.store",
+                "https://beforeVD.chocolate-letter.com",
+                "https://onVD.chocolate-letter.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
