@@ -24,6 +24,9 @@ interface ICSDownloadButtonProps {
 const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
   const eventDate = getEventDate();
 
+  // isAccept가 true인 스케줄만 필터링
+  const acceptedSchedules = schedules.filter((schedule) => schedule.isAccept);
+
   // unBoxingTime("HH:mm")을 기반으로 해당 일정의 Date 객체를 생성
   const getEventTime = (timeStr: string): Date => {
     const [hour, minute] = timeStr.split(":").map(Number);
@@ -54,9 +57,9 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     const startTime = getEventTime(schedule.unBoxingTime);
     // 이벤트 종료시간은 시작 시간으로부터 1시간 후 (필요시 변경 가능)
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
-    const title = "초코레터 영상통화!";
+    const title = "초코레터 - 영상통화 입장 알림!";
     const description = "https://www.chocolate-letter.com";
-    const location = "chocoletter";
+    const location = "초콜릿보다 달콤한 설렘을 전하세요!";
 
     return [
       "BEGIN:VEVENT",
@@ -68,9 +71,9 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
       `DESCRIPTION:${description}`,
       `LOCATION:${location}`,
       "BEGIN:VALARM",
-      "TRIGGER:-PT30M",
+      "TRIGGER:-PT5M",
       "ACTION:DISPLAY",
-      "DESCRIPTION:30분 전 알림",
+      "DESCRIPTION:5분 전 알림",
       "END:VALARM",
       "END:VEVENT",
     ].join("\r\n");
@@ -78,7 +81,7 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
 
   // 모든 VEVENT를 포함하는 ICS 콘텐츠 생성
   const generateICSContent = (): string => {
-    const eventsICS = schedules.map(generateEventICS).join("\r\n");
+    const eventsICS = acceptedSchedules.map(generateEventICS).join("\r\n");
     return [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
