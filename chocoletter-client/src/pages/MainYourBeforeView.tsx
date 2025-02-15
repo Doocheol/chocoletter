@@ -55,22 +55,22 @@ const MainYourBeforeView: React.FC = () => {
 	const isLoggedIn = useRecoilValue(isLoginAtom);
 
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
-	const giftBoxRef = useRef<HTMLDivElement>(null);
+	const eventGiftBoxRef = useRef<HTMLImageElement>(null);
 	const dummyRef = useRef<HTMLDivElement>(null);
 
 	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
-	if (!isLoggedIn) {
-		return (
-			<NotLoginModal
-				isOpen={true}
-				onClose={() => {}}
-				onLogin={() => {
-					localStorage.setItem("redirect", location.pathname);
-					navigate("/");
-				}}
-			/>
-		);
-	}
+	// if (!isLoggedIn) {
+	// 	return (
+	// 		<NotLoginModal
+	// 			isOpen={true}
+	// 			onClose={() => {}}
+	// 			onLogin={() => {
+	// 				localStorage.setItem("redirect", location.pathname);
+	// 				navigate("/");
+	// 			}}
+	// 		/>
+	// 	);
+	// }
 
 	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
@@ -187,7 +187,7 @@ const MainYourBeforeView: React.FC = () => {
 			dummyRef,
 			dummyRef,
 			dummyRef,
-			giftBoxRef,
+			eventGiftBoxRef,
 		],
 		[]
 	);
@@ -294,13 +294,13 @@ const MainYourBeforeView: React.FC = () => {
 
 				<div
 					className="flex flex-col items-center pl-10 mb-6"
-					ref={giftBoxRef}
 				>
 					{/* giftBoxType에 따라 선물상자 이미지 동적으로 변경 */}
 					<img
 						src={giftboxImages[giftBoxType]}
 						alt={`giftbox_before_${giftBoxType}`}
 						className="p-2 max-h-60"
+						ref={eventGiftBoxRef}
 					/>
 				</div>
 
