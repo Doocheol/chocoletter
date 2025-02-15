@@ -59,18 +59,18 @@ const MainYourBeforeView: React.FC = () => {
 	const dummyRef = useRef<HTMLDivElement>(null);
 
 	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
-	// if (!isLoggedIn) {
-	// 	return (
-	// 		<NotLoginModal
-	// 			isOpen={true}
-	// 			onClose={() => {}}
-	// 			onLogin={() => {
-	// 				localStorage.setItem("redirect", location.pathname);
-	// 				navigate("/");
-	// 			}}
-	// 		/>
-	// 	);
-	// }
+	if (!isLoggedIn) {
+		return (
+			<NotLoginModal
+				isOpen={true}
+				onClose={() => {}}
+				onLogin={() => {
+					localStorage.setItem("redirect", location.pathname);
+					navigate("/");
+				}}
+			/>
+		);
+	}
 
 	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
