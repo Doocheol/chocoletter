@@ -188,13 +188,13 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     >
       <div className="flex flex-col w-full">
         {/* 헤더 영역 */}
-        <div className="w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+        <div className="flex w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
           </div>
-          <div className="text-center text-gray-400 text-xs mt-1">
-            버튼 클릭하고 캘린더로 열어주세요!
+          <div className="flex justify-end text-center text-gray-400 text-xs mt-1">
+            캘박 안내: Android 또는 iOS Safari에서 지원합니다.
           </div>
         </div>
 
