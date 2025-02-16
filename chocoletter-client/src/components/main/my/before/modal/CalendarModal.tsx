@@ -163,7 +163,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       // 3️⃣ 지난 일정 (isHidden === true) → 기존 시간 순서 유지 (오름차순 정렬)
       return timeToMinute(a.unBoxingTime) - timeToMinute(b.unBoxingTime);
     });
-  }, [schedules]); // 여기 수정하고 merge
+  }, [schedules]);
 
   return (
     <Modal
@@ -173,7 +173,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     >
       <div className="flex flex-col w-full">
         {/* 헤더 영역 - flex-col로 설정하여 제목/버튼과 안내 문구를 각각 별도의 줄에 배치 */}
-        <div className="flex flex-col w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+        <div className="flex flex-col w-full px-2 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
@@ -189,39 +189,27 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
           {sortedSchedules.length > 0 ? (
             sortedSchedules.map((item, index) => {
               const RTCchocolate = specialChocos[Math.floor(Math.random() * specialChocos.length)];
-              const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
-              const fiveBeforeKST = getFiveMinutesBefore(eventKST);
-              const nowKST = CurrentTime();
 
               // 조건에 따라 버튼을 다르게 처리
               let buttonAction;
-              let isHidden = false;
+              const isHidden = false;
               let isAfter = false;
 
-              if (nowKST > eventKST) {
-                // 이벤트 시간이 지난 경우 -> 버튼 숨기기
-                isHidden = true;
-              } else if (nowKST >= fiveBeforeKST) {
-                // 5분 전 ~ 이벤트 시간까지 -> navigate
-                if (item.unboxingRoomId) {
-                  buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
-                } else {
-                  buttonAction = () => {
-                    if (!toast.isActive("no-room-toast")) {
-                      toast.error("방 정보가 없습니다.", {
-                        toastId: "no-room-toast",
-                        position: "top-center",
-                        autoClose: 2000,
-                      });
-                    }
-                  };
-                }
-              } else {
-                // 이벤트 시간이 아직 안 됨 -> toast 출력
+              if (item.isAccept) {
                 buttonAction = () => {
-                  if (!toast.isActive("before-5minute-toast")) {
-                    toast.error("5분 전부터 입장 가능합니다.", {
-                      toastId: "before-5minute-toast",
+                  if (!toast.isActive("not-Dday-toast")) {
+                    toast.error("2월 14일 해당되는 시간에 입장 가능합니다.", {
+                      toastId: "not-Dday-toast",
+                      position: "top-center",
+                      autoClose: 2000,
+                    });
+                  }
+                };
+              } else {
+                buttonAction = () => {
+                  if (!toast.isActive("not-accepted-toast")) {
+                    toast.error("아직 수락되지 않은 초대장입니다.", {
+                      toastId: "not-accepted-toast",
                       position: "top-center",
                       autoClose: 2000,
                     });

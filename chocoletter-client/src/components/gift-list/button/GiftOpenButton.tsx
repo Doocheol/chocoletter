@@ -105,37 +105,18 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	// 특별과 일반에 따른 버튼 동작 구현 
 	const giftOpenButtonClickHandler = async () => {
 		if (giftType === "SPECIAL") {
-			if (unboxingTime === null) return;
-
-			const unboxingDate = new Date(unboxingTime);
-			const unboxingMinusFive = new Date(
-				unboxingDate.getTime() - 5 * 60 * 1000
-			);
-			const currentDate = new Date();
-
-			if (currentDate < unboxingMinusFive) {
-				if (isAccepted) {
-					setIsRTC(true);
-				} else {
-					setIsAcceptRejectOpen(true);
-				}
+			if (isAccepted) {
+				setIsRTC(true);
 			} else {
-				if (roomId === null) {
-					navigate("/gift-list/before");
-					if (!toast.isActive("no-room-toast")) {
-						toast.error("방 정보가 없습니다.", {
-							toastId: "no-room-toast",
-							position: "top-center",
-							autoClose: 2000,
-						});
-					}
-				} else {
-					navigate(`/video/${roomId}`);
-				}
+				setIsAcceptRejectOpen(true);
 			}
 		} else {
 			setAtomGiftId(giftId);
-			navigate("/letter");
+			if (isOpened) {
+				navigate("/letter");
+			} else {
+				setIsNonOpen(true);
+			}
 		}
 	};
 
