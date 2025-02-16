@@ -35,13 +35,13 @@ interface CalendarModalProps {
 
 // 내 언박싱 일정 확인 API(GET)
 const GetMyUnboxingSchedule = async () => {
-    try {
-        const response = await fetchMyUnboxingSchedule();
-        return response.myUnBoxingTimes;
-    } catch (err) {
-        return null;
-    }
-}
+  try {
+    const response = await fetchMyUnboxingSchedule();
+    return response.myUnBoxingTimes;
+  } catch (err) {
+    return null;
+  }
+};
 
 // 시간 설정 AM/PM
 const ChangeAmPm = (strTime: string) => {
@@ -172,95 +172,109 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       className="max-w-sm sm:max-w-lg md:max-w-xl max-h-[80vh] !bg-chocoletterLetterBgBlue"
     >
       <div className="flex flex-col w-full">
-        {/* 헤더 영역 */}
-        <div className="flex w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+        {/* 헤더 영역 - flex-col로 설정하여 제목/버튼과 안내 문구를 각각 별도의 줄에 배치 */}
+        <div className="flex flex-col w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
           </div>
           <div className="flex justify-end text-center text-gray-400 text-xxs mt-1">
-            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 추가해주세요.
+            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 일정을 추가할 수
+            있어요.
           </div>
         </div>
 
-            {/* 일정 목록 영역 */}
-            <div className="w-full max-h-[60dvh] flex flex-col space-y-[15px] mt-4 ml-1 pb-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
-            {sortedSchedules.length > 0 ? (
-                sortedSchedules.map((item, index) => { 
-                const RTCchocolate = specialChocos[Math.floor(Math.random() * specialChocos.length)];
-                const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
-                const fiveBeforeKST = getFiveMinutesBefore(eventKST);
-                const nowKST = CurrentTime();
+        {/* 일정 목록 영역 */}
+        <div className="w-full max-h-[60dvh] flex flex-col space-y-[15px] mt-4 ml-1 pb-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
+          {sortedSchedules.length > 0 ? (
+            sortedSchedules.map((item, index) => {
+              const RTCchocolate = specialChocos[Math.floor(Math.random() * specialChocos.length)];
+              const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
+              const fiveBeforeKST = getFiveMinutesBefore(eventKST);
+              const nowKST = CurrentTime();
 
-                // 조건에 따라 버튼을 다르게 처리
-                let buttonAction;
-                let isHidden = false;
-                let isAfter = false;
+              // 조건에 따라 버튼을 다르게 처리
+              let buttonAction;
+              let isHidden = false;
+              let isAfter = false;
 
-                if (nowKST > eventKST) {
-                    // 이벤트 시간이 지난 경우 -> 버튼 숨기기
-                    isHidden = true;
-                } else if (nowKST >= fiveBeforeKST) {
-                    // 5분 전 ~ 이벤트 시간까지 -> navigate
-                    if (item.unboxingRoomId) {
-                        buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
-                    } else {
-                        buttonAction = () => {
-                            if (!toast.isActive("no-room-toast")) {
-                                toast.error("방 정보가 없습니다.", {
-                                    toastId: "no-room-toast",
-                                    position: "top-center",
-                                    autoClose: 2000,
-                                });
-                            }
-                        }
-                    }
+              if (nowKST > eventKST) {
+                // 이벤트 시간이 지난 경우 -> 버튼 숨기기
+                isHidden = true;
+              } else if (nowKST >= fiveBeforeKST) {
+                // 5분 전 ~ 이벤트 시간까지 -> navigate
+                if (item.unboxingRoomId) {
+                  buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
                 } else {
-                    // 이벤트 시간이 아직 안 됨 -> toast 출력
-                        buttonAction = () => { 
-                            if (!toast.isActive("before-5minute-toast")) {
-                                toast.error("5분 전부터 입장 가능합니다.", {
-                                    toastId: "before-5minute-toast",
-                                    position: "top-center",
-                                    autoClose: 2000,
-                                });
-                            }
-                        }
-                    isAfter = true;
+                  buttonAction = () => {
+                    if (!toast.isActive("no-room-toast")) {
+                      toast.error("방 정보가 없습니다.", {
+                        toastId: "no-room-toast",
+                        position: "top-center",
+                        autoClose: 2000,
+                      });
+                    }
+                  };
                 }
+              } else {
+                // 이벤트 시간이 아직 안 됨 -> toast 출력
+                buttonAction = () => {
+                  if (!toast.isActive("before-5minute-toast")) {
+                    toast.error("5분 전부터 입장 가능합니다.", {
+                      toastId: "before-5minute-toast",
+                      position: "top-center",
+                      autoClose: 2000,
+                    });
+                  }
+                };
+                isAfter = true;
+              }
 
-                return(
-                    <button 
-                    key={`${item.nickName}-${index}`}
-                    className={`active:opacity-80 transition ${
-                        isHidden ? "opacity-40 pointer-events-none grayscale" : ""
-                    } ${isAfter ? "opacity-40" : ""}`}
-                    onClick={buttonAction}
+              return (
+                <button
+                  key={`${item.nickName}-${index}`}
+                  className={`active:opacity-80 transition ${
+                    isHidden ? "opacity-40 pointer-events-none grayscale" : ""
+                  } ${isAfter ? "opacity-40" : ""}`}
+                  onClick={buttonAction}
+                >
+                  <div className="relative w-[300px] shadow-[-102px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
+                    {/* 왼쪽 초대장 스타일 배경 */}
+                    <div
+                      className="w-2/3 h-full text-start bg-white text-chocoletterPurpleBold p-3 relative z-10"
+                      style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}
                     >
-                    <div className="relative w-[300px] shadow-[-102px_5px_5px_0px_rgba(0,0,0,0.2)] h-32 flex items-end">
-                        {/* 왼쪽 초대장 스타일 배경 */}
-                        <div className="w-2/3 h-full text-start bg-white text-chocoletterPurpleBold p-3 relative z-10" style={{ clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)" }}>
-                        <div className="w-full h-full">
-                            <h3 className="text-md font-bold font-sans">언박싱 초대장💌</h3>
-                            <p className="text-gray-500 mt-2 font-sans max-w-full overflow-hidden whitespace-nowrap text-ellipsis">{item.nickName}님과 함께<br/>영상통화를 시작해보세요!</p>
-                            <p className="text-sm mt-2 font-sans">{ChangeAmPm(item.unBoxingTime)}</p>
-                        </div>
-                        </div>
-                        
-                        {/* 오른쪽 아이콘 스타일 */}
-                        <div className={`w-2/5 h-[calc(100%-15px)] mb-[2px] bg-chocoletterPurple flex items-center justify-center relative -ml-12 ${!isHidden ? "animate-slideWiggle" : ""} `} style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px"}}>
-                        <img src={RTCchocolate} className="w-[60%] h-[60%]" />
-                        </div>
+                      <div className="w-full h-full">
+                        <h3 className="text-md font-bold font-sans">언박싱 초대장💌</h3>
+                        <p className="text-gray-500 mt-2 font-sans max-w-full overflow-hidden whitespace-nowrap text-ellipsis">
+                          {item.nickName}님과 함께
+                          <br />
+                          영상통화를 시작해보세요!
+                        </p>
+                        <p className="text-sm mt-2 font-sans">{ChangeAmPm(item.unBoxingTime)}</p>
+                      </div>
                     </div>
-                    </button>
-                )})
-            ) : (
-                <div className="text-gray-300 text-sm text-center font-sans">일정이 없어요!</div>
-            )}
-            </div>
+
+                    {/* 오른쪽 아이콘 스타일 */}
+                    <div
+                      className={`w-2/5 h-[calc(100%-15px)] mb-[2px] bg-chocoletterPurple flex items-center justify-center relative -ml-12 ${
+                        !isHidden ? "animate-slideWiggle" : ""
+                      } `}
+                      style={{ borderTopRightRadius: "20px", borderBottomRightRadius: "20px" }}
+                    >
+                      <img src={RTCchocolate} className="w-[60%] h-[60%]" />
+                    </div>
+                  </div>
+                </button>
+              );
+            })
+          ) : (
+            <div className="text-gray-300 text-sm text-center font-sans">일정이 없어요!</div>
+          )}
         </div>
-        </Modal>
-    );
+      </div>
+    </Modal>
+  );
 };
 
 export default CalendarModal;
