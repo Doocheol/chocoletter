@@ -37,7 +37,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
         setIsOpenLetter(false);
     }
 
-    // 남은 시간 계산
+    // 대기방의 남은 시간 계산
     useEffect(() => {
         const targetTime = new Date(unboxing);
         const targetUTC = new Date(targetTime.getTime() - 9 * 3600 * 1000 + 60 * 1000);
@@ -51,7 +51,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
         setRemainTime(secondDiff);
     }, [unboxing])
 
-    // 5분동안 타이머
+    // 대기방 남은 시간 동안 타이머
     useEffect(() => {
         timeoutRef.current = setInterval(() => {
             setRemainTime((time) => time - 1);
@@ -70,7 +70,7 @@ export const WaitingTest = ({ unboxing, onEnd, isReady, isItThere, videoState, t
         };
     }, [remainTime])
 
-    // 5분 후 방 폭파
+    // 남은 시간이 없을 때 방 폭파
     useEffect(() => {
         if (remainTime <= 0 && !isItThere) {
             onEnd();

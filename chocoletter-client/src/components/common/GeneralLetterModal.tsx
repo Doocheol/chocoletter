@@ -20,9 +20,6 @@ const GeneralLetterModal: React.FC<ModalProps> = ({
 	question,
 	answer,
 }) => {
-	// 편지 담을 state
-	// const letter = "Sweet Valentine Letter";
-
 	useEffect(() => {
 		if (!isOpen) return;
 

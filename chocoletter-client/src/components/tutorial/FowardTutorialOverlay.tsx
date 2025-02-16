@@ -304,20 +304,6 @@ export const FowardTutorialOverlay: React.FC<FowardTutorialOverlayProps> = ({
                     보낸 친구를 유추해보세요!
                 </p>
             </div>
-            {/* <div className="mt-[30px] mt-6 flex flex-col items-center px-4">
-                <div className="flex flex-col w-[255px] pl-8 flex items-center justify-center heartbeat" >
-                    <img
-                            src={click_text}
-                            alt="click_text"
-                            style={{ width: "35%" }}
-                        />
-                    <img
-                        src={giftbox_before_12}
-                        alt={`giftbox_before_12`}
-                        className="p-2 max-h-60"
-                    />
-                </div>
-            </div> */}
         </div>)
     ]
 
@@ -430,13 +416,9 @@ function makeHighlightPath(x: number, y: number, radius: number, page: number,) 
         circle = [
         `M ${startX},${startY}`,               // 시작점: 좌측 상단 (borderRadius offset 적용)
         `h ${horizontalLength}`,              // 상단 가로선
-        // `q ${borderRadius},0 ${borderRadius},${borderRadius}`,  // 우측 상단 곡선
         `v ${verticalLength}`,                // 우측 세로선
-        // `q 0,${borderRadius} -${borderRadius},${borderRadius}`, // 우측 하단 곡선
         `h -${horizontalLength}`,             // 하단 가로선
-        // `q -${borderRadius},0 -${borderRadius},-${borderRadius}`,// 좌측 하단 곡선
         `v -${verticalLength}`,               // 좌측 세로선
-        // `q 0,-${borderRadius} ${borderRadius},-${borderRadius}`, // 좌측 상단 곡선
         'Z'
         ].join(" ");
     }

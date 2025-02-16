@@ -20,20 +20,18 @@ const formatTimeKST = (date: Date): string => {
 export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepted}: UnboxingTimeStickerProps) => {
     const [currentDate, setCurrentDate] = useState(new Date());
 
+    // 1분마다 현재 시간 갱신
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentDate(new Date());
         }, 60000);
         return () => clearInterval(interval);
     }, [])
-    
-    const eventDay = import.meta.env.VITE_EVNET_DAY || "0214";
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const currentMonthDay = month + day;
 
     let content = null;
 
+    // 일반 초콜릿은 당일 체크표시 유무만 표시 
+    // 특별 초콜릿은 unboxingTime 5분 전까지는 시간수락 대기, 이후에는 연결 가능
     if (giftType === "GENERAL") {
         if (isOpened) {
             content = (
