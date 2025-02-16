@@ -10,21 +10,22 @@ import {
 import { getGiftList } from "../services/giftApi";
 
 const GiftListBeforeView = () => {
-	const [remainOpenCount, setRemainOpenCount] =
-		useRecoilState(availableGiftsAtom);
+	const [remainOpenCount, setRemainOpenCount] = useRecoilState(availableGiftsAtom);
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 플래그
-
+	
+	// 초콜릿 목록 불러오기
 	useEffect(() => {
 		getGiftList("all");
 	}, [refresh]);
 
+	// 열어볼 수 있는 초콜릿 개수 불러오기 
 	useEffect(() => {
 		const getCanOpenGiftCount = async () => {
 			try {
 				const response = await countMyGiftBox();
 				setRemainOpenCount(response.canOpenGiftCount);
 			} catch (err) {
-				console.log(err);
+				setRemainOpenCount(0);
 			}
 		};
 
