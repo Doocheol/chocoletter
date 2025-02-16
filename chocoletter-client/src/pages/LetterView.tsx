@@ -5,20 +5,12 @@ import { GoBackButton } from "../components/common/GoBackButton";
 import { getGiftDetail } from "../services/giftApi";
 import Gift from "../components/letter/Letter";
 import Loading from "../components/common/Loading";
-import {
-	giftBoxIdAtom,
-	isLoginAtom,
-	memberIdAtom,
-} from "../atoms/auth/userAtoms";
+import { giftBoxIdAtom, memberIdAtom } from "../atoms/auth/userAtoms";
 import { decryptLetter } from "../services/giftEncryptedApi";
 import { getMemberPrivateKey } from "../utils/keyManager";
 import { getGiftBoxPublicKey } from "../services/keyApi";
-import { logout } from "../services/userApi";
 import LetterEncryptedNoneModal from "../components/letter/modal/LetterEncryptedNoneModal";
-import { useNavigate } from "react-router-dom";
 
-// 편지 보는 뷰
-// gift list page 에서 초콜릿 선택 시 보이게 됨.
 interface GiftData {
 	nickName?: string;
 	content?: string | null;
@@ -30,15 +22,15 @@ const LetterView = () => {
 	const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
-	const isLogin = useRecoilValue(isLoginAtom);
-	const navigate = useNavigate();
-
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
-		useState(false);
-
+	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
+	const backgroundClass = giftData?.question
+		? "bg-letter-blue-background"
+		: "bg-letter-pink-background";
+	
+	// 암호화된 편지를 복호화하여 가져오기 
 	useEffect(() => {
 		const fetchGiftData = async () => {
 			if (selectedGiftId) {
@@ -54,6 +46,7 @@ const LetterView = () => {
 
 					const publicKey = await getGiftBoxPublicKey(giftBoxId);
 
+					// 질문 편지인 경우 
 					if (data.question && data.answer) {
 						try {
 							const plainAnswer = await decryptLetter(
@@ -67,6 +60,7 @@ const LetterView = () => {
 								"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
 							setIsLetterEncryptedNoneModalOpen(true);
 						}
+					// 자유 편지인 경우 
 					} else if (data.content) {
 						try {
 							const plainContent = await decryptLetter(
@@ -85,9 +79,9 @@ const LetterView = () => {
 					setGiftData(updatedData);
 				} catch (error: any) {
 					if (error.response?.status === 403) {
-						setError(403); // 에러 상태 설정
+						setError(403); 
 					} else {
-						setError(error.response?.status || 500); // 기타 에러 처리
+						setError(error.response?.status || 500); 
 					}
 				} finally {
 					setLoading(false);
@@ -99,23 +93,10 @@ const LetterView = () => {
 		fetchGiftData();
 	}, [selectedGiftId]);
 
-	const backgroundClass = giftData?.question
-		? "bg-letter-blue-background"
-		: "bg-letter-pink-background";
 
 	return (
-		<div
-			className={`relative flex flex-col items-center h-screen ${backgroundClass}`}
-		>
-			{/* GoBackButton을 좌측 상단에 고정 */}
+		<div className={`relative flex flex-col items-center h-screen ${backgroundClass}`}>
 			<GoBackButton strokeColor="#9E4AFF" />
-
-			{/* 추후 삭제!! 선택된 Gift ID 표시 */}
-			{/* <div className="mt-4 text-center text-gray-600">
-                <p>
-                    <strong>Selected Gift ID:</strong> {selectedGiftId}
-                </p>
-            </div> */}
 
 			{/* 메인 콘텐츠 렌더링 */}
 			{loading ? (
