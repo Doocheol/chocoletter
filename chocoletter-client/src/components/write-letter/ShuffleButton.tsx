@@ -1,11 +1,7 @@
-import React from "react";
-import shuffle_icon from "../../assets/images/letter/shuffle_icon.svg";
-import { BsArrowCounterclockwise } from "react-icons/bs";
 import { RiResetRightFill } from "react-icons/ri";
-import { AiOutlineReload } from "react-icons/ai";
 
 type ShuffleButtonProps = {
-    onShuffleClick: () => void; // 부모 컴포넌트로 전달할 이벤트
+    onShuffleClick: () => void;
     className?: string; 
     altText?: string; 
 };

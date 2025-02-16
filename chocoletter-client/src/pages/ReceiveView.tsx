@@ -5,17 +5,16 @@ import RejectButton from "../components/receive/button/RejectButton";
 
 // webRTC 일정 수락/거절 화면
 function ReceiveView() {
-	const navigate = useNavigate();
-	const { giftId: strGiftId } = useParams<{ giftId: string }>(); //url에서 giftid 가져오기
+	const [time, setTime] = useState<string | null>(null);
+	const [error, setError] = useState<boolean>(false);
+	const { giftId: strGiftId } = useParams<{ giftId: string }>(); 
 	const giftId =
 		strGiftId && !isNaN(Number(strGiftId)) ? Number(strGiftId) : null;
 
-	const [time, setTime] = useState<string | null>(null);
-	const [error, setError] = useState<boolean>(false);
 
 	// giftId가 null인 경우와 에러인 경우 처리
 	if (!giftId || error) {
-		navigate("/error");
+		new Error("Invalid giftId");
 		return null;
 	}
 
