@@ -1,20 +1,18 @@
-import React, { useState, useEffect  } from "react";
+import React, { useEffect  } from "react";
 import { useRecoilState } from "recoil";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ShuffleButton } from "./ShuffleButton";
 import { getQuestion } from "../../services/questionApi";
 import question_icon from "../../assets/images/letter/question_icon.svg";
 import { questionLetterState } from "../../atoms/letter/letterAtoms";
 
-
 const QuestionLetterForm: React.FC = () => {
     const [letter, setLetter] = useRecoilState(questionLetterState);
-    // const [randomQuestion, setRandomQuestion] = useState("랜덤질문이 들어갈 자리입니다.")
-
     const nicknameToastId = "nickname-warning";
     const answerToastId = "answer-warning";
 
+    // 닉네임 작성 
     const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (value.length > 15) {
@@ -31,7 +29,7 @@ const QuestionLetterForm: React.FC = () => {
         }
     };
 
-
+    // 답변 작성
     const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
         if (value.length > 150) {
@@ -66,11 +64,10 @@ const QuestionLetterForm: React.FC = () => {
         }
     };
 
-    // 페이지가 로딩될 때 한 번 실행
+    // 페이지가 로딩될 때 한 번 실행하여 처음 질문 넣기
     useEffect(() => {
         onShuffleQuestion();
-    }, []); // 빈 배열을 넣어 최초 렌더링 시 실행
-
+    }, []); 
 
     return (
         <div className="flex flex-col justify-center items-center mb-[20px] gap-[20px]">

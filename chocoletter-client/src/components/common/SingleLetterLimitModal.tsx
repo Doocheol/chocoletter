@@ -8,12 +8,10 @@ import readLetterIcon from "../../assets/images/unboxing/letter_purple.svg";
 interface SingleLetterLimitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSend: () => void; // 보내기 동작 추가
+    onSend: () => void;
 }
 
 export const SingleLetterLimitModal: React.FC<SingleLetterLimitModalProps> = ({ isOpen, onClose, onSend }) => {
-    const remainOpenCount = useRecoilValue(availableGiftsAtom);
-
     return (
         <OtherModal isOpen={isOpen} onClose={onClose}>
             <div className="text-center flex flex-col justify-center items-center gap-6">
