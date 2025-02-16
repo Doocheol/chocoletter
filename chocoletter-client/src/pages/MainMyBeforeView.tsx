@@ -64,6 +64,9 @@ import { PointTutorialOverlay } from "../components/tutorial/PointTutorialOverla
 import { useCookies } from "react-cookie";
 
 const MainMyBeforeView: React.FC = () => {
+  const chocoletterUrl = import.meta.env.VITE_FRONTEND_SERVER_URL;
+  console.log(chocoletterUrl);
+
   const navigate = useNavigate();
 
   const [cookies] = useCookies(["valentineCountdownShown"]);
