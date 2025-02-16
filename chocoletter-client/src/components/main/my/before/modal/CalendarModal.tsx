@@ -179,8 +179,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
             <ICSDownloadButton schedules={schedules} />
           </div>
           <div className="flex justify-end text-center text-gray-400 text-xxs mt-1">
-            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 일정을 추가할 수
-            있어요.
+            캘박 안내: 아이폰은 Safari만 지원하며, 공유 창이 열린 뒤에 닫으시면 캘린더로 추가가
+            가능합니다.
           </div>
         </div>
 
