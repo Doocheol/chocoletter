@@ -7,11 +7,11 @@ const ProtectedRoute: React.FC = () => {
 	const navigate = useNavigate();
 	const isLogin = useRecoilValue(isLoginAtom);
 
-	// useEffect(() => {
-	// 	if (!isLogin) {
-	// 		navigate("/");
-	// 	}
-	// }, [isLogin, navigate]);
+	useEffect(() => {
+		if (!isLogin) {
+			navigate("/");
+		}
+	}, [isLogin, navigate]);
 
 	return <Outlet />;
 };
