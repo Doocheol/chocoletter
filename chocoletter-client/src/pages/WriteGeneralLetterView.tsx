@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GoBackButton } from "../components/common/GoBackButton";
-import { Button } from "../components/common/Button";
 import { SingleLetterLimitModal } from "../components/common/SingleLetterLimitModal";
 import GeneralLetterForm from "../components/write-letter/GeneralLetterForm";
 import { toast } from "react-toastify";
@@ -15,8 +14,8 @@ import next_button from "../assets/images/button/next_button.svg";
 const WriteGeneralLetterView = () => {
     const [letter, setLetter] = useRecoilState(freeLetterState);
     const { giftBoxId } = useParams();
-    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
     
     const resetLetterState = () => {
         setLetter({
@@ -25,10 +24,13 @@ const WriteGeneralLetterView = () => {
             contentLength: 0,
         });
     };
+
+    // 뒤로 가기 클릭 : 상태 초기화 
     const handleGoBack = () => {
         resetLetterState(); // 상태 초기화
     };
 
+    // 다음으로 버튼 클릭 : 한 사람에게 하나의 편지만 작성 가능하다는 모달 열기
     const handleNextClick  = () => {
         if (letter.nickname.length < 1) {
             if (!toast.isActive("min-nickname-toast")) {
@@ -55,15 +57,15 @@ const WriteGeneralLetterView = () => {
             setIsModalOpen(true);
         };
 
+    // 다음으로 버튼 클릭 : 선물 선택 화면으로 이동
     const handleSendLetter = () => {
-        setIsModalOpen(false); // 모달 닫기
-        navigate(`/select-gift/${giftBoxId}`); // 보내기 버튼 클릭 시 이동
+        setIsModalOpen(false); 
+        navigate(`/select-gift/${giftBoxId}`);
     };
 
     return (
         <div className="relative flex flex-col items-center h-screen bg-letter-pink-background">
             <GoBackButton strokeColor="#9E4AFF" altText="뒤로가기 버튼" onClick={handleGoBack} />
-
             <div className="absolute mt-[41px] m-4">
                 {/* 로고 이미지 */}
                 <div className="flex flex-col items-center mb-[30px]">
@@ -71,24 +73,16 @@ const WriteGeneralLetterView = () => {
                 </div>
 
                 <div>
-                    {/* GeneralLetterForm */}
+                    {/* 자유 편지 양식 */}
                     <GeneralLetterForm />
 
-                    {/* 편지 작성 완료 버튼 - 모달 열기 */}
+                    {/* 다음으로 버튼 */}
                     <div className="relatvie text-center">
                         <ImageButton
                             onClick={handleNextClick}
                             src={next_button}
                             className="absolute right-0 gap-2"
-                        />
-                        {/* <Button
-                            onClick={handleNextClick}
-                            className="absolute flex w-[152px] h-[45px] justify-center items-center right-0 gap-2 rounded-[15px] border border-black bg-chocoletterPurpleBold"
-                        >
-                            <p className="text-white text-center font-sans text-[21px] leading-[22px] tracking-[-0.408px]">
-                                다음으로
-                            </p>
-                        </Button> */}
+                        />  
                     </div>
                 </div>
             </div>
@@ -96,7 +90,7 @@ const WriteGeneralLetterView = () => {
             <SingleLetterLimitModal
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                onSend={handleSendLetter} // 보내기 버튼 클릭 시 동작
+                onSend={handleSendLetter}
             />
         </div>
     );

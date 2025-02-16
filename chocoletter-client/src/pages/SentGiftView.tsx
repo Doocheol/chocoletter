@@ -5,7 +5,6 @@ import wing_right from "../assets/images/chocolate/wing_right.svg";
 import { ImageButton } from "../components/common/ImageButton";
 import go_to_my_main_button from "../assets/images/button/go_to_my_main_button.svg";
 
-// 편지 작성 완료 후, 전송 완료 페이지
 const SentGiftView = () => {
 	const [remainTime, setRemainTime] = useState(10);
 	const navigate = useNavigate();
