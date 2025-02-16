@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
-import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
 	giftListRefreshAtom,
 	selectedGiftIdAtom,
@@ -47,28 +46,6 @@ interface GiftOpenButtonProps {
 	onRefresh: () => void;
 }
 
-const getEventDate = (): Date => {
-	const raw = import.meta.env.VITE_EVENT_DAY || "0214";
-	// raw가 "0214" 형식이면 앞의 두 자리는 월, 뒤의 두 자리는 일
-	const month = Number(raw.slice(0, 2));
-	const day = Number(raw.slice(2, 4));
-	const currentYear = new Date().getFullYear();
-	// JavaScript Date는 month가 0부터 시작하므로 month - 1
-	return new Date(currentYear, month - 1, day);
-};
-
-const compareDates = (current: Date, eventday: Date) => {
-	if (
-		current.getFullYear() === eventday.getFullYear() &&
-		current.getMonth() === eventday.getMonth() &&
-		current.getDate() === eventday.getDate()
-	) {
-		return true;
-	}
-
-	return false;
-};
-
 export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	giftId,
 	giftType,
@@ -80,12 +57,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 }) => {
 	const [isRTC, setIsRTC] = useState(false);
 	const [isNonOpen, setIsNonOpen] = useState(false);
-	// const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
-	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
-
+	const refresh = useRecoilValue(giftListRefreshAtom); 
 	const [buttonImage, setButtonImage] = useState("");
 
 	// refresh 값이 변경되면 AcceptRejectModal을 자동으로 닫음
@@ -117,19 +92,17 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 		}
 	}, []);
 
+	// RTC 초콜릿 안내 모달 닫는 함수
 	const closeRTCModal = () => {
 		setIsRTC(false);
 	};
 
-	const closeGeneralModal = () => {
-		setIsNonOpen(false);
-	};
-
+	// RTC 수락/거절 모달 닫는 함수 
 	const closeAcceptRejectModal = () => {
 		setIsAcceptRejectOpen(false);
 	};
 
-	// 버튼 onClick 메서드
+	// 특별과 일반에 따른 버튼 동작 구현 
 	const giftOpenButtonClickHandler = async () => {
 		if (giftType === "SPECIAL") {
 			if (isAccepted) {

@@ -55,6 +55,8 @@ const TestVideoRoomView = () => {
     const [isRTCsender, setIsRTCsender] = useState(false);
     const [refreshKey, setRefreshKey] = useState(Date.now());
 
+    // 대기방 종료, 통화 종료일 때 실행되는 함수 
+    // 세션 종료, 방 재입장 불가 API 호출 
     const onEnd = async () => {
         setIsTerminate(true)
         if (videoState.session?.sessionId) {
@@ -64,7 +66,7 @@ const TestVideoRoomView = () => {
         if (sessionId) terminateVideoRoom(sessionId);
     }
 
-    // 로그인 확인 및 입장 확인 API
+    // 로그인 확인, 세션 번호 확인 및 입장 확인 API 호출 
     useEffect(() => {
         navigate(`/main/${user?.giftBoxId || ""}`);
 
@@ -75,6 +77,7 @@ const TestVideoRoomView = () => {
 
         if (!sessionIdInit) {
             new Error("세션 아이디가 없습니다.");
+            navigate(`main/${user?.giftBoxId}`);
             return;
         }
         setSessionId(sessionIdInit);
@@ -104,6 +107,8 @@ const TestVideoRoomView = () => {
                     } else {
                         new Error("서버 오류");
                     }
+                
+                navigate(`main/${user?.giftBoxId}`);
                 }
             }
         };
@@ -161,29 +166,35 @@ const TestVideoRoomView = () => {
         return () => clearInterval(timerInterval);
     }, [isItThere]);
 
+    // 음소거 실행/해제 함수 
     const muteOrNotHandler = () => {
         videoState.publisher?.publishAudio(!videoState.publisher.stream.audioActive);
         setIsAudio((prev) => !prev)
     }
 
+    // 비디오 끄기/켜기 함수 
     const videoOffOrNotHandler = () => {
         videoState.publisher?.publishVideo(!videoState.publisher.stream.videoActive);
         setIsVideo((prev) => !prev)
     }
 
+    // 편지 모달 열기 함수 
     const showRTCLetter = () => {
         setIsOpenLetter(true);
     }
 
+    // 편지 모달 닫기 함수 
     const hideRTCLetter = () => {
         setIsOpenLetter(false);
     }
 
+    // 보낸이나 오류가 발생한 경우 편지 모달 닫는 함수 
     const hideRTCLetterError = () => {
         setIsOpenLetter(false);
         setIsRTCsender(true);
     }
 
+    // 세션 생성 및 내 화면의 상대방 video 음소거 해제 함수 
     const transRemoteMuted = async () => {
         await initSession();
         setIsRemoteMuted(false);
