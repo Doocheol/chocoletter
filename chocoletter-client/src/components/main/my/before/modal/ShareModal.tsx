@@ -41,8 +41,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
       try {
         setIsLinkLoading(true);
         setSharedLink("");
-        const chocoletterUrl =
-          import.meta.env.VITE_FRONTEND_SERVER_URL || "https://www.chocolate-letter.com";
+        const chocoletterUrl = import.meta.env.VITE_FRONTEND_SERVER_URL;
         const giftBoxId = await getGiftBoxId();
         if (!giftBoxId || giftBoxId.trim() === "") {
           setSharedLink(window.location.href);

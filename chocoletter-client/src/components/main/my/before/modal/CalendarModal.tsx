@@ -176,11 +176,13 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
         <div className="flex flex-col w-full px-2 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
-            <ICSDownloadButton schedules={schedules} />
+            <div className="flex mr-3">
+              <ICSDownloadButton schedules={schedules} />
+            </div>
           </div>
           <div className="flex justify-end text-center text-gray-400 text-xxs mt-1">
-            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 일정을 추가할 수
-            있어요.
+            캘박 안내: 아이폰은 Safari만 지원하며, 공유 창이 열린 뒤에 닫으시면 캘린더로 추가가
+            가능합니다.
           </div>
         </div>
 
@@ -189,39 +191,27 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
           {sortedSchedules.length > 0 ? (
             sortedSchedules.map((item, index) => {
               const RTCchocolate = specialChocos[Math.floor(Math.random() * specialChocos.length)];
-              const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
-              const fiveBeforeKST = getFiveMinutesBefore(eventKST);
-              const nowKST = CurrentTime();
 
               // 조건에 따라 버튼을 다르게 처리
               let buttonAction;
-              let isHidden = false;
+              const isHidden = false;
               let isAfter = false;
 
-              if (nowKST > eventKST) {
-                // 이벤트 시간이 지난 경우 -> 버튼 숨기기
-                isHidden = true;
-              } else if (nowKST >= fiveBeforeKST) {
-                // 5분 전 ~ 이벤트 시간까지 -> navigate
-                if (item.unboxingRoomId) {
-                  buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
-                } else {
-                  buttonAction = () => {
-                    if (!toast.isActive("no-room-toast")) {
-                      toast.error("방 정보가 없습니다.", {
-                        toastId: "no-room-toast",
-                        position: "top-center",
-                        autoClose: 2000,
-                      });
-                    }
-                  };
-                }
-              } else {
-                // 이벤트 시간이 아직 안 됨 -> toast 출력
+              if (item.isAccept) {
                 buttonAction = () => {
-                  if (!toast.isActive("before-5minute-toast")) {
-                    toast.error("5분 전부터 입장 가능합니다.", {
-                      toastId: "before-5minute-toast",
+                  if (!toast.isActive("not-Dday-toast")) {
+                    toast.error("2월 14일 해당되는 시간에 입장 가능합니다.", {
+                      toastId: "not-Dday-toast",
+                      position: "top-center",
+                      autoClose: 2000,
+                    });
+                  }
+                };
+              } else {
+                buttonAction = () => {
+                  if (!toast.isActive("not-accepted-toast")) {
+                    toast.error("아직 수락되지 않은 초대장입니다.", {
+                      toastId: "not-accepted-toast",
                       position: "top-center",
                       autoClose: 2000,
                     });
