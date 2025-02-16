@@ -38,11 +38,9 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			if (choco.giftType === "SPECIAL" && choco.unBoxingTime) {
 				const unBoxingUTC =
 					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
-				console.log(choco.giftId, currentTimeUTC, unBoxingUTC);
 				if (currentTimeUTC > unBoxingUTC) {
 					try {
 						const res = await changeSpecialToGeneral(choco.giftId);
-						console.log(res);
 						setLocalChocolates((prevChocos) =>
 							prevChocos.map((item) =>
 								item.giftId === choco.giftId
@@ -51,7 +49,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						console.log("GiftList에서 변환 실패 : ", err);
+						new Error("특별 초콜릿 변환 실패")
 					}
 				}
 			}
@@ -61,7 +59,6 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 	if (isLoading) {
 		return <Loading />; // 로딩 상태 표시
 	}
-	console.log(chocolates);
 
 	const filteredChocolates = localChocolates.filter((choco) => {
 		if (filter === "all") return true;
@@ -78,7 +75,6 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			<div
 				className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[90px]`}
 			>
-				{/* api 연동 후 추가 수정 */}
 				{filteredChocolates.map((chocolate) => (
 					<GiftOpenButton
 						key={chocolate.giftId}

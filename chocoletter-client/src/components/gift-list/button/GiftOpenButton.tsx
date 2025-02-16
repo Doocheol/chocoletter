@@ -85,7 +85,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
-	const setRefresh = useSetRecoilState(giftListRefreshAtom); // 새로고침 플래그 관리
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
 
 	const [buttonImage, setButtonImage] = useState("");
@@ -95,16 +94,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	useEffect(() => {
 		setIsAcceptRejectOpen(false);
 	}, [refresh]);
-
-	// 1. 안 열린 일반 초콜릿
-	// 횟수를 사용하는 모달로 안내
-
-	// 2. 열린 일반 초콜릿
-	// 바로 편지로 이동
-
-	// 3. RTC 초콜릿
-	// 열지 못한다는 안내 모달로 이동
-	// 14일 시간 지난 경우
 
 	// localStorage에서 이미지 로드
 	useEffect(() => {
@@ -128,7 +117,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			setButtonImage(chocoRandomImage);
 			localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
 		}
-		console.log(giftId, savedImage);
 	}, []);
 
 	const closeRTCModal = () => {
@@ -139,10 +127,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 		setIsNonOpen(false);
 	};
 
-	// const closeGoNotificationModal = () => {
-	//     setIsAnnounceNoti(false);
-	// }
-
 	const closeAcceptRejectModal = () => {
 		setIsAcceptRejectOpen(false);
 	};
@@ -150,40 +134,14 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	// 버튼 onClick 메서드
 	const giftOpenButtonClickHandler = async () => {
 		if (giftType === "SPECIAL") {
-			if (unboxingTime === null) return;
-
-			const unboxingDate = new Date(unboxingTime);
-			const unboxingMinusFive = new Date(
-				unboxingDate.getTime() - 5 * 60 * 1000
-			);
-			const currentDate = new Date();
-
-			// 이거 이벤트 이후도 추가해야 할 것 같은데...
-			// 날짜 분류도 필요할 것 같은데...
-			if (currentDate < unboxingMinusFive) {
-				if (isAccepted) {
-					setIsRTC(true);
-				} else {
-					// setIsAnnounceNoti(true);
-					setIsAcceptRejectOpen(true);
-				}
+			if (isAccepted) {
+				setIsRTC(true);
 			} else {
-				if (roomId === null) {
-					navigate("/gift-list/before");
-					if (!toast.isActive("no-room-toast")) {
-						toast.error("방 정보가 없습니다.", {
-							toastId: "no-room-toast",
-							position: "top-center",
-							autoClose: 2000,
-						});
-					}
-				} else {
-					navigate(`/video/${roomId}`);
-				}
+				setIsAcceptRejectOpen(true);
 			}
 		} else {
 			setAtomGiftId(giftId);
-			if (isOpened || compareDates(currentDate, getEventDate())) {
+			if (isOpened) {
 				navigate("/letter");
 			} else {
 				setIsNonOpen(true);
@@ -195,11 +153,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleAccept = async () => {
 		try {
 			const result = await patchUnboxingAccept(giftId);
-			console.log("수락 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("수락 처리 중 에러 발생:", error);
+			new Error("수락 처리 중 에러 발생");
 		}
 	};
 
@@ -207,11 +164,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleReject = async () => {
 		try {
 			const result = await patchUnboxingReject(giftId);
-			console.log("거절 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("거절 처리 중 에러 발생:", error);
+			new Error("거절 처리 중 에러 발생");
 		}
 	};
 
@@ -224,8 +180,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 					onReject={handleReject}
 				/>
 			)}
-			{/* <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} /> */}
-
 			<AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
 			<IsOpenGeneralGiftModal
 				isOpen={isNonOpen}
