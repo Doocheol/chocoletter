@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
-import { AnnounceGoNotificationModal } from "../modal/AnnounceGoNotification";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -88,7 +87,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
 
 	const [buttonImage, setButtonImage] = useState("");
-	const currentDate = new Date();
 
 	// refresh 값이 변경되면 AcceptRejectModal을 자동으로 닫음
 	useEffect(() => {
@@ -181,10 +179,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 				/>
 			)}
 			<AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
-			<IsOpenGeneralGiftModal
-				isOpen={isNonOpen}
-				onClose={closeGeneralModal}
-			/>
 			<div
 				className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${
 					isRTC || isNonOpen

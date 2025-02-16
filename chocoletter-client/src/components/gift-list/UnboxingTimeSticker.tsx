@@ -41,14 +41,6 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
                     <img src={checkPurple} alt="체크 아이콘" />
                 </div>
             )
-        } else {
-            if (currentMonthDay !== eventDay) {
-                content = (
-                    <div className="absolute inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                        <p className="font-sans text-white text-sm text-center font-bold">열어주길<br/>기다리는 중...</p>
-                    </div>
-                )
-            }
         }
 
     } else {

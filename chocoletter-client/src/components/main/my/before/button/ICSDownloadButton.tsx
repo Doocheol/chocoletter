@@ -58,12 +58,13 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     // 이벤트 종료시간은 시작 시간으로부터 1시간 후 (필요시 조정 가능)
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
     const title = "초코레터 - 영상통화 입장 알림!";
-    const description = "https://onvd.chocolate-letter.com";
+    const description =
+      import.meta.env.VITE_FRONTEND_SERVER_URL || "https://www.chocolate-letter.com";
     const location = "초콜릿보다 달콤한 설렘을 전하세요!";
 
     return [
       "BEGIN:VEVENT",
-      `UID:${Date.now()}-${Math.random()}@onVD.chocolate-letter.com`,
+      `UID:${Date.now()}-${Math.random()}@${description}`,
       `DTSTAMP:${formatDate(new Date())}`,
       `DTSTART:${formatDate(startTime)}`,
       `DTEND:${formatDate(endTime)}`,
@@ -94,15 +95,21 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
   const handleOpenICS = async () => {
     const icsContent = generateICSContent();
     const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const file = new File([blob], "chocoletter_events.ics", { type: "text/calendar" });
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chocoletter_events.ics";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("android") > -1) {
+      // Android: 앵커 태그의 download 속성을 사용하여 ICS 파일 다운로드
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "events.ics";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // iOS 및 그 외: window.location.href로 파일 열기 시도
+      window.location.href = url;
+    }
 
     // 메모리 해제
     setTimeout(() => {

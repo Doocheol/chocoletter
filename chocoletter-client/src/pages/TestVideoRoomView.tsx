@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isLoginAtom } from '../atoms/auth/userAtoms';
-import { freeLetterState, questionLetterState } from '../atoms/letter/letterAtoms';
 import { userNameAtom } from '../atoms/auth/userAtoms';
 import { FiveSecondModal } from '../components/video-waiting-room/modal/FiveSecondModal';
 import { AnnouncePermitModal } from '../components/video-room/modal/AnnouncePermitModal';
 import { AnnounceSender } from '../components/video-room/modal/AnnounceSender';
-
+import { toast } from 'react-toastify';
 import CloseVideoRoomButton from '../components/video-room/button/CloseVideoRoomButton';
 import OutVideoRoomModal from '../components/video-room/modal/OutVideoRoomModal';
 import LetterInVideoModal from '../components/video-waiting-room/modal/LetterInVideoModal';
@@ -19,16 +18,15 @@ import { FaVideo } from "react-icons/fa6";
 import { FaVideoSlash } from "react-icons/fa";
 import { getUserInfo } from '../services/userInfo';
 import { joinSession, leaveSession, deleteSession } from '../utils/openviduTest';
-
 import { WaitingTest } from '../components/video-room/VideoWaiting';
 import { VideoState } from "../types/openvidutest";
 import { checkAuthVideoRoom, terminateVideoRoom } from '../services/openviduApi';
 import { GiftDetail } from '../types/openvidutest';
+import { AxiosError } from 'axios';
 
 const TestVideoRoomView = () => {
     const navigate = useNavigate();
     const { sessionIdInit } = useParams();
-    // const localPreviewRef = useRef<HTMLDivElement>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
     const [isRemoteMuted, setIsRemoteMuted] = useState(true);
     const [ isItThere, setIsItThere ] = useState(false);
@@ -37,7 +35,6 @@ const TestVideoRoomView = () => {
 
     const [isTerminate, setIsTerminate] = useState(false);
     const [leftTime, setLeftTime] = useState(95);
-    const didJoin = useRef(false);
     const [isAudio, setIsAudio] = useState(true);
     const [isVideo, setIsVideo] = useState(true);
     const [isOpenLetter, setIsOpenLetter] = useState(false);
@@ -47,13 +44,9 @@ const TestVideoRoomView = () => {
         mainStreamManager: undefined,
         publisher: undefined,
         subscribers: undefined,
-    }); // 비디오 상태
-    ///////////////////////////////////////////////////////////////
+    });
     const [letterInfo, setLetterInfo] = useState<GiftDetail | null>(null);
-    const [isWaitingRoom, setIsWaitingRoom] = useState(true);
     const isLogin = useRecoilValue(isLoginAtom);
-    const setFreeLetter = useSetRecoilState(freeLetterState);
-    const setQuestionLetter = useSetRecoilState(questionLetterState);
     const username = useRecoilValue(userNameAtom);
     const [user, setUser] = useState(() => getUserInfo());
     const [unboxingTime, setUnboxingTime] = useState<string>('');
@@ -81,8 +74,7 @@ const TestVideoRoomView = () => {
         }
 
         if (!sessionIdInit) {
-            console.error("세션 ID가 없습니다.");
-            navigate(`/main/${user?.giftBoxId || ""}`);
+            new Error("세션 아이디가 없습니다.");
             return;
         }
         setSessionId(sessionIdInit);
@@ -94,32 +86,34 @@ const TestVideoRoomView = () => {
         const checkAuth = async () => {
             try {
                 const checkAuthResult = await checkAuthVideoRoom(sessionIdInit);
-                console.log(checkAuthResult);
                 setLetterInfo(checkAuthResult.giftDetail);
                 setUnboxingTime(checkAuthResult.unboxingTime);
-                console.log(unboxingTime, letterInfo);
                 
                 if (!sessionStorage.getItem(refreshStorageKey)) {
                     sessionStorage.setItem(refreshStorageKey, "true");
                     setRefreshKey(Date.now());
                 }
             } catch (err) {
-                console.error("입장 확인 실패:", err);
-                navigate(`/main/${user?.giftBoxId}`);
+                if (err instanceof AxiosError) {
+                    if (err.response?.status === 401) {
+                        new Error("인증 실패");
+                    } else if (err.response?.status === 403) {
+                        new Error("권한 없음");
+                    } else if (err.response?.status === 404) {
+                        new Error("방이 존재하지 않음");
+                    } else {
+                        new Error("서버 오류");
+                    }
+                }
             }
         };
 
         checkAuth();
     }, [isLogin, letterInfo, navigate, sessionIdInit, unboxingTime, user?.giftBoxId, setSessionId]);
 
-    // 편지 찾기(추후 추가)
-    // 위의 checkAuth에 존재
-
     // 세션 및 토큰 발급
     const initSession = async () => {
         try {
-            console.log("세션 생성 중")
-
             await joinSession(
                 { sessionId: sessionIdInit, username },
                 setVideoState,
@@ -127,27 +121,28 @@ const TestVideoRoomView = () => {
                 setIsItThere,
             )
         } catch (err) {
-            console.log("세션 생성 실패 : ", err)
+            if (!toast.isActive("no-create-session")) {
+                toast.error("연결에 실패했습니다. 새로고침 해주세요!", { 
+                    toastId: "no-create-session",
+                    position: "top-center",
+                    autoClose: 3000,
+                });
+            }
         }
     };
 
-    //////////////////////////////////////////////////////////////////
-    // 내 영상 publishAudio 활성화
+    // 연결 전 5초 타이머 실행
     useEffect(() => {
         if (!isItThere) return;
         setCountFive(true);
         const timer = setTimeout(() => {
-            // console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& videoState.publisher");
-            // videoState.publisher?.publishAudio(true);
-            // console.log("&&&&&&&&&&&", videoState.publisher, "&&&&&&&&&&& after.publisher");
-            console.log("publish do");
             setCountFive(false);
         }, 5000);
 
         return () => clearTimeout(timer);       
     }, [isItThere])
 
-    // 1분 타이머 지나면 방 폭파
+    // 1분 30초 타이머 지나면 방 폭파
     useEffect(() => {
         if (!isItThere) return;
 
