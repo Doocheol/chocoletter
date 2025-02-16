@@ -39,7 +39,6 @@ const GetMyUnboxingSchedule = async () => {
     const response = await fetchMyUnboxingSchedule();
     return response.myUnBoxingTimes;
   } catch (err) {
-    console.log("내 언박스 일정 조회 실패 : ", err);
     return null;
   }
 };
@@ -173,14 +172,15 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       className="max-w-sm sm:max-w-lg md:max-w-xl max-h-[80vh] !bg-chocoletterLetterBgBlue"
     >
       <div className="flex flex-col w-full">
-        {/* 헤더 영역 */}
-        <div className="flex w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+        {/* 헤더 영역 - flex-col로 설정하여 제목/버튼과 안내 문구를 각각 별도의 줄에 배치 */}
+        <div className="flex flex-col w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
           </div>
           <div className="flex justify-end text-center text-gray-400 text-xxs mt-1">
-            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 추가해주세요.
+            캘박 안내: Android 또는 iOS Safari에서 지원하며, 다운로드 후 캘린더에 일정을 추가할 수
+            있어요.
           </div>
         </div>
 
