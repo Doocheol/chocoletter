@@ -2,30 +2,18 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { availableGiftsAtom, receivedGiftsAtom } from "../atoms/gift/giftAtoms";
 import {
   giftBoxIdAtom,
   giftBoxNumAtom,
   isFirstLoginAtom,
   isFirstLoginEventAtom,
-  isLoginAtom,
 } from "../atoms/auth/userAtoms";
 
-import giftbox_before_10 from "../assets/images/giftbox/giftbox_before_10.svg";
-import giftbox_before_20 from "../assets/images/giftbox/giftbox_before_20.svg";
-import giftbox_before_30 from "../assets/images/giftbox/giftbox_before_30.svg";
-import giftbox_before_40 from "../assets/images/giftbox/giftbox_before_40.svg";
-import giftbox_before_50 from "../assets/images/giftbox/giftbox_before_50.svg";
-import giftbox_before_11 from "../assets/images/giftbox/giftbox_before_11.svg";
-import giftbox_before_21 from "../assets/images/giftbox/giftbox_before_21.svg";
-import giftbox_before_31 from "../assets/images/giftbox/giftbox_before_31.svg";
-import giftbox_before_41 from "../assets/images/giftbox/giftbox_before_41.svg";
-import giftbox_before_51 from "../assets/images/giftbox/giftbox_before_51.svg";
-import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
-import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
-import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
-import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
-import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
+import giftbox_event_1 from "../assets/images/giftbox/giftbox_event_1.svg";
+import giftbox_event_2 from "../assets/images/giftbox/giftbox_event_2.svg";
+import giftbox_event_3 from "../assets/images/giftbox/giftbox_event_3.svg";
+import giftbox_event_4 from "../assets/images/giftbox/giftbox_event_4.svg";
+import giftbox_event_5 from "../assets/images/giftbox/giftbox_event_5.svg";
 
 import { FaUserCircle } from "react-icons/fa";
 
@@ -39,7 +27,6 @@ import MyPage from "../components/my-page/MyPage";
 import useViewportHeight from "../hooks/useViewportHeight";
 
 // 이미지 리소스 예시
-import giftbox_event_1 from "../assets/images/giftbox/giftbox_event_1.svg";
 import Backdrop from "../components/common/Backdrop";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
 import chat_icon from "../assets/images/main/chat_icon.svg";
@@ -69,21 +56,11 @@ const MainMyEventView: React.FC = () => {
   const giftBoxNum = useRecoilValue(giftBoxNumAtom);
 
   const giftBoxImages: { [key: number]: string } = {
-    11: giftbox_before_10,
-    21: giftbox_before_20,
-    31: giftbox_before_30,
-    41: giftbox_before_40,
-    51: giftbox_before_50,
-    12: giftbox_before_11,
-    22: giftbox_before_21,
-    32: giftbox_before_31,
-    42: giftbox_before_41,
-    52: giftbox_before_51,
-    13: giftbox_before_12,
-    23: giftbox_before_22,
-    33: giftbox_before_32,
-    43: giftbox_before_42,
-    53: giftbox_before_52,
+    1: giftbox_event_1,
+    2: giftbox_event_2,
+    3: giftbox_event_3,
+    4: giftbox_event_4,
+    5: giftbox_event_5,
   };
 
   const isFirstLoginEvent = useRecoilValue(isFirstLoginEventAtom);
@@ -92,7 +69,7 @@ const MainMyEventView: React.FC = () => {
   // 로딩 상태들 (API 호출 또는 모달 전환 중)
   const [isAlarmCountLoading, setIsAlarmCountLoading] = useState<boolean>(false);
   const [isGiftShapeLoading, setIsGiftShapeLoading] = useState<boolean>(false);
-  const [shapeNum, setShapeNum] = useState("12");
+  const [shapeNum, setShapeNum] = useState("1");
   const [isFirstLoginEventModalOpen, setIsFirstLoginEventModalOpen] = useState(false);
 
   const isLoading = isAlarmCountLoading || isGiftShapeLoading;
@@ -197,7 +174,7 @@ const MainMyEventView: React.FC = () => {
       try {
         if (urlGiftBoxId) {
           const { name, type, fillLevel } = await getGiftBoxName(urlGiftBoxId);
-          setShapeNum(String(type) + String(fillLevel));
+          setShapeNum(String(type));
         } else {
           throw new Error("Gift Box ID is undefined");
         }
@@ -311,7 +288,7 @@ const MainMyEventView: React.FC = () => {
               >
                 <img
                   src={giftBoxImages[Number(shapeNum)]}
-                  alt={`giftbox_before_${shapeNum}`}
+                  alt={`giftbox_event_${shapeNum}`}
                   className="p-2 max-h-60"
                 />
               </button>

@@ -95,14 +95,17 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
   const handleOpenICS = async () => {
     const icsContent = generateICSContent();
     const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+    const file = new File([blob], "chocoletter.ics", {
+      type: "text/calendar",
+    });
+    const url = URL.createObjectURL(file);
 
     const ua = navigator.userAgent.toLowerCase();
     if (ua.indexOf("android") > -1) {
       // Android: 앵커 태그의 download 속성을 사용하여 ICS 파일 다운로드
       const link = document.createElement("a");
       link.href = url;
-      link.download = "events.ics";
+      link.download = "chocoletter.ics";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
