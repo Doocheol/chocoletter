@@ -24,7 +24,6 @@ export const CheckLetterUseButton = ({ onClick }: CheckLetterUseButtonProps) => 
             // 기존 모달 지우고
             onClick();
             // 편지함으로 이동
-            // 이전에서 atom에 giftId는 기록해 두었음.
             navigate('/letter')
         } catch (err) {
             setIsProblemOpen(true);
@@ -32,6 +31,7 @@ export const CheckLetterUseButton = ({ onClick }: CheckLetterUseButtonProps) => 
         };
     }
 
+    // 열려있는 모든 모달 닫기 
     const allModalCloseHandler = () => {
         setIsProblemOpen(false);
         onClick();

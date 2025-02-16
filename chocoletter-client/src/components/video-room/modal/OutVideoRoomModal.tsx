@@ -12,6 +12,7 @@ const OutVideoRoomModal = ({giftBoxId}: OutVideoRoomModalProps) => {
     const [remainTime, setRemainTime] = useState(10);
     const navigate = useNavigate();
 
+    // 10초 후에 메인으로 이동
     useEffect(() => {
         const interval = setInterval(() => {
             setRemainTime((prev) => {

@@ -173,7 +173,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     >
       <div className="flex flex-col w-full">
         {/* 헤더 영역 - flex-col로 설정하여 제목/버튼과 안내 문구를 각각 별도의 줄에 배치 */}
-        <div className="flex flex-col w-full px-4 bg-chocoletterLetterBgBlue rounded-xl">
+        <div className="flex flex-col w-full px-2 bg-chocoletterLetterBgBlue rounded-xl">
           <div className="flex items-center justify-between h-[30px]">
             <div className="text-black text-xl font-bold font-sans">발렌타인데이 일정</div>
             <ICSDownloadButton schedules={schedules} />
