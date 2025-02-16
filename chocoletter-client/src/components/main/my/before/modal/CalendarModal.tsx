@@ -65,7 +65,7 @@ const convertToEventDate = (
 ): Date => {
   const currentYear = new Date().getFullYear();
   const eventMonth = eventDay.substring(0, 2); // "02" (월)
-  const eventDate = eventDay.substring(2, 4); // "14" (일)
+  const eventDate = eventDay.substring(2, 4); // "18" (일)
   const [hour, minute] = unBoxingTime.split(":").map(Number);
 
   // UTC 기준으로 Date 객체 생성 후, timeZone 적용

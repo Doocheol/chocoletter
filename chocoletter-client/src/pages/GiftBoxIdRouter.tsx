@@ -12,8 +12,9 @@ import MainYourEventView from "./MainYourEventView";
 
 // 이벤트 날짜를 env 변수(VITE_EVENT_DAY="0214")에서 가져와 현재 연도의 Date 객체 반환 함수
 const getEventDate = (): Date => {
-	const raw = import.meta.env.VITE_EVENT_DAY || "0214";
-	// raw가 "0214" 형식이면 앞의 두 자리는 월, 뒤의 두 자리는 일
+	const raw = import.meta.env.VITE_EVENT_DAY || "0218";
+	// raw가 "0218" 형식이면 앞의 두 자리는 월, 뒤의 두 자리는 일
+	console.log(import.meta.env.VITE_EVENT_DAY);
 	const month = Number(raw.slice(0, 2));
 	const day = Number(raw.slice(2, 4));
 	const currentYear = new Date().getFullYear();
