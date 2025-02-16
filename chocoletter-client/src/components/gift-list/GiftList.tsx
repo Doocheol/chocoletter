@@ -19,10 +19,12 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
         setRefresh((prev) => !prev)
     }
 
+	// useFetchChocolates의 데이터가 변경되면 localChocolates를 업데이트
 	useEffect(() => {
 		setLocalChocolates(chocolates);
 	}, [refresh, chocolates]);
 
+	// 특별 초콜릿이 지난 시간이 되면 일반 초콜릿으로 변경
 	useEffect(() => {
 		const eventDay = import.meta.env.VITE_EVENT_DAY;
 		const today = new Date();
@@ -59,6 +61,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 		return <Loading />; // 로딩 상태 표시
 	}
 
+	// props의 giftType과 동일한 초콜릿만 필터링 
 	const filteredChocolates = localChocolates.filter((choco) => {
 		if (filter === "all") return true;
 		return choco.giftType.toLowerCase() === filter;
