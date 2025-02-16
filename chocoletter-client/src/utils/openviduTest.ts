@@ -1,7 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
 import { User, VideoState } from "../types/openvidutest";
 import { getUserInfo } from '../services/userInfo';
-
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import React from 'react';
 
@@ -16,7 +16,6 @@ export const joinSession = async (
 	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
 	setIsTerminate: React.Dispatch<React.SetStateAction<boolean>>,
     setIsItThere: React.Dispatch<React.SetStateAction<boolean>>,
-    // setLocalPreviewElement?: (publisher: Publisher) => void
 ) => {
 	if (!user.sessionId) return;
 
@@ -29,9 +28,15 @@ export const joinSession = async (
     // 인원 확인
     session.on("connectionCreated", async () => {
         try {
-            console.log("여기 왔나요?")
+            console.log("openvidu is connected")
         } catch (err) {
-            console.log("연결 확인 오류 : ", err)
+            if (!toast.isActive("no-connect")) {
+                toast.error("연결에 실패했습니다. 새로고침 해주세요!", { 
+                    toastId: "no-connect",
+                    position: "top-center",
+                    autoClose: 3000,
+                });
+            }
         }
     });
 
@@ -43,12 +48,17 @@ export const joinSession = async (
 				...prevVideo,
 				subscribers: subscriber,
 			}));
-			console.log("stream이 발생했나요?");
 			if (user.sessionId && await countConnection(user.sessionId) === 2) {
 				setIsItThere(true);
 			};
 		} catch (err) {
-			console.log("stream 생성 중 오류 발생! : ", err);
+			if (!toast.isActive("no-create-stream")) {
+                toast.error("비디오 생성성에 실패했습니다. 새로고침 해주세요!", { 
+                    toastId: "no-create-stream",
+                    position: "top-center",
+                    autoClose: 3000,
+                });
+            }
 		}
 	});
 
@@ -61,12 +71,7 @@ export const joinSession = async (
 		})
 	});
 
-    session.on("connectionDestroyed", (event) => {
-        console.log("상대방의 연결이 잠시 끊겼습니다.", event.reason);
-    });
-
     session.on("sessionDisconnected", (event) => {
-		console.log("회의 종료", event.type)
 		setIsTerminate(true)
     });
 
@@ -77,7 +82,6 @@ export const joinSession = async (
 
 	// publish 저장
 	getToken(user.sessionId).then((token) => {
-		console.log('token : ', token)
 		session
 			.connect(token, { clientData: user.username })
 			.then(async () => {
@@ -102,7 +106,7 @@ export const joinSession = async (
 				}));
 			})
 			.catch((error) => {
-				console.log('토큰 연결 오류:', error.code, error.message);
+				new Error('There was an error connecting to the session:');
 			});
 	});
 }
@@ -120,7 +124,6 @@ export const leaveSession = async (
 	setVideo: React.Dispatch<React.SetStateAction<VideoState>>,
 ) => {
 	if (manageVideo.session) {
-        console.log(manageVideo.session)
 		try {
 			if (manageVideo.publisher) {
 				manageVideo.publisher.stream.getMediaStream().getTracks().forEach(track => {
@@ -134,7 +137,7 @@ export const leaveSession = async (
 
             manageVideo.session.disconnect();
 		} catch (err) {
-			console.log("연결 해제 오류 : ", err)
+			new Error("연결 해제 오류")
 		} finally {
 			setVideo((prevVideo) => ({
 				...prevVideo,
@@ -186,7 +189,6 @@ const countConnection = async (sessionId: string) => {
         });
         return res.data?.numberOfElements
     } catch (err) {
-        console.log("연결 인원을 찾을 수 없습니다.", err)
         return -1;
     }
 };
@@ -201,7 +203,6 @@ export const deleteSession = async (sessionId: string) => {
         });
         return res.data
     } catch (err) {
-        console.log("세션 삭제 실패 : ", err);
         return null;
     }
 };

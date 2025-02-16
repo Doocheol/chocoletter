@@ -35,7 +35,6 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 	// const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
 
 	useEffect(() => {
-		console.log(giftId);
 		const fetchGiftData = async () => {
 			if (giftId) {
 				try {
@@ -62,7 +61,6 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 							} catch (e) {
 								updatedData.answer =
 									"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
-								// setIsLetterEncryptedNoneModalOpen(true);
 							}
 						} else if (data.content) {
 							try {
@@ -75,7 +73,6 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 							} catch (e) {
 								updatedData.content =
 									"브라우저가 변경된 것 같아요. 다시 로그인 해주세요!";
-								// setIsLetterEncryptedNoneModalOpen(true);
 							}
 						}
 					}
