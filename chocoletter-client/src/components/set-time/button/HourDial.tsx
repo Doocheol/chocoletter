@@ -5,35 +5,33 @@ type HourDialProps = {
 };
 
 const HourDial: React.FC<HourDialProps> = ({ onHourChange }) => {
-  const [hour, setHour] = useState("1");
+    const [hour, setHour] = useState("1");
 
-  // 시간 배열 ("01" ~ "12")
-  const hours = Array.from({ length: 12 }, (_, i) =>
-    (i + 1).toString()
-  );
+    // 시간 배열 ("01" ~ "12")
+    const hours = Array.from({ length: 12 }, (_, i) =>
+        (i + 1).toString()
+    );
 
-  // 스크롤 변경 처리
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-  const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    const element = e.currentTarget;
-    const index = Math.round(e.currentTarget.scrollTop / 40);
-    const newHour = hours[index % 12]; // "01" ~ "12" 순환
-    // console.log(e.currentTarget.scrollTop)
+    // 스크롤 변경 처리
+    const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+    const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+        const element = e.currentTarget;
+        const index = Math.round(e.currentTarget.scrollTop / 40);
+        const newHour = hours[index % 12]; 
 
-    // 사용자가 계속 스크롤할 때는 `scrollTo` 실행하지 않도록 딜레이 적용
-    if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-    }
+        if (scrollTimeout.current) {
+            clearTimeout(scrollTimeout.current);
+        }
 
     scrollTimeout.current = setTimeout(() => {
         element.scrollTo({
           top: 40 * index,
           behavior: "smooth",
         });
-    }, 150); // 사용자가 멈춘 후 150ms 뒤에 실행
+    }, 150);
     
     setHour(newHour);
-    onHourChange(newHour); // 부모 컴포넌트에 새로운 시간 전달
+    onHourChange(newHour);
   };
 
   return (      
