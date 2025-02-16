@@ -58,8 +58,7 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     // 이벤트 종료시간은 시작 시간으로부터 1시간 후 (필요시 조정 가능)
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
     const title = "초코레터 - 영상통화 입장 알림!";
-    const description =
-      import.meta.env.VITE_FRONTEND_SERVER_URL || "https://www.chocolate-letter.com";
+    const description = import.meta.env.VITE_FRONTEND_SERVER_URL;
     const location = "초콜릿보다 달콤한 설렘을 전하세요!";
 
     return [
