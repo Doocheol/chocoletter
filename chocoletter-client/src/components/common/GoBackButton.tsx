@@ -1,12 +1,12 @@
 type GoBackButtonProps = {
-    strokeColor?: string; // 아이콘의 stroke 색상
-    altText?: string; // 접근성 텍스트
-    className?: string; // 추가 클래스
+    strokeColor?: string; 
+    altText?: string; 
+    className?: string; 
     onClick?: () => void; 
 };
 
 export const GoBackButton = ({
-    strokeColor = "white", // 기본값은 white
+    strokeColor = "white", 
     altText = "뒤로가기 버튼",
     className = "",
     onClick,    
@@ -15,9 +15,9 @@ export const GoBackButton = ({
 
     const handleBackClick = () => {
         if (onClick) {
-            onClick(); // 🟢 외부에서 전달된 `onClick` 실행
+            onClick(); 
         }
-        window.history.back(); // 🟢 항상 브라우저 뒤로 가기 실행
+        window.history.back();
     };
 
     return (
@@ -36,7 +36,7 @@ export const GoBackButton = ({
             >
                 <path
                     d="M18 1L7 12.2683L17.4762 23"
-                    stroke={strokeColor} // 동적으로 stroke 설정
+                    stroke={strokeColor}
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"

@@ -84,7 +84,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
-	const setRefresh = useSetRecoilState(giftListRefreshAtom); // 새로고침 플래그 관리
 	const refresh = useRecoilValue(giftListRefreshAtom); // refresh 값을 모니터링
 
 	const [buttonImage, setButtonImage] = useState("");
@@ -122,6 +121,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 		setIsRTC(false);
 	};
 
+	const closeGeneralModal = () => {
+		setIsNonOpen(false);
+	};
+
 	const closeAcceptRejectModal = () => {
 		setIsAcceptRejectOpen(false);
 	};
@@ -129,37 +132,18 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	// 버튼 onClick 메서드
 	const giftOpenButtonClickHandler = async () => {
 		if (giftType === "SPECIAL") {
-			if (unboxingTime === null) return;
-
-			const unboxingDate = new Date(unboxingTime);
-			const unboxingMinusFive = new Date(
-				unboxingDate.getTime() - 5 * 60 * 1000
-			);
-			const currentDate = new Date();
-
-			if (currentDate < unboxingMinusFive) {
-				if (isAccepted) {
-					setIsRTC(true);
-				} else {
-					setIsAcceptRejectOpen(true);
-				}
+			if (isAccepted) {
+				setIsRTC(true);
 			} else {
-				if (roomId === null) {
-					navigate("/gift-list/before");
-					if (!toast.isActive("no-room-toast")) {
-						toast.error("방 정보가 없습니다.", {
-							toastId: "no-room-toast",
-							position: "top-center",
-							autoClose: 2000,
-						});
-					}
-				} else {
-					navigate(`/video/${roomId}`);
-				}
+				setIsAcceptRejectOpen(true);
 			}
 		} else {
 			setAtomGiftId(giftId);
-			navigate("/letter");
+			if (isOpened) {
+				navigate("/letter");
+			} else {
+				setIsNonOpen(true);
+			}
 		}
 	};
 

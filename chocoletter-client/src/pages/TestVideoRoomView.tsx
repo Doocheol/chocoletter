@@ -66,6 +66,8 @@ const TestVideoRoomView = () => {
 
     // 로그인 확인 및 입장 확인 API
     useEffect(() => {
+        navigate(`/main/${user?.giftBoxId || ""}`);
+
         if (!isLogin) {
             navigate("/");
             return;

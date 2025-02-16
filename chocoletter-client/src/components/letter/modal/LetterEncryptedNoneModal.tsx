@@ -18,6 +18,7 @@ const LetterEncryptedNoneModal: React.FC<LetterEncryptedNoneModalProps> = ({
 	const navigate = useNavigate();
 	const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
 
+	// 로그아웃
 	const handleLogout = async () => {
 		try {
 			await logout();
@@ -33,8 +34,8 @@ const LetterEncryptedNoneModal: React.FC<LetterEncryptedNoneModalProps> = ({
 			});
 		}
 		setIsLogin(false);
-		onClose(); // 부모에서 전달받은 onClose로 모달 상태를 false로 전환
-		navigate("/"); // 홈으로 이동
+		onClose(); 
+		navigate("/");
 	};
 
 	return (

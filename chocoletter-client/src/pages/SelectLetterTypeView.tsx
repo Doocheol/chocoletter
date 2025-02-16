@@ -10,6 +10,16 @@ function SelectLetterTypeView() {
 	const { giftBoxId } = useParams();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
+	
+	// 편지지 선택 시, 일반 편지 작성 페이지로 이동
+	const handleAccept = () => {
+		navigate(`/write/general/${giftBoxId}`);
+	};
+	
+	// 편지지 선택 시, 질문 편지 작성 페이지로 이동
+	const handleReject = () => {
+		navigate(`/write/question/${giftBoxId}`);
+	};
 
 	// 이미지 preloading: 두 이미지가 모두 로드되면 loading 상태를 false로 변경
 	useEffect(() => {
@@ -39,8 +49,6 @@ function SelectLetterTypeView() {
 				]);
 				setLoading(false);
 			} catch (error) {
-				console.error("이미지 로딩 실패:", error);
-				// 이미지 로딩에 실패하더라도 페이지는 렌더링합니다.
 				setLoading(false);
 			}
 		};
@@ -48,13 +56,7 @@ function SelectLetterTypeView() {
 		loadImages();
 	}, []);
 
-	const handleAccept = () => {
-		navigate(`/write/general/${giftBoxId}`);
-	};
-
-	const handleReject = () => {
-		navigate(`/write/question/${giftBoxId}`);
-	};
+	
 
 	return (
 		<div className="flex flex-col items-center justify-start min-h-screen min-w-screen relative bg-chocoletterGiftBoxBg overflow-hidden">

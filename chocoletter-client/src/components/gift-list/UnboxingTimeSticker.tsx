@@ -27,7 +27,7 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
         return () => clearInterval(interval);
     }, [])
     
-    const eventDay = import.meta.env.VITE_EVNET_DAY || "0214";
+    const eventDay = import.meta.env.VITE_EVNET_DAY || "0218";
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const day = currentDate.getDate().toString().padStart(2, '0');
     const currentMonthDay = month + day;
@@ -48,31 +48,22 @@ export const UnboxingTimeSticker = ({unboxingTime, giftType, isOpened, isAccepte
 
         const unboxingTimeKST = unboxingTime.replace("Z", "+09:00");
         const unboxingDate = new Date(unboxingTimeKST);
-        const unboxingMinusFive = new Date(unboxingDate.getTime() - 5 * 60 * 1000);
 
-        if (currentDate < unboxingMinusFive) {
-            if (isAccepted) {
-                const formattedTime = formatTimeKST(unboxingDate);
-                content = (
-                    <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
-                        <svg width="24" height="24" fill="currentColor" className="text-white">
-                            <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
-                            <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none" />
-                        </svg>
-                        <p className="font-sans text-white text-sm text-center mt-2">{formattedTime}</p>
-                    </div>
-                )
-            } else {
-                content = (
-                    <div className="absolute inset-0 flex justify-center items-center bg-chocoletterRed/30 bg-opacity-50 rounded-lg pointer-events-none">
-                        <p className="font-sans text-white text-sm text-center font-bold">시간수락<br/>기다리는 중...</p>
-                    </div>
-                )
-            }
+        if (isAccepted) {
+            const formattedTime = formatTimeKST(unboxingDate);
+            content = (
+                <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-500 bg-opacity-50 rounded-lg pointer-events-none">
+                    <svg width="24" height="24" fill="currentColor" className="text-white">
+                        <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
+                        <path d="M12 6v6l4 2" stroke="white" strokeWidth="2" fill="none" />
+                    </svg>
+                    <p className="font-sans text-white text-sm text-center mt-2">{formattedTime}</p>
+                </div>
+            )
         } else {
             content = (
-                <div className="absolute inset-0 flex justify-center items-center bg-chocoletterYellow bg-opacity-80 rounded-lg pointer-events-none">
-                    <p className="font-sans text-chocoletterPurpleBold text-md font-bold text-nowrap text-center">영상통화<br/>연결</p>
+                <div className="absolute inset-0 flex justify-center items-center bg-chocoletterRed/30 bg-opacity-50 rounded-lg pointer-events-none">
+                    <p className="font-sans text-white text-sm text-center font-bold">시간수락<br/>기다리는 중...</p>
                 </div>
             )
         }

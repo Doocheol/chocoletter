@@ -1,9 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import GeneralLetterModal from "../../common/GeneralLetterModal";
 import { useRecoilValue } from "recoil";
-import { getGiftDetail } from "../../../services/giftApi";
 import { memberIdAtom, giftBoxIdAtom } from "../../../atoms/auth/userAtoms";
 import Loading from "../../common/Loading";
 import { decryptLetter } from "../../../services/giftEncryptedApi";
@@ -37,13 +35,12 @@ const LetterInChatModal: React.FC<LetterInChatModalProps> = ({
 }) => {
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
-
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] =
-		useState(false);
+	const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
 
+	// 편지 데이터 가져오기
 	useEffect(() => {
 		const fetchGiftData = async () => {
 			if (nickName && (content || answer || question)) {

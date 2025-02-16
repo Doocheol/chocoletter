@@ -48,7 +48,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						console.log(err);
+						new Error("특별 초콜릿 변환 실패")
 					}
 				}
 			}
@@ -74,7 +74,6 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			<div
 				className={`w-full grid grid-cols-3 gap-4 overflow-y-auto scrollbar-hidden px-4 py-4 mt-[90px]`}
 			>
-				{/* api 연동 후 추가 수정 */}
 				{filteredChocolates.map((chocolate) => (
 					<GiftOpenButton
 						key={chocolate.giftId}
