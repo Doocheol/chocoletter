@@ -75,6 +75,7 @@ const TestVideoRoomView = () => {
 
         if (!sessionIdInit) {
             new Error("세션 아이디가 없습니다.");
+            navigate(`main/${user?.giftBoxId}`);
             return;
         }
         setSessionId(sessionIdInit);
@@ -104,6 +105,8 @@ const TestVideoRoomView = () => {
                     } else {
                         new Error("서버 오류");
                     }
+                
+                navigate(`main/${user?.giftBoxId}`);
                 }
             }
         };
