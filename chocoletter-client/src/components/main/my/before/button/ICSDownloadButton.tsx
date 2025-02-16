@@ -97,7 +97,8 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     const file = new File([blob], "chocoletter.ics", {
       type: "text/calendar",
     });
-    const url = URL.createObjectURL(file);
+    const urlFile = URL.createObjectURL(file);
+    const urlBlob = URL.createObjectURL(blob);
 
     const ua = navigator.userAgent.toLowerCase();
     const isAndroid = ua.indexOf("android") > -1;
@@ -106,7 +107,7 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     if (isAndroid) {
       // Android: 앵커 태그의 download 속성을 사용하여 ICS 파일 다운로드
       const link = document.createElement("a");
-      link.href = url;
+      link.href = urlFile;
       link.download = "chocoletter.ics";
       document.body.appendChild(link);
       link.click();
@@ -118,20 +119,20 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
           await navigator.share({ files: [file] });
           return; // 공유 성공 시 더 이상 진행하지 않음.
         } catch (err) {
-          console.log("Web Share API 호출 실패 또는 취소됨:", err);
-          // 취소 또는 에러 발생 시 fallback으로 window.location.href를 사용.
+          window.location.href = urlBlob;
         }
       }
       // Web Share API 사용 불가 또는 실패 시 fallback
-      window.location.href = url;
+      window.location.href = urlBlob;
     } else {
       // 그 외 환경: window.location.href 사용
-      window.location.href = url;
+      window.location.href = urlBlob;
     }
 
     // 메모리 해제
     setTimeout(() => {
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(urlFile);
+      URL.revokeObjectURL(urlBlob);
     }, 10000);
   };
 
