@@ -3,6 +3,7 @@ package chocolate.chocoletter.common.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,7 @@ public class DateTimeUtil {
     public LocalDateTime parseTimeToDateTime(String time) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime parsedTime = LocalTime.parse(time, timeFormatter);
-        log.warn("parseTimeToDateTime: {}", LocalDateTime.of(getOpenDay(), parsedTime));
-        return LocalDateTime.of(getOpenDay(), parsedTime);
+        return LocalDateTime.of(LocalDate.now(ZoneId.of("Asia/Seoul")), parsedTime);
     }
 
     public String formatDateTime(LocalDateTime dateTime) {
