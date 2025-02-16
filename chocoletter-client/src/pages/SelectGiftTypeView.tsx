@@ -18,12 +18,12 @@ function SelectGiftTypeView() {
     const { giftBoxId } = useParams<{ giftBoxId: string }>();
     const [alreadySent, setAlreadySent] = useState(false);
 
-    // 특별/일반 선물 선택 시, 특별 선물인 경우 특별 선물 작성 페이지로 이동
+    // 특별/일반 선물 선택 시, 특별 선물인 경우 시간 설정 페이지로 이동
     const handleAccept = () => {
         navigate(`/set-time/${giftBoxId}`);
     };
 
-    // 특별/일반 선물 선택 시, 일반 선물인 경우 일반 선물 작성 페이지로 이동
+    // 특별/일반 선물 선택 시, 일반 선물인 경우 전송 완료 페이지로 이동
     const handleReject = async () => {
         try {
             if (questionLetter.question) {
