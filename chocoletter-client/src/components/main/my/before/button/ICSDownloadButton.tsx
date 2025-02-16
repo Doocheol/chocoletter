@@ -58,8 +58,7 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     // 이벤트 종료시간은 시작 시간으로부터 1시간 후 (필요시 조정 가능)
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
     const title = "초코레터 - 영상통화 입장 알림!";
-    const description =
-      import.meta.env.VITE_FRONTEND_SERVER_URL || "https://www.chocolate-letter.com";
+    const description = import.meta.env.VITE_FRONTEND_SERVER_URL;
     const location = "초콜릿보다 달콤한 설렘을 전하세요!";
 
     return [
@@ -101,7 +100,10 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
     const url = URL.createObjectURL(file);
 
     const ua = navigator.userAgent.toLowerCase();
-    if (ua.indexOf("android") > -1) {
+    const isAndroid = ua.indexOf("android") > -1;
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+
+    if (isAndroid) {
       // Android: 앵커 태그의 download 속성을 사용하여 ICS 파일 다운로드
       const link = document.createElement("a");
       link.href = url;
@@ -109,8 +111,21 @@ const ICSDownloadButton: React.FC<ICSDownloadButtonProps> = ({ schedules }) => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    } else if (isIOS) {
+      // iOS: Web Share API를 시도. (Safari에서 ICS 파일 공유 후, 취소되면 fallback)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file] });
+          return; // 공유 성공 시 더 이상 진행하지 않음.
+        } catch (err) {
+          console.log("Web Share API 호출 실패 또는 취소됨:", err);
+          // 취소 또는 에러 발생 시 fallback으로 window.location.href를 사용.
+        }
+      }
+      // Web Share API 사용 불가 또는 실패 시 fallback
+      window.location.href = url;
     } else {
-      // iOS 및 그 외: window.location.href로 파일 열기 시도
+      // 그 외 환경: window.location.href 사용
       window.location.href = url;
     }
 
