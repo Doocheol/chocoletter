@@ -32,6 +32,8 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			2,
 			"0"
 		)}${String(today.getDate()).padStart(2, "0")}`;
+
+		if (formattedToday !== eventDay) return;
 		if (!chocolates) return;
 
 		chocolates.map(async (choco) => {
@@ -48,7 +50,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						new Error("특별 초콜릿 변환 실패")
+						console.log(err);
 					}
 				}
 			}
