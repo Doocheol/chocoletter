@@ -50,7 +50,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						new Error("특별 초콜릿 변환 실패")
+						console.log(err);
 					}
 				}
 			}
