@@ -38,4 +38,4 @@ COPY $NAS_KEY_DIR $CONTAINER_KEY_DIR
 RUN chmod 600 $PRIVATE_KEY_PATH
 
 # 애플리케이션 실행
-ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]
