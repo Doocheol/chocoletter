@@ -124,6 +124,7 @@ const TestVideoRoomView = () => {
                     await deleteSession(videoState.session.sessionId);
                     await leaveSession(videoState, setVideoState);
                 }
+                if (sessionId) terminateVideoRoom(sessionId);
             }
         };
         window.addEventListener('popstate', handlePopState);
