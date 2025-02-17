@@ -114,6 +114,26 @@ const TestVideoRoomView = () => {
         checkAuth();
     }, [isLogin, letterInfo, navigate, sessionIdInit, unboxingTime, user?.giftBoxId, setSessionId]);
 
+    // popstate 이벤트 리스너 등록 
+    useEffect(() => {
+        const isMobileDevice = () => /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+        const handlePopState = async () => {
+            if (isMobileDevice()) {
+                if (videoState.session?.sessionId) {
+                    await deleteSession(videoState.session.sessionId);
+                    await leaveSession(videoState, setVideoState);
+                }
+                if (sessionId) terminateVideoRoom(sessionId);
+            }
+        };
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
+
     // 세션 및 토큰 발급
     const initSession = async () => {
         try {
