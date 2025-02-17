@@ -194,13 +194,15 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               const eventKST = convertToEventDate(item.unBoxingTime, EventMMDD, "Asia/Seoul");
               const fiveBeforeKST = getFiveMinutesBefore(eventKST);
               const nowKST = CurrentTime();
+              const eventKSTMin = eventKST.getUTCMinutes() === 0 ? 60 : eventKST.getUTCMinutes();
+              const nowKSTMin = nowKST.getUTCMinutes() === 0 ? 60 : nowKST.getUTCMinutes();
 
               // 조건에 따라 버튼을 다르게 처리
               let buttonAction;
               let isHidden = false;
               let isAfter = false;
 
-              if (nowKST.getUTCHours() == fiveBeforeKST.getUTCHours() && nowKST.getUTCMinutes() >= fiveBeforeKST.getUTCMinutes()) {
+              if (nowKST.getUTCHours() == fiveBeforeKST.getUTCHours() && nowKSTMin >= fiveBeforeKST.getUTCMinutes() && nowKSTMin <= eventKSTMin) {
                 // 5분 전 ~ 이벤트 시간까지 -> navigate
                 if (item.unboxingRoomId) {
                   buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
