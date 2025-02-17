@@ -33,7 +33,6 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 			"0"
 		)}${String(today.getDate()).padStart(2, "0")}`;
 
-		if (formattedToday !== eventDay) return;
 		if (!chocolates) return;
 
 		chocolates.map(async (choco) => {
