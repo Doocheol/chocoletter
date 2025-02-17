@@ -66,11 +66,11 @@ const GiftBoxIdRouter: React.FC = () => {
 		// 	return <MainMyAfterView />;
 		// }
 
-		if (today.toDateString() === eventDate.toDateString()) {
-			return <MainMyEventView />;
-		} else {
-			return <MainMyAfterView />;
-		}
+		// if (today.toDateString() === eventDate.toDateString()) {
+		return <MainMyEventView />;
+		// } else {
+		// return <MainMyAfterView />;
+		// }
 	} else {
 		navigate("/");
 	}
