@@ -12,6 +12,7 @@ import bg_choco_button from "../../../assets/images/giftbox/bg_choco_button.svg"
 import { UnboxingTimeSticker } from "../UnboxingTimeSticker";
 import { toast } from "react-toastify";
 import AcceptRejectModal from "../../main/my/before/modal/AcceptRejectModal";
+import { RTCOpenModal } from "../modal/RTCOpenModal";
 import {
 	patchUnboxingAccept,
 	patchUnboxingReject,
@@ -62,6 +63,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
 	const refresh = useRecoilValue(giftListRefreshAtom); 
 	const [buttonImage, setButtonImage] = useState("");
+	const [isRTCOpenModal, setIsRTCOpenModal] = useState(false);
 
 	// refresh 값이 변경되면 AcceptRejectModal을 자동으로 닫음
 	useEffect(() => {
@@ -102,6 +104,11 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 		setIsAcceptRejectOpen(false);
 	};
 
+	// RTC 입장 모달 닫는 함수
+	const closeRTCOpenModal = () => {
+		setIsRTCOpenModal(false);
+	}
+
 	// 특별과 일반에 따른 버튼 동작 구현 
 	const giftOpenButtonClickHandler = async () => {
 		if (giftType === "SPECIAL") {
@@ -130,7 +137,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 						});
 					}
 				} else {
-					navigate(`/video/${roomId}`);
+					setIsRTCOpenModal(true);
 				}
 			}
 		} else {
@@ -171,6 +178,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 				/>
 			)}
 			<AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
+			{roomId && <RTCOpenModal isOpen={isRTCOpenModal} onClose={closeRTCOpenModal} roomId={roomId} />}
 			<div
 				className={`[&>button>img]:w-[55%] [&>button>img]:h-[55%] ${
 					isRTC || isNonOpen
