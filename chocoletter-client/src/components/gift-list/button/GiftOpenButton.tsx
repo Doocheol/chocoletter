@@ -16,6 +16,7 @@ import {
 	patchUnboxingAccept,
 	patchUnboxingReject,
 } from "../../../services/unboxingApi";
+import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 
 const generalImages = import.meta.glob(
 	"../../../assets/images/chocolate/general/*.svg",
@@ -144,6 +145,7 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 
 	return (
 		<div className="relative w-[100px] h-full aspect-square rounded-lg flex items-center justify-center">
+			<IsOpenGeneralGiftModal isOpen={isNonOpen} onClose={() => setIsNonOpen(false)} />
 			{isAcceptRejectOpen && (
 				<AcceptRejectModal
 					onClose={closeAcceptRejectModal}
