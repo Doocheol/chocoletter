@@ -200,10 +200,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               let isHidden = false;
               let isAfter = false;
 
-              if (nowKST > eventKST) {
-                // 이벤트 시간이 지난 경우 -> 버튼 숨기기
-                isHidden = true;
-              } else if (nowKST >= fiveBeforeKST) {
+              if (nowKST.getUTCHours() == fiveBeforeKST.getUTCHours() && nowKST.getUTCMinutes() >= fiveBeforeKST.getUTCMinutes()) {
                 // 5분 전 ~ 이벤트 시간까지 -> navigate
                 if (item.unboxingRoomId) {
                   buttonAction = () => navigate(`/video/${item.unboxingRoomId}`);
