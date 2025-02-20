@@ -10,11 +10,11 @@ spring:
     url: jdbc:${DB_TYPE}://${DB_URL}:${DB_PORT}/${DB_SCHEMA}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  hikari:      
-    maximumPoolSize: 60  # 최대 커넥션 수 (기본값 10)      
-    minimumIdle: 10       # 최소 유지 커넥션      
-    idleTimeout: 30000    # (30초) 사용하지 않는 커넥션 종료      
-    connectionTimeout: 30000  # (30초) 커넥션 대기 시간
+    hikari:      
+      maximumPoolSize: 40  # 최대 커넥션 수 (기본값 10)      
+      minimumIdle: 10       # 최소 유지 커넥션      
+      idleTimeout: 30000    # (30초) 사용하지 않는 커넥션 종료      
+      connectionTimeout: 30000  # (30초) 커넥션 대기 시간
 
   jpa:
     hibernate:
