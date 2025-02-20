@@ -11,7 +11,6 @@ function SelectLetterTypeView() {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
 
-	// 이미지 preloading: 두 이미지가 모두 로드되면 loading 상태를 false로 변경
 	useEffect(() => {
 		const loadImages = async () => {
 			try {
@@ -39,8 +38,6 @@ function SelectLetterTypeView() {
 				]);
 				setLoading(false);
 			} catch (error) {
-				console.error("이미지 로딩 실패:", error);
-				// 이미지 로딩에 실패하더라도 페이지는 렌더링합니다.
 				setLoading(false);
 			}
 		};

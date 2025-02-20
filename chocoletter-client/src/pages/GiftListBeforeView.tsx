@@ -24,7 +24,7 @@ const GiftListBeforeView = () => {
 				const response = await countMyGiftBox();
 				setRemainOpenCount(response.canOpenGiftCount);
 			} catch (err) {
-				console.log(err);
+				new Error("선물 상자 정보 조회 오류");
 			}
 		};
 

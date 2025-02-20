@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnnounceDontOpenModal } from "../modal/AnnounceDontOpenModal";
-import { AnnounceGoNotificationModal } from "../modal/AnnounceGoNotification";
 import { IsOpenGeneralGiftModal } from "../modal/IsOpenGeneralGiftModal";
 import { ImageButton } from "../../common/ImageButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -81,7 +80,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 }) => {
 	const [isRTC, setIsRTC] = useState(false);
 	const [isNonOpen, setIsNonOpen] = useState(false);
-	// const [isAnnounceNoti, setIsAnnounceNoti] = useState(false);
 	const [isAcceptRejectOpen, setIsAcceptRejectOpen] = useState(false);
 	const navigate = useNavigate();
 	const [atomGiftId, setAtomGiftId] = useRecoilState(selectedGiftIdAtom);
@@ -128,7 +126,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			setButtonImage(chocoRandomImage);
 			localStorage.setItem(`giftImage_${giftId}`, chocoRandomImage);
 		}
-		console.log(giftId, savedImage);
 	}, []);
 
 	const closeRTCModal = () => {
@@ -138,10 +135,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const closeGeneralModal = () => {
 		setIsNonOpen(false);
 	};
-
-	// const closeGoNotificationModal = () => {
-	//     setIsAnnounceNoti(false);
-	// }
 
 	const closeAcceptRejectModal = () => {
 		setIsAcceptRejectOpen(false);
@@ -158,13 +151,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 			);
 			const currentDate = new Date();
 
-			// 이거 이벤트 이후도 추가해야 할 것 같은데...
-			// 날짜 분류도 필요할 것 같은데...
 			if (currentDate < unboxingMinusFive) {
 				if (isAccepted) {
 					setIsRTC(true);
 				} else {
-					// setIsAnnounceNoti(true);
 					setIsAcceptRejectOpen(true);
 				}
 			} else {
@@ -195,11 +185,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleAccept = async () => {
 		try {
 			const result = await patchUnboxingAccept(giftId);
-			console.log("수락 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("수락 처리 중 에러 발생:", error);
+			new Error("수락 처리 중 에러 발생");
 		}
 	};
 
@@ -207,11 +196,10 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 	const handleReject = async () => {
 		try {
 			const result = await patchUnboxingReject(giftId);
-			console.log("거절 처리 성공:", result);
 			setIsAcceptRejectOpen(false);
 			onRefresh();
 		} catch (error) {
-			console.error("거절 처리 중 에러 발생:", error);
+			new Error("거절 처리 중 에러 발생");
 		}
 	};
 
@@ -224,8 +212,6 @@ export const GiftOpenButton: React.FC<GiftOpenButtonProps> = ({
 					onReject={handleReject}
 				/>
 			)}
-			{/* <AnnounceGoNotificationModal isOpen={isAnnounceNoti} onClose={closeGoNotificationModal} /> */}
-
 			<AnnounceDontOpenModal isOpen={isRTC} onClose={closeRTCModal} />
 			<IsOpenGeneralGiftModal
 				isOpen={isNonOpen}

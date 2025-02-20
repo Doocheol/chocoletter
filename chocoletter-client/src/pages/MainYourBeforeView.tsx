@@ -9,7 +9,6 @@ import Backdrop from "../components/common/Backdrop";
 import MyPage from "../components/my-page/MyPage";
 import { ImageButton } from "../components/common/ImageButton";
 
-// 이미지 및 버튼 파일들
 import giftbox_before_12 from "../assets/images/giftbox/giftbox_before_12.svg";
 import giftbox_before_22 from "../assets/images/giftbox/giftbox_before_22.svg";
 import giftbox_before_32 from "../assets/images/giftbox/giftbox_before_32.svg";
@@ -17,7 +16,6 @@ import giftbox_before_42 from "../assets/images/giftbox/giftbox_before_42.svg";
 import giftbox_before_52 from "../assets/images/giftbox/giftbox_before_52.svg";
 import gift_send_button from "../assets/images/button/gift_send_button.svg";
 import tutorial_icon from "../assets/images/main/tutorial_icon.svg";
-// 선물상자 배경 이미지를 background-image로 사용
 import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import AlreadySentModal from "../components/main/your/before/modal/AlreadySentModal";
@@ -27,15 +25,13 @@ import {
 	verifyGiftSend,
 	getSentLetter,
 } from "../services/giftBoxApi";
-import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
-// 공통 Loading 컴포넌트 (페이지 전체를 덮을 Loading)
+import { ForwardTutorialOverlay } from "../components/tutorial/ForwardTutorialOverlay";
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
 import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
 
-// giftBoxType에 따른 이미지 매핑
 const giftboxImages: { [key: number]: string } = {
 	1: giftbox_before_12,
 	2: giftbox_before_22,
@@ -49,16 +45,14 @@ const MainYourBeforeView: React.FC = () => {
 	const location = useLocation();
 	const setIsLogin = useSetRecoilState(isLoginAtom);
 
-	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
+	const { giftBoxId } = useParams<{ giftBoxId: string }>();
 
-	// 로그인 여부 확인
 	const isLoggedIn = useRecoilValue(isLoginAtom);
 
 	const tutorialIconRef = useRef<HTMLButtonElement>(null);
 	const giftBoxRef = useRef<HTMLDivElement>(null);
 	const dummyRef = useRef<HTMLDivElement>(null);
 
-	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
 	if (!isLoggedIn) {
 		return (
 			<NotLoginModal
@@ -120,10 +114,7 @@ const MainYourBeforeView: React.FC = () => {
 				navigate(`/select-letter/${giftBoxId}`);
 			}
 		} catch (error) {
-			console.error("선물 전송 여부 확인 중 오류 발생:", error);
-			// removeUserInfo();
-			// setIsLogin(false);
-			// navigate("/");
+			new Error("선물 전송 여부 확인 오류");
 		}
 	};
 
@@ -138,7 +129,6 @@ const MainYourBeforeView: React.FC = () => {
 				return;
 			}
 			const sentLetterData = await getSentLetter(giftBoxId);
-			console.log("getSentLetter Response:", sentLetterData);
 			// 편지를 아직 읽지 않은 경우, 편지 작성 화면으로 이동
 			if (sentLetterData.type == "FREE") {
 				// 자유 편지인 경우
@@ -155,16 +145,13 @@ const MainYourBeforeView: React.FC = () => {
 			console.error("getSentLetter API 호출 오류:", error);
 			const errorMessage =
 				error.response?.data?.errorMessage || "알 수 없는 에러 발생";
-			// console.log("Received error message:", errorMessage);
 			if (errorMessage === "ERR_GIFT_ALREADY_OPENED") {
-				// 이미 읽은 상태라면 수정 불가 모달 표시
 				setIsAlreadySentModalOpen(false);
 				setIsAlreadyReadModalOpen(true);
 			}
 		}
 	};
 
-	// redirect 정보를 localStorage에 저장 후 로그인 페이지로 이동
 	const handleGoToLogin = () => {
 		localStorage.setItem("redirect", location.pathname);
 		navigate("/");
@@ -192,12 +179,10 @@ const MainYourBeforeView: React.FC = () => {
 		[]
 	);
 
-	// giftBoxId가 있을 경우, 상대방 선물상자 정보 조회 (이제 name과 type을 받아옴)
 	useEffect(() => {
 		if (giftBoxId) {
 			getGiftBoxName(giftBoxId)
 				.then((data) => {
-					// data의 타입은 { name: string, type: number, fillLevel: number }라고 가정
 					const { name, type, fillLevel } = data;
 					const validName =
 						name && name.trim() !== "" ? name.trim() : null;
@@ -352,7 +337,7 @@ const MainYourBeforeView: React.FC = () => {
 
 				{/* 튜토리얼 모달 */}
 				{isTutorialModalOpen && (
-					<FowardTutorialOverlay
+					<ForwardTutorialOverlay
 						targetRefs={tutorialIcons}
 						onClose={() => setIsTutorialModalOpen(false)}
 					/>

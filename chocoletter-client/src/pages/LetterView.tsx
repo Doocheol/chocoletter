@@ -13,12 +13,8 @@ import {
 import { decryptLetter } from "../services/giftEncryptedApi";
 import { getMemberPrivateKey } from "../utils/keyManager";
 import { getGiftBoxPublicKey } from "../services/keyApi";
-import { logout } from "../services/userApi";
 import LetterEncryptedNoneModal from "../components/letter/modal/LetterEncryptedNoneModal";
-import { useNavigate } from "react-router-dom";
 
-// 편지 보는 뷰
-// gift list page 에서 초콜릿 선택 시 보이게 됨.
 interface GiftData {
 	nickName?: string;
 	content?: string | null;
@@ -30,8 +26,6 @@ const LetterView = () => {
 	const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
-	const isLogin = useRecoilValue(isLoginAtom);
-	const navigate = useNavigate();
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -107,15 +101,7 @@ const LetterView = () => {
 		<div
 			className={`relative flex flex-col items-center h-screen ${backgroundClass}`}
 		>
-			{/* GoBackButton을 좌측 상단에 고정 */}
 			<GoBackButton strokeColor="#9E4AFF" />
-
-			{/* 추후 삭제!! 선택된 Gift ID 표시 */}
-			{/* <div className="mt-4 text-center text-gray-600">
-                <p>
-                    <strong>Selected Gift ID:</strong> {selectedGiftId}
-                </p>
-            </div> */}
 
 			{/* 메인 콘텐츠 렌더링 */}
 			{loading ? (

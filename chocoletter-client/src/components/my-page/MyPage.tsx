@@ -17,7 +17,6 @@ import home_icon from "../../assets/images/main/home_icon.svg"; // 홈 아이콘
 import { logout, removeUserInfo } from "../../services/userApi";
 // MyPage 통계 API 함수
 import { getMyPageStats } from "../../services/giftApi";
-import KakaoLoginButton from "../login/button/KakaoLoginButton";
 
 interface MyPageProps {
 	onClose: () => void;
@@ -66,12 +65,12 @@ const MyPage: React.FC<MyPageProps> = ({ onClose }) => {
 			navigate(`/main/${giftBoxId}`);
 		} else {
 			if (!toast.isActive("require-login-toast")) {
-			toast.error("다시 로그인해주세요!", {
-				toastId: "require-login-toast",
-				position: "top-center",
-				autoClose: 2000,
-			});
-		}
+				toast.error("다시 로그인해주세요!", {
+					toastId: "require-login-toast",
+					position: "top-center",
+					autoClose: 2000,
+				});
+			}
 			removeUserInfo();
 			navigate("/");
 		}
