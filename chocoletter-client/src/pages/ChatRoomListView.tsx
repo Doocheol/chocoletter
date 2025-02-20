@@ -114,18 +114,20 @@ const ChatRoomListView = () => {
                                 onClick={() => handleRoomClick(room)}
                             >
                                 {/* 왼쪽 닉네임 + 마지막 채팅 */}
-                                <div className="flex flex-col over-hidden ">
+                                <div className="flex flex-col overflow-hidden ">
                                     <div className="flex flex-row gap-1 mb-[3px]">
                                         <p className="text-[18px] leading-[22px]">{room.nickName}</p>
                                         <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
                                     </div>
-                                    <p className="font-[Pretendard] text-[12px] text-[#696A73] w-full overflow-hidden whitespace-nowrap text-ellipsis">
-                                        {room.lastMessage ? (
-                                            room.lastMessage
-                                        ) : (
-                                            <span className="text-[#A0A0A0]">채팅을 시작해보세요!</span>
-                                        )}
-                                    </p>
+                                    <div className="w-full">
+                                        <p className="font-[Pretendard] text-[12px] text-[#696A73] overflow-hidden whitespace-nowrap text-ellipsis">
+                                            {room.lastMessage ? (
+                                                room.lastMessage
+                                            ) : (
+                                                <span className="text-[#A0A0A0]">채팅을 시작해보세요!</span>
+                                            )}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {/* 오른쪽 채팅 숫자 */}
