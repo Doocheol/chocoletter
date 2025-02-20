@@ -1,8 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-// import axios from "axios";
-import GeneralLetterModal from "../../common/GeneralLetterModal"
+import GeneralLetterModal from "../../common/GeneralLetterModal";
 import Loading from "../../common/Loading";
 import { memberIdAtom, giftBoxIdAtom } from "../../../atoms/auth/userAtoms";
 import { getGiftDetail } from "../../../services/giftApi";
@@ -11,10 +10,10 @@ import { getGiftBoxPublicKey } from "../../../services/keyApi";
 import { decryptLetter } from "../../../services/giftEncryptedApi";
 
 interface LetterInVideoModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onErrorClose: () => void;
-  giftId: string;
+	isOpen: boolean;
+	onClose: () => void;
+	onErrorClose: () => void;
+	giftId: string;
 }
 
 interface GiftData {
@@ -24,15 +23,19 @@ interface GiftData {
 	answer?: string | null;
 }
 
-const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose, onErrorClose, giftId }) => {
-  // const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
+const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({
+	isOpen,
+	onClose,
+	onErrorClose,
+	giftId,
+}) => {
+	// const selectedGiftId = useRecoilValue(selectedGiftIdAtom);
 	const memberId = useRecoilValue(memberIdAtom);
 	const giftBoxId = useRecoilValue(giftBoxIdAtom);
 
 	const [giftData, setGiftData] = useState<GiftData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<number | null>(null);
-	// const [isLetterEncryptedNoneModalOpen, setIsLetterEncryptedNoneModalOpen] = useState(false);
 
 	useEffect(() => {
 		console.log(giftId);
@@ -97,26 +100,26 @@ const LetterInVideoModal: React.FC<LetterInVideoModalProps> = ({ isOpen, onClose
 		};
 		fetchGiftData();
 	}, [giftId]);
-  
-  return (
-    <>
-      {/* 메인 콘텐츠 렌더링 */}
+
+	return (
+		<>
+			{/* 메인 콘텐츠 렌더링 */}
 			{loading ? (
 				<Loading />
 			) : (
 				<div className="absolute mt-[41px] m-4">
-          <GeneralLetterModal 
-            isOpen={isOpen} 
-            onClose={onClose} 
-            nickName={giftData?.nickName}
-			content={giftData?.content}
-			question={giftData?.question}
-			answer={giftData?.answer}
-          />
+					<GeneralLetterModal
+						isOpen={isOpen}
+						onClose={onClose}
+						nickName={giftData?.nickName}
+						content={giftData?.content}
+						question={giftData?.question}
+						answer={giftData?.answer}
+					/>
 				</div>
 			)}
-    </>
-  );
+		</>
+	);
 };
 
 export default LetterInVideoModal;

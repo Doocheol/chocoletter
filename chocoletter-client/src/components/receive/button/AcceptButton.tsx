@@ -3,11 +3,8 @@ import { Button } from "../../common/Button";
 import { useNavigate } from "react-router-dom";
 import { patchUnboxingAccept } from "../../../services/unboxingApi";
 
-// webRTC 초대창 수락 버튼
-
 interface AcceptButtonProps {
 	giftId: string;
-	// accessToken: string;
 }
 
 const AcceptButton: React.FC<AcceptButtonProps> = ({ giftId }) => {
@@ -23,7 +20,7 @@ const AcceptButton: React.FC<AcceptButtonProps> = ({ giftId }) => {
 				alert("거절 요청 중 오류가 발생했습니다.");
 			}
 		} catch (err) {
-			console.error("API 호출 중 에러 발생:", err);
+			new Error("실패");
 		}
 	};
 

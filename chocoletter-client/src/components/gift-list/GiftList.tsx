@@ -3,8 +3,6 @@ import { GiftOpenButton } from "./button/GiftOpenButton";
 import { useFetchChocolates } from "../../hooks/useGetChocolates";
 import { changeSpecialToGeneral } from "../../services/giftApi";
 import Loading from "../common/Loading";
-import { useRecoilValue } from "recoil";
-import { giftListRefreshAtom } from "../../atoms/gift/giftAtoms";
 
 // 초콜릿 더미 데이터
 const dummyChocolates = [
@@ -74,14 +72,14 @@ interface GiftListProps {
 }
 
 export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
-    const [refresh, setRefresh] = useState(false);
+	const [refresh, setRefresh] = useState(false);
 	const { data: chocolates, isLoading } = useFetchChocolates("all", refresh);
 	const [localChocolates, setLocalChocolates] = useState(chocolates);
 	const currentTimeUTC = new Date().getTime() - 9 * 60 * 60 * 1000;
 
-    const onChange = () => {
-        setRefresh((prev) => !prev)
-    }
+	const onChange = () => {
+		setRefresh((prev) => !prev);
+	};
 
 	useEffect(() => {
 		setLocalChocolates(chocolates);
@@ -102,12 +100,12 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 		chocolates.map(async (choco) => {
 			if (choco.giftType === "SPECIAL" && choco.unBoxingTime) {
 				const unBoxingUTC =
-					new Date(choco.unBoxingTime).getTime() - 9 * 60 * 60 * 1000 + 60 * 1000;
-				console.log(choco.giftId, currentTimeUTC, unBoxingUTC);
+					new Date(choco.unBoxingTime).getTime() -
+					9 * 60 * 60 * 1000 +
+					60 * 1000;
 				if (currentTimeUTC > unBoxingUTC) {
 					try {
 						const res = await changeSpecialToGeneral(choco.giftId);
-						console.log(res);
 						setLocalChocolates((prevChocos) =>
 							prevChocos.map((item) =>
 								item.giftId === choco.giftId
@@ -116,7 +114,9 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 							)
 						);
 					} catch (err) {
-						console.log("GiftList에서 변환 실패 : ", err);
+						new Error(
+							"스페셜 초콜릿을 일반 초콜릿으로 변경하는데 실패했습니다."
+						);
 					}
 				}
 			}
@@ -153,7 +153,7 @@ export const GiftList: React.FC<GiftListProps> = ({ filter }) => {
 						unboxingTime={chocolate.unBoxingTime}
 						isAccepted={chocolate.isAccept}
 						roomId={chocolate.unBoxingRoomId}
-                        onRefresh={onChange}
+						onRefresh={onChange}
 					/>
 				))}
 			</div>

@@ -26,7 +26,6 @@ import {
 } from "../../../../../atoms/auth/userAtoms";
 
 import choco_asset from "../../../../../assets/images/main/choco_asset.svg";
-import Loading from "../../../../common/Loading";
 import { copyToClipboard } from "../../../../../utils/copyToClipboard";
 import { getGiftBoxId } from "../../../../../services/userApi";
 
@@ -282,7 +281,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 			toast.dismiss();
 			toast.success("링크가 복사되었습니다!");
 		} catch (error) {
-			console.error("링크 복사 오류:", error);
 			toast.dismiss();
 		}
 	};
@@ -307,8 +305,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 		) {
 			try {
 				await navigator.share({
-					// title: "'초코레터!'",
-					// text: "내 초콜릿 보관함 이미지를 공유하고, 링크를 공유하여 편지를 받아보세요!",
 					files: [file],
 				});
 				toast.dismiss();
@@ -316,7 +312,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 					"링크 복사까지 완료! 인스타 스토리로 공유해보세요!"
 				);
 			} catch (shareError) {
-				console.error("공유에 실패했습니다.", shareError);
 				downloadFile(finalImageSrc);
 			}
 		} else {
@@ -332,7 +327,6 @@ const CaptureModal: React.FC<CaptureModalProps> = ({ isVisible, onClose }) => {
 			setIsAnimating(false);
 			onClose();
 		} catch (error) {
-			console.error("이미지 다운로드/공유 중 오류 발생:", error);
 			toast.dismiss();
 			toast.error("이미지 다운로드/공유에 실패했습니다.");
 			setIsAnimating(false);

@@ -19,10 +19,9 @@ import my_count_background from "../assets/images/main/my_count_background.svg";
 import NotLoginModal from "../components/main/your/before/modal/NotLoginModal";
 import WhiteDayCountdownModal from "../components/main/your/before/modal/WhiteDayCountdownModal";
 import { getGiftBoxName } from "../services/giftBoxApi";
-import { FowardTutorialOverlay } from "../components/tutorial/FowardTutorialOverlay";
+import { ForwardTutorialOverlay } from "../components/tutorial/ForwardTutorialOverlay";
 import Loading from "../components/common/Loading";
 import { removeUserInfo } from "../services/userApi";
-import tool_tip_your from "../assets/images/main/tool_tip_your.svg";
 import my_chocolate_box_move_button from "../assets/images/main/my_chocolate_box_move_button.svg";
 
 const DEFAULT_GIFTBOX_NAME = "초코레터";
@@ -41,7 +40,7 @@ const MainYourEventView: React.FC = () => {
 	const setIsLogin = useSetRecoilState(isLoginAtom);
 	const myGiftBoxId = useRecoilValue(giftBoxIdAtom);
 
-	const { giftBoxId } = useParams<{ giftBoxId: string }>(); // URL에서 giftBoxId 추출
+	const { giftBoxId } = useParams<{ giftBoxId: string }>();
 
 	const isLoggedIn = useRecoilValue(isLoginAtom);
 
@@ -49,7 +48,6 @@ const MainYourEventView: React.FC = () => {
 	const giftBoxRef = useRef<HTMLDivElement>(null);
 	const dummyRef = useRef<HTMLDivElement>(null);
 
-	// 로그인 상태가 아니라면 바로 NotLoginModal만 렌더링
 	if (!isLoggedIn) {
 		return (
 			<NotLoginModal
@@ -63,9 +61,7 @@ const MainYourEventView: React.FC = () => {
 		);
 	}
 
-	// 선물상자에 표시할 이름과 로딩 상태
 	const [recipientNickname, setRecipientNickname] = useState<string>("");
-	// 새로 추가된 선물상자 타입 state (기본값 5)
 	const [giftBoxType, setGiftBoxType] = useState<number>(5);
 	const [isGiftBoxNameLoaded, setIsGiftBoxNameLoaded] =
 		useState<boolean>(false);
@@ -86,7 +82,6 @@ const MainYourEventView: React.FC = () => {
 		setIsTutorialModalOpen(true);
 	};
 
-	// 선물하기 버튼 클릭 시, 먼저 선물 전송 여부를 확인합니다.
 	const handleGoToMyGiftBox = async () => {
 		if (!isLoggedIn) {
 			setIsNotLoginModalOpen(true);
@@ -94,7 +89,6 @@ const MainYourEventView: React.FC = () => {
 		}
 		try {
 			if (!giftBoxId) {
-				// giftBoxId가 없으면 에러 처리
 				removeUserInfo();
 				setIsLogin(false);
 				navigate("/");
@@ -107,7 +101,6 @@ const MainYourEventView: React.FC = () => {
 		navigate(`/main/${myGiftBoxId}`);
 	};
 
-	// redirect 정보를 localStorage에 저장 후 로그인 페이지로 이동
 	const handleGoToLogin = () => {
 		localStorage.setItem("redirect", location.pathname);
 		navigate("/");
@@ -135,12 +128,10 @@ const MainYourEventView: React.FC = () => {
 		[]
 	);
 
-	// giftBoxId가 있을 경우, 상대방 선물상자 정보 조회 (이제 name과 type을 받아옴)
 	useEffect(() => {
 		if (giftBoxId) {
 			getGiftBoxName(giftBoxId)
 				.then((data) => {
-					// data의 타입은 { name: string, type: number, fillLevel: number }라고 가정
 					const { name, type, fillLevel } = data;
 					const validName =
 						name && name.trim() !== "" ? name.trim() : null;
@@ -169,17 +160,14 @@ const MainYourEventView: React.FC = () => {
 					setIsGiftBoxNameLoaded(true);
 				})
 				.catch((error) => {
-					console.error("선물상자 정보 조회 에러:", error);
 					setIsGiftBoxNameLoaded(true);
 				});
 		} else {
-			// giftBoxId가 없으면 기본값 사용
 			setRecipientNickname(DEFAULT_GIFTBOX_NAME);
 			setIsGiftBoxNameLoaded(true);
 		}
 	}, [giftBoxId]);
 
-	// API 호출이 끝나기 전에는 전체 페이지를 Loading 컴포넌트로 대체
 	if (!isGiftBoxNameLoaded) {
 		return (
 			<div className="flex justify-center items-center min-h-screen">
@@ -191,7 +179,6 @@ const MainYourEventView: React.FC = () => {
 	return (
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-sm min-h-screen h-[calc(var(--vh)*100)] flex flex-col bg-gradient-to-b from-[#E6F5FF] to-[#F4D3FF]">
-				{/* 더미 div  */}
 				<div ref={dummyRef} className="w-0 h-0" />
 				{/* 상단 아이콘 바 */}
 				<div className="mt-7 ml-6 flex items-center justify-between">
@@ -258,7 +245,6 @@ const MainYourEventView: React.FC = () => {
 					</div>
 				</div>
 
-				{/* 로그인 필요 모달 */}
 				{isNotLoginModalOpen && (
 					<NotLoginModal
 						isOpen={isNotLoginModalOpen}
@@ -267,7 +253,6 @@ const MainYourEventView: React.FC = () => {
 					/>
 				)}
 
-				{/* 프로필 모달 */}
 				{isProfileOpen && (
 					<>
 						<Backdrop onClick={() => setIsProfileOpen(false)} />
@@ -275,15 +260,14 @@ const MainYourEventView: React.FC = () => {
 					</>
 				)}
 
-				{/* D-DAY 모달 (화이트데이까지 남은 일수 표시) */}
 				<WhiteDayCountdownModal
 					targetDate={whiteDay}
 					isOpen={isCountdownOpen}
 					onClose={() => setIsCountdownOpen(false)}
 				/>
-				{/* 튜토리얼 모달 */}
+
 				{isTutorialModalOpen && (
-					<FowardTutorialOverlay
+					<ForwardTutorialOverlay
 						targetRefs={tutorialIcons}
 						onClose={() => setIsTutorialModalOpen(false)}
 					/>
