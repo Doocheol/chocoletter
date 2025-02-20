@@ -119,7 +119,7 @@ const ChatRoomListView = () => {
                                         <p className="text-[18px] leading-[22px]">{room.nickName}</p>
                                         <p className="text-[15px] leading-[22px] text-[#696A73]">님과의 채팅방</p>
                                     </div>
-                                    <p className="font-[Pretendard] text-[12px] text-[#696A73]">
+                                    <p className="font-[Pretendard] text-[12px] text-[#696A73] overflow-hidden whitespace-nowrap text-ellipsis">
                                         {room.lastMessage ? (
                                             room.lastMessage
                                         ) : (
