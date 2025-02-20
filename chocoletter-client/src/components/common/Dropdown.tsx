@@ -7,11 +7,6 @@ interface DropdownProps {
 	className?: string;
 }
 
-/**
- * 공통 드롭다운
- * - 열릴 때 wave-down 애니메이션 적용
- * - 바깥 클릭 시 닫기
- */
 const Dropdown: React.FC<DropdownProps> = ({
 	isOpen,
 	onClose,
@@ -20,7 +15,6 @@ const Dropdown: React.FC<DropdownProps> = ({
 }) => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	// 바깥 클릭 감지
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
 			if (

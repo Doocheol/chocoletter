@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/common/Button";
 import choco from "../assets/images/chocolate/general/gen_choco_4.svg";
-import wing_left from "../assets/images/chocolate/wing_left.svg";
 import wing_right from "../assets/images/chocolate/wing_right.svg";
 import { ImageButton } from "../components/common/ImageButton";
 import go_to_my_main_button from "../assets/images/button/go_to_my_main_button.svg";
 
-// 편지 작성 완료 후, 전송 완료 페이지
 const SentGiftView = () => {
 	const [remainTime, setRemainTime] = useState(10);
 	const navigate = useNavigate();
@@ -17,7 +14,7 @@ const SentGiftView = () => {
 		const interval = setInterval(() => {
 			setRemainTime((prev) => {
 				if (prev === 1) {
-					navigate("/main/my/before"); // 추후 수정 예정
+					navigate("/main/my/before");
 					clearInterval(interval);
 					return 1;
 				} else {
@@ -34,7 +31,6 @@ const SentGiftView = () => {
 	};
 
 	return (
-		//[#FFEEFD]
 		<div className="relative flex flex-col items-center h-screen bg-chocoletterGiftBoxBg">
 			<div className="absolute mt-24 px-8">
 				<div className="relative flex items-center justify-center mb-16 shake-vertical">
@@ -51,7 +47,7 @@ const SentGiftView = () => {
 					<object
 						data={choco}
 						type="image/svg+xml"
-						className= "w-[80px] relative z-20"// "max-h-40 relative z-20"
+						className="w-[80px] relative z-20"
 					>
 						<img src={choco} alt="초콜릿" />
 					</object>
@@ -80,9 +76,6 @@ const SentGiftView = () => {
 						className="mb-4"
 					/>
 
-					{/* <Button onClick={goBackMainMyBefore} className="bg-white w-[300px] h-[50px] px-1 mb-4 hover:bg-gray-200">
-            내 초콜릿 상자로 이동하기
-          </Button> */}
 					<div className="w-[270px] p-[5px_15px] rounded-[18px] bg-white text-sm text-cholo">
 						{remainTime}초 후, 내 초콜릿 보관함으로 이동합니다.
 					</div>

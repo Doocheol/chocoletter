@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { giftBoxNumAtom, giftBoxIdAtom, isGiftBoxSelectedAtom } from "../atoms/auth/userAtoms";
+import {
+	giftBoxNumAtom,
+	giftBoxIdAtom,
+	isGiftBoxSelectedAtom,
+} from "../atoms/auth/userAtoms";
 import { GoBackButton } from "../components/common/GoBackButton";
 
-// 선물상자 에셋 임포트
 import box1 from "../assets/images/giftbox/giftbox_before_12.svg";
 import box2 from "../assets/images/giftbox/giftbox_before_22.svg";
 import box3 from "../assets/images/giftbox/giftbox_before_32.svg";
@@ -13,7 +16,7 @@ import box4 from "../assets/images/giftbox/giftbox_before_42.svg";
 import box5 from "../assets/images/giftbox/giftbox_before_52.svg";
 import { Button } from "../components/common/Button";
 import { removeUserInfo } from "../services/userApi";
-import { updateGiftBoxType } from "../services/giftBoxApi"; // 추가: 선물상자 타입 업데이트 API
+import { updateGiftBoxType } from "../services/giftBoxApi";
 
 const SelectGiftBoxView: React.FC = () => {
 	const navigate = useNavigate();
@@ -37,19 +40,20 @@ const SelectGiftBoxView: React.FC = () => {
 
 	const handleConfirmSelection = async () => {
 		try {
-			// PATCH 요청을 통해 선택한 선물상자 타입 업데이트 (type은 숫자형)
 			await updateGiftBoxType(selectedBox);
-			// 성공하면 recoil 상태에 선택한 번호 저장 후 다음 페이지로 이동
 			setGiftBoxNum(selectedBox);
 			setIsGiftBoxSelected(true);
 			navigate(`/main/${giftBoxId}`);
 		} catch (error) {
 			if (!toast.isActive("select-giftbox-toast")) {
-				toast.error("초콜릿 보관함 업데이트에 실패했습니다. 다시 시도해주세요!", {
-					toastId: "select-giftbox-toast",
-					position: "top-center",
-					autoClose: 2000,
-				});
+				toast.error(
+					"초콜릿 보관함 업데이트에 실패했습니다. 다시 시도해주세요!",
+					{
+						toastId: "select-giftbox-toast",
+						position: "top-center",
+						autoClose: 2000,
+					}
+				);
 			}
 		}
 	};
@@ -62,11 +66,11 @@ const SelectGiftBoxView: React.FC = () => {
 	useEffect(() => {
 		if (!giftBoxId) {
 			if (!toast.isActive("retry-login-toast")) {
-                toast.error("다시 로그인 해주세요!", {
-                    toastId: "retry-login-toast",
-                    position: "top-center",
-                    autoClose: 2000,
-                });
+				toast.error("다시 로그인 해주세요!", {
+					toastId: "retry-login-toast",
+					position: "top-center",
+					autoClose: 2000,
+				});
 			}
 			removeUserInfo();
 			navigate("/");
@@ -94,7 +98,7 @@ const SelectGiftBoxView: React.FC = () => {
 					<img
 						src={selectedBoxInfo.image}
 						alt={`선택된 선물상자 ${selectedBoxInfo.id}`}
-						className="w-60 h-auto" // 사이즈 조절은 필요에 따라 변경
+						className="w-60 h-auto"
 					/>
 				)}
 			</div>

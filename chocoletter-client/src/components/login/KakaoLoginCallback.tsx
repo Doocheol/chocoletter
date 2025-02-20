@@ -1,4 +1,3 @@
-// KakaoLoginCallback.tsx (일부)
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -32,7 +31,7 @@ const getGiftBoxNumFill = async (giftBoxId: string) => {
 		const res = await getGiftBoxName(giftBoxId);
 		return res;
 	} catch (err) {
-		console.error(err, "선물상자 정보 로그인에서 불러오기 실패");
+		new Error("Failed to load gift box information");
 	}
 };
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Backdrop from "../../../../common/Backdrop";
 import { RiResetRightFill } from "react-icons/ri";
-import Loading from "../../../../common/Loading";
 import { Alarm, getAllAlarms } from "../../../../../services/alarmApi";
 import {
 	patchUnboxingAccept,

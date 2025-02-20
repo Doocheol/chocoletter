@@ -16,18 +16,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 	}
 
 	static getDerivedStateFromError(_: Error): ErrorBoundaryState {
-		// 에러 발생 시 상태 업데이트
 		return { hasError: true };
 	}
 
 	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-		// 에러 로깅 등 추가 작업 가능
-		console.error("Uncaught error:", error, errorInfo);
+		new Error(error.message);
 	}
 
 	render() {
 		if (this.state.hasError) {
-			// 에러가 발생했을 때 에러 페이지로 리다이렉트
 			return <Navigate to="/error" replace />;
 		}
 

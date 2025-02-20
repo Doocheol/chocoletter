@@ -11,13 +11,12 @@ export const useFetchChocolates = (filter: string, refresh: boolean) => {
             try {
                 // API 호출로 데이터 가져오기
                 const chocolates = await getGiftList(filter);
-                console.log("is in" ,chocolates)
                 setCachedData((prev) => ({
                     ...prev,
                     [filter]: chocolates.gifts, // filter별 데이터 저장
                 }));
             } catch (error) {
-                console.error("Error fetching chocolates:", error);
+                new Error("선물 상자 정보 조회 오류");
             } finally {
                 setIsLoading(false);
             }
